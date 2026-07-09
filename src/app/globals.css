@@ -1,26 +1,674 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap");
 @import "tailwindcss";
 
+/* ============================================
+   DESIGN SYSTEM — PT Mahaga Widya Cita
+   ============================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary — Navy & Blue */
+  --color-primary-900: #0B2D6B;
+  --color-primary-800: #0D3580;
+  --color-primary-700: #1247A8;
+  --color-primary-600: #165EC8;
+  --color-primary-500: #1E6FD9;
+  --color-primary-400: #3B86E8;
+  --color-primary-300: #6CA7F0;
+  --color-primary-200: #AACBF7;
+  --color-primary-100: #DBEAFE;
+  --color-primary-50:  #EFF6FF;
+
+  /* Gold Accent */
+  --color-gold-600: #A07508;
+  --color-gold-500: #C9970A;
+  --color-gold-400: #DDB134;
+  --color-gold-300: #EFD080;
+  --color-gold-100: #FEF9EC;
+
+  /* Semantic */
+  --color-success: #16A34A;
+  --color-success-light: #DCFCE7;
+  --color-warning: #D97706;
+  --color-warning-light: #FEF3C7;
+  --color-danger: #DC2626;
+  --color-danger-light: #FEE2E2;
+  --color-info: #0EA5E9;
+  --color-info-light: #E0F2FE;
+
+  /* Neutral */
+  --color-neutral-900: #1A1A2E;
+  --color-neutral-800: #2D2D44;
+  --color-neutral-700: #404057;
+  --color-neutral-600: #545469;
+  --color-neutral-500: #6B7280;
+  --color-neutral-400: #9CA3AF;
+  --color-neutral-300: #D1D5DB;
+  --color-neutral-200: #E5E7EB;
+  --color-neutral-100: #F4F6FA;
+  --color-neutral-50:  #F9FAFB;
+
+  /* Backgrounds */
+  --background: #FFFFFF;
+  --foreground: #1A1A2E;
+  --bg-section-alt: #F4F6FA;
+  --bg-section-dark: #0B2D6B;
+
+  /* Spacing */
+  --container-max: 1280px;
+  --container-padding: 1.5rem;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+  --shadow-card: 0 4px 24px rgba(11,45,107,0.08);
+  --shadow-card-hover: 0 12px 40px rgba(11,45,107,0.16);
+
+  /* Border radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-heading: "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-neutral-900);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ============================================
+   LAYOUT UTILITIES
+   ============================================ */
+
+.container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+}
+
+.section {
+  padding-block: 5rem;
+}
+
+.section-sm {
+  padding-block: 3rem;
+}
+
+.section-alt {
+  background: var(--bg-section-alt);
+}
+
+.section-dark {
+  background: var(--bg-section-dark);
+  color: white;
+}
+
+/* ============================================
+   TYPOGRAPHY UTILITIES
+   ============================================ */
+
+.text-display {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.text-heading-xl {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.text-heading-lg {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+}
+
+.text-heading-md {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 600;
+}
+
+.text-body-lg {
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+.text-gradient-primary {
+  background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-300));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, var(--color-gold-600), var(--color-gold-400));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   BUTTON COMPONENTS
+   ============================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius-full);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-500));
+  color: white;
+  box-shadow: 0 4px 16px rgba(30,111,217,0.35);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--color-primary-700), var(--color-primary-600));
+  box-shadow: 0 6px 24px rgba(30,111,217,0.45);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--color-primary-700);
+  border-color: var(--color-primary-200);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--color-primary-500);
+  background: var(--color-primary-50);
+  transform: translateY(-2px);
+}
+
+.btn-outline-white {
+  background: transparent;
+  color: white;
+  border-color: rgba(255,255,255,0.6);
+}
+
+.btn-outline-white:hover:not(:disabled) {
+  background: white;
+  color: var(--color-primary-700);
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, var(--color-gold-600), var(--color-gold-400));
+  color: white;
+  box-shadow: 0 4px 16px rgba(201,151,10,0.35);
+}
+
+.btn-gold:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(201,151,10,0.45);
+}
+
+.btn-sm {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+}
+
+.btn-lg {
+  padding: 1rem 2.5rem;
+  font-size: 1.0625rem;
+}
+
+/* ============================================
+   CARD COMPONENTS
+   ============================================ */
+
+.card {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-neutral-100);
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-4px);
+}
+
+.card-glass {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(11,45,107,0.12);
+}
+
+.card-gold {
+  background: linear-gradient(135deg, #fffdf7 0%, #fef9ec 100%);
+  border: 1px solid var(--color-gold-300);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 16px rgba(201,151,10,0.12);
+}
+
+.card-dark {
+  background: linear-gradient(135deg, var(--color-primary-900), var(--color-primary-800));
+  color: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ============================================
+   BADGE COMPONENTS
+   ============================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.badge-primary {
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+}
+
+.badge-gold {
+  background: var(--color-gold-100);
+  color: var(--color-gold-600);
+}
+
+.badge-success {
+  background: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.badge-warning {
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+}
+
+.badge-danger {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+.badge-dark {
+  background: var(--color-primary-900);
+  color: white;
+}
+
+/* ============================================
+   SECTION TITLE COMPONENT
+   ============================================ */
+
+.section-title {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-title .overline {
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: var(--color-primary-500);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  padding: 0.25rem 1rem;
+  background: var(--color-primary-100);
+  border-radius: var(--radius-full);
+}
+
+.section-title h2 {
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  margin-bottom: 1rem;
+}
+
+.section-title p {
+  max-width: 600px;
+  margin-inline: auto;
+  color: var(--color-neutral-500);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+/* ============================================
+   NAVBAR STYLES
+   ============================================ */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: all var(--transition-base);
+}
+
+.navbar.scrolled {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 24px rgba(11,45,107,0.10);
+  border-bottom: 1px solid var(--color-neutral-100);
+}
+
+.navbar.transparent {
+  background: transparent;
+}
+
+/* ============================================
+   HERO GRADIENT BACKGROUNDS
+   ============================================ */
+
+.hero-gradient {
+  background: linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-700) 50%, var(--color-primary-800) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-gradient::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(30,111,217,0.4) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-gradient::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+  pointer-events: none;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(30,111,217,0.4); }
+  70% { transform: scale(1); box-shadow: 0 0 0 16px rgba(30,111,217,0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(30,111,217,0); }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out both;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+
+/* ============================================
+   FORM STYLES
+   ============================================ */
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--color-neutral-200);
+  border-radius: var(--radius-md);
+  font-family: "Inter", sans-serif;
+  font-size: 0.9375rem;
+  color: var(--foreground);
+  background: white;
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px rgba(30,111,217,0.12);
+}
+
+.input::placeholder {
+  color: var(--color-neutral-400);
+}
+
+.input-error {
+  border-color: var(--color-danger);
+}
+
+.input-error:focus {
+  box-shadow: 0 0 0 3px rgba(220,38,38,0.12);
+}
+
+label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-neutral-700);
+  margin-bottom: 0.375rem;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* ============================================
+   FLOATING WHATSAPP BUTTON
+   ============================================ */
+
+.whatsapp-float {
+  position: fixed;
+  bottom: 1.75rem;
+  right: 1.75rem;
+  z-index: 999;
+  width: 56px;
+  height: 56px;
+  background: #25D366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 24px rgba(37,211,102,0.45);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  animation: pulse-ring 2.5s infinite;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 32px rgba(37,211,102,0.55);
+}
+
+/* ============================================
+   DIVIDER
+   ============================================ */
+
+.gold-divider {
+  width: 64px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-gold-500), var(--color-gold-300));
+  border-radius: 2px;
+  margin: 0.75rem auto 0;
+}
+
+/* ============================================
+   FOOTER LINKS (BULLETPROOF HOVER)
+   ============================================ */
+.footer-link {
+  color: rgba(255, 255, 255, 0.65);
+  transition: color 0.2s ease;
+}
+.footer-link:hover {
+  color: white;
+}
+
+.footer-link-muted {
+  color: rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.footer-link-muted:hover {
+  color: white;
+}
+
+.footer-social {
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  transition: all 0.2s ease;
+}
+.footer-social:hover {
+  color: white;
+  background: var(--color-primary-500);
+  border-color: var(--color-primary-500);
+}
+
+/* ============================================
+   RESPONSIVE UTILITIES
+   ============================================ */
+
+@media (max-width: 768px) {
+  .section {
+    padding-block: 3.5rem;
+  }
+
+  .container {
+    padding-inline: 1.25rem;
+  }
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-neutral-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-300);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-500);
 }
