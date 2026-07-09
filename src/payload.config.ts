@@ -11,6 +11,7 @@ import { PolicyReviews } from './collections/PolicyReviews'
 
 import { ContactSubmissions } from './collections/ContactSubmissions'
 import { Subscribers } from './collections/Subscribers'
+import { Services } from './collections/Services'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -30,6 +31,7 @@ export default buildConfig({
     PolicyReviews,
     ContactSubmissions,
     Subscribers,
+    Services,
   ],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || 'fallback-secret-key', // Ensure to set this in production
