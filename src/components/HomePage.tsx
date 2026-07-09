@@ -670,32 +670,49 @@ export default function HomePage() {
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
-            {articles.map((article) => (
+            {displayArticles.map((article) => (
               <Link key={article.id} href={`/artikel/${article.id}`} style={{ textDecoration: "none", display: "block" }}>
-                <div className="card" style={{ height: "100%" }}>
-                  {/* Thumbnail placeholder */}
-                  <div
-                    style={{
-                      height: "180px",
-                      background: `linear-gradient(135deg, var(--color-primary-900), var(--color-primary-700))`,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      position: "relative", overflow: "hidden",
-                    }}
-                  >
-                    <FileText size={48} color="rgba(255,255,255,0.2)" />
-                    <span
+                <div className="card" style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+                  {article.imageUrl ? (
+                    <div style={{ height: "180px", backgroundColor: "#f1f5f9", position: "relative" }}>
+                      <img src={article.imageUrl} alt={article.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      <span
+                        style={{
+                          position: "absolute", top: "1rem", left: "1rem",
+                          background: article.categoryBg,
+                          color: article.categoryColor,
+                          fontSize: "0.6875rem", fontWeight: "700",
+                          borderRadius: "99px", padding: "0.2rem 0.75rem",
+                          letterSpacing: "0.06em",
+                        }}
+                      >
+                        {article.category}
+                      </span>
+                    </div>
+                  ) : (
+                    <div
                       style={{
-                        position: "absolute", top: "1rem", left: "1rem",
-                        background: article.categoryBg,
-                        color: article.categoryColor,
-                        fontSize: "0.6875rem", fontWeight: "700",
-                        borderRadius: "99px", padding: "0.2rem 0.75rem",
-                        letterSpacing: "0.06em",
+                        height: "180px",
+                        background: `linear-gradient(135deg, var(--color-primary-900), var(--color-primary-700))`,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        position: "relative", overflow: "hidden",
                       }}
                     >
-                      {article.category}
-                    </span>
-                  </div>
+                      <FileText size={48} color="rgba(255,255,255,0.2)" />
+                      <span
+                        style={{
+                          position: "absolute", top: "1rem", left: "1rem",
+                          background: article.categoryBg,
+                          color: article.categoryColor,
+                          fontSize: "0.6875rem", fontWeight: "700",
+                          borderRadius: "99px", padding: "0.2rem 0.75rem",
+                          letterSpacing: "0.06em",
+                        }}
+                      >
+                        {article.category}
+                      </span>
+                    </div>
+                  )}
                   <div style={{ padding: "1.5rem" }}>
                     <h3 style={{ fontSize: "1rem", lineHeight: "1.4", marginBottom: "0.75rem", color: "var(--color-neutral-900)" }}>
                       {article.title}

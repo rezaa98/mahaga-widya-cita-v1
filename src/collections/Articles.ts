@@ -38,6 +38,14 @@ export const Articles: CollectionConfig = {
       required: true,
     },
     {
+      name: 'imageUrl',
+      type: 'text',
+      label: 'Thumbnail Image URL',
+      admin: {
+        description: 'URL gambar untuk thumbnail artikel (contoh: https://images.unsplash.com/...)',
+      },
+    },
+    {
       name: 'author',
       type: 'relationship',
       relationTo: 'users',

@@ -37,7 +37,7 @@ const navLinks = [
       { label: "Untuk Individu", href: "/artikel?kategori=individu" },
       { label: "Untuk Bisnis", href: "/artikel?kategori=bisnis" },
       { label: "Untuk Pemerintah", href: "/artikel?kategori=pemerintah" },
-      { label: "Policy Review", href: "/kebijakan" },
+      { label: "Policy Review", href: "/policy-reviews" },
     ],
   },
   { label: "Karir", href: "/karir" },

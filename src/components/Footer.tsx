@@ -49,7 +49,7 @@ const footerLinks = {
   ],
   content: [
     { label: "Artikel", href: "/artikel" },
-    { label: "Policy Review", href: "/kebijakan" },
+    { label: "Policy Review", href: "/policy-reviews" },
     { label: "Webinar / SDS", href: "/webinar" },
     { label: "Verifikasi Sertifikat", href: "/verifikasi" },
     { label: "Kontak", href: "/kontak" },
