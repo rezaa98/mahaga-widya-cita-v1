@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Phone, Mail, MapPin } from "lucide-react";
 
 // Custom social media SVG icons (not available in lucide-react)
@@ -91,23 +92,13 @@ export default function Footer() {
           {/* Brand column */}
           <div style={{ gridColumn: "span 1" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.25rem" }}>
-              <div
-                style={{
-                  width: "44px",
-                  height: "44px",
-                  background: "linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600))",
-                  borderRadius: "10px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: "800",
-                  fontSize: "0.875rem",
-                  color: "white",
-                }}
-              >
-                MWC
-              </div>
+              <Image 
+                src="/logo-transparent.png" 
+                alt="Logo PT Mahaga Widya Cita" 
+                width={44} 
+                height={44} 
+                style={{ objectFit: 'contain' }}
+              />
               <div>
                 <div
                   style={{

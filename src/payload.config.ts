@@ -4,6 +4,10 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { Users } from './collections/Users'
+import { Media } from './collections/Media'
+import { Categories } from './collections/Categories'
+import { Articles } from './collections/Articles'
+import { PolicyReviews } from './collections/PolicyReviews'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -17,6 +21,10 @@ export default buildConfig({
   },
   collections: [
     Users,
+    Media,
+    Categories,
+    Articles,
+    PolicyReviews,
   ],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || 'fallback-secret-key', // Ensure to set this in production

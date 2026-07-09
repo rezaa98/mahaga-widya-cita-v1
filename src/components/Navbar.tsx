@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X, ChevronDown } from "lucide-react";
 
 const navLinks = [
@@ -72,25 +73,13 @@ export default function Navbar() {
           >
             {/* Logo */}
             <Link href="/" style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexShrink: 0 }}>
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  background: "linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700))",
-                  borderRadius: "10px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontWeight: "800",
-                  fontSize: "1rem",
-                  color: "white",
-                  letterSpacing: "-0.02em",
-                  boxShadow: "0 2px 12px rgba(30,111,217,0.4)",
-                }}
-              >
-                MWC
-              </div>
+              <Image 
+                src="/logo-transparent.png" 
+                alt="Logo PT Mahaga Widya Cita" 
+                width={40} 
+                height={40} 
+                style={{ objectFit: 'contain' }}
+              />
               <span
                 style={{
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
