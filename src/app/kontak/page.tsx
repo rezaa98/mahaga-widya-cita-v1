@@ -36,10 +36,28 @@ export default function KontakPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate API call
-    await new Promise((r) => setTimeout(r, 1500));
-    setLoading(false);
-    setSubmitted(true);
+    
+    try {
+      const res = await fetch('/api/contact-submissions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (res.ok) {
+        setSubmitted(true);
+        setForm({ name: "", email: "", phone: "", institution: "", subject: "", message: "" });
+      } else {
+        alert("Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.");
+      }
+    } catch (error) {
+      console.error("Error submitting form", error);
+      alert("Terjadi kesalahan koneksi. Silakan coba lagi.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

@@ -9,6 +9,9 @@ import { Categories } from './collections/Categories'
 import { Articles } from './collections/Articles'
 import { PolicyReviews } from './collections/PolicyReviews'
 
+import { ContactSubmissions } from './collections/ContactSubmissions'
+import { Subscribers } from './collections/Subscribers'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -25,6 +28,8 @@ export default buildConfig({
     Categories,
     Articles,
     PolicyReviews,
+    ContactSubmissions,
+    Subscribers,
   ],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || 'fallback-secret-key', // Ensure to set this in production

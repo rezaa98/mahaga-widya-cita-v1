@@ -136,6 +136,7 @@ const articles = [
     readTime: "7 menit",
     categoryColor: "var(--color-primary-500)",
     categoryBg: "var(--color-primary-100)",
+    imageUrl: undefined,
   },
   {
     id: 2,
@@ -148,6 +149,7 @@ const articles = [
     readTime: "5 menit",
     categoryColor: "var(--color-gold-600)",
     categoryBg: "var(--color-gold-100)",
+    imageUrl: undefined,
   },
   {
     id: 3,
@@ -160,6 +162,7 @@ const articles = [
     readTime: "4 menit",
     categoryColor: "var(--color-success)",
     categoryBg: "var(--color-success-light)",
+    imageUrl: undefined,
   },
 ];
 
@@ -261,7 +264,20 @@ function StatCard({ stat, index, total, visible }: { stat: StatItem; index: numb
    HOMEPAGE COMPONENT
    ============================================ */
 
-export default function HomePage() {
+export default function HomePage({ articles: payloadArticles = [] }: { articles?: any[] }) {
+  const displayArticles = payloadArticles.length > 0 ? payloadArticles.map(a => ({
+    id: a.id,
+    category: typeof a.category === 'object' && a.category ? a.category.name : 'UMUM',
+    title: a.title,
+    excerpt: 'Klik untuk membaca lebih lanjut...',
+    author: typeof a.author === 'object' && a.author ? a.author.name || 'Admin' : 'Admin',
+    date: new Date(a.publishedAt || new Date()).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }),
+    readTime: '5 menit',
+    categoryColor: "var(--color-primary-500)",
+    categoryBg: "var(--color-primary-100)",
+    imageUrl: a.imageUrl,
+  })) : articles;
+
   const [statsVisible, setStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
 
