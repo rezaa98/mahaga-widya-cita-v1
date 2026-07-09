@@ -7,28 +7,26 @@ import { Globe, BookOpen } from "lucide-react";
 
 import { IconLinkedin } from "@/components/icons/SocialIcons";
 import { WaveDivider } from "@/components/ui/WaveDivider";
+import { getPayload } from "payload";
+import configPromise from "@payload-config";
 
 export const metadata: Metadata = {
   title: "Tim & Manajemen",
   description: "Kenali para pakar dan manajemen PT Mahaga Widya Cita yang berpengalaman di bidang administrasi publik, tata kelola, dan teknologi.",
 };
 
-const management = [
-  { initials: "EL", name: "Prof. Dr. Hj. Endang Larasati, M.S.", role: "Direktur Utama", expertise: "Administrasi Publik & Kebijakan Pemerintahan", bio: "Guru Besar Administrasi Publik dengan pengalaman 30+ tahun di bidang reformasi birokrasi dan penguatan tata kelola pemerintahan. Aktif sebagai konsultan di berbagai kementerian dan lembaga nasional.", color: "linear-gradient(135deg, #1E6FD9, #0B2D6B)" },
-  { initials: "OR", name: "Dr. Oscar Radyan Danar, M.A.", role: "Direktur Program", expertise: "Kebijakan Publik & Reformasi Birokrasi", bio: "Doktor kebijakan publik dengan spesialisasi reformasi birokrasi dan inovasi pelayanan publik. Penulis lebih dari 20 jurnal ilmiah dan pembicara di 100+ forum nasional dan internasional.", color: "linear-gradient(135deg, #C9970A, #A07508)" },
-  { initials: "RF", name: "Rizki Firmansyah, M.Sc.", role: "Direktur Teknologi", expertise: "Transformasi Digital & IT Governance", bio: "Spesialis transformasi digital sektor publik dengan pengalaman memimpin proyek SPBE di 15+ instansi pemerintah. Bersertifikasi CISA dan COBIT 2019.", color: "linear-gradient(135deg, #7C3AED, #5B21B6)" },
-];
+export default async function TimPage() {
+  const payload = await getPayload({ config: configPromise });
+  const result = await payload.find({
+    collection: 'team-members',
+    limit: 100,
+    sort: 'order',
+  });
 
-const experts = [
-  { initials: "AB", name: "Prof. Dr. Ahmad Basori, M.M.", expertise: "Manajemen Keuangan Daerah & APBD", institution: "Universitas Indonesia", color: "linear-gradient(135deg, #059669, #047857)" },
-  { initials: "SD", name: "Sari Dewi Purnama, S.Psi., M.Si.", expertise: "Psikologi Organisasi & Manajemen SDM", institution: "Universitas Gadjah Mada", color: "linear-gradient(135deg, #DC2626, #B91C1C)" },
-  { initials: "BW", name: "Dr. Bambang Wiyono, S.H., M.H.", expertise: "Hukum Administrasi & Regulasi Publik", institution: "Universitas Diponegoro", color: "linear-gradient(135deg, #0891B2, #0E7490)" },
-  { initials: "RA", name: "Rudi Ardiansyah, M.Kom.", expertise: "Sistem Informasi & Keamanan Siber", institution: "Institut Teknologi Bandung", color: "linear-gradient(135deg, #D97706, #B45309)" },
-  { initials: "NA", name: "Nurul Aini, M.Pd.", expertise: "Pendidikan Profesional & Kurikulum", institution: "Universitas Pendidikan Indonesia", color: "linear-gradient(135deg, #7C3AED, #6D28D9)" },
-  { initials: "HS", name: "Dr. Hendra Saputra, M.Sos.", expertise: "Sosiologi Pemerintahan & Otonomi Daerah", institution: "Universitas Airlangga", color: "linear-gradient(135deg, #0B2D6B, #1247A8)" },
-];
+  const team = result.docs;
+  const management = team.filter(member => member.category === 'management');
+  const experts = team.filter(member => member.category === 'expert');
 
-export default function TimPage() {
   return (
     <>
       <Navbar />
@@ -58,27 +56,27 @@ export default function TimPage() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "2rem" }}>
             {management.map((m) => (
-              <div key={m.name} className="card" style={{ padding: "0", overflow: "hidden" }}>
-                <div style={{ height: "8px", background: m.color }} />
-                <div style={{ padding: "2rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.25rem" }}>
-                    <div style={{ width: "64px", height: "64px", background: m.color, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "800", fontSize: "1.125rem", color: "white", flexShrink: 0, boxShadow: "0 4px 16px rgba(0,0,0,0.15)" }}>
-                      {m.initials}
-                    </div>
-                    <div>
-                      <h3 style={{ fontSize: "0.9375rem", lineHeight: "1.3", marginBottom: "0.25rem" }}>{m.name}</h3>
-                      <div style={{ fontSize: "0.8125rem", fontWeight: "600", color: "var(--color-primary-600)" }}>{m.role}</div>
-                    </div>
+              <div key={m.id} className="card" style={{ display: "flex", flexDirection: "column" }}>
+                <div style={{ padding: "2rem", background: "var(--color-neutral-50)", borderBottom: "1px solid var(--color-neutral-200)", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+                  <div style={{ width: "96px", height: "96px", borderRadius: "50%", background: m.color, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.25rem", boxShadow: "0 8px 16px rgba(0,0,0,0.1)" }}>
+                    <span style={{ fontSize: "2rem", fontWeight: "700", color: "white", letterSpacing: "1px" }}>{m.initials}</span>
                   </div>
-                  <div className="badge badge-primary" style={{ marginBottom: "0.875rem", fontSize: "0.6875rem" }}>{m.expertise}</div>
-                  <p style={{ fontSize: "0.875rem", color: "var(--color-neutral-500)", lineHeight: "1.65" }}>{m.bio}</p>
-                  <div style={{ display: "flex", gap: "0.625rem", marginTop: "1.25rem" }}>
-                    <a href="#" style={{ display: "flex", alignItems: "center", gap: "0.375rem", fontSize: "0.8125rem", color: "var(--color-primary-600)", fontWeight: "500" }}>
-                      <IconLinkedin size={14} /> LinkedIn
-                    </a>
-                    <a href="#" style={{ display: "flex", alignItems: "center", gap: "0.375rem", fontSize: "0.8125rem", color: "var(--color-primary-600)", fontWeight: "500" }}>
-                      <Globe size={14} /> Profil
-                    </a>
+                  <h3 style={{ fontSize: "1.25rem", marginBottom: "0.25rem" }}>{m.name}</h3>
+                  <p style={{ color: "var(--color-primary-600)", fontWeight: "600", fontSize: "0.9375rem" }}>{m.role}</p>
+                </div>
+                <div style={{ padding: "2rem", flex: 1, display: "flex", flexDirection: "column" }}>
+                  <div style={{ marginBottom: "1.5rem" }}>
+                    <span style={{ display: "inline-block", background: "rgba(201, 151, 10, 0.1)", color: "var(--color-gold-700)", padding: "0.25rem 0.75rem", borderRadius: "100px", fontSize: "0.8125rem", fontWeight: "600", marginBottom: "1rem" }}>
+                      Spesialisasi: {m.expertise}
+                    </span>
+                    <p style={{ color: "var(--color-neutral-600)", fontSize: "0.9375rem", lineHeight: "1.6" }}>
+                      {m.bio}
+                    </p>
+                  </div>
+                  <div style={{ marginTop: "auto", paddingTop: "1.5rem", borderTop: "1px solid var(--color-neutral-100)", display: "flex", justifyContent: "center" }}>
+                    <Link href="#" style={{ color: "var(--color-neutral-500)", transition: "color 0.2s" }} className="hover:text-primary">
+                      <IconLinkedin size={20} />
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -88,27 +86,32 @@ export default function TimPage() {
       </section>
 
       {/* EXPERTS */}
-      <section className="section section-alt" id="ahli">
+      <section className="section" style={{ background: "var(--color-neutral-50)" }} id="ahli">
         <div className="container">
-          <div className="section-title">
-            <span className="overline">Tenaga Ahli</span>
-            <h2>Panel Pakar & Instruktur</h2>
+          <div className="section-title text-center" style={{ alignItems: "center" }}>
+            <span className="overline">Jejaring Kepakaran</span>
+            <h2>Tenaga Ahli & Fasilitator</h2>
             <div className="gold-divider" />
-            <p style={{ marginTop: "1rem" }}>
-              Program kami didukung oleh para pakar dari universitas dan lembaga riset terkemuka di Indonesia.
+            <p style={{ color: "var(--color-neutral-600)", maxWidth: "600px", margin: "1rem auto 0" }}>
+              Ratusan program kami didukung oleh para praktisi dan akademisi terbaik dari berbagai institusi dan perguruan tinggi terkemuka di Indonesia.
             </p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
-            {experts.map((e) => (
-              <div key={e.name} className="card" style={{ padding: "1.75rem", display: "flex", gap: "1rem", alignItems: "flex-start" }}>
-                <div style={{ width: "52px", height: "52px", background: e.color, borderRadius: "14px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "800", fontSize: "0.9375rem", color: "white", flexShrink: 0 }}>
-                  {e.initials}
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.5rem" }}>
+            {experts.map((expert) => (
+              <div key={expert.id} className="card" style={{ padding: "1.5rem", display: "flex", alignItems: "center", gap: "1.25rem" }}>
+                <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: expert.color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <span style={{ fontSize: "1.25rem", fontWeight: "700", color: "white" }}>{expert.initials}</span>
                 </div>
                 <div>
-                  <h3 style={{ fontSize: "0.9375rem", lineHeight: "1.3", marginBottom: "0.375rem" }}>{e.name}</h3>
-                  <div style={{ fontSize: "0.8125rem", color: "var(--color-primary-600)", fontWeight: "600", marginBottom: "0.375rem" }}>{e.expertise}</div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.375rem", fontSize: "0.75rem", color: "var(--color-neutral-400)" }}>
-                    <BookOpen size={12} /> {e.institution}
+                  <h3 style={{ fontSize: "1.0625rem", marginBottom: "0.25rem" }}>{expert.name}</h3>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+                    <span style={{ fontSize: "0.8125rem", color: "var(--color-primary-700)", fontWeight: "500", display: "flex", alignItems: "center", gap: "0.375rem" }}>
+                      <BookOpen size={12} /> {expert.expertise}
+                    </span>
+                    <span style={{ fontSize: "0.8125rem", color: "var(--color-neutral-500)", display: "flex", alignItems: "center", gap: "0.375rem" }}>
+                      <Globe size={12} /> {expert.institution}
+                    </span>
                   </div>
                 </div>
               </div>
