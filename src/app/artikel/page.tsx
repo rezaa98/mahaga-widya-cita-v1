@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
@@ -57,10 +58,9 @@ export default async function ArtikelPage() {
                       alignItems: "center",
                       justifyContent: "center",
                       color: "#94a3b8",
-                      overflow: "hidden"
-                    }}>
+                      overflow: "hidden", position: "relative" }}>
                       {article.imageUrl ? (
-                        <img src={article.imageUrl} alt={article.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        <Image src={article.imageUrl} alt={article.title} fill style={{ objectFit: "cover" }} sizes="(max-width: 768px) 100vw, 33vw" />
                       ) : (
                         <span>[Image Placeholder]</span>
                       )}
@@ -78,7 +78,7 @@ export default async function ArtikelPage() {
                       </span>
                     </div>
                     <h3 style={{ fontSize: "1.25rem", color: "#1a2b4c", marginBottom: "0.75rem", flexGrow: 1 }}>{article.title}</h3>
-                    <p style={{ color: "#666", fontSize: "0.9rem", marginBottom: "1rem", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                    <p style={{ color: "#666", fontSize: "0.9rem", marginBottom: "1rem", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden", position: "relative" }}>
                       Klik untuk membaca selengkapnya...
                     </p>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #f1f5f9", paddingTop: "1rem", marginTop: "auto" }}>

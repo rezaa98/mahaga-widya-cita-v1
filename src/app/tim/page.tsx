@@ -5,14 +5,8 @@ import WhatsAppFloat from "@/components/WhatsAppFloat";
 import Link from "next/link";
 import { Globe, BookOpen } from "lucide-react";
 
-// Custom social media SVG icons (not available in lucide-react)
-const IconLinkedin = ({ size = 16 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-    <rect width="4" height="12" x="2" y="9"/>
-    <circle cx="4" cy="4" r="2"/>
-  </svg>
-);
+import { IconLinkedin } from "@/components/icons/SocialIcons";
+import { WaveDivider } from "@/components/ui/WaveDivider";
 
 export const metadata: Metadata = {
   title: "Tim & Manajemen",
@@ -51,11 +45,7 @@ export default function TimPage() {
             Kami bangga memiliki tim yang terdiri dari akademisi, birokrat berpengalaman, dan praktisi teknologi terkemuka.
           </p>
         </div>
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, lineHeight: 0 }}>
-          <svg viewBox="0 0 1440 48" style={{ display: "block", width: "100%", height: "48px" }}>
-            <path d="M0,48 L1440,48 L1440,16 Q1080,48 720,24 Q360,0 0,24 Z" fill="white" />
-          </svg>
-        </div>
+        <WaveDivider fill="white" />
       </section>
 
       {/* MANAGEMENT */}

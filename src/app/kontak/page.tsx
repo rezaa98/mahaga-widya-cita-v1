@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle2, MessageSquare } from "lucide-react";
 import type { Metadata } from "next";
+import { WaveDivider } from "@/components/ui/WaveDivider";
 
 const contactInfo = [
   { icon: Phone, label: "Telepon", value: "+62 21 1234 5678", href: "tel:+622112345678" },
@@ -76,11 +77,7 @@ export default function KontakPage() {
             Tim kami siap membantu kebutuhan edukasi dan konsultasi instansi Anda. Respons dalam 1×24 jam kerja.
           </p>
         </div>
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, lineHeight: 0 }}>
-          <svg viewBox="0 0 1440 48" style={{ display: "block", width: "100%", height: "48px" }}>
-            <path d="M0,48 L1440,48 L1440,16 Q1080,48 720,24 Q360,0 0,24 Z" fill="white" />
-          </svg>
-        </div>
+        <WaveDivider fill="white" />
       </section>
 
       {/* MAIN CONTENT */}

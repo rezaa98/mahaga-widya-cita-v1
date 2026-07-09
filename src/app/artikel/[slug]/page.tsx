@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
@@ -87,7 +88,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
 
             {article.imageUrl && (
               <div style={{ width: "100%", height: "400px", borderRadius: "12px", overflow: "hidden", marginBottom: "2.5rem" }}>
-                <img src={article.imageUrl} alt={article.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <Image src={article.imageUrl} alt={article.title} fill style={{ objectFit: "cover" }} priority sizes="100vw" />
               </div>
             )}
 

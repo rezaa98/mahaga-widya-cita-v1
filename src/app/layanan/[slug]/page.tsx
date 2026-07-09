@@ -7,6 +7,7 @@ import { CheckCircle2, ArrowRight, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
+import { WaveDivider } from "@/components/ui/WaveDivider";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -82,11 +83,7 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
         </div>
         
         {/* Wave Divider */}
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, lineHeight: 0 }}>
-          <svg viewBox="0 0 1440 48" style={{ display: "block", width: "100%", height: "48px" }}>
-            <path d="M0,48 L1440,48 L1440,16 Q1080,48 720,24 Q360,0 0,24 Z" fill="var(--color-neutral-50)" />
-          </svg>
-        </div>
+        <WaveDivider fill="var(--color-neutral-50)" />
       </section>
 
       {/* MAIN CONTENT */}

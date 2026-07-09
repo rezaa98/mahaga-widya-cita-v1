@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -691,7 +692,7 @@ export default function HomePage({ articles: payloadArticles = [] }: { articles?
                 <div className="card" style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
                   {article.imageUrl ? (
                     <div style={{ height: "180px", backgroundColor: "#f1f5f9", position: "relative" }}>
-                      <img src={article.imageUrl} alt={article.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      <Image src={article.imageUrl} alt={article.title} fill style={{ objectFit: "cover" }} sizes="(max-width: 768px) 100vw, 33vw" />
                       <span
                         style={{
                           position: "absolute", top: "1rem", left: "1rem",
