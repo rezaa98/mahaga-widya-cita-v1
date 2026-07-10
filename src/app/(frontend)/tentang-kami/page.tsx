@@ -256,7 +256,7 @@ export default async function TentangKamiPage() {
 
 
       {/* CORE VALUE */}
-      <section className="section section-alt">
+      <section className="section">
         <div className="container">
           <div className="section-title">
             <span className="overline">Core Value</span>
@@ -291,7 +291,7 @@ export default async function TentangKamiPage() {
 
 
       {/* CEO MESSAGE */}
-      <section className="section" id="ceo">
+      <section className="section section-alt" id="ceo">
         <div className="container">
           <div style={{ maxWidth: "800px", margin: "0 auto", textAlign: "center" }}>
             <span className="badge badge-primary" style={{ marginBottom: "1.5rem" }}>Pesan CEO</span>
