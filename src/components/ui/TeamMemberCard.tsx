@@ -109,16 +109,6 @@ export default function TeamMemberCard({ member }: { member: any }) {
         }}
       >
         <CardImage />
-        
-        {/* Bottom text inside card */}
-        <div style={{ padding: "1.5rem 0.5rem 0.5rem", textAlign: "center" }}>
-           <h3 style={{ fontSize: "1.125rem", fontWeight: "800", marginBottom: "0.375rem", color: "#191b23", lineHeight: "1.3" }}>
-             {member.name}
-           </h3>
-           <p style={{ color: "var(--color-neutral-500)", fontSize: "0.875rem", fontWeight: "500" }}>
-             {member.role || member.expertise}
-           </p>
-        </div>
       </div>
 
       {/* POPUP MODAL */}
