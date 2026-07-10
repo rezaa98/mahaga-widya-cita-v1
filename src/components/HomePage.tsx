@@ -22,6 +22,7 @@ import {
   Play,
   Shield,
   Star,
+  Target,
   TrendingUp,
   Users,
   Video,
@@ -236,7 +237,7 @@ function StatCard({ stat, index, total, visible }: { stat: StatItem; index: numb
    HOMEPAGE COMPONENT
    ============================================ */
 
-export default function HomePage({ articles: payloadArticles = [], teamMembers: payloadTeamMembers = [] }: { articles?: any[], teamMembers?: any[] }) {
+export default function HomePage({ articles: payloadArticles = [], teamMembers: payloadTeamMembers = [], berandaData }: { articles?: any[], teamMembers?: any[], berandaData?: any }) {
   const displayArticles = payloadArticles.length > 0 ? payloadArticles.map(a => ({
     id: a.id,
     category: typeof a.category === 'object' && a.category ? a.category.name : 'UMUM',
@@ -251,6 +252,27 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
   })) : articles;
 
   const displayTeamMembers = payloadTeamMembers.length > 0 ? payloadTeamMembers : teamMembers;
+
+  // HERO DATA
+  const heroBadge = berandaData?.hero?.badge || "Platform Edukasi & Tata Kelola Terpercaya Sejak 2015";
+  const heroTitle = berandaData?.hero?.title || "Platform Edukasi &";
+  const heroTitleHighlight = berandaData?.hero?.titleHighlight || "Tata Kelola";
+  const heroTitleSuffix = berandaData?.hero?.titleSuffix || "untuk Profesional Indonesia";
+  const heroDescription = berandaData?.hero?.description || "Tingkatkan kompetensi SDM dan perkuat tata kelola instansi Anda melalui program edukasi, konsultasi, dan webinar berkualitas tinggi bersama para pakar terbaik Indonesia.";
+  const heroFeatures = berandaData?.hero?.features?.length > 0 
+    ? berandaData.hero.features.map((f: any) => f.text)
+    : ["Sertifikat Digital Resmi", "Webinar Gratis Setiap Bulan", "500+ Materi Edukasi"];
+
+  // STATS DATA
+  const iconMap: Record<string, any> = { Mic2, Users, Building2, Globe, Target, CheckCircle2 };
+  const displayStats = berandaData?.stats?.length > 0 
+    ? berandaData.stats.map((s: any) => ({
+        value: s.value,
+        suffix: s.suffix || "",
+        label: s.label,
+        icon: iconMap[s.icon] || Mic2
+      }))
+    : stats;
 
   const [statsVisible, setStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
@@ -283,7 +305,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
                   }}
                 >
                   <Star size={12} fill="var(--color-gold-400)" color="var(--color-gold-400)" />
-                  Platform Edukasi & Tata Kelola Terpercaya Sejak 2015
+                  {heroBadge}
                 </span>
               </div>
 
@@ -291,16 +313,16 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
                 className="text-display animate-fade-in-up delay-100"
                 style={{ color: "white", marginBottom: "1.5rem", letterSpacing: "-0.02em" }}
               >
-                Platform Edukasi &{" "}
-                <span style={{ color: "var(--color-gold-300)" }}>Tata Kelola</span>
-                {" "}untuk Profesional Indonesia
+                {heroTitle}{" "}
+                <span style={{ color: "var(--color-gold-300)" }}>{heroTitleHighlight}</span>
+                {" "}{heroTitleSuffix}
               </h1>
 
               <p
                 className="text-body-lg animate-fade-in-up delay-200"
-                style={{ color: "rgba(255,255,255,0.75)", marginBottom: "2.5rem", maxWidth: "500px" }}
+                style={{ color: "rgba(255,255,255,0.75)", marginBottom: "2.5rem", maxWidth: "500px", whiteSpace: "pre-line" }}
               >
-                Tingkatkan kompetensi SDM dan perkuat tata kelola instansi Anda melalui program edukasi, konsultasi, dan webinar berkualitas tinggi bersama para pakar terbaik Indonesia.
+                {heroDescription}
               </p>
 
               <div className="animate-fade-in-up delay-300" style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
@@ -310,8 +332,8 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
               </div>
 
               <div className="animate-fade-in-up delay-400" style={{ display: "flex", gap: "1.5rem", marginTop: "2.5rem", flexWrap: "wrap" }}>
-                {["Sertifikat Digital Resmi", "Webinar Gratis Setiap Bulan", "500+ Materi Edukasi"].map((item) => (
-                  <div key={item} style={{ display: "flex", alignItems: "center", gap: "0.375rem" }}>
+                {heroFeatures.map((item: string, idx: number) => (
+                  <div key={idx} style={{ display: "flex", alignItems: "center", gap: "0.375rem" }}>
                     <CheckCircle2 size={14} color="var(--color-gold-300)" />
                     <span style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.75)", fontWeight: "500" }}>
                       {item}
@@ -348,12 +370,16 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
                 </div>
 
                 {/* Floating stat cards */}
-                {[
-                  { label: "Webinar", value: "500+", icon: Mic2, top: "5%", left: "0%", delay: "0s" },
-                  { label: "Peserta", value: "10K+", icon: Users, top: "5%", right: "0%", delay: "0.5s" },
-                  { label: "Instansi", value: "200+", icon: Building2, bottom: "5%", left: "5%", delay: "1s" },
-                  { label: "Mitra", value: "50+", icon: Globe, bottom: "5%", right: "5%", delay: "1.5s" },
-                ].map(({ label, value, icon: Icon, top, left, right, bottom, delay }) => (
+                {displayStats.map(({ label, value, suffix, icon: Icon }: any, idx: number) => {
+                  const positions = [
+                    { top: "5%", left: "0%", delay: "0s" },
+                    { top: "5%", right: "0%", delay: "0.5s" },
+                    { bottom: "5%", left: "5%", delay: "1s" },
+                    { bottom: "5%", right: "5%", delay: "1.5s" },
+                  ];
+                  const { top, left, right, bottom, delay } = positions[idx % positions.length];
+                  
+                  return (
                   <div
                     key={label}
                     style={{
@@ -371,13 +397,13 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
                   >
                     <Icon size={18} color="var(--color-gold-300)" style={{ marginBottom: "0.375rem" }} />
                     <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "800", fontSize: "1.375rem", color: "white", lineHeight: "1" }}>
-                      {value}
+                      {value}{suffix}
                     </div>
                     <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.65)", marginTop: "0.25rem" }}>
                       {label}
                     </div>
                   </div>
-                ))}
+                )})}
               </div>
             </div>
           </div>
@@ -398,8 +424,8 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(4, 1fr)",
-              gap: "0",
-              background: "white",
+              gap: "1px",
+              background: "var(--color-neutral-100)",
               borderRadius: "20px",
               boxShadow: "0 8px 48px rgba(11,45,107,0.10)",
               border: "1px solid var(--color-neutral-100)",
@@ -408,8 +434,10 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
               zIndex: 10,
             }}
           >
-            {stats.map((stat, i) => (
-              <StatCard key={stat.label} stat={stat} index={i} total={stats.length} visible={statsVisible} />
+            {displayStats.map((stat: any, i: number) => (
+              <div key={i} style={{ background: "white" }}>
+                <StatCard stat={stat} index={i} total={displayStats.length} visible={statsVisible} />
+              </div>
             ))}
           </div>
         </div>
