@@ -21,14 +21,6 @@ const footerLinks = {
     { label: "Smart Governance Review", href: "/layanan/governance-review" },
     { label: "Smart Online Course", href: "/kursus" },
     { label: "Smart Digital Conference", href: "/webinar" },
-  ],
-  content: [
-    { label: "Artikel", href: "/artikel" },
-    { label: "Policy Review", href: "/policy-reviews" },
-    { label: "Webinar / SDS", href: "/webinar" },
-    { label: "Verifikasi Sertifikat", href: "/verifikasi" },
-    { label: "Kontak", href: "/kontak" },
-  ],
 };
 
 export default async function Footer() {
@@ -167,24 +159,11 @@ export default async function Footer() {
             </ul>
           </div>
 
-          {/* Konten & Info */}
+          {/* Kontak */}
           <div>
             <h4 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "0.875rem", fontWeight: "600", color: "white", marginBottom: "1.25rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-              Konten & Info
+              Kontak
             </h4>
-            <ul style={{ listStyle: "none", marginBottom: "1.5rem" }}>
-              {footerLinks.content.map((link) => (
-                <li key={link.label} style={{ marginBottom: "0.625rem" }}>
-                  <Link
-                    href={link.href}
-                    className="footer-link"
-                    style={{ fontSize: "0.875rem" }}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
               {[
                 { icon: Phone, text: phone },
