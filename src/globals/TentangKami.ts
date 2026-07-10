@@ -12,10 +12,10 @@ export const TentangKami: GlobalConfig = {
       label: 'Bagian Hero (Atas)',
       type: 'group',
       fields: [
-        { name: 'badge', type: 'text', defaultValue: 'Tentang Kami', required: true },
-        { name: 'title', type: 'text', defaultValue: 'Mitra Terpercaya untuk', required: true },
-        { name: 'titleHighlight', type: 'text', defaultValue: 'Tata Kelola & Edukasi', required: true },
-        { name: 'description', type: 'textarea', defaultValue: 'PT Mahaga Widya Cita hadir sebagai jembatan antara kebutuhan penguatan kapasitas SDM dengan solusi berbasis pengetahuan dan teknologi terkini di Indonesia.', required: true },
+        { name: 'badge', type: 'text', defaultValue: 'TENTANG KAMI', required: true },
+        { name: 'title', type: 'text', defaultValue: 'Building Better Decisions.', required: true },
+        { name: 'titleHighlight', type: 'text', defaultValue: 'Creating Sustainable Impact.', required: true },
+        { name: 'description', type: 'textarea', defaultValue: 'Your One-Stop Consulting Partner', required: true },
       ]
     },
     {
