@@ -137,21 +137,33 @@ export const Beranda: GlobalConfig = {
             },
             {
               name: 'logo',
-              label: 'Logo (Opsional)',
+              label: 'Logo Upload (Utama)',
               type: 'upload',
               relationTo: 'media',
               admin: {
                 description: 'Logo perusahaan/instansi. Sebaiknya menggunakan latar transparan (PNG).',
               },
+            },
+            {
+              name: 'logoUrl',
+              label: 'Logo URL (Alternatif)',
+              type: 'text',
+              admin: {
+                description: 'Isi dengan URL gambar jika tidak mengunggah logo di atas.',
+              }
             }
           ],
           defaultValue: [
-            { name: 'Kementerian PAN-RB' },
-            { name: 'BKN' },
-            { name: 'BPKP' },
-            { name: 'LAN RI' },
-            { name: 'Setjen DPR RI' },
-            { name: 'Bappenas' },
+            { name: 'Kementerian PAN-RB', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Logo_of_the_Ministry_of_Administrative_and_Bureaucratic_Reform_of_the_Republic_of_Indonesia.svg/512px-Logo_of_the_Ministry_of_Administrative_and_Bureaucratic_Reform_of_the_Republic_of_Indonesia.svg.png' },
+            { name: 'BKN', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Logo_BKN_Terbaru.png/512px-Logo_BKN_Terbaru.png' },
+            { name: 'BPKP', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Logo_BPKP_Indonesia_-_Badan_Pengawasan_Keuangan_dan_Pembangunan.png/512px-Logo_BPKP_Indonesia_-_Badan_Pengawasan_Keuangan_dan_Pembangunan.png' },
+            { name: 'LAN RI', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Lembaga_Administrasi_Negara_Republik_Indonesia.png/512px-Lembaga_Administrasi_Negara_Republik_Indonesia.png' },
+            { name: 'Setjen DPR RI', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Logo_Dewan_Perwakilan_Rakyat_Republik_Indonesia_2020.svg/512px-Logo_Dewan_Perwakilan_Rakyat_Republik_Indonesia_2020.svg.png' },
+            { name: 'Bappenas', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Logo_Bappenas_Indonesia.svg/512px-Logo_Bappenas_Indonesia.svg.png' },
+            { name: 'Kemendagri', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Logo_Kementerian_Dalam_Negeri.svg/512px-Logo_Kementerian_Dalam_Negeri.svg.png' },
+            { name: 'Kemenkeu', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Kementerian_Keuangan_Republik_Indonesia.png/512px-Kementerian_Keuangan_Republik_Indonesia.png' },
+            { name: 'KemenPUPR', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Logo_PUPR.png/512px-Logo_PUPR.png' },
+            { name: 'Ombudsman RI', logoUrl: 'https://upload.wikimedia.org/wikipedia/id/thumb/7/77/Logo_Ombudsman_Republik_Indonesia.png/512px-Logo_Ombudsman_Republik_Indonesia.png' },
           ]
         }
       ]

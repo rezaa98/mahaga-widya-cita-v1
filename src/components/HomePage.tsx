@@ -683,6 +683,8 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
               >
                 {partner.logo && typeof partner.logo === 'object' && partner.logo.url ? (
                   <img src={partner.logo.url} alt={partner.name} style={{ height: "100%", maxHeight: "30px", objectFit: "contain" }} />
+                ) : partner.logoUrl ? (
+                  <img src={partner.logoUrl} alt={partner.name} style={{ height: "100%", maxHeight: "30px", objectFit: "contain" }} />
                 ) : (
                   <span>{partner.name}</span>
                 )}
