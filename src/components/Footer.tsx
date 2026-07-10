@@ -213,26 +213,14 @@ export default async function Footer() {
             padding: "1.25rem 0",
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "center",
             gap: "1rem",
             flexWrap: "wrap",
           }}
         >
-          <p style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.45)" }}>
+          <p style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.45)", textAlign: "center" }}>
             © {new Date().getFullYear()} PT Mahaga Widya Cita. Hak Cipta Dilindungi.
           </p>
-          <div style={{ display: "flex", gap: "1.5rem" }}>
-            {["Kebijakan Privasi", "Syarat & Ketentuan"].map((text) => (
-              <Link
-                key={text}
-                href="#"
-                className="footer-link-muted"
-                style={{ fontSize: "0.8125rem" }}
-              >
-                {text}
-              </Link>
-            ))}
-          </div>
         </div>
       </div>
     </footer>
