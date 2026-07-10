@@ -95,36 +95,6 @@ const stats = [
   { value: 50, suffix: "+", label: "Mitra Strategis", icon: Globe },
 ];
 
-const upcomingWebinars = [
-  {
-    id: 1,
-    series: "SDS #27 | 2026",
-    topic: "Implementasi SAKIP Berbasis Kinerja dan Pengukuran Capaian IKU Instansi Pemerintah",
-    speaker: "Dr. Oscar Radyan Danar, M.A.",
-    speakerTitle: "Pakar Administrasi Publik",
-    date: "15 Juli 2026",
-    time: "09.00 – 11.00 WIB",
-    platform: "Zoom Meeting",
-    quota: 234,
-    maxQuota: 500,
-    isFree: true,
-    category: "Pemerintah",
-  },
-  {
-    id: 2,
-    series: "SDS #26 | 2026",
-    topic: "Reformasi Tata Kelola Keuangan Daerah dalam Kerangka Otonomi Fiskal",
-    speaker: "Prof. Dr. Ahmad Basori, M.M.",
-    speakerTitle: "Guru Besar Universitas Indonesia",
-    date: "22 Juli 2026",
-    time: "13.00 – 15.00 WIB",
-    platform: "Zoom Meeting",
-    quota: 189,
-    maxQuota: 400,
-    isFree: true,
-    category: "Keuangan",
-  },
-];
 
 const articles = [
   {
@@ -334,10 +304,6 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
               </p>
 
               <div className="animate-fade-in-up delay-300" style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-                <Link href="/webinar" className="btn btn-primary btn-lg" id="hero-cta-webinar">
-                  Daftar Webinar Gratis
-                  <ArrowRight size={18} />
-                </Link>
                 <Link href="/layanan" className="btn btn-outline-white btn-lg" id="hero-cta-layanan">
                   Lihat Layanan Kami
                 </Link>
@@ -537,143 +503,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
         </div>
       </section>
 
-      {/* =================== UPCOMING WEBINARS =================== */}
-      <section className="section section-alt">
-        <div className="container">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "2.5rem", flexWrap: "wrap", gap: "1rem" }}>
-            <div>
-              <span className="badge badge-primary" style={{ marginBottom: "0.75rem" }}>Webinar Mendatang</span>
-              <h2 className="text-heading-xl" style={{ margin: "0" }}>Smart Discussion Series 2026</h2>
-              <div className="gold-divider" style={{ margin: "0.75rem 0 0" }} />
-            </div>
-            <Link href="/webinar" className="btn btn-secondary" id="see-all-webinar">
-              Lihat Semua Webinar <ArrowRight size={16} />
-            </Link>
-          </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1.5rem" }}>
-            {upcomingWebinars.map((webinar) => (
-              <div
-                key={webinar.id}
-                className="card"
-                style={{ padding: "2rem", display: "grid", gridTemplateColumns: "1fr", gap: "1.25rem" }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "1rem" }}>
-                  <div>
-                    <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.75rem" }}>
-                      <span className="badge badge-primary">{webinar.series}</span>
-                      {webinar.isFree && <span className="badge badge-success">GRATIS</span>}
-                      <span
-                        style={{
-                          display: "inline-flex", alignItems: "center", gap: "0.25rem",
-                          fontSize: "0.6875rem", fontWeight: "600",
-                          color: "var(--color-neutral-500)",
-                          background: "var(--color-neutral-100)",
-                          borderRadius: "99px", padding: "0.2rem 0.625rem",
-                          textTransform: "uppercase", letterSpacing: "0.04em",
-                        }}
-                      >
-                        {webinar.category}
-                      </span>
-                    </div>
-                    <h3 style={{ fontSize: "1rem", lineHeight: "1.4", color: "var(--color-neutral-900)", marginBottom: "1rem" }}>
-                      {webinar.topic}
-                    </h3>
-                  </div>
-                  <div
-                    style={{
-                      width: "64px", height: "64px",
-                      background: "linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700))",
-                      borderRadius: "14px",
-                      display: "flex", flexDirection: "column",
-                      alignItems: "center", justifyContent: "center",
-                      flexShrink: 0,
-                      boxShadow: "0 4px 16px rgba(30,111,217,0.25)",
-                    }}
-                  >
-                    <Mic2 size={24} color="white" />
-                  </div>
-                </div>
-
-                {/* Speaker */}
-                <div
-                  style={{
-                    display: "flex", alignItems: "center", gap: "0.75rem",
-                    background: "var(--color-neutral-50)",
-                    borderRadius: "12px", padding: "0.875rem 1rem",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "40px", height: "40px",
-                      background: "linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600))",
-                      borderRadius: "50%",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      fontWeight: "700", fontSize: "0.8125rem", color: "white",
-                    }}
-                  >
-                    {webinar.speaker.split(" ").slice(-2, -1)[0]?.[0] || "S"}
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: "600", fontSize: "0.875rem", color: "var(--color-neutral-800)" }}>
-                      {webinar.speaker}
-                    </div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--color-neutral-500)" }}>
-                      {webinar.speakerTitle}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Meta info */}
-                <div style={{ display: "flex", gap: "1.25rem", flexWrap: "wrap" }}>
-                  {[
-                    { icon: Calendar, text: webinar.date },
-                    { icon: Play, text: webinar.time },
-                    { icon: MessageSquare, text: webinar.platform },
-                  ].map(({ icon: Icon, text }) => (
-                    <div key={text} style={{ display: "flex", alignItems: "center", gap: "0.375rem" }}>
-                      <Icon size={13} color="var(--color-primary-500)" />
-                      <span style={{ fontSize: "0.8125rem", color: "var(--color-neutral-600)" }}>{text}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Quota bar */}
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.375rem" }}>
-                    <span style={{ fontSize: "0.75rem", color: "var(--color-neutral-500)" }}>Kuota Pendaftaran</span>
-                    <span style={{ fontSize: "0.75rem", fontWeight: "600", color: "var(--color-primary-600)" }}>
-                      {webinar.quota.toLocaleString("id-ID")} / {webinar.maxQuota.toLocaleString("id-ID")} peserta
-                    </span>
-                  </div>
-                  <div style={{ background: "var(--color-neutral-200)", borderRadius: "99px", height: "6px", overflow: "hidden" }}>
-                    <div
-                      style={{
-                        width: `${(webinar.quota / webinar.maxQuota) * 100}%`,
-                        height: "100%",
-                        background: "linear-gradient(90deg, var(--color-primary-500), var(--color-primary-400))",
-                        borderRadius: "99px",
-                        transition: "width 1s ease",
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <Link
-                  href={`/webinar/${webinar.id}`}
-                  className="btn btn-primary"
-                  style={{ justifyContent: "center" }}
-                  id={`webinar-register-${webinar.id}`}
-                >
-                  Daftar Sekarang — Gratis
-                  <ArrowRight size={16} />
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* =================== ARTICLES =================== */}
       <section className="section">

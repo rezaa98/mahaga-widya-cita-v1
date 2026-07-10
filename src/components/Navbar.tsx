@@ -28,8 +28,6 @@ const navLinks = [
       { label: "Smart Digital Conference", href: "/layanan/digital-conference" },
     ],
   },
-  { label: "Webinar", href: "/webinar" },
-  { label: "Kursus", href: "/kursus" },
   {
     label: "Artikel",
     href: "/artikel",
@@ -40,7 +38,6 @@ const navLinks = [
       { label: "Policy Review", href: "/policy-reviews" },
     ],
   },
-  { label: "Karir", href: "/karir" },
   { label: "Kontak", href: "/kontak" },
 ];
 
@@ -218,9 +215,6 @@ export default function Navbar() {
               >
                 Masuk
               </Link>
-              <Link href="/webinar" className="btn btn-primary btn-sm">
-                Daftar Webinar
-              </Link>
             </div>
 
             {/* Mobile Hamburger */}
@@ -292,9 +286,6 @@ export default function Navbar() {
               <div style={{ display: "flex", gap: "0.75rem", marginTop: "1.25rem" }}>
                 <Link href="/login" className="btn btn-secondary" style={{ flex: 1, justifyContent: "center" }}>
                   Masuk
-                </Link>
-                <Link href="/webinar" className="btn btn-primary" style={{ flex: 1, justifyContent: "center" }}>
-                  Daftar Webinar
                 </Link>
               </div>
             </div>
