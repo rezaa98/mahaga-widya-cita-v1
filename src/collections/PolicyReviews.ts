@@ -11,9 +11,37 @@ export const PolicyReviews: CollectionConfig = {
   },
   fields: [
     {
-      name: 'title',
-      type: 'text',
-      required: true,
+      type: 'tabs',
+      tabs: [
+        {
+          label: 'Konten Ulasan',
+          fields: [
+            {
+              name: 'title',
+              type: 'text',
+              required: true,
+              label: 'Judul Policy Review',
+            },
+            {
+              name: 'summary',
+              type: 'richText',
+              label: 'Ringkasan (Summary)',
+            },
+          ]
+        },
+        {
+          label: 'Dokumen',
+          fields: [
+            {
+              name: 'document',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+              label: 'File Dokumen (PDF dll)',
+            },
+          ]
+        }
+      ]
     },
     {
       name: 'slug',
@@ -31,16 +59,6 @@ export const PolicyReviews: CollectionConfig = {
           },
         ],
       },
-    },
-    {
-      name: 'document',
-      type: 'upload',
-      relationTo: 'media',
-      required: true,
-    },
-    {
-      name: 'summary',
-      type: 'richText',
     },
     {
       name: 'author',

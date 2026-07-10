@@ -24,6 +24,9 @@ export default buildConfig({
       titleSuffix: '- Mahaga Widya Cita CMS',
     },
     components: {
+      beforeDashboard: [
+        '@/components/admin/DashboardWidget#DashboardWidget',
+      ],
       graphics: {
         Logo: '@/components/admin/Logo#Logo',
         Icon: '@/components/admin/Icon#Icon',

@@ -12,85 +12,105 @@ export const Services: CollectionConfig = {
   },
   fields: [
     {
-      name: 'title',
-      type: 'text',
-      required: true,
-      label: 'Judul Layanan',
-    },
-    {
-      name: 'slug',
-      type: 'text',
-      required: true,
-      unique: true,
-      index: true,
-      label: 'Slug URL (contoh: konsultasi)',
-    },
-    {
-      name: 'tagline',
-      type: 'text',
-      required: true,
-      label: 'Tagline Singkat',
-    },
-    {
-      name: 'description',
-      type: 'textarea',
-      required: true,
-      label: 'Deskripsi Layanan',
-    },
-    {
-      name: 'color',
-      type: 'text',
-      required: true,
-      defaultValue: 'var(--color-primary-600)',
-      label: 'Warna Tema (Hex / CSS Var)',
-    },
-    {
-      name: 'gradient',
-      type: 'text',
-      required: true,
-      defaultValue: 'linear-gradient(135deg, #1E6FD9, #0B2D6B)',
-      label: 'Gradien Banner',
-    },
-    {
-      name: 'features',
-      type: 'array',
-      label: 'Fitur Utama',
-      fields: [
+      type: 'tabs',
+      tabs: [
         {
-          name: 'feature',
-          type: 'text',
-          required: true,
-        },
-      ],
-    },
-    {
-      name: 'benefits',
-      type: 'array',
-      label: 'Keuntungan (Benefits)',
-      fields: [
-        {
-          name: 'title',
-          type: 'text',
-          required: true,
+          label: 'Informasi Dasar',
+          fields: [
+            {
+              name: 'title',
+              type: 'text',
+              required: true,
+              label: 'Judul Layanan',
+            },
+            {
+              name: 'slug',
+              type: 'text',
+              required: true,
+              unique: true,
+              index: true,
+              label: 'Slug URL (contoh: konsultasi)',
+            },
+            {
+              name: 'tagline',
+              type: 'text',
+              required: true,
+              label: 'Tagline Singkat',
+            },
+            {
+              name: 'description',
+              type: 'textarea',
+              required: true,
+              label: 'Deskripsi Layanan',
+            },
+          ]
         },
         {
-          name: 'desc',
-          type: 'text',
-          required: true,
+          label: 'Tampilan & Tema',
+          fields: [
+            {
+              name: 'color',
+              type: 'text',
+              required: true,
+              defaultValue: 'var(--color-primary-600)',
+              label: 'Warna Tema (Hex / CSS Var)',
+            },
+            {
+              name: 'gradient',
+              type: 'text',
+              required: true,
+              defaultValue: 'linear-gradient(135deg, #1E6FD9, #0B2D6B)',
+              label: 'Gradien Banner',
+            },
+          ]
         },
-      ],
-    },
-    {
-      name: 'targetAudience',
-      type: 'array',
-      label: 'Target Audiens',
-      fields: [
         {
-          name: 'audience',
-          type: 'text',
-          required: true,
-        },
-      ],
-    },
+          label: 'Detail Konten',
+          fields: [
+            {
+              name: 'features',
+              type: 'array',
+              label: 'Fitur Utama',
+              fields: [
+                {
+                  name: 'feature',
+                  type: 'text',
+                  required: true,
+                },
+              ],
+            },
+            {
+              name: 'benefits',
+              type: 'array',
+              label: 'Keuntungan (Benefits)',
+              fields: [
+                {
+                  name: 'title',
+                  type: 'text',
+                  required: true,
+                },
+                {
+                  name: 'desc',
+                  type: 'text',
+                  required: true,
+                },
+              ],
+            },
+            {
+              name: 'targetAudience',
+              type: 'array',
+              label: 'Target Audiens',
+              fields: [
+                {
+                  name: 'audience',
+                  type: 'text',
+                  required: true,
+                },
+              ],
+            },
+          ]
+        }
+      ]
+    }
   ],
 }

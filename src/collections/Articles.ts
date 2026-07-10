@@ -12,9 +12,39 @@ export const Articles: CollectionConfig = {
   },
   fields: [
     {
-      name: 'title',
-      type: 'text',
-      required: true,
+      type: 'tabs',
+      tabs: [
+        {
+          label: 'Konten Penulisan',
+          fields: [
+            {
+              name: 'title',
+              type: 'text',
+              required: true,
+              label: 'Judul Artikel',
+            },
+            {
+              name: 'content',
+              type: 'richText',
+              required: true,
+              label: 'Isi Artikel',
+            },
+          ]
+        },
+        {
+          label: 'Media',
+          fields: [
+            {
+              name: 'imageUrl',
+              type: 'text',
+              label: 'Thumbnail Image URL',
+              admin: {
+                description: 'URL gambar untuk thumbnail artikel (contoh: https://images.unsplash.com/...)',
+              },
+            },
+          ]
+        }
+      ]
     },
     {
       name: 'slug',
@@ -31,19 +61,6 @@ export const Articles: CollectionConfig = {
             return value
           },
         ],
-      },
-    },
-    {
-      name: 'content',
-      type: 'richText',
-      required: true,
-    },
-    {
-      name: 'imageUrl',
-      type: 'text',
-      label: 'Thumbnail Image URL',
-      admin: {
-        description: 'URL gambar untuk thumbnail artikel (contoh: https://images.unsplash.com/...)',
       },
     },
     {
