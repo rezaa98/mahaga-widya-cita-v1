@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 export const Articles: CollectionConfig = {
   slug: 'articles',
   admin: {
+    group: 'Manajemen Konten',
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'status', 'publishedAt'],
   },

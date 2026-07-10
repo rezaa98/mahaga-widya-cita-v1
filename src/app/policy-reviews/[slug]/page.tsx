@@ -24,8 +24,23 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return { title: "Policy Review Tidak Ditemukan" };
   }
 
+  const review = docs[0];
+
   return {
-    title: `${docs[0].title} | Policy Reviews`,
+    title: `${review.title}`,
+    description: review.excerpt || `Baca analisis kebijakan publik "${review.title}" di Mahaga Widya Cita.`,
+    openGraph: {
+      title: review.title,
+      description: review.excerpt || `Baca analisis kebijakan publik "${review.title}" di Mahaga Widya Cita.`,
+      url: `https://mahagawidyacita.co.id/policy-reviews/${review.slug}`,
+      type: 'article',
+      publishedTime: review.publishedAt || review.createdAt,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: review.title,
+      description: review.excerpt || `Baca analisis kebijakan publik "${review.title}" di Mahaga Widya Cita.`,
+    }
   };
 }
 

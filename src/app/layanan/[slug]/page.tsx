@@ -31,6 +31,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${service.title} | Mahaga Widya Cita`,
     description: service.description,
+    openGraph: {
+      title: `${service.title} - Mahaga Widya Cita`,
+      description: service.description,
+      url: `https://mahagawidyacita.co.id/layanan/${service.slug}`,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: service.title,
+      description: service.description,
+    }
   };
 }
 

@@ -22,7 +22,13 @@ export default buildConfig({
     user: Users.slug,
     meta: {
       titleSuffix: '- Mahaga Widya Cita CMS',
-    }
+    },
+    components: {
+      graphics: {
+        Logo: '@/components/admin/Logo#Logo',
+        Icon: '@/components/admin/Icon#Icon',
+      },
+    },
   },
   collections: [
     Users,

@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 export const TeamMembers: CollectionConfig = {
   slug: 'team-members',
   admin: {
+    group: 'Manajemen Konten',
     useAsTitle: 'name',
     defaultColumns: ['name', 'category', 'expertise', 'updatedAt'],
   },

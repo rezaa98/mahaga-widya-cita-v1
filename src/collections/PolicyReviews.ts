@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 export const PolicyReviews: CollectionConfig = {
   slug: 'policy-reviews',
   admin: {
+    group: 'Manajemen Konten',
     useAsTitle: 'title',
   },
   access: {

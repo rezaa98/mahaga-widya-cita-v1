@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 export const ContactSubmissions: CollectionConfig = {
   slug: 'contact-submissions',
   admin: {
+    group: 'Data Audiens',
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'subject', 'createdAt'],
   },

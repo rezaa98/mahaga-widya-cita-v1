@@ -25,8 +25,28 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return { title: "Artikel Tidak Ditemukan" };
   }
 
+  const article = docs[0];
+  const imageUrl = typeof article.featuredImage === 'object' && article.featuredImage?.url 
+    ? article.featuredImage.url 
+    : undefined;
+
   return {
-    title: `${docs[0].title} | Mahaga Widya Cita`,
+    title: `${article.title}`,
+    description: article.excerpt || `Baca selengkapnya mengenai ${article.title} di Mahaga Widya Cita.`,
+    openGraph: {
+      title: article.title,
+      description: article.excerpt || `Baca selengkapnya mengenai ${article.title} di Mahaga Widya Cita.`,
+      url: `https://mahagawidyacita.co.id/artikel/${article.slug}`,
+      type: 'article',
+      publishedTime: article.publishedAt || article.createdAt,
+      images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.title,
+      description: article.excerpt || `Baca selengkapnya mengenai ${article.title} di Mahaga Widya Cita.`,
+      images: imageUrl ? [imageUrl] : [],
+    }
   };
 }
 

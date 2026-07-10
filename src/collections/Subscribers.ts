@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 export const Subscribers: CollectionConfig = {
   slug: 'subscribers',
   admin: {
+    group: 'Data Audiens',
     useAsTitle: 'email',
     defaultColumns: ['email', 'createdAt'],
   },

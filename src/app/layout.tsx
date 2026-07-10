@@ -28,20 +28,11 @@ export const metadata: Metadata = {
     title: "PT Mahaga Widya Cita — Platform Edukasi & Tata Kelola Profesional",
     description:
       "Platform terdepan untuk edukasi profesional, konsultasi tata kelola, dan sertifikasi digital bagi ASN dan profesional Indonesia.",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "PT Mahaga Widya Cita",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "PT Mahaga Widya Cita",
     description: "Platform edukasi dan tata kelola profesional untuk ASN Indonesia.",
-    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
