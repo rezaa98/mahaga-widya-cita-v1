@@ -24,6 +24,7 @@ import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0
 import { Icon as Icon_534076e2c753ea5d539a54b05f456b1b } from '@/components/admin/Icon'
 import { Logo as Logo_a44df17d0fc3dcd873dae43dc3bf66bd } from '@/components/admin/Logo'
 import { ThemeForceProvider as ThemeForceProvider_bafdd812978598fcfadcb4693fefc9da } from '@/components/admin/ThemeForceProvider'
+import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 import { DashboardWidget as DashboardWidget_c5192f80c64fc937341a06e8b5136d0d } from '@/components/admin/DashboardWidget'
 import { CustomLogin as CustomLogin_5942ad61d31a35e0b477445ac2da020b } from '@/components/admin/CustomLogin'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -56,6 +57,7 @@ export const importMap = {
   "@/components/admin/Icon#Icon": Icon_534076e2c753ea5d539a54b05f456b1b,
   "@/components/admin/Logo#Logo": Logo_a44df17d0fc3dcd873dae43dc3bf66bd,
   "@/components/admin/ThemeForceProvider#ThemeForceProvider": ThemeForceProvider_bafdd812978598fcfadcb4693fefc9da,
+  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
   "@/components/admin/DashboardWidget#DashboardWidget": DashboardWidget_c5192f80c64fc937341a06e8b5136d0d,
   "@/components/admin/CustomLogin#CustomLogin": CustomLogin_5942ad61d31a35e0b477445ac2da020b,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
