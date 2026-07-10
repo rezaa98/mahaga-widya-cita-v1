@@ -27,7 +27,7 @@ export default function TeamMemberCard({ member }: { member: any }) {
       <div style={{ 
         width: "100%", 
         aspectRatio: "1 / 1.1", 
-        background: member.color || "linear-gradient(180deg, #FFF9E6 0%, #FBBF24 100%)",
+        background: member.color || "linear-gradient(180deg, var(--color-primary-50) 0%, var(--color-primary-200) 100%)",
         borderTopLeftRadius: "999px",
         borderTopRightRadius: "999px",
         overflow: "hidden",
@@ -65,16 +65,16 @@ export default function TeamMemberCard({ member }: { member: any }) {
           {member.role || member.expertise}
         </div>
 
-        {/* Solid Orange Name Bar */}
+        {/* Solid Blue Name Bar */}
         <div style={{
-          background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+          background: "linear-gradient(135deg, var(--color-primary-700) 0%, var(--color-primary-900) 100%)",
           color: "white",
           padding: "1.25rem 0.5rem 0.75rem",
           textAlign: "center",
           fontSize: "0.875rem",
           fontWeight: "700",
           borderRadius: "0 0 6px 6px",
-          boxShadow: "0 4px 10px rgba(217, 119, 6, 0.2)"
+          boxShadow: "0 4px 10px rgba(11, 45, 107, 0.2)"
         }}>
           {member.name}
         </div>
@@ -175,7 +175,7 @@ export default function TeamMemberCard({ member }: { member: any }) {
               <h2 style={{ fontSize: "2.5rem", fontWeight: "900", marginBottom: "0.5rem", color: "#0f172a", letterSpacing: "-0.02em", lineHeight: "1.2" }}>
                 {member.name}
               </h2>
-              <p style={{ color: "#d97706", fontWeight: "800", fontSize: "1rem", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "2.5rem" }}>
+              <p style={{ color: "var(--color-primary-600)", fontWeight: "800", fontSize: "1rem", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "2.5rem" }}>
                 {member.role || member.expertise}
               </p>
               
