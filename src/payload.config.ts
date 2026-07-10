@@ -13,6 +13,7 @@ import { ContactSubmissions } from './collections/ContactSubmissions'
 import { Subscribers } from './collections/Subscribers'
 import { Services } from './collections/Services'
 import { TeamMembers } from './collections/TeamMembers'
+import { Beranda } from './globals/Beranda'
 import { TentangKami } from './globals/TentangKami'
 import { Kontak } from './globals/Kontak'
 
@@ -42,6 +43,7 @@ export default buildConfig({
     },
   },
   globals: [
+    Beranda,
     TentangKami,
     Kontak,
   ],
