@@ -22,6 +22,7 @@ import {
   Play,
   Shield,
   Star,
+  Target,
   TrendingUp,
   Users,
   Video,
@@ -95,36 +96,6 @@ const stats = [
   { value: 50, suffix: "+", label: "Mitra Strategis", icon: Globe },
 ];
 
-const upcomingWebinars = [
-  {
-    id: 1,
-    series: "SDS #27 | 2026",
-    topic: "Implementasi SAKIP Berbasis Kinerja dan Pengukuran Capaian IKU Instansi Pemerintah",
-    speaker: "Dr. Oscar Radyan Danar, M.A.",
-    speakerTitle: "Pakar Administrasi Publik",
-    date: "15 Juli 2026",
-    time: "09.00 – 11.00 WIB",
-    platform: "Zoom Meeting",
-    quota: 234,
-    maxQuota: 500,
-    isFree: true,
-    category: "Pemerintah",
-  },
-  {
-    id: 2,
-    series: "SDS #26 | 2026",
-    topic: "Reformasi Tata Kelola Keuangan Daerah dalam Kerangka Otonomi Fiskal",
-    speaker: "Prof. Dr. Ahmad Basori, M.M.",
-    speakerTitle: "Guru Besar Universitas Indonesia",
-    date: "22 Juli 2026",
-    time: "13.00 – 15.00 WIB",
-    platform: "Zoom Meeting",
-    quota: 189,
-    maxQuota: 400,
-    isFree: true,
-    category: "Keuangan",
-  },
-];
 
 const articles = [
   {
@@ -266,7 +237,7 @@ function StatCard({ stat, index, total, visible }: { stat: StatItem; index: numb
    HOMEPAGE COMPONENT
    ============================================ */
 
-export default function HomePage({ articles: payloadArticles = [], teamMembers: payloadTeamMembers = [] }: { articles?: any[], teamMembers?: any[] }) {
+export default function HomePage({ articles: payloadArticles = [], teamMembers: payloadTeamMembers = [], berandaData }: { articles?: any[], teamMembers?: any[], berandaData?: any }) {
   const displayArticles = payloadArticles.length > 0 ? payloadArticles.map(a => ({
     id: a.id,
     category: typeof a.category === 'object' && a.category ? a.category.name : 'UMUM',
@@ -281,6 +252,33 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
   })) : articles;
 
   const displayTeamMembers = payloadTeamMembers.length > 0 ? payloadTeamMembers : teamMembers;
+
+  // HERO DATA
+  const heroBadge = berandaData?.hero?.badge || "Platform Edukasi & Tata Kelola Terpercaya Sejak 2015";
+  const heroTitle = berandaData?.hero?.title || "Platform Edukasi &";
+  const heroTitleHighlight = berandaData?.hero?.titleHighlight || "Tata Kelola";
+  const heroTitleSuffix = berandaData?.hero?.titleSuffix || "untuk Profesional Indonesia";
+  const heroDescription = berandaData?.hero?.description || "Tingkatkan kompetensi SDM dan perkuat tata kelola instansi Anda melalui program edukasi, konsultasi, dan webinar berkualitas tinggi bersama para pakar terbaik Indonesia.";
+  const heroFeatures = berandaData?.hero?.features?.length > 0 
+    ? berandaData.hero.features.map((f: any) => f.text)
+    : ["Sertifikat Digital Resmi", "Webinar Gratis Setiap Bulan", "500+ Materi Edukasi"];
+
+  // STATS DATA
+  const iconMap: Record<string, any> = { Mic2, Users, Building2, Globe, Target, CheckCircle2 };
+  const displayStats = berandaData?.stats?.length > 0 
+    ? berandaData.stats.map((s: any) => ({
+        value: s.value,
+        suffix: s.suffix || "",
+        label: s.label,
+        icon: iconMap[s.icon] || Mic2
+      }))
+    : stats;
+
+  // PARTNERS DATA
+  const partnersTitle = berandaData?.partners?.title || "Dipercaya oleh Lebih dari 200 Instansi dan Mitra Strategis";
+  const displayPartners = berandaData?.partners?.list?.length > 0
+    ? berandaData.partners.list
+    : partners.map(name => ({ name }));
 
   const [statsVisible, setStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
@@ -313,7 +311,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
                   }}
                 >
                   <Star size={12} fill="var(--color-gold-400)" color="var(--color-gold-400)" />
-                  Platform Edukasi & Tata Kelola Terpercaya Sejak 2015
+                  {heroBadge}
                 </span>
               </div>
 
@@ -321,31 +319,27 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
                 className="text-display animate-fade-in-up delay-100"
                 style={{ color: "white", marginBottom: "1.5rem", letterSpacing: "-0.02em" }}
               >
-                Platform Edukasi &{" "}
-                <span style={{ color: "var(--color-gold-300)" }}>Tata Kelola</span>
-                {" "}untuk Profesional Indonesia
+                {heroTitle}{" "}
+                <span style={{ color: "var(--color-gold-300)" }}>{heroTitleHighlight}</span>
+                {" "}{heroTitleSuffix}
               </h1>
 
               <p
                 className="text-body-lg animate-fade-in-up delay-200"
-                style={{ color: "rgba(255,255,255,0.75)", marginBottom: "2.5rem", maxWidth: "500px" }}
+                style={{ color: "rgba(255,255,255,0.75)", marginBottom: "2.5rem", maxWidth: "500px", whiteSpace: "pre-line" }}
               >
-                Tingkatkan kompetensi SDM dan perkuat tata kelola instansi Anda melalui program edukasi, konsultasi, dan webinar berkualitas tinggi bersama para pakar terbaik Indonesia.
+                {heroDescription}
               </p>
 
               <div className="animate-fade-in-up delay-300" style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-                <Link href="/webinar" className="btn btn-primary btn-lg" id="hero-cta-webinar">
-                  Daftar Webinar Gratis
-                  <ArrowRight size={18} />
-                </Link>
                 <Link href="/layanan" className="btn btn-outline-white btn-lg" id="hero-cta-layanan">
                   Lihat Layanan Kami
                 </Link>
               </div>
 
               <div className="animate-fade-in-up delay-400" style={{ display: "flex", gap: "1.5rem", marginTop: "2.5rem", flexWrap: "wrap" }}>
-                {["Sertifikat Digital Resmi", "Webinar Gratis Setiap Bulan", "500+ Materi Edukasi"].map((item) => (
-                  <div key={item} style={{ display: "flex", alignItems: "center", gap: "0.375rem" }}>
+                {heroFeatures.map((item: string, idx: number) => (
+                  <div key={idx} style={{ display: "flex", alignItems: "center", gap: "0.375rem" }}>
                     <CheckCircle2 size={14} color="var(--color-gold-300)" />
                     <span style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.75)", fontWeight: "500" }}>
                       {item}
@@ -382,12 +376,16 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
                 </div>
 
                 {/* Floating stat cards */}
-                {[
-                  { label: "Webinar", value: "500+", icon: Mic2, top: "5%", left: "0%", delay: "0s" },
-                  { label: "Peserta", value: "10K+", icon: Users, top: "5%", right: "0%", delay: "0.5s" },
-                  { label: "Instansi", value: "200+", icon: Building2, bottom: "5%", left: "5%", delay: "1s" },
-                  { label: "Mitra", value: "50+", icon: Globe, bottom: "5%", right: "5%", delay: "1.5s" },
-                ].map(({ label, value, icon: Icon, top, left, right, bottom, delay }) => (
+                {displayStats.map(({ label, value, suffix, icon: Icon }: any, idx: number) => {
+                  const positions = [
+                    { top: "5%", left: "0%", delay: "0s" },
+                    { top: "5%", right: "0%", delay: "0.5s" },
+                    { bottom: "5%", left: "5%", delay: "1s" },
+                    { bottom: "5%", right: "5%", delay: "1.5s" },
+                  ];
+                  const { top, left, right, bottom, delay } = positions[idx % positions.length];
+                  
+                  return (
                   <div
                     key={label}
                     style={{
@@ -405,13 +403,13 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
                   >
                     <Icon size={18} color="var(--color-gold-300)" style={{ marginBottom: "0.375rem" }} />
                     <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "800", fontSize: "1.375rem", color: "white", lineHeight: "1" }}>
-                      {value}
+                      {value}{suffix}
                     </div>
                     <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.65)", marginTop: "0.25rem" }}>
                       {label}
                     </div>
                   </div>
-                ))}
+                )})}
               </div>
             </div>
           </div>
@@ -432,8 +430,8 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(4, 1fr)",
-              gap: "0",
-              background: "white",
+              gap: "1px",
+              background: "var(--color-neutral-100)",
               borderRadius: "20px",
               boxShadow: "0 8px 48px rgba(11,45,107,0.10)",
               border: "1px solid var(--color-neutral-100)",
@@ -442,8 +440,10 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
               zIndex: 10,
             }}
           >
-            {stats.map((stat, i) => (
-              <StatCard key={stat.label} stat={stat} index={i} total={stats.length} visible={statsVisible} />
+            {displayStats.map((stat: any, i: number) => (
+              <div key={i} style={{ background: "white" }}>
+                <StatCard stat={stat} index={i} total={displayStats.length} visible={statsVisible} />
+              </div>
             ))}
           </div>
         </div>
@@ -537,143 +537,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
         </div>
       </section>
 
-      {/* =================== UPCOMING WEBINARS =================== */}
-      <section className="section section-alt">
-        <div className="container">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "2.5rem", flexWrap: "wrap", gap: "1rem" }}>
-            <div>
-              <span className="badge badge-primary" style={{ marginBottom: "0.75rem" }}>Webinar Mendatang</span>
-              <h2 className="text-heading-xl" style={{ margin: "0" }}>Smart Discussion Series 2026</h2>
-              <div className="gold-divider" style={{ margin: "0.75rem 0 0" }} />
-            </div>
-            <Link href="/webinar" className="btn btn-secondary" id="see-all-webinar">
-              Lihat Semua Webinar <ArrowRight size={16} />
-            </Link>
-          </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1.5rem" }}>
-            {upcomingWebinars.map((webinar) => (
-              <div
-                key={webinar.id}
-                className="card"
-                style={{ padding: "2rem", display: "grid", gridTemplateColumns: "1fr", gap: "1.25rem" }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "1rem" }}>
-                  <div>
-                    <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.75rem" }}>
-                      <span className="badge badge-primary">{webinar.series}</span>
-                      {webinar.isFree && <span className="badge badge-success">GRATIS</span>}
-                      <span
-                        style={{
-                          display: "inline-flex", alignItems: "center", gap: "0.25rem",
-                          fontSize: "0.6875rem", fontWeight: "600",
-                          color: "var(--color-neutral-500)",
-                          background: "var(--color-neutral-100)",
-                          borderRadius: "99px", padding: "0.2rem 0.625rem",
-                          textTransform: "uppercase", letterSpacing: "0.04em",
-                        }}
-                      >
-                        {webinar.category}
-                      </span>
-                    </div>
-                    <h3 style={{ fontSize: "1rem", lineHeight: "1.4", color: "var(--color-neutral-900)", marginBottom: "1rem" }}>
-                      {webinar.topic}
-                    </h3>
-                  </div>
-                  <div
-                    style={{
-                      width: "64px", height: "64px",
-                      background: "linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700))",
-                      borderRadius: "14px",
-                      display: "flex", flexDirection: "column",
-                      alignItems: "center", justifyContent: "center",
-                      flexShrink: 0,
-                      boxShadow: "0 4px 16px rgba(30,111,217,0.25)",
-                    }}
-                  >
-                    <Mic2 size={24} color="white" />
-                  </div>
-                </div>
-
-                {/* Speaker */}
-                <div
-                  style={{
-                    display: "flex", alignItems: "center", gap: "0.75rem",
-                    background: "var(--color-neutral-50)",
-                    borderRadius: "12px", padding: "0.875rem 1rem",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "40px", height: "40px",
-                      background: "linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600))",
-                      borderRadius: "50%",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      fontWeight: "700", fontSize: "0.8125rem", color: "white",
-                    }}
-                  >
-                    {webinar.speaker.split(" ").slice(-2, -1)[0]?.[0] || "S"}
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: "600", fontSize: "0.875rem", color: "var(--color-neutral-800)" }}>
-                      {webinar.speaker}
-                    </div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--color-neutral-500)" }}>
-                      {webinar.speakerTitle}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Meta info */}
-                <div style={{ display: "flex", gap: "1.25rem", flexWrap: "wrap" }}>
-                  {[
-                    { icon: Calendar, text: webinar.date },
-                    { icon: Play, text: webinar.time },
-                    { icon: MessageSquare, text: webinar.platform },
-                  ].map(({ icon: Icon, text }) => (
-                    <div key={text} style={{ display: "flex", alignItems: "center", gap: "0.375rem" }}>
-                      <Icon size={13} color="var(--color-primary-500)" />
-                      <span style={{ fontSize: "0.8125rem", color: "var(--color-neutral-600)" }}>{text}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Quota bar */}
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.375rem" }}>
-                    <span style={{ fontSize: "0.75rem", color: "var(--color-neutral-500)" }}>Kuota Pendaftaran</span>
-                    <span style={{ fontSize: "0.75rem", fontWeight: "600", color: "var(--color-primary-600)" }}>
-                      {webinar.quota.toLocaleString("id-ID")} / {webinar.maxQuota.toLocaleString("id-ID")} peserta
-                    </span>
-                  </div>
-                  <div style={{ background: "var(--color-neutral-200)", borderRadius: "99px", height: "6px", overflow: "hidden" }}>
-                    <div
-                      style={{
-                        width: `${(webinar.quota / webinar.maxQuota) * 100}%`,
-                        height: "100%",
-                        background: "linear-gradient(90deg, var(--color-primary-500), var(--color-primary-400))",
-                        borderRadius: "99px",
-                        transition: "width 1s ease",
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <Link
-                  href={`/webinar/${webinar.id}`}
-                  className="btn btn-primary"
-                  style={{ justifyContent: "center" }}
-                  id={`webinar-register-${webinar.id}`}
-                >
-                  Daftar Sekarang — Gratis
-                  <ArrowRight size={16} />
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* =================== ARTICLES =================== */}
       <section className="section">
@@ -786,7 +650,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
       <section className="section-sm" style={{ overflow: "hidden", borderTop: "1px solid var(--color-neutral-100)", borderBottom: "1px solid var(--color-neutral-100)" }}>
         <div className="container" style={{ marginBottom: "1.5rem", textAlign: "center" }}>
           <p style={{ fontSize: "0.8125rem", color: "var(--color-neutral-400)", fontWeight: "600", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            Dipercaya oleh Lebih dari 200 Instansi dan Mitra Strategis
+            {partnersTitle}
           </p>
         </div>
         <div style={{ position: "relative", overflow: "hidden" }}>
@@ -798,7 +662,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
               width: "max-content",
             }}
           >
-            {[...partners, ...partners].map((partner, i) => (
+            {[...displayPartners, ...displayPartners].map((partner: any, i: number) => (
               <div
                 key={i}
                 style={{
@@ -811,9 +675,19 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
                   fontWeight: "600",
                   color: "var(--color-neutral-600)",
                   flexShrink: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "54px",
                 }}
               >
-                {partner}
+                {partner.logo && typeof partner.logo === 'object' && partner.logo.url ? (
+                  <img src={partner.logo.url} alt={partner.name} style={{ height: "100%", maxHeight: "30px", objectFit: "contain" }} />
+                ) : partner.logoUrl ? (
+                  <img src={partner.logoUrl} alt={partner.name} style={{ height: "100%", maxHeight: "30px", objectFit: "contain" }} />
+                ) : (
+                  <span>{partner.name}</span>
+                )}
               </div>
             ))}
           </div>

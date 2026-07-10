@@ -1,68 +1,46 @@
-"use client";
-
-import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle2, MessageSquare } from "lucide-react";
+import ContactForm from "@/components/ContactForm";
+import { Phone, Mail, MapPin, Clock, MessageSquare } from "lucide-react";
 import type { Metadata } from "next";
 import { WaveDivider } from "@/components/ui/WaveDivider";
+import { getPayload } from "payload";
+import configPromise from "@payload-config";
 
 export const dynamic = "force-dynamic";
 
+export const metadata: Metadata = {
+  title: "Kontak",
+  description: "Hubungi PT Mahaga Widya Cita untuk konsultasi, kerjasama, dan informasi layanan lebih lanjut.",
+};
 
-const contactInfo = [
-  { icon: Phone, label: "Telepon", value: "+62 21 1234 5678", href: "tel:+622112345678" },
-  { icon: Mail, label: "Email", value: "info@mahagawidyacita.co.id", href: "mailto:info@mahagawidyacita.co.id" },
-  { icon: MapPin, label: "Alamat", value: "Jl. Raya Gatot Subroto No. 42, Jakarta Selatan, DKI Jakarta 12930", href: "#" },
-  { icon: Clock, label: "Jam Kerja", value: "Senin – Jumat, 08.00 – 17.00 WIB", href: "#" },
-];
+export default async function KontakPage() {
+  const payload = await getPayload({ config: configPromise });
+  const kontakData = await payload.findGlobal({ slug: "kontak" });
 
-const subjects = [
-  "Konsultasi Tata Kelola",
-  "Smart Executive Education",
-  "Smart Software Service",
-  "Smart Online Course",
-  "Pendaftaran Webinar",
-  "Kemitraan & Kolaborasi",
-  "Lainnya",
-];
-
-export default function KontakPage() {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", institution: "", subject: "", message: "" });
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const phone = kontakData?.phone || "+62 21 1234 5678";
+  const email = kontakData?.email || "info@mahagawidyacita.co.id";
+  const address = kontakData?.address || "Jl. Raya Gatot Subroto No. 42, Jakarta Selatan, DKI Jakarta 12930";
+  const workingHours = kontakData?.workingHours || "Senin – Jumat, 08.00 – 17.00 WIB";
+  const locationTag = kontakData?.locationTag || "Jakarta Selatan, DKI Jakarta";
+  const heroTitle = kontakData?.heroTitle || "Mari Berkolaborasi Bersama Kami";
+  const heroSubtitle = kontakData?.heroSubtitle || "Tim kami siap membantu kebutuhan edukasi dan konsultasi instansi Anda. Respons dalam 1×24 jam kerja.";
+  
+  const whatsappCta = kontakData?.whatsappCta || {
+    title: 'Chat via WhatsApp',
+    subtitle: 'Respons lebih cepat, langsung ke tim kami',
+    defaultMessage: 'Halo, saya ingin berkonsultasi dengan tim PT Mahaga Widya Cita.'
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    
-    try {
-      const res = await fetch('/api/contact-submissions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form),
-      });
+  const contactInfo = [
+    { icon: Phone, label: "Telepon", value: phone, href: `tel:${phone.replace(/\D/g, "")}` },
+    { icon: Mail, label: "Email", value: email, href: `mailto:${email}` },
+    { icon: MapPin, label: "Alamat", value: address, href: "#" },
+    { icon: Clock, label: "Jam Kerja", value: workingHours, href: "#" },
+  ];
 
-      if (res.ok) {
-        setSubmitted(true);
-        setForm({ name: "", email: "", phone: "", institution: "", subject: "", message: "" });
-      } else {
-        alert("Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.");
-      }
-    } catch (error) {
-      console.error("Error submitting form", error);
-      alert("Terjadi kesalahan koneksi. Silakan coba lagi.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const waNumber = phone.replace(/\D/g, '').replace(/^0/, '62');
 
   return (
     <>
@@ -73,11 +51,11 @@ export default function KontakPage() {
         <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(ellipse at 70% 50%, rgba(30,111,217,0.3) 0%, transparent 65%)", pointerEvents: "none" }} />
         <div className="container" style={{ position: "relative" }}>
           <span className="badge" style={{ background: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.9)", marginBottom: "1rem" }}>Hubungi Kami</span>
-          <h1 className="text-display" style={{ color: "white", marginBottom: "1rem", maxWidth: "560px" }}>
-            Mari Berkolaborasi Bersama Kami
+          <h1 className="text-display" style={{ color: "white", marginBottom: "1rem", maxWidth: "560px", whiteSpace: "pre-line" }}>
+            {heroTitle}
           </h1>
-          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "1.125rem", maxWidth: "480px" }}>
-            Tim kami siap membantu kebutuhan edukasi dan konsultasi instansi Anda. Respons dalam 1×24 jam kerja.
+          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "1.125rem", maxWidth: "480px", whiteSpace: "pre-line" }}>
+            {heroSubtitle}
           </p>
         </div>
         <WaveDivider fill="white" />
@@ -90,71 +68,7 @@ export default function KontakPage() {
 
             {/* FORM */}
             <div className="card" style={{ padding: "2.5rem" }}>
-              {submitted ? (
-                <div style={{ textAlign: "center", padding: "3rem 1rem" }}>
-                  <div style={{ width: "72px", height: "72px", background: "var(--color-success-light)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.5rem" }}>
-                    <CheckCircle2 size={36} color="var(--color-success)" />
-                  </div>
-                  <h2 style={{ fontSize: "1.5rem", marginBottom: "0.75rem" }}>Pesan Terkirim!</h2>
-                  <p style={{ color: "var(--color-neutral-500)", fontSize: "1rem", marginBottom: "2rem" }}>
-                    Terima kasih telah menghubungi kami. Tim kami akan segera menghubungi Anda dalam 1×24 jam kerja.
-                  </p>
-                  <button className="btn btn-primary" onClick={() => { setSubmitted(false); setForm({ name: "", email: "", phone: "", institution: "", subject: "", message: "" }); }}>
-                    Kirim Pesan Baru
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <h2 style={{ fontSize: "1.5rem", marginBottom: "0.375rem" }}>Kirim Pesan</h2>
-                  <p style={{ color: "var(--color-neutral-500)", marginBottom: "2rem", fontSize: "0.9375rem" }}>
-                    Isi formulir di bawah ini dan tim kami akan menghubungi Anda secepatnya.
-                  </p>
-                  <form onSubmit={handleSubmit}>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem", marginBottom: "1.25rem" }}>
-                      <div>
-                        <label htmlFor="contact-name">Nama Lengkap *</label>
-                        <input id="contact-name" name="name" type="text" className="input" placeholder="Budi Santoso" value={form.name} onChange={handleChange} required />
-                      </div>
-                      <div>
-                        <label htmlFor="contact-email">Email *</label>
-                        <input id="contact-email" name="email" type="email" className="input" placeholder="budi@instansi.go.id" value={form.email} onChange={handleChange} required />
-                      </div>
-                      <div>
-                        <label htmlFor="contact-phone">No. HP / WhatsApp</label>
-                        <input id="contact-phone" name="phone" type="tel" className="input" placeholder="0812xxxxxxxx" value={form.phone} onChange={handleChange} />
-                      </div>
-                      <div>
-                        <label htmlFor="contact-institution">Instansi / Perusahaan</label>
-                        <input id="contact-institution" name="institution" type="text" className="input" placeholder="Kementerian / Dinas / PT ..." value={form.institution} onChange={handleChange} />
-                      </div>
-                    </div>
-                    <div style={{ marginBottom: "1.25rem" }}>
-                      <label htmlFor="contact-subject">Subjek / Keperluan *</label>
-                      <select id="contact-subject" name="subject" className="input" value={form.subject} onChange={handleChange} required style={{ cursor: "pointer" }}>
-                        <option value="">— Pilih keperluan Anda —</option>
-                        {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
-                      </select>
-                    </div>
-                    <div style={{ marginBottom: "2rem" }}>
-                      <label htmlFor="contact-message">Pesan *</label>
-                      <textarea
-                        id="contact-message"
-                        name="message"
-                        className="input"
-                        placeholder="Ceritakan kebutuhan atau pertanyaan Anda..."
-                        rows={5}
-                        value={form.message}
-                        onChange={handleChange}
-                        required
-                        style={{ resize: "vertical" }}
-                      />
-                    </div>
-                    <button type="submit" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }} disabled={loading} id="submit-contact-form">
-                      {loading ? "Mengirim..." : <><Send size={16} /> Kirim Pesan</>}
-                    </button>
-                  </form>
-                </>
-              )}
+              <ContactForm />
             </div>
 
             {/* SIDEBAR INFO */}
@@ -179,7 +93,7 @@ export default function KontakPage() {
 
               {/* WhatsApp CTA */}
               <a
-                href="https://wa.me/6221123456789?text=Halo%2C%20saya%20ingin%20berkonsultasi%20dengan%20tim%20PT%20Mahaga%20Widya%20Cita."
+                href={`https://wa.me/${waNumber}?text=${encodeURIComponent(whatsappCta.defaultMessage)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="card"
@@ -189,16 +103,16 @@ export default function KontakPage() {
                   <MessageSquare size={24} fill="white" color="white" />
                 </div>
                 <div>
-                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "700", color: "white", marginBottom: "0.25rem" }}>Chat via WhatsApp</div>
-                  <div style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.8)" }}>Respons lebih cepat, langsung ke tim kami</div>
+                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "700", color: "white", marginBottom: "0.25rem" }}>{whatsappCta.title}</div>
+                  <div style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.8)", lineHeight: "1.4" }}>{whatsappCta.subtitle}</div>
                 </div>
               </a>
 
               {/* Map placeholder */}
               <div className="card" style={{ overflow: "hidden" }}>
-                <div style={{ height: "200px", background: "linear-gradient(135deg, var(--color-primary-100), var(--color-primary-200))", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "0.5rem" }}>
+                <div style={{ height: "200px", background: "linear-gradient(135deg, var(--color-primary-100), var(--color-primary-200))", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "0.5rem", textAlign: "center", padding: "1rem" }}>
                   <MapPin size={36} color="var(--color-primary-500)" />
-                  <span style={{ fontSize: "0.875rem", color: "var(--color-primary-600)", fontWeight: "600" }}>Jakarta Selatan, DKI Jakarta</span>
+                  <span style={{ fontSize: "0.875rem", color: "var(--color-primary-600)", fontWeight: "600" }}>{locationTag}</span>
                 </div>
               </div>
             </div>

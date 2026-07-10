@@ -51,12 +51,10 @@ export default async function ArtikelPage() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
               {articles.map((article: any) => (
                 <Link key={article.id} href={`/artikel/${article.slug || article.id}`} style={{ textDecoration: "none", display: "block" }}>
-                  <div className="card" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+                  <div className="card" style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
                     <div style={{ 
                       height: "200px", 
                       backgroundColor: "#e2e8f0", 
-                      borderRadius: "8px", 
-                      marginBottom: "1rem",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -68,34 +66,37 @@ export default async function ArtikelPage() {
                         <span>[Image Placeholder]</span>
                       )}
                     </div>
-                    <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.75rem", flexWrap: "wrap" }}>
-                      <span style={{ 
-                        fontSize: "0.75rem", 
-                        fontWeight: 600, 
-                        color: "var(--color-primary-600)", 
-                        backgroundColor: "var(--color-primary-100)", 
-                        padding: "0.25rem 0.75rem", 
-                        borderRadius: "100px" 
-                      }}>
-                        {typeof article.category === 'object' && article.category ? article.category.name : 'UMUM'}
-                      </span>
-                    </div>
-                    <h3 style={{ fontSize: "1.25rem", color: "#1a2b4c", marginBottom: "0.75rem", flexGrow: 1 }}>{article.title}</h3>
-                    <p style={{ color: "#666", fontSize: "0.9rem", marginBottom: "1rem", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden", position: "relative" }}>
-                      Klik untuk membaca selengkapnya...
-                    </p>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #f1f5f9", paddingTop: "1rem", marginTop: "auto" }}>
-                      <div>
-                        <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#334155" }}>
-                          {typeof article.author === 'object' && article.author ? article.author.name || 'Admin' : 'Admin'}
-                        </div>
-                        <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>
-                          {new Date(article.publishedAt || article.createdAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}
-                        </div>
+                    
+                    <div style={{ padding: "1.5rem", display: "flex", flexDirection: "column", flexGrow: 1 }}>
+                      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.75rem", flexWrap: "wrap" }}>
+                        <span style={{ 
+                          fontSize: "0.75rem", 
+                          fontWeight: 600, 
+                          color: "var(--color-primary-600)", 
+                          backgroundColor: "var(--color-primary-100)", 
+                          padding: "0.25rem 0.75rem", 
+                          borderRadius: "100px" 
+                        }}>
+                          {typeof article.category === 'object' && article.category ? article.category.name : 'UMUM'}
+                        </span>
                       </div>
-                      <span style={{ color: "var(--color-primary-500)", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.85rem", fontWeight: 600 }}>
-                        Baca <ArrowRight size={14} />
-                      </span>
+                      <h3 style={{ fontSize: "1.25rem", color: "#1a2b4c", marginBottom: "0.75rem" }}>{article.title}</h3>
+                      <p style={{ color: "#666", fontSize: "0.9rem", marginBottom: "1.25rem", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                        Klik untuk membaca selengkapnya...
+                      </p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #f1f5f9", paddingTop: "1rem", marginTop: "auto" }}>
+                        <div>
+                          <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#334155" }}>
+                            {typeof article.author === 'object' && article.author ? article.author.name || 'Admin' : 'Admin'}
+                          </div>
+                          <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>
+                            {new Date(article.publishedAt || article.createdAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}
+                          </div>
+                        </div>
+                        <span style={{ color: "var(--color-primary-500)", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.85rem", fontWeight: 600 }}>
+                          Baca <ArrowRight size={14} />
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </Link>

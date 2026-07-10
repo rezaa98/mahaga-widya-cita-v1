@@ -19,36 +19,63 @@ export const metadata: Metadata = {
 
 const defaultValues = [
   {
-    icon: 'Target',
-    title: "Inovasi",
-    description: "Selalu menghadirkan solusi mutakhir yang relevan dengan dinamika kebijakan dan teknologi terkini.",
+    icon: 'CheckCircle2',
+    title: "Integritas",
+    description: "Menjunjung tinggi kejujuran, transparansi, etika, dan tanggung jawab dalam setiap penugasan.",
   },
   {
     icon: 'Users',
     title: "Kolaborasi",
-    description: "Membangun ekosistem kemitraan yang saling menguatkan antara akademisi, praktisi, dan pemerintah.",
+    description: "Membangun kemitraan yang kuat untuk menghasilkan solusi terbaik.",
+  },
+  {
+    icon: 'Award',
+    title: "Keunggulan",
+    description: "Berkomitmen memberikan layanan berkualitas tinggi dengan hasil yang terukur.",
+  },
+  {
+    icon: 'Target',
+    title: "Inovasi",
+    description: "Terus mengembangkan ide, metode, dan teknologi untuk menciptakan solusi yang relevan.",
+  },
+  {
+    icon: 'Building2',
+    title: "Profesionalisme",
+    description: "Melaksanakan setiap pekerjaan dengan kompetensi, disiplin, dan akuntabilitas.",
   },
   {
     icon: 'Globe',
-    title: "Dampak",
-    description: "Setiap program dirancang untuk memberikan dampak nyata bagi peningkatan kualitas tata kelola Indonesia.",
+    title: "Keberlanjutan",
+    description: "Mengembangkan solusi yang memberikan manfaat jangka panjang bagi organisasi dan lingkungan.",
   },
+  {
+    icon: 'CheckCircle2',
+    title: "Kepercayaan",
+    description: "Membangun kepercayaan melalui layanan yang andal, profesional, dan berorientasi pada hasil.",
+  }
 ];
 
-const defaultMilestones = [
-  { year: "2015", event: "PT Mahaga Widya Cita berdiri dan mulai melayani instansi pemerintah pertama." },
-  { year: "2017", event: "Meluncurkan program Smart Executive Education yang kini telah diikuti 3.000+ peserta." },
-  { year: "2019", event: "Mengembangkan platform Smart Discussion Series (SDS) yang menghubungkan pakar & ASN." },
-  { year: "2021", event: "Meluncurkan platform Smart Online Course dengan sertifikasi digital terintegrasi." },
-  { year: "2023", event: "Bermitra dengan 200+ instansi pemerintah di seluruh Indonesia." },
-  { year: "2026", event: "Meluncurkan platform digital terintegrasi generasi baru untuk profesional Indonesia." },
-];
+
 
 const stats = [
-  { value: "11+", label: "Tahun Pengalaman", icon: Award },
-  { value: "200+", label: "Instansi Mitra", icon: Building2 },
-  { value: "10.000+", label: "Alumni Program", icon: Users },
-  { value: "500+", label: "Sesi Webinar & Pelatihan", icon: BookOpen },
+  { value: "7+", label: "Area Layanan Terintegrasi", icon: Target },
+  { value: "25+", label: "Tenaga Ahli Multidisiplin", icon: Users },
+  { value: "100+", label: "Proyek dan Studi", icon: Award },
+  { value: "Nasional", label: "Cakupan Layanan", icon: Globe },
+  { value: "Banyak", label: "Dipercaya Pemerintah & Swasta", icon: Building2 },
+];
+
+const coreValuesList = [
+  { letter: "F", name: "FORESIGHT", desc: "Berpikir jauh ke depan, merancang masa depan pembangunan." },
+  { letter: "U", name: "UNIT", desc: "Mengutamakan kerja sama lintas sektor dan pemangku kepentingan." },
+  { letter: "T", name: "TRANSFORMATION", desc: "Mendorong perubahan nyata melalui pemberdayaan dan pengembangan." },
+  { letter: "U", name: "UNDERSTANDING", desc: "Memahami kebutuhan masyarakat dan dinamika daerah secara mendalam." },
+  { letter: "R", name: "RESPONSIBILITY", desc: "Bertindak dengan tanggung jawab dan komitmen terhadap hasil." },
+  { letter: "I", name: "INTEGRITY", desc: "Menjaga kejujuran, etika, dan akuntabilitas dalam setiap langkah." },
+  { letter: "S", name: "SUSTAINABILITY", desc: "Berorientasi pada dampak jangka panjang dan berkelanjutan." },
+  { letter: "T", name: "TECHNOLOGY", desc: "Memanfaatkan teknologi untuk tata kelola dan perencanaan yang lebih baik." },
+  { letter: "I", name: "INNOVATION", desc: "Terus berinovasi untuk menjawab tantangan masa kini dan mendatang." },
+  { letter: "C", name: "COLLABORATION", desc: "Membangun sinergi dengan masyarakat, pemerintah, dan mitra profesional." }
 ];
 
 export default async function TentangKamiPage() {
@@ -73,14 +100,30 @@ export default async function TentangKamiPage() {
   const tentangKami = await payload.findGlobal({ slug: "tentang-kami" });
   
   const heroData = tentangKami?.hero?.title ? tentangKami.hero : {
-    badge: 'Tentang Kami',
-    title: 'Mitra Terpercaya untuk',
-    titleHighlight: 'Tata Kelola & Edukasi',
-    description: 'PT Mahaga Widya Cita hadir sebagai jembatan antara kebutuhan penguatan kapasitas SDM dengan solusi berbasis pengetahuan dan teknologi terkini di Indonesia.'
+    badge: 'TENTANG KAMI',
+    title: 'Building Better Decisions.',
+    titleHighlight: 'Creating Sustainable Impact.',
+    description: 'Your One-Stop Consulting Partner'
   };
 
   const valuesData = tentangKami?.values?.length ? tentangKami.values : defaultValues;
-  const milestonesData = tentangKami?.milestones?.length ? tentangKami.milestones : defaultMilestones;
+  const statsData = tentangKami?.stats?.length ? tentangKami.stats : stats;
+  const coreValuesData = tentangKami?.coreValues?.length ? tentangKami.coreValues : coreValuesList;
+  const profilData = tentangKami?.profil?.paragraph1 ? tentangKami.profil : {
+    paragraph1: "PT Mahaga Widya Cita merupakan perusahaan konsultan multidisiplin Indonesia yang berkomitmen menghadirkan solusi yang terintegrasi, inovatif, dan berkelanjutan bagi instansi pemerintah, BUMN, perusahaan swasta, institusi pendidikan, serta organisasi pembangunan.",
+    paragraph2: "Kami menyediakan layanan konsultasi yang mencakup konsultasi pemerintahan, bisnis dan investasi, perpajakan, riset strategis, solusi penyediaan tenaga profesional (workforce solutions), konsultasi teknologi, serta pengembangan sumber daya manusia. Dengan menggabungkan keahlian multidisiplin, pendekatan berbasis data, dan pemanfaatan teknologi, kami membantu organisasi menghadapi tantangan yang kompleks, meningkatkan kinerja, serta menciptakan nilai yang berkelanjutan.",
+    paragraph3: "Dilandasi integritas, profesionalisme, dan inovasi, PT Mahaga Widya Cita berkomitmen menjadi mitra strategis terpercaya yang mendukung pembangunan berkelanjutan serta mendorong keunggulan organisasi di seluruh Indonesia."
+  };
+  const visiData = tentangKami?.visi || "Menjadi perusahaan konsultan multidisiplin terdepan di Indonesia yang menghadirkan solusi inovatif, berbasis data, dan berkelanjutan untuk mendorong kemajuan organisasi serta berkontribusi terhadap pembangunan nasional.";
+  const misiData = tentangKami?.misi?.length ? tentangKami.misi : [
+    { title: "Memberikan Solusi Strategis", text: "Menyediakan layanan konsultasi terintegrasi yang menghasilkan solusi praktis, terukur, dan berkelanjutan bagi pemerintah, dunia usaha, dan berbagai institusi." },
+    { title: "Mendorong Pengambilan Keputusan Berbasis Data", text: "Mendukung penyusunan kebijakan dan strategi bisnis melalui riset berkualitas, analisis data, serta kajian strategis yang komprehensif." },
+    { title: "Mengembangkan Sumber Daya Manusia", text: "Meningkatkan kapasitas organisasi melalui pengembangan kompetensi, pelatihan profesional, konsultasi SDM, dan penyediaan tenaga profesional." },
+    { title: "Mempercepat Transformasi Digital", text: "Mendorong peningkatan efisiensi, tata kelola, dan kualitas layanan melalui penerapan teknologi dan inovasi digital." },
+    { title: "Membangun Kemitraan Jangka Panjang", text: "Menjalin hubungan kerja yang dilandasi integritas, profesionalisme, akuntabilitas, dan kolaborasi untuk menciptakan keberhasilan bersama." },
+    { title: "Menciptakan Dampak Berkelanjutan", text: "Menghasilkan solusi yang memberikan manfaat ekonomi, sosial, dan lingkungan secara berkelanjutan bagi klien dan masyarakat." }
+  ];
+
   const ceoQuote = tentangKami?.ceoMessage?.quote || "Kami percaya bahwa kualitas tata kelola suatu bangsa dimulai dari kualitas manusianya. Setiap program yang kami rancang adalah investasi jangka panjang bagi kemajuan Indonesia — sebuah misi yang kami emban dengan penuh dedikasi dan kebanggaan.";
 
   // Icon mapping
@@ -95,7 +138,9 @@ export default async function TentangKamiPage() {
       {/* PAGE HERO */}
       <section
         style={{
-          background: "linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-700) 100%)",
+          background: heroData.backgroundImage?.url
+            ? `linear-gradient(135deg, rgba(11, 45, 107, 0.9) 0%, rgba(18, 71, 168, 0.8) 100%), url(${heroData.backgroundImage.url}) center/cover no-repeat`
+            : "linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-700) 100%)",
           paddingTop: "calc(72px + 4rem)",
           paddingBottom: "4rem",
           position: "relative",
@@ -123,16 +168,19 @@ export default async function TentangKamiPage() {
       {/* STATS BAR */}
       <section style={{ padding: "3rem 0" }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1rem" }}>
-            {stats.map(({ value, label, icon: Icon }) => (
-              <div key={label} className="card" style={{ padding: "1.75rem", textAlign: "center" }}>
-                <Icon size={26} color="var(--color-primary-500)" style={{ margin: "0 auto 0.75rem" }} />
-                <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "800", fontSize: "2rem", color: "var(--color-primary-700)", lineHeight: 1 }}>
-                  {value}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "1rem" }}>
+            {statsData.map(({ value, label, icon: iconName }: any) => {
+              const Icon = IconMap[iconName] || Target;
+              return (
+                <div key={label} className="card" style={{ padding: "1.75rem", textAlign: "center" }}>
+                  <Icon size={26} color="var(--color-primary-500)" style={{ margin: "0 auto 0.75rem" }} />
+                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "800", fontSize: "1.75rem", color: "var(--color-primary-700)", lineHeight: 1 }}>
+                    {value}
+                  </div>
+                  <div style={{ fontSize: "0.875rem", color: "var(--color-neutral-500)", marginTop: "0.375rem" }}>{label}</div>
                 </div>
-                <div style={{ fontSize: "0.875rem", color: "var(--color-neutral-500)", marginTop: "0.375rem" }}>{label}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -148,39 +196,47 @@ export default async function TentangKamiPage() {
               </h2>
               <div className="gold-divider" style={{ margin: "0 0 1.5rem" }} />
               <p style={{ color: "var(--color-neutral-600)", lineHeight: "1.8", marginBottom: "1rem", fontSize: "1.0625rem" }}>
-                PT Mahaga Widya Cita adalah perusahaan konsultasi dan edukasi yang berfokus pada penguatan kapasitas Sumber Daya Manusia (SDM) dan tata kelola di sektor pemerintahan dan swasta Indonesia.
+                {profilData.paragraph1}
+              </p>
+              <p style={{ color: "var(--color-neutral-600)", lineHeight: "1.8", marginBottom: "1rem", fontSize: "1.0625rem" }}>
+                {profilData.paragraph2}
               </p>
               <p style={{ color: "var(--color-neutral-600)", lineHeight: "1.8", marginBottom: "1.75rem", fontSize: "1.0625rem" }}>
-                Didirikan pada tahun 2015, perusahaan kami telah berkembang menjadi ekosistem edukasi digital yang menghubungkan para pakar terbaik Indonesia dengan ribuan ASN dan profesional dari seluruh penjuru nusantara.
+                {profilData.paragraph3}
               </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                {[
-                  "Berizin dan beroperasi resmi di Indonesia",
-                  "Tim pakar dari akademisi dan praktisi berpengalaman",
-                  "Program tersertifikasi yang diakui institusi pemerintah",
-                  "Metode pembelajaran berbasis evidence & best practice",
-                ].map((item) => (
-                  <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem" }}>
-                    <CheckCircle2 size={18} color="var(--color-success)" style={{ flexShrink: 0, marginTop: "2px" }} />
-                    <span style={{ fontSize: "0.9375rem", color: "var(--color-neutral-700)" }}>{item}</span>
-                  </div>
-                ))}
-              </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-              {[
-                { label: "Visi", color: "var(--color-primary-900)", text: "Menjadi platform digital terdepan yang menghubungkan kebutuhan penguatan kapasitas SDM dan tata kelola organisasi dengan solusi teknologi terkini di Indonesia." },
-                { label: "Misi", color: "var(--color-gold-600)", text: "Menghadirkan program edukasi berkualitas tinggi, layanan konsultasi berbasis riset, dan solusi teknologi adaptif yang memberi dampak nyata bagi kemajuan bangsa." },
-                { label: "Nilai", color: "var(--color-success)", text: "Integritas, Inovasi, Kolaborasi, dan Dampak. Empat pilar yang menjadi fondasi setiap langkah dan keputusan kami." },
-                { label: "Komitmen", color: "#7C3AED", text: "Memberikan layanan terbaik dengan standar profesionalisme tertinggi kepada setiap mitra dan peserta program kami." },
-              ].map(({ label, color, text }) => (
-                <div key={label} className="card" style={{ padding: "1.5rem" }}>
-                  <div style={{ width: "36px", height: "4px", background: color, borderRadius: "2px", marginBottom: "0.875rem" }} />
-                  <h3 style={{ fontSize: "1rem", marginBottom: "0.625rem", color: "var(--color-neutral-900)" }}>{label}</h3>
-                  <p style={{ fontSize: "0.8125rem", color: "var(--color-neutral-500)", lineHeight: "1.6" }}>{text}</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+              <div className="card" style={{ padding: "1.5rem" }}>
+                <div style={{ width: "36px", height: "4px", background: "var(--color-primary-900)", borderRadius: "2px", marginBottom: "0.875rem" }} />
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "0.625rem", color: "var(--color-neutral-900)" }}>Visi</h3>
+                <p style={{ fontSize: "0.875rem", color: "var(--color-neutral-500)", lineHeight: "1.6" }}>
+                  {visiData}
+                </p>
+              </div>
+
+              <div className="card" style={{ padding: "1.5rem" }}>
+                <div style={{ width: "36px", height: "4px", background: "var(--color-gold-600)", borderRadius: "2px", marginBottom: "0.875rem" }} />
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "1rem", color: "var(--color-neutral-900)" }}>Misi</h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  {misiData.map((misi: any, i: number) => (
+                    <div key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
+                      <div style={{ 
+                        width: "24px", height: "24px", borderRadius: "50%", 
+                        background: "var(--color-primary-100)", color: "var(--color-primary-700)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: "0.75rem", fontWeight: "700", flexShrink: 0
+                      }}>
+                        {i + 1}
+                      </div>
+                      <div>
+                        <div style={{ fontSize: "0.875rem", fontWeight: "600", color: "var(--color-neutral-800)", marginBottom: "0.25rem" }}>{misi.title}</div>
+                        <div style={{ fontSize: "0.8125rem", color: "var(--color-neutral-500)", lineHeight: "1.5" }}>{misi.text}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </div>
@@ -194,7 +250,7 @@ export default async function TentangKamiPage() {
             <h2>Landasan yang Memandu Setiap Langkah Kami</h2>
             <div className="gold-divider" />
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.5rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "1.5rem" }}>
             {valuesData.map((val: any) => {
               const Icon = IconMap[val.icon] || Target;
               return (
@@ -211,37 +267,44 @@ export default async function TentangKamiPage() {
         </div>
       </section>
 
-      {/* TIMELINE */}
+      {/* CORE VALUE */}
       <section className="section section-alt">
         <div className="container">
           <div className="section-title">
-            <span className="overline">Perjalanan Kami</span>
-            <h2>Milestone PT Mahaga Widya Cita</h2>
+            <span className="overline">Core Value</span>
+            <h2 style={{ fontSize: "2.5rem", letterSpacing: "0.1em", color: "var(--color-primary-900)" }}>FUTURISTIC</h2>
             <div className="gold-divider" />
           </div>
-          <div style={{ position: "relative", maxWidth: "800px", margin: "0 auto" }}>
-            {/* Center line */}
-            <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: "2px", background: "var(--color-primary-200)", transform: "translateX(-50%)" }} />
-            <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
-              {milestonesData.map((m: any, i: number) => (
-                <div key={m.year} style={{ display: "flex", gap: "2rem", alignItems: "center", flexDirection: i % 2 === 0 ? "row" : "row-reverse" }}>
-                  <div style={{ flex: 1, textAlign: i % 2 === 0 ? "right" : "left" }}>
-                    <div className="card" style={{ padding: "1.25rem 1.5rem", display: "inline-block", textAlign: i % 2 === 0 ? "right" : "left" }}>
-                      <p style={{ fontSize: "0.9375rem", color: "var(--color-neutral-700)", lineHeight: "1.5" }}>{m.event}</p>
-                    </div>
-                  </div>
-                  <div style={{ position: "relative", zIndex: 1, flexShrink: 0 }}>
-                    <div style={{ width: "52px", height: "52px", background: "linear-gradient(135deg, var(--color-primary-500), var(--color-primary-800))", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 0 4px white, 0 0 0 6px var(--color-primary-200)" }}>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "800", fontSize: "0.75rem", color: "white" }}>{m.year}</span>
-                    </div>
-                  </div>
-                  <div style={{ flex: 1 }} />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))", gap: "1.5rem" }}>
+            {coreValuesData.map((cv: any) => (
+              <div key={cv.name} className="card" style={{ padding: "1.5rem", display: "flex", gap: "1.5rem", alignItems: "flex-start", background: "white" }}>
+                <div style={{ 
+                  fontSize: "3rem", 
+                  fontWeight: 900, 
+                  color: "var(--color-primary-200)", 
+                  lineHeight: 0.8, 
+                  width: "50px", 
+                  textAlign: "center",
+                  WebkitTextStroke: "1px var(--color-primary-600)",
+                  fontFamily: "'Plus Jakarta Sans', sans-serif"
+                }}>
+                  {cv.letter}
                 </div>
-              ))}
-            </div>
+                <div>
+                  <h3 style={{ fontSize: "1.25rem", color: "var(--color-primary-900)", marginBottom: "0.5rem", letterSpacing: "0.05em", fontWeight: 800 }}>
+                    {cv.name}
+                  </h3>
+                  <p style={{ color: "var(--color-neutral-600)", fontSize: "0.9375rem", lineHeight: "1.6", textTransform: "capitalize" }}>
+                    {cv.desc.toLowerCase()}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
+
+
 
       {/* CEO MESSAGE */}
       <section className="section" id="ceo">

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 
 const navLinks = [
@@ -28,8 +29,6 @@ const navLinks = [
       { label: "Smart Digital Conference", href: "/layanan/digital-conference" },
     ],
   },
-  { label: "Webinar", href: "/webinar" },
-  { label: "Kursus", href: "/kursus" },
   {
     label: "Artikel",
     href: "/artikel",
@@ -40,7 +39,6 @@ const navLinks = [
       { label: "Policy Review", href: "/policy-reviews" },
     ],
   },
-  { label: "Karir", href: "/karir" },
   { label: "Kontak", href: "/kontak" },
 ];
 
@@ -48,6 +46,10 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  
+  const pathname = usePathname();
+  const isDarkHero = pathname === '/' || pathname === '/tentang-kami';
+  const shouldBeSolid = scrolled || !isDarkHero;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -58,7 +60,7 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`navbar ${scrolled ? "scrolled" : "transparent"}`}
+        className={`navbar ${shouldBeSolid ? "scrolled" : "transparent"}`}
         style={{ padding: "0" }}
       >
         <div className="container">
@@ -85,7 +87,7 @@ export default function Navbar() {
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
                   fontWeight: "700",
                   fontSize: "0.9375rem",
-                  color: scrolled ? "var(--color-primary-900)" : "white",
+                  color: shouldBeSolid ? "var(--color-primary-900)" : "white",
                   lineHeight: "1.2",
                   transition: "color 0.25s ease",
                 }}
@@ -122,22 +124,22 @@ export default function Navbar() {
                       fontSize: "0.875rem",
                       fontWeight: "500",
                       fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      color: scrolled ? "var(--color-neutral-700)" : "rgba(255,255,255,0.88)",
+                      color: shouldBeSolid ? "var(--color-neutral-700)" : "rgba(255,255,255,0.88)",
                       borderRadius: "8px",
                       transition: "all 0.2s ease",
                       whiteSpace: "nowrap",
                     }}
                     onMouseOver={(e) => {
-                      (e.currentTarget as HTMLElement).style.background = scrolled
+                      (e.currentTarget as HTMLElement).style.background = shouldBeSolid
                         ? "var(--color-primary-50)"
                         : "rgba(255,255,255,0.12)";
-                      (e.currentTarget as HTMLElement).style.color = scrolled
+                      (e.currentTarget as HTMLElement).style.color = shouldBeSolid
                         ? "var(--color-primary-600)"
                         : "white";
                     }}
                     onMouseOut={(e) => {
                       (e.currentTarget as HTMLElement).style.background = "transparent";
-                      (e.currentTarget as HTMLElement).style.color = scrolled
+                      (e.currentTarget as HTMLElement).style.color = shouldBeSolid
                         ? "var(--color-neutral-700)"
                         : "rgba(255,255,255,0.88)";
                     }}
@@ -210,16 +212,13 @@ export default function Navbar() {
                 className="btn btn-sm"
                 style={{
                   background: "transparent",
-                  color: scrolled ? "var(--color-primary-700)" : "white",
-                  border: `1.5px solid ${scrolled ? "var(--color-primary-200)" : "rgba(255,255,255,0.5)"}`,
+                  color: shouldBeSolid ? "var(--color-primary-700)" : "white",
+                  border: `1.5px solid ${shouldBeSolid ? "var(--color-primary-200)" : "rgba(255,255,255,0.5)"}`,
                   borderRadius: "var(--radius-full)",
                   transition: "all 0.25s ease",
                 }}
               >
                 Masuk
-              </Link>
-              <Link href="/webinar" className="btn btn-primary btn-sm">
-                Daftar Webinar
               </Link>
             </div>
 
@@ -231,7 +230,7 @@ export default function Navbar() {
                 background: "transparent",
                 border: "none",
                 cursor: "pointer",
-                color: scrolled ? "var(--color-primary-900)" : "white",
+                color: shouldBeSolid ? "var(--color-primary-900)" : "white",
                 padding: "0.375rem",
                 display: "none",
               }}
@@ -292,9 +291,6 @@ export default function Navbar() {
               <div style={{ display: "flex", gap: "0.75rem", marginTop: "1.25rem" }}>
                 <Link href="/login" className="btn btn-secondary" style={{ flex: 1, justifyContent: "center" }}>
                   Masuk
-                </Link>
-                <Link href="/webinar" className="btn btn-primary" style={{ flex: 1, justifyContent: "center" }}>
-                  Daftar Webinar
                 </Link>
               </div>
             </div>
