@@ -24,14 +24,15 @@ export default buildConfig({
       titleSuffix: '- Mahaga Widya Cita CMS',
     },
     components: {
+      providers: ['@/components/admin/ThemeForceProvider#ThemeForceProvider'],
       views: {
-        Dashboard: {
-          Component: './components/admin/DashboardWidget#DashboardWidget',
+        dashboard: {
+          Component: '@/components/admin/DashboardWidget#DashboardWidget',
         },
       },
       graphics: {
-        Logo: './components/admin/Logo#Logo',
-        Icon: './components/admin/Icon#Icon',
+        Logo: '@/components/admin/Logo#Logo',
+        Icon: '@/components/admin/Icon#Icon',
       },
     },
   },

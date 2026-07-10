@@ -18,6 +18,12 @@ export const TeamMembers: CollectionConfig = {
           label: 'Data Profil',
           fields: [
             {
+              name: 'photo',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Foto Profil',
+            },
+            {
               name: 'name',
               type: 'text',
               required: true,

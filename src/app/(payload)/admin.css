@@ -1,36 +1,145 @@
-/* Dark Glassmorphism Theme for Payload Admin */
-:root {
-  /* Override base variables safely */
+/* ============================================
+   PAYLOAD ADMIN PANEL — CLEAN LIGHT THEME
+   PT Mahaga Widya Cita CMS
+   Referensi: Modern SaaS Admin Dashboard
+   ============================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* Force ALL theme variables to light — regardless of data-theme attribute */
+:root,
+html,
+html[data-theme="light"],
+html[data-theme="dark"] {
+  /* Background hierarchy */
+  --theme-bg: #faf8ff !important;
+  --theme-elevation-0: #ffffff !important;
+  --theme-elevation-50: #f3f3fe !important;
+  --theme-elevation-100: #ededf9 !important;
+  --theme-elevation-150: #e7e7f3 !important;
+  --theme-elevation-200: #e1e2ed !important;
+  --theme-elevation-250: #d9d9e5 !important;
+  --theme-elevation-300: #c3c6d7 !important;
+  --theme-elevation-350: #9fa3b5 !important;
+  --theme-elevation-400: #737686 !important;
+  --theme-elevation-450: #5c5f6e !important;
+  --theme-elevation-500: #434655 !important;
+  --theme-elevation-600: #2e3039 !important;
+  --theme-elevation-700: #191b23 !important;
+  --theme-elevation-800: #0f1117 !important;
+  --theme-elevation-900: #080a0e !important;
+  --theme-elevation-1000: #000000 !important;
+
+  /* Text */
+  --theme-text: #191b23 !important;
+
+  /* Brand */
+  --theme-success-500: #16a34a !important;
+  --theme-error-500: #ba1a1a !important;
+  --theme-warning-500: #d97706 !important;
+
+  /* Input */
+  --theme-input-bg: #ffffff !important;
+
+  /* Radius */
+  --style-radius-s: 6px !important;
+  --style-radius-m: 8px !important;
+  --style-radius-l: 12px !important;
+
+  /* Font */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
 }
 
-/* Force dark mode glassmorphism */
-html[data-theme='dark'] body, html[data-theme='light'] body {
-  /* Dynamic abstract gradient background for Mahaga Widya Cita */
-  background: 
-    radial-gradient(circle at 15% 50%, rgba(30, 111, 217, 0.25), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(201, 151, 10, 0.2), transparent 25%),
-    linear-gradient(135deg, #0B2D6B 0%, #061838 100%) !important;
-  background-attachment: fixed !important;
-  background-size: cover !important;
-  min-height: 100vh;
+/* ==================
+   RESET dark overrides from old glassmorphism
+   ================== */
+html[data-theme='dark'] body,
+html[data-theme='light'] body {
+  background: #faf8ff !important;
+  background-attachment: unset !important;
+  background-size: unset !important;
+  color: #191b23 !important;
 }
 
-/* Glass effect for main components */
-.payload__app,
-.payload__header,
-.payload__nav {
-  background: transparent !important;
+body {
+  background: #faf8ff !important;
+  color: #191b23 !important;
 }
 
-/* Navigation sidebar */
-.payload__nav {
-  background: rgba(11, 45, 107, 0.3) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+/* ==================
+   NAV / SIDEBAR
+   ================== */
+.nav,
+.nav__wrapper,
+nav {
+  background-color: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-right: 1px solid #e1e2ed !important;
 }
 
-/* Cards, Tables, Forms */
+.nav-group__toggle,
+.nav-group__label {
+  color: #737686 !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+}
+
+.nav a,
+.nav__link {
+  color: #505f76 !important;
+  border-radius: 8px !important;
+  transition: all 0.15s ease !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+.nav a:hover,
+.nav__link:hover {
+  background-color: #f3f3fe !important;
+  color: #191b23 !important;
+}
+
+.nav a.active,
+.nav__link.active {
+  background-color: #dbe1ff !important;
+  color: #004ac6 !important;
+  font-weight: 600 !important;
+}
+
+/* ==================
+   HEADER
+   ================== */
+header,
+.app-header {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #e1e2ed !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* ==================
+   MAIN CONTENT
+   ================== */
+.template-default,
+.template-default__content,
+.collection-list,
+.edit-view,
+.dashboard,
+main,
+.payload__app {
+  background-color: #faf8ff !important;
+  background: #faf8ff !important;
+  backdrop-filter: none !important;
+}
+
+/* ==================
+   CARDS & PANELS
+   ================== */
 .card,
 .collection-list__table,
 .collection-list__table thead,
@@ -41,76 +150,236 @@ html[data-theme='dark'] body, html[data-theme='light'] body {
 .tabs-field,
 .collapsible,
 .tabs-field__tabs,
-.tabs-field__tab-content {
-  background: rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 12px;
+.tabs-field__tab-content,
+.document-fields,
+.render-fields {
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid #e1e2ed !important;
+  border-radius: 12px !important;
 }
 
-/* Removing inner borders and fixing transparency in tables */
-.collection-list__table th, .collection-list__table td {
-  background: transparent !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+/* ==================
+   TEXT COLORS — override old white text
+   ================== */
+h1, h2, h3, h4, h5, h6,
+label, p, span, th, td, div,
+.field-label {
+  color: inherit !important;
 }
 
-/* Text colors and inputs */
-input, textarea, select, .rich-text {
-  background: rgba(0, 0, 0, 0.3) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  color: #FFFFFF !important;
+/* ==================
+   BUTTONS
+   ================== */
+button.btn, a.btn,
+.btn {
   border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  letter-spacing: 0.02em !important;
+  transition: all 0.2s ease !important;
+  backdrop-filter: none !important;
+}
+
+.btn--style-primary,
+button.btn--style-primary {
+  background-color: #004ac6 !important;
+  background: #004ac6 !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.btn--style-primary:hover {
+  background-color: #003ea8 !important;
+  background: #003ea8 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 74, 198, 0.3) !important;
+}
+
+.btn--style-secondary {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #004ac6 !important;
+  border: 1px solid #c3c6d7 !important;
+}
+
+.btn--style-secondary:hover {
+  background-color: #f3f3fe !important;
+  border-color: #004ac6 !important;
+}
+
+/* ==================
+   FORM INPUTS
+   ================== */
+input, textarea, select, .rich-text {
+  background: #ffffff !important;
+  border: 1px solid #c3c6d7 !important;
+  border-radius: 8px !important;
+  color: #191b23 !important;
+  font-size: 14px !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 input:focus, textarea:focus, select:focus {
-  border-color: #1E6FD9 !important;
-  box-shadow: 0 0 0 2px rgba(30, 111, 217, 0.3) !important;
+  border-color: #004ac6 !important;
+  box-shadow: 0 0 0 3px rgba(0, 74, 198, 0.1) !important;
+  outline: none !important;
 }
 
-/* Force text colors to be readable in dark mode */
-.payload__app h1, .payload__app h2, .payload__app h3, .payload__app h4, .payload__app h5, .payload__app h6, 
-.payload__app label, .payload__app p, .payload__app span, .payload__app th, .payload__app td, .payload__app div {
-  color: #FFFFFF;
+input::placeholder, textarea::placeholder {
+  color: #9fa3b5 !important;
 }
 
-/* Make sure specific texts are white too */
-.payload__nav a {
-  color: rgba(255, 255, 255, 0.8) !important;
-}
-.payload__nav a:hover, .payload__nav a.active {
-  color: #FFFFFF !important;
-  background: rgba(255,255,255,0.1) !important;
-  border-radius: 6px;
+label {
+  color: #434655 !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
 }
 
-/* Buttons */
-button.btn, a.btn {
-  background: rgba(30, 111, 217, 0.7) !important;
-  backdrop-filter: blur(8px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  color: #FFFFFF !important;
-  transition: all 0.3s ease !important;
+/* ==================
+   TABLE / LIST VIEW
+   ================== */
+.collection-list__table th,
+.collection-list__table td {
+  background: transparent !important;
+  border-bottom: 1px solid #f3f3fe !important;
+  color: #191b23 !important;
+}
+
+.collection-list__table thead th {
+  color: #434655 !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  background-color: #f3f3fe !important;
+}
+
+.collection-list__table tbody tr:hover td {
+  background-color: #f3f3fe !important;
+}
+
+.cell-link {
+  color: #004ac6 !important;
+  font-weight: 500 !important;
+}
+
+.cell-link:hover {
+  color: #003ea8 !important;
+  text-decoration: underline !important;
+}
+
+/* ==================
+   SEARCH
+   ================== */
+.search-filter__input {
+  background-color: #f3f3fe !important;
+  border: 1px solid #c3c6d7 !important;
+  border-radius: 9999px !important;
+  color: #191b23 !important;
+}
+
+/* ==================
+   PILLS / BADGES
+   ================== */
+.pill {
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+}
+
+.pill--style-light {
+  background-color: #dbe1ff !important;
+  color: #004ac6 !important;
+}
+
+/* ==================
+   DRAWER / MODAL
+   ================== */
+.drawer__content {
+  background-color: #ffffff !important;
+}
+
+.modal__content {
+  background-color: #ffffff !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ==================
+   RICH TEXT EDITOR
+   ================== */
+.rich-text-lexical {
+  background-color: #ffffff !important;
+  border: 1px solid #c3c6d7 !important;
   border-radius: 8px !important;
 }
 
-button.btn:hover, a.btn:hover {
-  background: rgba(30, 111, 217, 0.9) !important;
-  box-shadow: 0 4px 15px rgba(30, 111, 217, 0.4) !important;
+/* ==================
+   LOGIN PAGE
+   ================== */
+.login {
+  background-color: #faf8ff !important;
 }
 
-/* Scrollbars */
+.login__form {
+  background-color: #ffffff !important;
+  border: 1px solid #e1e2ed !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* ==================
+   BREADCRUMBS
+   ================== */
+.step-nav a {
+  color: #737686 !important;
+}
+
+.step-nav a:hover {
+  color: #004ac6 !important;
+}
+
+/* ==================
+   UPLOAD AREA
+   ================== */
+.file-field__upload {
+  background-color: #f3f3fe !important;
+  border: 2px dashed #c3c6d7 !important;
+  border-radius: 12px !important;
+}
+
+.file-field__upload:hover {
+  border-color: #004ac6 !important;
+  background-color: #dbe1ff !important;
+}
+
+/* ==================
+   SCROLLBAR
+   ================== */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
+
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1); 
+  background: #f3f3fe;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2); 
-  border-radius: 10px;
+  background: #c3c6d7;
+  border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3); 
+  background: #9fa3b5;
+}
+
+/* ==================
+   FOCUS RING
+   ================== */
+:focus-visible {
+  outline: 2px solid #004ac6 !important;
+  outline-offset: 2px !important;
 }

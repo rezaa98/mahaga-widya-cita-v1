@@ -7,6 +7,7 @@ import { Globe, BookOpen } from "lucide-react";
 
 import { IconLinkedin } from "@/components/icons/SocialIcons";
 import { WaveDivider } from "@/components/ui/WaveDivider";
+import TeamMemberCard from "@/components/ui/TeamMemberCard";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 
@@ -54,32 +55,9 @@ export default async function TimPage() {
             <h2>Manajemen Perusahaan</h2>
             <div className="gold-divider" />
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "2rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(280px, 1fr))", gap: "2rem" }}>
             {management.map((m) => (
-              <div key={m.id} className="card" style={{ display: "flex", flexDirection: "column" }}>
-                <div style={{ padding: "2rem", background: "var(--color-neutral-50)", borderBottom: "1px solid var(--color-neutral-200)", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-                  <div style={{ width: "96px", height: "96px", borderRadius: "50%", background: m.color, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.25rem", boxShadow: "0 8px 16px rgba(0,0,0,0.1)" }}>
-                    <span style={{ fontSize: "2rem", fontWeight: "700", color: "white", letterSpacing: "1px" }}>{m.initials}</span>
-                  </div>
-                  <h3 style={{ fontSize: "1.25rem", marginBottom: "0.25rem" }}>{m.name}</h3>
-                  <p style={{ color: "var(--color-primary-600)", fontWeight: "600", fontSize: "0.9375rem" }}>{m.role}</p>
-                </div>
-                <div style={{ padding: "2rem", flex: 1, display: "flex", flexDirection: "column" }}>
-                  <div style={{ marginBottom: "1.5rem" }}>
-                    <span style={{ display: "inline-block", background: "rgba(201, 151, 10, 0.1)", color: "var(--color-gold-700)", padding: "0.25rem 0.75rem", borderRadius: "100px", fontSize: "0.8125rem", fontWeight: "600", marginBottom: "1rem" }}>
-                      Spesialisasi: {m.expertise}
-                    </span>
-                    <p style={{ color: "var(--color-neutral-600)", fontSize: "0.9375rem", lineHeight: "1.6" }}>
-                      {m.bio}
-                    </p>
-                  </div>
-                  <div style={{ marginTop: "auto", paddingTop: "1.5rem", borderTop: "1px solid var(--color-neutral-100)", display: "flex", justifyContent: "center" }}>
-                    <Link href="#" style={{ color: "var(--color-neutral-500)", transition: "color 0.2s" }} className="hover:text-primary">
-                      <IconLinkedin size={20} />
-                    </Link>
-                  </div>
-                </div>
-              </div>
+              <TeamMemberCard key={m.id} member={m} />
             ))}
           </div>
         </div>
@@ -97,24 +75,9 @@ export default async function TimPage() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.5rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2rem" }}>
             {experts.map((expert) => (
-              <div key={expert.id} className="card" style={{ padding: "1.5rem", display: "flex", alignItems: "center", gap: "1.25rem" }}>
-                <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: expert.color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <span style={{ fontSize: "1.25rem", fontWeight: "700", color: "white" }}>{expert.initials}</span>
-                </div>
-                <div>
-                  <h3 style={{ fontSize: "1.0625rem", marginBottom: "0.25rem" }}>{expert.name}</h3>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-                    <span style={{ fontSize: "0.8125rem", color: "var(--color-primary-700)", fontWeight: "500", display: "flex", alignItems: "center", gap: "0.375rem" }}>
-                      <BookOpen size={12} /> {expert.expertise}
-                    </span>
-                    <span style={{ fontSize: "0.8125rem", color: "var(--color-neutral-500)", display: "flex", alignItems: "center", gap: "0.375rem" }}>
-                      <Globe size={12} /> {expert.institution}
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <TeamMemberCard key={expert.id} member={expert} />
             ))}
           </div>
         </div>
