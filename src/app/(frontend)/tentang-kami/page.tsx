@@ -104,6 +104,23 @@ export default async function TentangKamiPage() {
   };
 
   const valuesData = tentangKami?.values?.length ? tentangKami.values : defaultValues;
+  const statsData = tentangKami?.stats?.length ? tentangKami.stats : stats;
+  const coreValuesData = tentangKami?.coreValues?.length ? tentangKami.coreValues : coreValuesList;
+  const profilData = tentangKami?.profil?.paragraph1 ? tentangKami.profil : {
+    paragraph1: "PT Mahaga Widya Cita merupakan perusahaan konsultan multidisiplin Indonesia yang berkomitmen menghadirkan solusi yang terintegrasi, inovatif, dan berkelanjutan bagi instansi pemerintah, BUMN, perusahaan swasta, institusi pendidikan, serta organisasi pembangunan.",
+    paragraph2: "Kami menyediakan layanan konsultasi yang mencakup konsultasi pemerintahan, bisnis dan investasi, perpajakan, riset strategis, solusi penyediaan tenaga profesional (workforce solutions), konsultasi teknologi, serta pengembangan sumber daya manusia. Dengan menggabungkan keahlian multidisiplin, pendekatan berbasis data, dan pemanfaatan teknologi, kami membantu organisasi menghadapi tantangan yang kompleks, meningkatkan kinerja, serta menciptakan nilai yang berkelanjutan.",
+    paragraph3: "Dilandasi integritas, profesionalisme, dan inovasi, PT Mahaga Widya Cita berkomitmen menjadi mitra strategis terpercaya yang mendukung pembangunan berkelanjutan serta mendorong keunggulan organisasi di seluruh Indonesia."
+  };
+  const visiData = tentangKami?.visi || "Menjadi perusahaan konsultan multidisiplin terdepan di Indonesia yang menghadirkan solusi inovatif, berbasis data, dan berkelanjutan untuk mendorong kemajuan organisasi serta berkontribusi terhadap pembangunan nasional.";
+  const misiData = tentangKami?.misi?.length ? tentangKami.misi : [
+    { title: "Memberikan Solusi Strategis", text: "Menyediakan layanan konsultasi terintegrasi yang menghasilkan solusi praktis, terukur, dan berkelanjutan bagi pemerintah, dunia usaha, dan berbagai institusi." },
+    { title: "Mendorong Pengambilan Keputusan Berbasis Data", text: "Mendukung penyusunan kebijakan dan strategi bisnis melalui riset berkualitas, analisis data, serta kajian strategis yang komprehensif." },
+    { title: "Mengembangkan Sumber Daya Manusia", text: "Meningkatkan kapasitas organisasi melalui pengembangan kompetensi, pelatihan profesional, konsultasi SDM, dan penyediaan tenaga profesional." },
+    { title: "Mempercepat Transformasi Digital", text: "Mendorong peningkatan efisiensi, tata kelola, dan kualitas layanan melalui penerapan teknologi dan inovasi digital." },
+    { title: "Membangun Kemitraan Jangka Panjang", text: "Menjalin hubungan kerja yang dilandasi integritas, profesionalisme, akuntabilitas, dan kolaborasi untuk menciptakan keberhasilan bersama." },
+    { title: "Menciptakan Dampak Berkelanjutan", text: "Menghasilkan solusi yang memberikan manfaat ekonomi, sosial, dan lingkungan secara berkelanjutan bagi klien dan masyarakat." }
+  ];
+
   const ceoQuote = tentangKami?.ceoMessage?.quote || "Kami percaya bahwa kualitas tata kelola suatu bangsa dimulai dari kualitas manusianya. Setiap program yang kami rancang adalah investasi jangka panjang bagi kemajuan Indonesia — sebuah misi yang kami emban dengan penuh dedikasi dan kebanggaan.";
 
   // Icon mapping
@@ -147,15 +164,18 @@ export default async function TentangKamiPage() {
       <section style={{ padding: "3rem 0" }}>
         <div className="container">
           <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "1rem" }}>
-            {stats.map(({ value, label, icon: Icon }) => (
-              <div key={label} className="card" style={{ padding: "1.75rem", textAlign: "center" }}>
-                <Icon size={26} color="var(--color-primary-500)" style={{ margin: "0 auto 0.75rem" }} />
-                <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "800", fontSize: "1.75rem", color: "var(--color-primary-700)", lineHeight: 1 }}>
-                  {value}
+            {statsData.map(({ value, label, icon: iconName }: any) => {
+              const Icon = IconMap[iconName] || Target;
+              return (
+                <div key={label} className="card" style={{ padding: "1.75rem", textAlign: "center" }}>
+                  <Icon size={26} color="var(--color-primary-500)" style={{ margin: "0 auto 0.75rem" }} />
+                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "800", fontSize: "1.75rem", color: "var(--color-primary-700)", lineHeight: 1 }}>
+                    {value}
+                  </div>
+                  <div style={{ fontSize: "0.875rem", color: "var(--color-neutral-500)", marginTop: "0.375rem" }}>{label}</div>
                 </div>
-                <div style={{ fontSize: "0.875rem", color: "var(--color-neutral-500)", marginTop: "0.375rem" }}>{label}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -171,13 +191,13 @@ export default async function TentangKamiPage() {
               </h2>
               <div className="gold-divider" style={{ margin: "0 0 1.5rem" }} />
               <p style={{ color: "var(--color-neutral-600)", lineHeight: "1.8", marginBottom: "1rem", fontSize: "1.0625rem" }}>
-                PT Mahaga Widya Cita merupakan perusahaan konsultan multidisiplin Indonesia yang berkomitmen menghadirkan solusi yang terintegrasi, inovatif, dan berkelanjutan bagi instansi pemerintah, BUMN, perusahaan swasta, institusi pendidikan, serta organisasi pembangunan.
+                {profilData.paragraph1}
               </p>
               <p style={{ color: "var(--color-neutral-600)", lineHeight: "1.8", marginBottom: "1rem", fontSize: "1.0625rem" }}>
-                Kami menyediakan layanan konsultasi yang mencakup konsultasi pemerintahan, bisnis dan investasi, perpajakan, riset strategis, solusi penyediaan tenaga profesional (workforce solutions), konsultasi teknologi, serta pengembangan sumber daya manusia. Dengan menggabungkan keahlian multidisiplin, pendekatan berbasis data, dan pemanfaatan teknologi, kami membantu organisasi menghadapi tantangan yang kompleks, meningkatkan kinerja, serta menciptakan nilai yang berkelanjutan.
+                {profilData.paragraph2}
               </p>
               <p style={{ color: "var(--color-neutral-600)", lineHeight: "1.8", marginBottom: "1.75rem", fontSize: "1.0625rem" }}>
-                Dilandasi integritas, profesionalisme, dan inovasi, PT Mahaga Widya Cita berkomitmen menjadi mitra strategis terpercaya yang mendukung pembangunan berkelanjutan serta mendorong keunggulan organisasi di seluruh Indonesia.
+                {profilData.paragraph3}
               </p>
             </div>
 
@@ -186,7 +206,7 @@ export default async function TentangKamiPage() {
                 <div style={{ width: "36px", height: "4px", background: "var(--color-primary-900)", borderRadius: "2px", marginBottom: "0.875rem" }} />
                 <h3 style={{ fontSize: "1.25rem", marginBottom: "0.625rem", color: "var(--color-neutral-900)" }}>Visi</h3>
                 <p style={{ fontSize: "0.875rem", color: "var(--color-neutral-500)", lineHeight: "1.6" }}>
-                  Menjadi perusahaan konsultan multidisiplin terdepan di Indonesia yang menghadirkan solusi inovatif, berbasis data, dan berkelanjutan untuk mendorong kemajuan organisasi serta berkontribusi terhadap pembangunan nasional.
+                  {visiData}
                 </p>
               </div>
 
@@ -194,14 +214,7 @@ export default async function TentangKamiPage() {
                 <div style={{ width: "36px", height: "4px", background: "var(--color-gold-600)", borderRadius: "2px", marginBottom: "0.875rem" }} />
                 <h3 style={{ fontSize: "1.25rem", marginBottom: "1rem", color: "var(--color-neutral-900)" }}>Misi</h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                  {[
-                    { title: "Memberikan Solusi Strategis", text: "Menyediakan layanan konsultasi terintegrasi yang menghasilkan solusi praktis, terukur, dan berkelanjutan bagi pemerintah, dunia usaha, dan berbagai institusi." },
-                    { title: "Mendorong Pengambilan Keputusan Berbasis Data", text: "Mendukung penyusunan kebijakan dan strategi bisnis melalui riset berkualitas, analisis data, serta kajian strategis yang komprehensif." },
-                    { title: "Mengembangkan Sumber Daya Manusia", text: "Meningkatkan kapasitas organisasi melalui pengembangan kompetensi, pelatihan profesional, konsultasi SDM, dan penyediaan tenaga profesional." },
-                    { title: "Mempercepat Transformasi Digital", text: "Mendorong peningkatan efisiensi, tata kelola, dan kualitas layanan melalui penerapan teknologi dan inovasi digital." },
-                    { title: "Membangun Kemitraan Jangka Panjang", text: "Menjalin hubungan kerja yang dilandasi integritas, profesionalisme, akuntabilitas, dan kolaborasi untuk menciptakan keberhasilan bersama." },
-                    { title: "Menciptakan Dampak Berkelanjutan", text: "Menghasilkan solusi yang memberikan manfaat ekonomi, sosial, dan lingkungan secara berkelanjutan bagi klien dan masyarakat." }
-                  ].map((misi, i) => (
+                  {misiData.map((misi: any, i: number) => (
                     <div key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
                       <div style={{ 
                         width: "24px", height: "24px", borderRadius: "50%", 
@@ -258,7 +271,7 @@ export default async function TentangKamiPage() {
             <div className="gold-divider" />
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))", gap: "1.5rem" }}>
-            {coreValuesList.map((cv) => (
+            {coreValuesData.map((cv: any) => (
               <div key={cv.name} className="card" style={{ padding: "1.5rem", display: "flex", gap: "1.5rem", alignItems: "flex-start", background: "white" }}>
                 <div style={{ 
                   fontSize: "3rem", 
