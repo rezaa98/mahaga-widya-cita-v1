@@ -20,12 +20,20 @@ export default async function KontakPage() {
   const phone = kontakData?.phone || "+62 21 1234 5678";
   const email = kontakData?.email || "info@mahagawidyacita.co.id";
   const address = kontakData?.address || "Jl. Raya Gatot Subroto No. 42, Jakarta Selatan, DKI Jakarta 12930";
+  const workingHours = kontakData?.workingHours || "Senin – Jumat, 08.00 – 17.00 WIB";
+  const locationTag = kontakData?.locationTag || "Jakarta Selatan, DKI Jakarta";
+  
+  const whatsappCta = kontakData?.whatsappCta || {
+    title: 'Chat via WhatsApp',
+    subtitle: 'Respons lebih cepat, langsung ke tim kami',
+    defaultMessage: 'Halo, saya ingin berkonsultasi dengan tim PT Mahaga Widya Cita.'
+  };
 
   const contactInfo = [
     { icon: Phone, label: "Telepon", value: phone, href: `tel:${phone.replace(/\D/g, "")}` },
     { icon: Mail, label: "Email", value: email, href: `mailto:${email}` },
     { icon: MapPin, label: "Alamat", value: address, href: "#" },
-    { icon: Clock, label: "Jam Kerja", value: "Senin – Jumat, 08.00 – 17.00 WIB", href: "#" },
+    { icon: Clock, label: "Jam Kerja", value: workingHours, href: "#" },
   ];
 
   const waNumber = phone.replace(/\D/g, '').replace(/^0/, '62');
@@ -81,7 +89,7 @@ export default async function KontakPage() {
 
               {/* WhatsApp CTA */}
               <a
-                href={`https://wa.me/${waNumber}?text=${encodeURIComponent("Halo, saya ingin berkonsultasi dengan tim PT Mahaga Widya Cita.")}`}
+                href={`https://wa.me/${waNumber}?text=${encodeURIComponent(whatsappCta.defaultMessage)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="card"
@@ -91,16 +99,16 @@ export default async function KontakPage() {
                   <MessageSquare size={24} fill="white" color="white" />
                 </div>
                 <div>
-                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "700", color: "white", marginBottom: "0.25rem" }}>Chat via WhatsApp</div>
-                  <div style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.8)" }}>Respons lebih cepat, langsung ke tim kami</div>
+                  <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "700", color: "white", marginBottom: "0.25rem" }}>{whatsappCta.title}</div>
+                  <div style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.8)", lineHeight: "1.4" }}>{whatsappCta.subtitle}</div>
                 </div>
               </a>
 
               {/* Map placeholder */}
               <div className="card" style={{ overflow: "hidden" }}>
-                <div style={{ height: "200px", background: "linear-gradient(135deg, var(--color-primary-100), var(--color-primary-200))", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "0.5rem" }}>
+                <div style={{ height: "200px", background: "linear-gradient(135deg, var(--color-primary-100), var(--color-primary-200))", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "0.5rem", textAlign: "center", padding: "1rem" }}>
                   <MapPin size={36} color="var(--color-primary-500)" />
-                  <span style={{ fontSize: "0.875rem", color: "var(--color-primary-600)", fontWeight: "600" }}>Jakarta Selatan, DKI Jakarta</span>
+                  <span style={{ fontSize: "0.875rem", color: "var(--color-primary-600)", fontWeight: "600" }}>{locationTag}</span>
                 </div>
               </div>
             </div>
