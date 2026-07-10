@@ -7,7 +7,8 @@ import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Calendar, User } from "lucide-react";
+import { ArrowLeft, Calendar, User, Share2, Link as LinkIcon, BookOpen, ArrowRight } from "lucide-react";
+import { IconLinkedin, IconXTwitter } from "@/components/icons/SocialIcons";
 
 export const dynamic = "force-dynamic";
 
@@ -71,6 +72,39 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
 
   const article: any = docs[0];
 
+  // Fetch related articles
+  const categoryId = typeof article.category === 'object' && article.category ? article.category.id : article.category;
+  
+  let relatedDocs: any[] = [];
+  if (categoryId) {
+    const { docs: rel } = await payload.find({
+      collection: "articles",
+      where: {
+        id: { not_equals: article.id },
+        category: { equals: categoryId },
+        status: { equals: "published" },
+      },
+      sort: "-publishedAt",
+      limit: 3,
+    });
+    relatedDocs = rel;
+  }
+  
+  if (relatedDocs.length < 3) {
+    const { docs: relFallback } = await payload.find({
+      collection: "articles",
+      where: {
+        id: { not_equals: article.id },
+        status: { equals: "published" },
+      },
+      sort: "-publishedAt",
+      limit: 3 - relatedDocs.length,
+    });
+    relatedDocs = [...relatedDocs, ...relFallback];
+  }
+
+  const shareUrl = `https://mahagawidyacita.co.id/artikel/${article.slug}`;
+
   return (
     <>
       <Navbar />
@@ -118,7 +152,73 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
             <div className="article-content">
               <RichTextRenderer content={article.content} />
             </div>
+            
+            {/* Share Section */}
+            <div style={{ marginTop: "3rem", paddingTop: "2rem", borderTop: "1px solid #f1f5f9", display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", fontWeight: 600, color: "#1a2b4c" }}>
+                <Share2 size={20} color="var(--color-primary-600)" />
+                Bagikan Artikel:
+              </div>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#f1f5f9", color: "#64748b", transition: "all 0.2s" }} onMouseOver={e => { e.currentTarget.style.backgroundColor = '#1877F2'; e.currentTarget.style.color = '#fff' }} onMouseOut={e => { e.currentTarget.style.backgroundColor = '#f1f5f9'; e.currentTarget.style.color = '#64748b' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                </a>
+                <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#f1f5f9", color: "#64748b", transition: "all 0.2s" }} onMouseOver={e => { e.currentTarget.style.backgroundColor = '#1DA1F2'; e.currentTarget.style.color = '#fff' }} onMouseOut={e => { e.currentTarget.style.backgroundColor = '#f1f5f9'; e.currentTarget.style.color = '#64748b' }}>
+                  <IconXTwitter size={18} />
+                </a>
+                <a href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#f1f5f9", color: "#64748b", transition: "all 0.2s" }} onMouseOver={e => { e.currentTarget.style.backgroundColor = '#0A66C2'; e.currentTarget.style.color = '#fff' }} onMouseOut={e => { e.currentTarget.style.backgroundColor = '#f1f5f9'; e.currentTarget.style.color = '#64748b' }}>
+                  <IconLinkedin size={18} />
+                </a>
+                <a href={`mailto:?subject=${encodeURIComponent(article.title)}&body=${encodeURIComponent(shareUrl)}`} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#f1f5f9", color: "#64748b", transition: "all 0.2s" }} onMouseOver={e => { e.currentTarget.style.backgroundColor = 'var(--color-primary-600)'; e.currentTarget.style.color = '#fff' }} onMouseOut={e => { e.currentTarget.style.backgroundColor = '#f1f5f9'; e.currentTarget.style.color = '#64748b' }}>
+                  <LinkIcon size={18} />
+                </a>
+              </div>
+            </div>
           </div>
+          
+          {/* Related Articles Section */}
+          {relatedDocs.length > 0 && (
+            <div style={{ marginTop: "4rem" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem" }}>
+                <h3 style={{ fontSize: "1.5rem", color: "#1a2b4c", fontWeight: 700, margin: 0 }}>Baca Juga</h3>
+                <Link href="/artikel" style={{ color: "var(--color-primary-600)", fontWeight: 600, display: "flex", alignItems: "center", gap: "0.25rem", fontSize: "0.9rem", textDecoration: "none" }}>
+                  Lihat Semua <ArrowRight size={16} />
+                </Link>
+              </div>
+              
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "1.5rem" }}>
+                {relatedDocs.map((rel: any) => (
+                  <Link key={rel.id} href={`/artikel/${rel.slug || rel.id}`} style={{ textDecoration: "none", display: "block" }}>
+                    <div className="card" style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.03)" }}>
+                      <div style={{ 
+                        height: "150px", 
+                        backgroundColor: "#e2e8f0", 
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#94a3b8",
+                        overflow: "hidden", position: "relative" }}>
+                        {rel.imageUrl ? (
+                          <Image src={rel.imageUrl} alt={rel.title} fill style={{ objectFit: "cover" }} sizes="(max-width: 768px) 100vw, 33vw" />
+                        ) : (
+                          <BookOpen size={24} />
+                        )}
+                      </div>
+                      
+                      <div style={{ padding: "1.25rem", display: "flex", flexDirection: "column", flexGrow: 1 }}>
+                        <h4 style={{ fontSize: "1.05rem", color: "#1a2b4c", marginBottom: "0.5rem", lineHeight: 1.4, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", fontWeight: 700 }}>
+                          {rel.title}
+                        </h4>
+                        <div style={{ fontSize: "0.75rem", color: "#94a3b8", marginTop: "auto", paddingTop: "0.75rem" }}>
+                          {new Date(rel.publishedAt || rel.createdAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </main>
       <Footer />
