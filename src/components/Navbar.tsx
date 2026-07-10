@@ -78,8 +78,8 @@ export default function Navbar() {
               <Image 
                 src="/logo-transparent.png" 
                 alt="Logo PT Mahaga Widya Cita" 
-                width={40} 
-                height={40} 
+                width={48} 
+                height={48} 
                 style={{ objectFit: 'contain' }}
               />
               <span
