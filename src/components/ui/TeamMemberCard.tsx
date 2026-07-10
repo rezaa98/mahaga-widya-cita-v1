@@ -18,8 +18,26 @@ export default function TeamMemberCard({ member }: { member: any }) {
     };
   }, [isOpen]);
 
-  const photoUrl = member.photo && typeof member.photo !== 'string' ? member.photo.url : null;
+  let photoUrl = member.photo && typeof member.photo !== 'string' ? member.photo.url : null;
   const initials = member.initials;
+
+  // Fallback for Vercel read-only filesystem (where media upload fails but files exist in git)
+  if (!photoUrl) {
+    const fallbackMap: Record<string, string> = {
+      "Prof. Dr. Hj. Endang Larasati, M.S.": "/media/prof_endang_1783667447330.png",
+      "Dr. Oscar Radyan Danar, M.A.": "/media/dr_oscar_1783667480247.png",
+      "Rizki Firmansyah, M.Sc.": "/media/rizki_firmansyah_1783667489175.png",
+      "Prof. Dr. Ahmad Basori, M.M.": "/media/prof_ahmad_1783667505471.png",
+      "Sari Dewi Purnama, S.Psi., M.Si.": "/media/sari_dewi_1783667556008.png",
+      "Dr. Bambang Wiyono, S.H., M.H.": "/media/dr_bambang_1783667514730.png",
+      "Rudi Ardiansyah, M.Kom.": "/media/rudi_ardiansyah_1783667564948.png",
+      "Nurul Aini, M.Pd.": "/media/nurul_aini_1783667603562.png",
+      "Dr. Hendra Saputra, M.Sos.": "/media/dr_hendra_1783667613293.png"
+    };
+    if (fallbackMap[member.name]) {
+      photoUrl = fallbackMap[member.name];
+    }
+  }
 
   const CardImage = () => (
     <div style={{ display: "flex", flexDirection: "column" }}>
