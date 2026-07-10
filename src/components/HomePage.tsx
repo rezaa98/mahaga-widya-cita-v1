@@ -274,6 +274,12 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
       }))
     : stats;
 
+  // PARTNERS DATA
+  const partnersTitle = berandaData?.partners?.title || "Dipercaya oleh Lebih dari 200 Instansi dan Mitra Strategis";
+  const displayPartners = berandaData?.partners?.list?.length > 0
+    ? berandaData.partners.list
+    : partners.map(name => ({ name }));
+
   const [statsVisible, setStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
 
@@ -644,7 +650,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
       <section className="section-sm" style={{ overflow: "hidden", borderTop: "1px solid var(--color-neutral-100)", borderBottom: "1px solid var(--color-neutral-100)" }}>
         <div className="container" style={{ marginBottom: "1.5rem", textAlign: "center" }}>
           <p style={{ fontSize: "0.8125rem", color: "var(--color-neutral-400)", fontWeight: "600", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            Dipercaya oleh Lebih dari 200 Instansi dan Mitra Strategis
+            {partnersTitle}
           </p>
         </div>
         <div style={{ position: "relative", overflow: "hidden" }}>
@@ -656,7 +662,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
               width: "max-content",
             }}
           >
-            {[...partners, ...partners].map((partner, i) => (
+            {[...displayPartners, ...displayPartners].map((partner: any, i: number) => (
               <div
                 key={i}
                 style={{
@@ -669,9 +675,17 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
                   fontWeight: "600",
                   color: "var(--color-neutral-600)",
                   flexShrink: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "54px",
                 }}
               >
-                {partner}
+                {partner.logo && typeof partner.logo === 'object' && partner.logo.url ? (
+                  <img src={partner.logo.url} alt={partner.name} style={{ height: "100%", maxHeight: "30px", objectFit: "contain" }} />
+                ) : (
+                  <span>{partner.name}</span>
+                )}
               </div>
             ))}
           </div>
