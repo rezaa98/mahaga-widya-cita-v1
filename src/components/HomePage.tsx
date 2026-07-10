@@ -171,8 +171,16 @@ const teamMembers = [
 ];
 
 const partners = [
-  "Kementerian PAN-RB", "BKN", "BPKP", "LAN RI", "Setjen DPR RI",
-  "Bappenas", "Kemendagri", "Kemenkeu", "KemenPUPR", "Ombudsman RI",
+  { name: 'Kementerian PAN-RB', logoUrl: '/media/partner_panrb.png' },
+  { name: 'BKN', logoUrl: '/media/partner_bkn.png' },
+  { name: 'BPKP', logoUrl: '/media/partner_bpkp.png' },
+  { name: 'LAN RI', logoUrl: '/media/partner_lan.png' },
+  { name: 'Setjen DPR RI', logoUrl: '/media/partner_dpr.png' },
+  { name: 'Bappenas', logoUrl: '/media/partner_bappenas.png' },
+  { name: 'Kemendagri', logoUrl: '/media/partner_kemendagri.png' },
+  { name: 'Kemenkeu', logoUrl: '/media/partner_kemenkeu.png' },
+  { name: 'KemenPUPR', logoUrl: '/media/partner_pupr.png' },
+  { name: 'Ombudsman RI', logoUrl: '/media/partner_ombudsman.png' },
 ];
 
 /* ============================================
@@ -278,7 +286,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
   const partnersTitle = berandaData?.partners?.title || "Dipercaya oleh Lebih dari 200 Instansi dan Mitra Strategis";
   const displayPartners = berandaData?.partners?.list?.length > 0
     ? berandaData.partners.list
-    : partners.map(name => ({ name }));
+    : partners;
 
   const [statsVisible, setStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
