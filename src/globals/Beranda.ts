@@ -169,6 +169,37 @@ export const Beranda: GlobalConfig = {
       ]
     },
     {
+      name: 'servicesIntro',
+      label: 'Pengaturan Teks Bagian Layanan',
+      type: 'group',
+      fields: [
+        {
+          name: 'badge',
+          label: 'Teks Badge (Kecil di Atas)',
+          type: 'text',
+          required: true,
+          defaultValue: 'Layanan Kami',
+        },
+        {
+          name: 'title',
+          label: 'Judul Utama Bagian Layanan',
+          type: 'text',
+          required: true,
+          defaultValue: 'Solusi Lengkap untuk Penguatan Kapasitas Instansi',
+          admin: {
+            description: 'Gunakan HTML <br /> untuk membuat baris baru. Contoh: Solusi Lengkap untuk<br />Penguatan Kapasitas Instansi'
+          }
+        },
+        {
+          name: 'description',
+          label: 'Deskripsi Singkat',
+          type: 'textarea',
+          required: true,
+          defaultValue: 'Enam pilar layanan terintegrasi yang dirancang khusus untuk memenuhi kebutuhan transformasi instansi pemerintah dan profesional Indonesia.',
+        }
+      ]
+    },
+    {
       name: 'featuredData',
       label: 'Data Pilihan (Opsional)',
       type: 'group',

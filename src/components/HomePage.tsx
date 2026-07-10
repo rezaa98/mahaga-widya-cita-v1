@@ -489,11 +489,11 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
       <section className="section">
         <div className="container">
           <div className="section-title">
-            <span className="overline">Layanan Kami</span>
-            <h2>Solusi Lengkap untuk<br />Penguatan Kapasitas Instansi</h2>
+            <span className="overline">{berandaData?.servicesIntro?.badge || "Layanan Kami"}</span>
+            <h2 dangerouslySetInnerHTML={{ __html: berandaData?.servicesIntro?.title || "Solusi Lengkap untuk<br />Penguatan Kapasitas Instansi" }}></h2>
             <div className="gold-divider" />
             <p style={{ marginTop: "1rem" }}>
-              Enam pilar layanan terintegrasi yang dirancang khusus untuk memenuhi kebutuhan transformasi instansi pemerintah dan profesional Indonesia.
+              {berandaData?.servicesIntro?.description || "Enam pilar layanan terintegrasi yang dirancang khusus untuk memenuhi kebutuhan transformasi instansi pemerintah dan profesional Indonesia."}
             </p>
           </div>
 
