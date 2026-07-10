@@ -658,7 +658,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
           </div>
 
           <div style={{ textAlign: "center", marginTop: "2.5rem" }}>
-            <Link href="/tentang-kami#ahli" className="btn btn-secondary" id="see-all-team">
+            <Link href="/tim" className="btn btn-secondary" id="see-all-team">
               Lihat Semua Tim & Pakar <ArrowRight size={16} />
             </Link>
           </div>
