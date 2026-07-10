@@ -21,10 +21,9 @@ import { StrikethroughFeatureClient as StrikethroughFeatureClient_e70f5e05f09f93
 import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
-import { Icon as Icon_534076e2c753ea5d539a54b05f456b1b } from '@/components/admin/Icon'
-import { Logo as Logo_a44df17d0fc3dcd873dae43dc3bf66bd } from '@/components/admin/Logo'
-import { ThemeForceProvider as ThemeForceProvider_bafdd812978598fcfadcb4693fefc9da } from '@/components/admin/ThemeForceProvider'
-import { DashboardWidget as DashboardWidget_c5192f80c64fc937341a06e8b5136d0d } from '@/components/admin/DashboardWidget'
+import { Icon as Icon_03ec9ad23b0bb66bfcac66241d9063eb } from '../../../components/admin/Icon'
+import { Logo as Logo_078be3ac59220a397a1074e5597d364f } from '../../../components/admin/Logo'
+import { DashboardWidget as DashboardWidget_5abcffbfdffa4b36842729c03af4c67c } from '../../../components/admin/DashboardWidget'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -52,9 +51,8 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#UnderlineFeatureClient": UnderlineFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
-  "@/components/admin/Icon#Icon": Icon_534076e2c753ea5d539a54b05f456b1b,
-  "@/components/admin/Logo#Logo": Logo_a44df17d0fc3dcd873dae43dc3bf66bd,
-  "@/components/admin/ThemeForceProvider#ThemeForceProvider": ThemeForceProvider_bafdd812978598fcfadcb4693fefc9da,
-  "@/components/admin/DashboardWidget#DashboardWidget": DashboardWidget_c5192f80c64fc937341a06e8b5136d0d,
+  "./components/admin/Icon#Icon": Icon_03ec9ad23b0bb66bfcac66241d9063eb,
+  "./components/admin/Logo#Logo": Logo_078be3ac59220a397a1074e5597d364f,
+  "./components/admin/DashboardWidget#DashboardWidget": DashboardWidget_5abcffbfdffa4b36842729c03af4c67c,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
