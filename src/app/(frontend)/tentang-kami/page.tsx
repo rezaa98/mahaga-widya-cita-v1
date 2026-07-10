@@ -289,27 +289,23 @@ export default async function TentangKamiPage() {
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
             {coreValuesData.map((cv: any) => (
-              <div key={cv.name} className="card" style={{ padding: "1.5rem", display: "flex", gap: "1.5rem", alignItems: "flex-start", background: "white", width: "100%", maxWidth: "450px", flexGrow: 1 }}>
-                <div style={{ 
-                  fontSize: "3rem", 
-                  fontWeight: 900, 
-                  color: "var(--color-primary-200)", 
-                  lineHeight: 0.8, 
-                  width: "50px", 
-                  textAlign: "center",
-                  WebkitTextStroke: "1px var(--color-primary-600)",
-                  fontFamily: "'Plus Jakarta Sans', sans-serif"
-                }}>
-                  {cv.letter}
+              <div key={cv.name} className="card" style={{ padding: "2rem", textAlign: "center", width: "100%", maxWidth: "280px", flexGrow: 1 }}>
+                <div style={{ width: "56px", height: "56px", background: "var(--color-primary-100)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem" }}>
+                  <div style={{ 
+                    fontSize: "2rem", 
+                    fontWeight: 900, 
+                    color: "var(--color-primary-600)", 
+                    fontFamily: "'Plus Jakarta Sans', sans-serif"
+                  }}>
+                    {cv.letter}
+                  </div>
                 </div>
-                <div>
-                  <h3 style={{ fontSize: "1.25rem", color: "var(--color-primary-900)", marginBottom: "0.5rem", letterSpacing: "0.05em", fontWeight: 800 }}>
-                    {cv.name}
-                  </h3>
-                  <p style={{ color: "var(--color-neutral-600)", fontSize: "0.9375rem", lineHeight: "1.6", textTransform: "capitalize" }}>
-                    {cv.desc.toLowerCase()}
-                  </p>
-                </div>
+                <h3 style={{ fontSize: "1.125rem", color: "var(--color-primary-900)", marginBottom: "0.625rem", letterSpacing: "0.05em", fontWeight: 800 }}>
+                  {cv.name}
+                </h3>
+                <p style={{ fontSize: "0.875rem", color: "var(--color-neutral-500)", lineHeight: "1.6", textTransform: "capitalize" }}>
+                  {cv.desc.toLowerCase()}
+                </p>
               </div>
             ))}
           </div>
