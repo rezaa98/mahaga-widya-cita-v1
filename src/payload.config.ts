@@ -26,12 +26,12 @@ export default buildConfig({
     components: {
       views: {
         Dashboard: {
-          Component: '@/components/admin/DashboardWidget#DashboardWidget',
+          Component: './components/admin/DashboardWidget#DashboardWidget',
         },
       },
       graphics: {
-        Logo: '@/components/admin/Logo#Logo',
-        Icon: '@/components/admin/Icon#Icon',
+        Logo: './components/admin/Logo#Logo',
+        Icon: './components/admin/Icon#Icon',
       },
     },
   },

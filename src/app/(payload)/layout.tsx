@@ -11,6 +11,7 @@ type Args = {
   children: React.ReactNode
 }
 
+// Trigger Next.js hot reload
 const Layout = ({ children }: Args) => (
   <RootLayout
     config={configPromise}
