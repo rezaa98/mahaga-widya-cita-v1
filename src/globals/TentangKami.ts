@@ -12,6 +12,16 @@ export const TentangKami: GlobalConfig = {
       label: 'Bagian Hero (Atas)',
       type: 'group',
       fields: [
+        { 
+          name: 'backgroundImage', 
+          type: 'upload', 
+          relationTo: 'media', 
+          label: 'Gambar Latar Belakang (Opsional)', 
+          required: false,
+          admin: {
+            description: 'Unggah gambar untuk mengganti background warna gradient di hero section.'
+          }
+        },
         { name: 'badge', type: 'text', defaultValue: 'TENTANG KAMI', required: true },
         { name: 'title', type: 'text', defaultValue: 'Building Better Decisions.', required: true },
         { name: 'titleHighlight', type: 'text', defaultValue: 'Creating Sustainable Impact.', required: true },

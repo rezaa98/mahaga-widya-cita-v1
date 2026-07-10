@@ -135,7 +135,9 @@ export default async function TentangKamiPage() {
       {/* PAGE HERO */}
       <section
         style={{
-          background: "linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-700) 100%)",
+          background: heroData.backgroundImage?.url
+            ? `linear-gradient(135deg, rgba(11, 45, 107, 0.9) 0%, rgba(18, 71, 168, 0.8) 100%), url(${heroData.backgroundImage.url}) center/cover no-repeat`
+            : "linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-700) 100%)",
           paddingTop: "calc(72px + 4rem)",
           paddingBottom: "4rem",
           position: "relative",
