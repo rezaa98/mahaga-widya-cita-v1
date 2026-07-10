@@ -6,6 +6,9 @@ import { ArrowRight, FileText, Download } from "lucide-react";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 
+export const dynamic = "force-dynamic";
+
+
 export const metadata = {
   title: "Policy Reviews | Mahaga Widya Cita",
   description: "Dokumen analisis kebijakan dan review komprehensif oleh pakar PT Mahaga Widya Cita.",

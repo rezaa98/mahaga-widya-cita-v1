@@ -6,6 +6,9 @@ import Link from "next/link";
 import { Building2, Globe, ArrowRight, Handshake } from "lucide-react";
 import { WaveDivider } from "@/components/ui/WaveDivider";
 
+export const dynamic = "force-dynamic";
+
+
 export const metadata: Metadata = {
   title: "Mitra Strategis",
   description: "Lebih dari 200 instansi pemerintah dan swasta telah bermitra dengan PT Mahaga Widya Cita dalam program edukasi dan konsultasi.",

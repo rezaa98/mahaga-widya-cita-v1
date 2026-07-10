@@ -7,6 +7,9 @@ import { ArrowRight, BookOpen } from "lucide-react";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 
+export const dynamic = "force-dynamic";
+
+
 export const metadata = {
   title: "Artikel & Wawasan | Mahaga Widya Cita",
   description: "Kumpulan artikel, insight, dan berita terbaru dari PT Mahaga Widya Cita.",

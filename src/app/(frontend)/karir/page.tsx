@@ -6,6 +6,9 @@ import Link from "next/link";
 import { MapPin, Clock, Briefcase, ChevronRight, ArrowRight, Users, Heart } from "lucide-react";
 import { WaveDivider } from "@/components/ui/WaveDivider";
 
+export const dynamic = "force-dynamic";
+
+
 export const metadata: Metadata = {
   title: "Karir",
   description: "Bergabunglah bersama tim PT Mahaga Widya Cita dan ikut berkontribusi dalam penguatan tata kelola dan edukasi profesional di Indonesia.",

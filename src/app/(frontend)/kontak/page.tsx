@@ -8,6 +8,9 @@ import { Phone, Mail, MapPin, Clock, Send, CheckCircle2, MessageSquare } from "l
 import type { Metadata } from "next";
 import { WaveDivider } from "@/components/ui/WaveDivider";
 
+export const dynamic = "force-dynamic";
+
+
 const contactInfo = [
   { icon: Phone, label: "Telepon", value: "+62 21 1234 5678", href: "tel:+622112345678" },
   { icon: Mail, label: "Email", value: "info@mahagawidyacita.co.id", href: "mailto:info@mahagawidyacita.co.id" },

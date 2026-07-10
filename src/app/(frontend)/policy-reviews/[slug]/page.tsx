@@ -8,6 +8,9 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, User, Download, FileText } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
   const payload = await getPayload({ config: configPromise });

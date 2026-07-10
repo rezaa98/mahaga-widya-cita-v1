@@ -8,6 +8,9 @@ import TeamMemberCard from "@/components/ui/TeamMemberCard";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 
+export const dynamic = "force-dynamic";
+
+
 export const metadata: Metadata = {
   title: "Tentang Kami",
   description:

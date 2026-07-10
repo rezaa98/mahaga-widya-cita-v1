@@ -11,6 +11,9 @@ import TeamMemberCard from "@/components/ui/TeamMemberCard";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 
+export const dynamic = "force-dynamic";
+
+
 export const metadata: Metadata = {
   title: "Tim & Manajemen",
   description: "Kenali para pakar dan manajemen PT Mahaga Widya Cita yang berpengalaman di bidang administrasi publik, tata kelola, dan teknologi.",
