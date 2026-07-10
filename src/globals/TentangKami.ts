@@ -43,15 +43,7 @@ export const TentangKami: GlobalConfig = {
         },
       ]
     },
-    {
-      name: 'milestones',
-      label: 'Perjalanan Kami (Timeline)',
-      type: 'array',
-      fields: [
-        { name: 'year', type: 'text', required: true },
-        { name: 'event', type: 'textarea', required: true },
-      ]
-    },
+
     {
       name: 'ceoMessage',
       label: 'Pesan CEO',

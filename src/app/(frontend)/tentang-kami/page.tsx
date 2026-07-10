@@ -52,14 +52,7 @@ const defaultValues = [
   }
 ];
 
-const defaultMilestones = [
-  { year: "2015", event: "PT Mahaga Widya Cita berdiri dan mulai melayani instansi pemerintah pertama." },
-  { year: "2017", event: "Meluncurkan program Smart Executive Education yang kini telah diikuti 3.000+ peserta." },
-  { year: "2019", event: "Mengembangkan platform Smart Discussion Series (SDS) yang menghubungkan pakar & ASN." },
-  { year: "2021", event: "Meluncurkan platform Smart Online Course dengan sertifikasi digital terintegrasi." },
-  { year: "2023", event: "Bermitra dengan 200+ instansi pemerintah di seluruh Indonesia." },
-  { year: "2026", event: "Meluncurkan platform digital terintegrasi generasi baru untuk profesional Indonesia." },
-];
+
 
 const stats = [
   { value: "7+", label: "Area Layanan Terintegrasi", icon: Target },
@@ -111,7 +104,6 @@ export default async function TentangKamiPage() {
   };
 
   const valuesData = tentangKami?.values?.length ? tentangKami.values : defaultValues;
-  const milestonesData = tentangKami?.milestones?.length ? tentangKami.milestones : defaultMilestones;
   const ceoQuote = tentangKami?.ceoMessage?.quote || "Kami percaya bahwa kualitas tata kelola suatu bangsa dimulai dari kualitas manusianya. Setiap program yang kami rancang adalah investasi jangka panjang bagi kemajuan Indonesia — sebuah misi yang kami emban dengan penuh dedikasi dan kebanggaan.";
 
   // Icon mapping
@@ -294,40 +286,10 @@ export default async function TentangKamiPage() {
         </div>
       </section>
 
-      {/* TIMELINE */}
-      <section className="section">
-        <div className="container">
-          <div className="section-title">
-            <span className="overline">Perjalanan Kami</span>
-            <h2>Milestone PT Mahaga Widya Cita</h2>
-            <div className="gold-divider" />
-          </div>
-          <div style={{ position: "relative", maxWidth: "800px", margin: "0 auto" }}>
-            {/* Center line */}
-            <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: "2px", background: "var(--color-primary-200)", transform: "translateX(-50%)" }} />
-            <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
-              {milestonesData.map((m: any, i: number) => (
-                <div key={m.year} style={{ display: "flex", gap: "2rem", alignItems: "center", flexDirection: i % 2 === 0 ? "row" : "row-reverse" }}>
-                  <div style={{ flex: 1, textAlign: i % 2 === 0 ? "right" : "left" }}>
-                    <div className="card" style={{ padding: "1.25rem 1.5rem", display: "inline-block", textAlign: i % 2 === 0 ? "right" : "left" }}>
-                      <p style={{ fontSize: "0.9375rem", color: "var(--color-neutral-700)", lineHeight: "1.5" }}>{m.event}</p>
-                    </div>
-                  </div>
-                  <div style={{ position: "relative", zIndex: 1, flexShrink: 0 }}>
-                    <div style={{ width: "52px", height: "52px", background: "linear-gradient(135deg, var(--color-primary-500), var(--color-primary-800))", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 0 4px white, 0 0 0 6px var(--color-primary-200)" }}>
-                      <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "800", fontSize: "0.75rem", color: "white" }}>{m.year}</span>
-                    </div>
-                  </div>
-                  <div style={{ flex: 1 }} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* CEO MESSAGE */}
-      <section className="section section-alt" id="ceo">
+      <section className="section" id="ceo">
         <div className="container">
           <div style={{ maxWidth: "800px", margin: "0 auto", textAlign: "center" }}>
             <span className="badge badge-primary" style={{ marginBottom: "1.5rem" }}>Pesan CEO</span>
