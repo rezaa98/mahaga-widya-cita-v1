@@ -180,31 +180,6 @@ export default async function Footer() {
           </div>
         </div>
 
-        {/* Newsletter bar */}
-        <div
-          style={{
-            background: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: "16px",
-            padding: "1.5rem 2rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "1.5rem",
-            flexWrap: "wrap",
-            marginBottom: "2.5rem",
-          }}
-        >
-          <div>
-            <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "600", color: "white", marginBottom: "0.25rem", fontSize: "1rem" }}>
-              Berlangganan Newsletter
-            </div>
-            <p style={{ fontSize: "0.875rem", color: "rgba(255,255,255,0.6)" }}>
-              Dapatkan info webinar, artikel, dan kursus terbaru langsung di inbox Anda.
-            </p>
-          </div>
-          <NewsletterForm />
-        </div>
 
         {/* Bottom bar */}
         <div
