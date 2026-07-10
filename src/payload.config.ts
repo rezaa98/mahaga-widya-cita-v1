@@ -14,6 +14,7 @@ import { Subscribers } from './collections/Subscribers'
 import { Services } from './collections/Services'
 import { TeamMembers } from './collections/TeamMembers'
 import { TentangKami } from './globals/TentangKami'
+import { Kontak } from './globals/Kontak'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -42,6 +43,7 @@ export default buildConfig({
   },
   globals: [
     TentangKami,
+    Kontak,
   ],
   collections: [
     Users,

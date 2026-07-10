@@ -1,9 +1,9 @@
-"use client";
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Phone, Mail, MapPin } from "lucide-react";
-
+import { getPayload } from "payload";
+import configPromise from "@payload-config";
+import NewsletterForm from "./NewsletterForm";
 import { IconInstagram, IconYoutube, IconLinkedin, IconXTwitter } from "./icons/SocialIcons";
 
 const footerLinks = {
@@ -31,37 +31,13 @@ const footerLinks = {
   ],
 };
 
-export default function Footer() {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
-
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-
-    setLoading(true);
-    setStatus("idle");
-
-    try {
-      const res = await fetch('/api/subscribers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-
-      if (res.ok) {
-        setStatus("success");
-        setEmail("");
-      } else {
-        setStatus("error");
-      }
-    } catch (err) {
-      setStatus("error");
-    } finally {
-      setLoading(false);
-    }
-  };
+export default async function Footer() {
+  const payload = await getPayload({ config: configPromise });
+  const kontakData = await payload.findGlobal({ slug: "kontak" });
+  
+  const phone = kontakData?.phone || "+62 21 1234 5678";
+  const email = kontakData?.email || "info@mahagawidyacita.co.id";
+  const address = kontakData?.address || "Jakarta, Indonesia";
 
   return (
     <footer
@@ -211,13 +187,13 @@ export default function Footer() {
             </ul>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
               {[
-                { icon: Phone, text: "+62 21 1234 5678" },
-                { icon: Mail, text: "info@mahagawidyacita.co.id" },
-                { icon: MapPin, text: "Jakarta, Indonesia" },
+                { icon: Phone, text: phone },
+                { icon: Mail, text: email },
+                { icon: MapPin, text: address },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   <Icon size={14} color="var(--color-primary-300)" style={{ flexShrink: 0 }} />
-                  <span style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.65)" }}>{text}</span>
+                  <span style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.65)", whiteSpace: "pre-line", lineHeight: "1.5" }}>{text}</span>
                 </div>
               ))}
             </div>
@@ -247,36 +223,7 @@ export default function Footer() {
               Dapatkan info webinar, artikel, dan kursus terbaru langsung di inbox Anda.
             </p>
           </div>
-          <form onSubmit={handleSubscribe} style={{ display: "flex", gap: "0.625rem", flexShrink: 0, flexWrap: "wrap" }}>
-            <input
-              type="email"
-              placeholder="Masukkan email Anda"
-              className="input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              disabled={loading || status === "success"}
-              style={{
-                background: "rgba(255,255,255,0.1)",
-                border: "1px solid rgba(255,255,255,0.2)",
-                color: "white",
-                minWidth: "240px",
-                borderRadius: "var(--radius-full)",
-              }}
-              id="newsletter-email"
-            />
-            <button 
-              type="submit" 
-              className="btn btn-primary btn-sm"
-              disabled={loading || status === "success"}
-              style={{
-                backgroundColor: status === "success" ? "var(--color-success)" : undefined,
-                borderColor: status === "success" ? "var(--color-success)" : undefined,
-              }}
-            >
-              {loading ? "Memproses..." : status === "success" ? "Berhasil!" : "Langganan"}
-            </button>
-          </form>
+          <NewsletterForm />
         </div>
 
         {/* Bottom bar */}
