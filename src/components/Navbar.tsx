@@ -12,8 +12,8 @@ const navLinks = [
     href: "/tentang-kami",
     children: [
       { label: "Profil Perusahaan", href: "/tentang-kami" },
-      { label: "Manajemen", href: "/tentang-kami#manajemen" },
-      { label: "Tenaga Ahli", href: "/tentang-kami#ahli" },
+      { label: "Manajemen", href: "/tim#manajemen" },
+      { label: "Tenaga Ahli", href: "/tim#ahli" },
       { label: "Pesan CEO", href: "/tentang-kami#ceo" },
     ],
   },
