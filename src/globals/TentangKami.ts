@@ -120,6 +120,16 @@ export const TentangKami: GlobalConfig = {
       label: 'Pesan CEO',
       type: 'group',
       fields: [
+        { 
+          name: 'ceo', 
+          type: 'relationship', 
+          relationTo: 'team-members', 
+          required: true, 
+          label: 'Pilih Anggota Tim (CEO)',
+          admin: {
+            description: 'Pilih anggota tim yang akan ditampilkan sebagai CEO di halaman ini.'
+          }
+        },
         { name: 'quote', type: 'textarea', required: true, defaultValue: 'Kami percaya bahwa kualitas tata kelola suatu bangsa dimulai dari kualitas manusianya. Setiap program yang kami rancang adalah investasi jangka panjang bagi kemajuan Indonesia — sebuah misi yang kami emban dengan penuh dedikasi dan kebanggaan.' },
       ]
     }

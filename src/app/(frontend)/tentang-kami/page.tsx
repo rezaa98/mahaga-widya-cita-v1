@@ -80,24 +80,36 @@ const coreValuesList = [
 
 export default async function TentangKamiPage() {
   const payload = await getPayload({ config: configPromise });
-  const { docs: ceoDocs } = await payload.find({
-    collection: "team-members",
-    where: {
-      name: {
-        contains: "Endang Larasati"
-      }
-    },
-    limit: 1,
-  });
+  const tentangKami: any = await payload.findGlobal({ slug: "tentang-kami" });
   
-  const ceo = ceoDocs[0] || {
-    name: "Prof. Dr. Hj. Endang Larasati, M.S.",
-    role: "Direktur Utama",
-    initials: "EL",
-    expertise: "Administrasi Publik & Tata Kelola",
-  };
+  let ceo = tentangKami?.ceoMessage?.ceo;
+  
+  // If ceo is just an ID (number or string), fetch the full doc
+  if (ceo && typeof ceo !== 'object') {
+    ceo = await payload.findByID({
+      collection: "team-members",
+      id: ceo,
+    });
+  }
 
-  const tentangKami = await payload.findGlobal({ slug: "tentang-kami" });
+  // Fallback if not configured yet
+  if (!ceo) {
+    const { docs: ceoDocs } = await payload.find({
+      collection: "team-members",
+      where: {
+        name: {
+          contains: "Endang Larasati"
+        }
+      },
+      limit: 1,
+    });
+    ceo = ceoDocs[0] || {
+      name: "Prof. Dr. Hj. Endang Larasati, M.S.",
+      role: "Direktur Utama",
+      initials: "EL",
+      expertise: "Administrasi Publik & Tata Kelola",
+    };
+  }
   
   const heroData = tentangKami?.hero?.title ? tentangKami.hero : {
     badge: 'TENTANG KAMI',
