@@ -5,8 +5,11 @@ import HomePage from "@/components/HomePage";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 
+export const revalidate = 0;
+
 export default async function Home() {
   const payload = await getPayload({ config: configPromise });
+  const berandaData = await payload.findGlobal({ slug: "beranda" });
   
   const { docs: articles } = await payload.find({
     collection: "articles",
@@ -28,7 +31,7 @@ export default async function Home() {
   return (
     <>
       <Navbar />
-      <HomePage articles={articles} teamMembers={teamMembers} />
+      <HomePage articles={articles} teamMembers={teamMembers} berandaData={berandaData} />
       <Footer />
       <WhatsAppFloat />
     </>
