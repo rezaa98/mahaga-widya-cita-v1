@@ -154,16 +154,16 @@ export const Beranda: GlobalConfig = {
             }
           ],
           defaultValue: [
-            { name: 'Kementerian PAN-RB', logoUrl: '/media/partner_panrb.png' },
+            { name: 'Kementerian PAN-RB', logoUrl: '/media/partner_kementerian_pan_rb.png' },
             { name: 'BKN', logoUrl: '/media/partner_bkn.png' },
             { name: 'BPKP', logoUrl: '/media/partner_bpkp.png' },
-            { name: 'LAN RI', logoUrl: '/media/partner_lan.png' },
-            { name: 'Setjen DPR RI', logoUrl: '/media/partner_dpr.png' },
+            { name: 'LAN RI', logoUrl: '/media/partner_lan_ri.png' },
+            { name: 'Setjen DPR RI', logoUrl: '/media/partner_setjen_dpr_ri.png' },
             { name: 'Bappenas', logoUrl: '/media/partner_bappenas.png' },
             { name: 'Kemendagri', logoUrl: '/media/partner_kemendagri.png' },
             { name: 'Kemenkeu', logoUrl: '/media/partner_kemenkeu.png' },
-            { name: 'KemenPUPR', logoUrl: '/media/partner_pupr.png' },
-            { name: 'Ombudsman RI', logoUrl: '/media/partner_ombudsman.png' },
+            { name: 'KemenPUPR', logoUrl: '/media/partner_kemenpupr.png' },
+            { name: 'Ombudsman RI', logoUrl: '/media/partner_ombudsman_ri.png' },
           ]
         }
       ]
