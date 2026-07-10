@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 import path from 'path'
 import fs from 'fs'
 
-const BRAIN_DIR = '/Users/rezaa_ym/.gemini/antigravity-ide/brain/fdb797ac-bcea-4120-9f3b-dce2f956f933';
+const BRAIN_DIR = path.join(process.cwd(), 'public/media');
 
 const management = [
   { initials: "EL", name: "Prof. Dr. Hj. Endang Larasati, M.S.", category: "management", role: "Direktur Utama", expertise: "Administrasi Publik & Kebijakan Pemerintahan", bio: "Guru Besar Administrasi Publik dengan pengalaman 30+ tahun di bidang reformasi birokrasi dan penguatan tata kelola pemerintahan. Aktif sebagai konsultan di berbagai kementerian dan lembaga nasional.", color: "linear-gradient(135deg, #1E6FD9, #0B2D6B)", order: 1, imageFile: "prof_endang_1783667447330.png" },
