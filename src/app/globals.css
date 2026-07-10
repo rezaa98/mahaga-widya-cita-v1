@@ -100,7 +100,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
+body#frontend-app {
   background: var(--background);
   color: var(--foreground);
   font-family: "Inter", system-ui, sans-serif;
@@ -109,7 +109,12 @@ body {
   overflow-x: hidden;
 }
 
-h1, h2, h3, h4, h5, h6 {
+body#frontend-app h1, 
+body#frontend-app h2, 
+body#frontend-app h3, 
+body#frontend-app h4, 
+body#frontend-app h5, 
+body#frontend-app h6 {
   font-family: "Plus Jakarta Sans", system-ui, sans-serif;
   font-weight: 700;
   line-height: 1.2;

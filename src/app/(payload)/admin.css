@@ -1,0 +1,116 @@
+/* Dark Glassmorphism Theme for Payload Admin */
+:root {
+  /* Override base variables safely */
+}
+
+/* Force dark mode glassmorphism */
+html[data-theme='dark'] body, html[data-theme='light'] body {
+  /* Dynamic abstract gradient background for Mahaga Widya Cita */
+  background: 
+    radial-gradient(circle at 15% 50%, rgba(30, 111, 217, 0.25), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(201, 151, 10, 0.2), transparent 25%),
+    linear-gradient(135deg, #0B2D6B 0%, #061838 100%) !important;
+  background-attachment: fixed !important;
+  background-size: cover !important;
+  min-height: 100vh;
+}
+
+/* Glass effect for main components */
+.payload__app,
+.payload__header,
+.payload__nav {
+  background: transparent !important;
+}
+
+/* Navigation sidebar */
+.payload__nav {
+  background: rgba(11, 45, 107, 0.3) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Cards, Tables, Forms */
+.card,
+.collection-list__table,
+.collection-list__table thead,
+.collection-list__table tr,
+.payload__page-header,
+.form,
+.field-type,
+.tabs-field,
+.collapsible,
+.tabs-field__tabs,
+.tabs-field__tab-content {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px;
+}
+
+/* Removing inner borders and fixing transparency in tables */
+.collection-list__table th, .collection-list__table td {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Text colors and inputs */
+input, textarea, select, .rich-text {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #FFFFFF !important;
+  border-radius: 8px !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #1E6FD9 !important;
+  box-shadow: 0 0 0 2px rgba(30, 111, 217, 0.3) !important;
+}
+
+/* Force text colors to be readable in dark mode */
+.payload__app h1, .payload__app h2, .payload__app h3, .payload__app h4, .payload__app h5, .payload__app h6, 
+.payload__app label, .payload__app p, .payload__app span, .payload__app th, .payload__app td, .payload__app div {
+  color: #FFFFFF;
+}
+
+/* Make sure specific texts are white too */
+.payload__nav a {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+.payload__nav a:hover, .payload__nav a.active {
+  color: #FFFFFF !important;
+  background: rgba(255,255,255,0.1) !important;
+  border-radius: 6px;
+}
+
+/* Buttons */
+button.btn, a.btn {
+  background: rgba(30, 111, 217, 0.7) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #FFFFFF !important;
+  transition: all 0.3s ease !important;
+  border-radius: 8px !important;
+}
+
+button.btn:hover, a.btn:hover {
+  background: rgba(30, 111, 217, 0.9) !important;
+  box-shadow: 0 4px 15px rgba(30, 111, 217, 0.4) !important;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1); 
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2); 
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3); 
+}

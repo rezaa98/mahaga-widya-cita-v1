@@ -58,7 +58,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body>{children}</body>
+      <body id="frontend-app">
+        {children}
+      </body>
     </html>
   );
 }
