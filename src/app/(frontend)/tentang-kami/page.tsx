@@ -69,6 +69,19 @@ const stats = [
   { value: "Banyak", label: "Dipercaya Pemerintah & Swasta", icon: Building2 },
 ];
 
+const coreValuesList = [
+  { letter: "F", name: "FORESIGHT", desc: "Berpikir jauh ke depan, merancang masa depan pembangunan." },
+  { letter: "U", name: "UNIT", desc: "Mengutamakan kerja sama lintas sektor dan pemangku kepentingan." },
+  { letter: "T", name: "TRANSFORMATION", desc: "Mendorong perubahan nyata melalui pemberdayaan dan pengembangan." },
+  { letter: "U", name: "UNDERSTANDING", desc: "Memahami kebutuhan masyarakat dan dinamika daerah secara mendalam." },
+  { letter: "R", name: "RESPONSIBILITY", desc: "Bertindak dengan tanggung jawab dan komitmen terhadap hasil." },
+  { letter: "I", name: "INTEGRITY", desc: "Menjaga kejujuran, etika, dan akuntabilitas dalam setiap langkah." },
+  { letter: "S", name: "SUSTAINABILITY", desc: "Berorientasi pada dampak jangka panjang dan berkelanjutan." },
+  { letter: "T", name: "TECHNOLOGY", desc: "Memanfaatkan teknologi untuk tata kelola dan perencanaan yang lebih baik." },
+  { letter: "I", name: "INNOVATION", desc: "Terus berinovasi untuk menjawab tantangan masa kini dan mendatang." },
+  { letter: "C", name: "COLLABORATION", desc: "Membangun sinergi dengan masyarakat, pemerintah, dan mitra profesional." }
+];
+
 export default async function TentangKamiPage() {
   const payload = await getPayload({ config: configPromise });
   const { docs: ceoDocs } = await payload.find({
@@ -244,8 +257,45 @@ export default async function TentangKamiPage() {
         </div>
       </section>
 
-      {/* TIMELINE */}
+      {/* CORE VALUE */}
       <section className="section section-alt">
+        <div className="container">
+          <div className="section-title">
+            <span className="overline">Core Value</span>
+            <h2 style={{ fontSize: "2.5rem", letterSpacing: "0.1em", color: "var(--color-primary-900)" }}>FUTURISTIC</h2>
+            <div className="gold-divider" />
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))", gap: "1.5rem" }}>
+            {coreValuesList.map((cv) => (
+              <div key={cv.name} className="card" style={{ padding: "1.5rem", display: "flex", gap: "1.5rem", alignItems: "flex-start", background: "white" }}>
+                <div style={{ 
+                  fontSize: "3rem", 
+                  fontWeight: 900, 
+                  color: "var(--color-primary-200)", 
+                  lineHeight: 0.8, 
+                  width: "50px", 
+                  textAlign: "center",
+                  WebkitTextStroke: "1px var(--color-primary-600)",
+                  fontFamily: "'Plus Jakarta Sans', sans-serif"
+                }}>
+                  {cv.letter}
+                </div>
+                <div>
+                  <h3 style={{ fontSize: "1.25rem", color: "var(--color-primary-900)", marginBottom: "0.5rem", letterSpacing: "0.05em", fontWeight: 800 }}>
+                    {cv.name}
+                  </h3>
+                  <p style={{ color: "var(--color-neutral-600)", fontSize: "0.9375rem", lineHeight: "1.6", textTransform: "capitalize" }}>
+                    {cv.desc.toLowerCase()}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TIMELINE */}
+      <section className="section">
         <div className="container">
           <div className="section-title">
             <span className="overline">Perjalanan Kami</span>
@@ -277,7 +327,7 @@ export default async function TentangKamiPage() {
       </section>
 
       {/* CEO MESSAGE */}
-      <section className="section" id="ceo">
+      <section className="section section-alt" id="ceo">
         <div className="container">
           <div style={{ maxWidth: "800px", margin: "0 auto", textAlign: "center" }}>
             <span className="badge badge-primary" style={{ marginBottom: "1.5rem" }}>Pesan CEO</span>
