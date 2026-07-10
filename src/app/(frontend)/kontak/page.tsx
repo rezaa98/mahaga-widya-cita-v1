@@ -22,6 +22,8 @@ export default async function KontakPage() {
   const address = kontakData?.address || "Jl. Raya Gatot Subroto No. 42, Jakarta Selatan, DKI Jakarta 12930";
   const workingHours = kontakData?.workingHours || "Senin – Jumat, 08.00 – 17.00 WIB";
   const locationTag = kontakData?.locationTag || "Jakarta Selatan, DKI Jakarta";
+  const heroTitle = kontakData?.heroTitle || "Mari Berkolaborasi Bersama Kami";
+  const heroSubtitle = kontakData?.heroSubtitle || "Tim kami siap membantu kebutuhan edukasi dan konsultasi instansi Anda. Respons dalam 1×24 jam kerja.";
   
   const whatsappCta = kontakData?.whatsappCta || {
     title: 'Chat via WhatsApp',
@@ -47,11 +49,11 @@ export default async function KontakPage() {
         <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(ellipse at 70% 50%, rgba(30,111,217,0.3) 0%, transparent 65%)", pointerEvents: "none" }} />
         <div className="container" style={{ position: "relative" }}>
           <span className="badge" style={{ background: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.9)", marginBottom: "1rem" }}>Hubungi Kami</span>
-          <h1 className="text-display" style={{ color: "white", marginBottom: "1rem", maxWidth: "560px" }}>
-            Mari Berkolaborasi Bersama Kami
+          <h1 className="text-display" style={{ color: "white", marginBottom: "1rem", maxWidth: "560px", whiteSpace: "pre-line" }}>
+            {heroTitle}
           </h1>
-          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "1.125rem", maxWidth: "480px" }}>
-            Tim kami siap membantu kebutuhan edukasi dan konsultasi instansi Anda. Respons dalam 1×24 jam kerja.
+          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "1.125rem", maxWidth: "480px", whiteSpace: "pre-line" }}>
+            {heroSubtitle}
           </p>
         </div>
         <WaveDivider fill="white" />

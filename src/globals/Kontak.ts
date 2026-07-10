@@ -8,6 +8,20 @@ export const Kontak: GlobalConfig = {
   },
   fields: [
     {
+      name: 'heroTitle',
+      label: 'Judul Utama (Hero)',
+      type: 'text',
+      required: true,
+      defaultValue: 'Mari Berkolaborasi Bersama Kami',
+    },
+    {
+      name: 'heroSubtitle',
+      label: 'Sub-judul (Hero)',
+      type: 'textarea',
+      required: true,
+      defaultValue: 'Tim kami siap membantu kebutuhan edukasi dan konsultasi instansi Anda. Respons dalam 1×24 jam kerja.',
+    },
+    {
       name: 'phone',
       label: 'Telepon / WhatsApp',
       type: 'text',
