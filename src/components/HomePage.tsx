@@ -3,6 +3,7 @@ import Image from "next/image";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import TeamMemberCard from "@/components/ui/TeamMemberCard";
 import {
   ArrowRight,
   Award,
@@ -265,7 +266,7 @@ function StatCard({ stat, index, total, visible }: { stat: StatItem; index: numb
    HOMEPAGE COMPONENT
    ============================================ */
 
-export default function HomePage({ articles: payloadArticles = [] }: { articles?: any[] }) {
+export default function HomePage({ articles: payloadArticles = [], teamMembers: payloadTeamMembers = [] }: { articles?: any[], teamMembers?: any[] }) {
   const displayArticles = payloadArticles.length > 0 ? payloadArticles.map(a => ({
     id: a.id,
     category: typeof a.category === 'object' && a.category ? a.category.name : 'UMUM',
@@ -278,6 +279,8 @@ export default function HomePage({ articles: payloadArticles = [] }: { articles?
     categoryBg: "var(--color-primary-100)",
     imageUrl: a.imageUrl,
   })) : articles;
+
+  const displayTeamMembers = payloadTeamMembers.length > 0 ? payloadTeamMembers : teamMembers;
 
   const [statsVisible, setStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
@@ -766,30 +769,8 @@ export default function HomePage({ articles: payloadArticles = [] }: { articles?
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.5rem" }}>
-            {teamMembers.map((member) => (
-              <div key={member.id} className="card" style={{ padding: "2rem", textAlign: "center" }}>
-                <div
-                  style={{
-                    width: "72px", height: "72px",
-                    background: "linear-gradient(135deg, var(--color-primary-500), var(--color-primary-800))",
-                    borderRadius: "50%",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: "700", fontSize: "1.25rem", color: "white",
-                    margin: "0 auto 1.25rem",
-                    boxShadow: "0 4px 16px rgba(30,111,217,0.3)",
-                  }}
-                >
-                  {member.initials}
-                </div>
-                <h3 style={{ fontSize: "0.9375rem", marginBottom: "0.375rem" }}>{member.name}</h3>
-                <div style={{ fontSize: "0.8125rem", fontWeight: "600", color: "var(--color-primary-600)", marginBottom: "0.375rem" }}>
-                  {member.role}
-                </div>
-                <div style={{ fontSize: "0.75rem", color: "var(--color-neutral-400)" }}>
-                  {member.expertise}
-                </div>
-              </div>
+            {displayTeamMembers.map((member: any) => (
+              <TeamMemberCard key={member.id} member={member} />
             ))}
           </div>
 

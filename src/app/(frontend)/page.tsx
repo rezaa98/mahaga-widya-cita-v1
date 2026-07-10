@@ -19,10 +19,16 @@ export default async function Home() {
     limit: 3,
   });
 
+  const { docs: teamMembers } = await payload.find({
+    collection: "team-members",
+    limit: 4,
+    sort: "order",
+  });
+
   return (
     <>
       <Navbar />
-      <HomePage articles={articles} />
+      <HomePage articles={articles} teamMembers={teamMembers} />
       <Footer />
       <WhatsAppFloat />
     </>
