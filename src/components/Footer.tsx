@@ -21,6 +21,7 @@ const footerLinks = {
     { label: "Smart Governance Review", href: "/layanan/governance-review" },
     { label: "Smart Online Course", href: "/kursus" },
     { label: "Smart Digital Conference", href: "/webinar" },
+  ],
 };
 
 export default async function Footer() {
