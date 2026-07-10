@@ -167,6 +167,43 @@ export const Beranda: GlobalConfig = {
           ]
         }
       ]
+    },
+    {
+      name: 'featuredData',
+      label: 'Data Pilihan (Opsional)',
+      type: 'group',
+      fields: [
+        {
+          name: 'services',
+          label: 'Layanan Pilihan',
+          type: 'relationship',
+          relationTo: 'services',
+          hasMany: true,
+          admin: {
+            description: 'Pilih layanan yang ingin ditampilkan di halaman Beranda (maksimal 6 disarankan).'
+          }
+        },
+        {
+          name: 'articles',
+          label: 'Artikel Pilihan',
+          type: 'relationship',
+          relationTo: 'articles',
+          hasMany: true,
+          admin: {
+            description: 'Pilih artikel yang ingin ditampilkan di halaman Beranda (maksimal 3 disarankan).'
+          }
+        },
+        {
+          name: 'team',
+          label: 'Tim Pilihan',
+          type: 'relationship',
+          relationTo: 'team-members',
+          hasMany: true,
+          admin: {
+            description: 'Pilih anggota tim yang ingin ditampilkan di halaman Beranda (maksimal 4 disarankan).'
+          }
+        }
+      ]
     }
   ]
 }

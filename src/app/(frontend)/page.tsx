@@ -9,29 +9,37 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const payload = await getPayload({ config: configPromise });
-  const berandaData = await payload.findGlobal({ slug: "beranda" });
+  const berandaData: any = await payload.findGlobal({ slug: "beranda", depth: 2 });
   
-  const { docs: articles } = await payload.find({
-    collection: "articles",
-    where: {
-      status: {
-        equals: "published",
-      },
-    },
-    sort: "-publishedAt",
-    limit: 3,
-  });
+  // Use CMS selected articles, otherwise fallback to latest 3
+  const articles = berandaData?.featuredData?.articles?.length > 0 
+    ? berandaData.featuredData.articles 
+    : (await payload.find({
+        collection: "articles",
+        where: {
+          status: { equals: "published" },
+        },
+        sort: "-publishedAt",
+        limit: 3,
+      })).docs;
 
-  const { docs: teamMembers } = await payload.find({
-    collection: "team-members",
-    limit: 4,
-    sort: "order",
-  });
+  // Use CMS selected team, otherwise fallback to top 4
+  const teamMembers = berandaData?.featuredData?.team?.length > 0
+    ? berandaData.featuredData.team
+    : (await payload.find({
+        collection: "team-members",
+        limit: 4,
+        sort: "order",
+      })).docs;
+      
+  const services = berandaData?.featuredData?.services?.length > 0
+    ? berandaData.featuredData.services
+    : undefined;
 
   return (
     <>
       <Navbar />
-      <HomePage articles={articles} teamMembers={teamMembers} berandaData={berandaData} />
+      <HomePage articles={articles} teamMembers={teamMembers} services={services} berandaData={berandaData} />
       <Footer />
       <WhatsAppFloat />
     </>

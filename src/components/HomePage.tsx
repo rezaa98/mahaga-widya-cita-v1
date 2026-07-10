@@ -32,7 +32,7 @@ import {
    DATA
    ============================================ */
 
-const services = [
+const defaultServices = [
   {
     icon: Lightbulb,
     title: "Smart Consulting",
@@ -245,7 +245,15 @@ function StatCard({ stat, index, total, visible }: { stat: StatItem; index: numb
    HOMEPAGE COMPONENT
    ============================================ */
 
-export default function HomePage({ articles: payloadArticles = [], teamMembers: payloadTeamMembers = [], berandaData }: { articles?: any[], teamMembers?: any[], berandaData?: any }) {
+const IconMapping: Record<string, any> = {
+  'konsultasi': Lightbulb,
+  'edukasi': GraduationCap,
+  'software': Cpu,
+  'governance-review': Shield,
+  'digital-conference': Video,
+};
+
+export default function HomePage({ articles: payloadArticles = [], teamMembers: payloadTeamMembers = [], services: payloadServices = [], berandaData }: { articles?: any[], teamMembers?: any[], services?: any[], berandaData?: any }) {
   const displayArticles = payloadArticles.length > 0 ? payloadArticles.map(a => ({
     id: a.id,
     category: typeof a.category === 'object' && a.category ? a.category.name : 'UMUM',
@@ -260,6 +268,15 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
   })) : articles;
 
   const displayTeamMembers = payloadTeamMembers.length > 0 ? payloadTeamMembers : teamMembers;
+
+  const displayServices = payloadServices?.length > 0 ? payloadServices.map((s: any) => ({
+    icon: IconMapping[s.slug] || Target,
+    title: s.title,
+    description: s.description,
+    href: `/layanan/${s.slug}`,
+    gradient: s.gradient || "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
+    tag: s.tagline || "Layanan",
+  })) : defaultServices;
 
   // HERO DATA
   const heroBadge = berandaData?.hero?.badge || "Platform Edukasi & Tata Kelola Terpercaya Sejak 2015";
@@ -487,7 +504,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
               gap: "1.5rem",
             }}
           >
-            {services.map((service) => (
+            {displayServices.map((service: any) => (
               <Link
                 key={service.title}
                 href={service.href}
