@@ -26,6 +26,7 @@ export default async function ArtikelPage() {
       },
     },
     sort: "-publishedAt",
+    limit: 100,
   });
 
   return (
