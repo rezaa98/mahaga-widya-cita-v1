@@ -86,6 +86,32 @@ export const Kontak: GlobalConfig = {
           defaultValue: 'Halo, saya ingin berkonsultasi dengan tim PT Mahaga Widya Cita.',
         }
       ]
+    },
+    {
+      name: 'formSubjects',
+      label: 'Pilihan Subjek Formulir',
+      type: 'array',
+      minRows: 1,
+      admin: {
+        description: 'Daftar pilihan keperluan / subjek yang akan muncul di dropdown formulir kontak.',
+      },
+      fields: [
+        {
+          name: 'subject',
+          label: 'Subjek',
+          type: 'text',
+          required: true,
+        },
+      ],
+      defaultValue: [
+        { subject: "Konsultasi Tata Kelola" },
+        { subject: "Smart Executive Education" },
+        { subject: "Smart Software Service" },
+        { subject: "Smart Online Course" },
+        { subject: "Pendaftaran Webinar" },
+        { subject: "Kemitraan & Kolaborasi" },
+        { subject: "Lainnya" },
+      ],
     }
   ]
 }

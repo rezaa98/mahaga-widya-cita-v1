@@ -2,17 +2,21 @@
 import { useState } from "react";
 import { Send, CheckCircle2 } from "lucide-react";
 
-const subjects = [
-  "Konsultasi Tata Kelola",
-  "Smart Executive Education",
-  "Smart Software Service",
-  "Smart Online Course",
-  "Pendaftaran Webinar",
-  "Kemitraan & Kolaborasi",
-  "Lainnya",
-];
+interface ContactFormProps {
+  subjects?: string[];
+}
 
-export default function ContactForm() {
+export default function ContactForm({ 
+  subjects = [
+    "Konsultasi Tata Kelola",
+    "Smart Executive Education",
+    "Smart Software Service",
+    "Smart Online Course",
+    "Pendaftaran Webinar",
+    "Kemitraan & Kolaborasi",
+    "Lainnya",
+  ] 
+}: ContactFormProps) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", institution: "", subject: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);

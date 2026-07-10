@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default async function KontakPage() {
   const payload = await getPayload({ config: configPromise });
-  const kontakData = await payload.findGlobal({ slug: "kontak" });
+  const kontakData: any = await payload.findGlobal({ slug: "kontak" });
 
   const phone = kontakData?.phone || "+62 21 1234 5678";
   const email = kontakData?.email || "info@mahagawidyacita.co.id";
@@ -68,7 +68,7 @@ export default async function KontakPage() {
 
             {/* FORM */}
             <div className="card" style={{ padding: "2.5rem" }}>
-              <ContactForm />
+              <ContactForm subjects={kontakData?.formSubjects?.map(s => s.subject) || undefined} />
             </div>
 
             {/* SIDEBAR INFO */}
