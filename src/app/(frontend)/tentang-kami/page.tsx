@@ -4,6 +4,9 @@ import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { CheckCircle2, Award, Target, Eye, Users, Building2, Globe, BookOpen } from "lucide-react";
 import { WaveDivider } from "@/components/ui/WaveDivider";
+import TeamMemberCard from "@/components/ui/TeamMemberCard";
+import { getPayload } from "payload";
+import configPromise from "@payload-config";
 
 export const metadata: Metadata = {
   title: "Tentang Kami",
@@ -50,7 +53,25 @@ const stats = [
   { value: "500+", label: "Sesi Webinar & Pelatihan", icon: BookOpen },
 ];
 
-export default function TentangKamiPage() {
+export default async function TentangKamiPage() {
+  const payload = await getPayload({ config: configPromise });
+  const { docs: ceoDocs } = await payload.find({
+    collection: "team-members",
+    where: {
+      name: {
+        contains: "Endang Larasati"
+      }
+    },
+    limit: 1,
+  });
+  
+  const ceo = ceoDocs[0] || {
+    name: "Prof. Dr. Hj. Endang Larasati, M.S.",
+    role: "Direktur Utama",
+    initials: "EL",
+    expertise: "Administrasi Publik & Tata Kelola",
+  };
+
   return (
     <>
       <Navbar />
@@ -212,9 +233,10 @@ export default function TentangKamiPage() {
             <blockquote style={{ fontSize: "1.25rem", color: "var(--color-neutral-700)", lineHeight: "1.8", fontStyle: "italic", marginBottom: "2rem" }}>
               Kami percaya bahwa kualitas tata kelola suatu bangsa dimulai dari kualitas manusianya. Setiap program yang kami rancang adalah investasi jangka panjang bagi kemajuan Indonesia — sebuah misi yang kami emban dengan penuh dedikasi dan kebanggaan.
             </blockquote>
-            <div style={{ width: "64px", height: "64px", background: "linear-gradient(135deg, var(--color-primary-500), var(--color-primary-800))", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1rem", fontSize: "1.375rem", fontWeight: "800", color: "white", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>EL</div>
-            <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: "700", fontSize: "1.0625rem", color: "var(--color-neutral-900)" }}>Prof. Dr. Hj. Endang Larasati, M.S.</div>
-            <div style={{ fontSize: "0.875rem", color: "var(--color-primary-600)" }}>Direktur Utama, PT Mahaga Widya Cita</div>
+            
+            <div style={{ maxWidth: "320px", margin: "0 auto", textAlign: "left" }}>
+              <TeamMemberCard member={ceo} />
+            </div>
           </div>
         </div>
       </section>
