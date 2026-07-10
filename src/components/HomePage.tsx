@@ -110,6 +110,7 @@ const articles = [
     categoryColor: "var(--color-primary-500)",
     categoryBg: "var(--color-primary-100)",
     imageUrl: undefined,
+    slug: "panduan-lkjip",
   },
   {
     id: 2,
@@ -123,6 +124,7 @@ const articles = [
     categoryColor: "var(--color-gold-600)",
     categoryBg: "var(--color-gold-100)",
     imageUrl: undefined,
+    slug: "transformasi-digital",
   },
   {
     id: 3,
@@ -136,6 +138,7 @@ const articles = [
     categoryColor: "var(--color-success)",
     categoryBg: "var(--color-success-light)",
     imageUrl: undefined,
+    slug: "kompetensi-asn",
   },
 ];
 
@@ -265,6 +268,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
     categoryColor: "var(--color-primary-500)",
     categoryBg: "var(--color-primary-100)",
     imageUrl: a.imageUrl,
+    slug: a.slug,
   })) : articles;
 
   const displayTeamMembers = payloadTeamMembers.length > 0 ? payloadTeamMembers : teamMembers;
@@ -591,8 +595,8 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
           </div>
 
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
-            {displayArticles.map((article) => (
-              <Link key={article.id} href={`/artikel/${article.id}`} style={{ textDecoration: "none", display: "block", width: "100%", maxWidth: "360px", flexGrow: 1 }}>
+            {displayArticles.map((article: any) => (
+              <Link key={article.id} href={`/artikel/${article.slug}`} style={{ textDecoration: "none", display: "block", width: "100%", maxWidth: "360px", flexGrow: 1 }}>
                 <div className="card" style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
                   {article.imageUrl ? (
                     <div style={{ height: "180px", backgroundColor: "#f1f5f9", position: "relative" }}>
