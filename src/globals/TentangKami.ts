@@ -79,31 +79,7 @@ export const TentangKami: GlobalConfig = {
         { name: 'text', type: 'textarea', required: true },
       ]
     },
-    {
-      name: 'values',
-      label: 'Nilai Kami',
-      type: 'array',
-      fields: [
-        { name: 'title', type: 'text', required: true },
-        { name: 'description', type: 'textarea', required: true },
-        { 
-          name: 'icon', 
-          type: 'select', 
-          options: [
-            { label: 'Check Circle', value: 'CheckCircle2' },
-            { label: 'Award', value: 'Award' },
-            { label: 'Target', value: 'Target' },
-            { label: 'Eye', value: 'Eye' },
-            { label: 'Users', value: 'Users' },
-            { label: 'Building', value: 'Building2' },
-            { label: 'Globe', value: 'Globe' },
-            { label: 'Book Open', value: 'BookOpen' }
-          ], 
-          defaultValue: 'Award',
-          required: true
-        },
-      ]
-    },
+
     {
       name: 'coreValues',
       label: 'Core Value (FUTURISTIC)',
