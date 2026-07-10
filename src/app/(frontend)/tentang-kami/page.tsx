@@ -254,30 +254,6 @@ export default async function TentangKamiPage() {
         </div>
       </section>
 
-      {/* VALUES */}
-      <section className="section">
-        <div className="container">
-          <div className="section-title">
-            <span className="overline">Nilai Kami</span>
-            <h2>Landasan yang Memandu Setiap Langkah Kami</h2>
-            <div className="gold-divider" />
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
-            {valuesData.map((val: any) => {
-              const Icon = IconMap[val.icon] || Target;
-              return (
-                <div key={val.title} className="card" style={{ padding: "2rem", textAlign: "center", width: "100%", maxWidth: "280px", flexGrow: 1 }}>
-                  <div style={{ width: "56px", height: "56px", background: "var(--color-primary-100)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem" }}>
-                    <Icon size={26} color="var(--color-primary-600)" />
-                  </div>
-                  <h3 style={{ fontSize: "1.125rem", marginBottom: "0.625rem" }}>{val.title}</h3>
-                  <p style={{ fontSize: "0.875rem", color: "var(--color-neutral-500)", lineHeight: "1.6" }}>{val.description}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* CORE VALUE */}
       <section className="section section-alt">
