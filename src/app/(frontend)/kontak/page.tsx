@@ -68,7 +68,7 @@ export default async function KontakPage() {
 
             {/* FORM */}
             <div className="card" style={{ padding: "2.5rem" }}>
-              <ContactForm subjects={kontakData?.formSubjects?.map(s => s.subject) || undefined} />
+              <ContactForm subjects={kontakData?.formSubjects?.map((s: any) => s.subject) || undefined} />
             </div>
 
             {/* SIDEBAR INFO */}
