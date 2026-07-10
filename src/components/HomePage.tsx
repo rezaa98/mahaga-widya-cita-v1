@@ -284,9 +284,20 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
 
   // PARTNERS DATA
   const partnersTitle = berandaData?.partners?.title || "Dipercaya oleh Lebih dari 200 Instansi dan Mitra Strategis";
-  const displayPartners = berandaData?.partners?.list?.length > 0
+  const displayPartnersRaw = berandaData?.partners?.list?.length > 0
     ? berandaData.partners.list
     : partners;
+
+  // Intercept and fix old broken URLs that might be cached in the CMS database
+  const displayPartners = displayPartnersRaw.map((p: any) => {
+    let correctedUrl = p.logoUrl;
+    if (correctedUrl === '/media/partner_panrb.png') correctedUrl = '/media/partner_kementerian_pan_rb.png';
+    if (correctedUrl === '/media/partner_lan.png') correctedUrl = '/media/partner_lan_ri.png';
+    if (correctedUrl === '/media/partner_dpr.png') correctedUrl = '/media/partner_setjen_dpr_ri.png';
+    if (correctedUrl === '/media/partner_pupr.png') correctedUrl = '/media/partner_kemenpupr.png';
+    if (correctedUrl === '/media/partner_ombudsman.png') correctedUrl = '/media/partner_ombudsman_ri.png';
+    return { ...p, logoUrl: correctedUrl };
+  });
 
   const [statsVisible, setStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
