@@ -262,11 +262,11 @@ export default async function TentangKamiPage() {
             <h2>Landasan yang Memandu Setiap Langkah Kami</h2>
             <div className="gold-divider" />
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "1.5rem" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
             {valuesData.map((val: any) => {
               const Icon = IconMap[val.icon] || Target;
               return (
-                <div key={val.title} className="card" style={{ padding: "2rem", textAlign: "center" }}>
+                <div key={val.title} className="card" style={{ padding: "2rem", textAlign: "center", width: "100%", maxWidth: "280px", flexGrow: 1 }}>
                   <div style={{ width: "56px", height: "56px", background: "var(--color-primary-100)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem" }}>
                     <Icon size={26} color="var(--color-primary-600)" />
                   </div>
@@ -287,9 +287,9 @@ export default async function TentangKamiPage() {
             <h2 style={{ fontSize: "2.5rem", letterSpacing: "0.1em", color: "var(--color-primary-900)" }}>FUTURISTIC</h2>
             <div className="gold-divider" />
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))", gap: "1.5rem" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
             {coreValuesData.map((cv: any) => (
-              <div key={cv.name} className="card" style={{ padding: "1.5rem", display: "flex", gap: "1.5rem", alignItems: "flex-start", background: "white" }}>
+              <div key={cv.name} className="card" style={{ padding: "1.5rem", display: "flex", gap: "1.5rem", alignItems: "flex-start", background: "white", width: "100%", maxWidth: "450px", flexGrow: 1 }}>
                 <div style={{ 
                   fontSize: "3rem", 
                   fontWeight: 900, 

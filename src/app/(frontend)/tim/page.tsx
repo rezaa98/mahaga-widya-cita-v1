@@ -58,9 +58,11 @@ export default async function TimPage() {
             <h2>Manajemen Perusahaan</h2>
             <div className="gold-divider" />
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(280px, 1fr))", gap: "2rem" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "2rem" }}>
             {management.map((m) => (
-              <TeamMemberCard key={m.id} member={m} />
+              <div key={m.id} style={{ width: "100%", maxWidth: "320px", flexGrow: 1 }}>
+                <TeamMemberCard member={m} />
+              </div>
             ))}
           </div>
         </div>
@@ -78,9 +80,11 @@ export default async function TimPage() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2rem" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "2rem" }}>
             {experts.map((expert) => (
-              <TeamMemberCard key={expert.id} member={expert} />
+              <div key={expert.id} style={{ width: "100%", maxWidth: "320px", flexGrow: 1 }}>
+                <TeamMemberCard member={expert} />
+              </div>
             ))}
           </div>
         </div>

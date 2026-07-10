@@ -499,8 +499,9 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
 
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
               gap: "1.5rem",
             }}
           >
@@ -508,7 +509,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
               <Link
                 key={service.title}
                 href={service.href}
-                style={{ textDecoration: "none" }}
+                style={{ textDecoration: "none", width: "100%", maxWidth: "360px", flexGrow: 1 }}
               >
                 <div
                   className="card"
@@ -589,9 +590,9 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
             </Link>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
             {displayArticles.map((article) => (
-              <Link key={article.id} href={`/artikel/${article.id}`} style={{ textDecoration: "none", display: "block" }}>
+              <Link key={article.id} href={`/artikel/${article.id}`} style={{ textDecoration: "none", display: "block", width: "100%", maxWidth: "360px", flexGrow: 1 }}>
                 <div className="card" style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
                   {article.imageUrl ? (
                     <div style={{ height: "180px", backgroundColor: "#f1f5f9", position: "relative" }}>
@@ -668,9 +669,11 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
             <div className="gold-divider" />
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.5rem" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
             {displayTeamMembers.map((member: any) => (
-              <TeamMemberCard key={member.id} member={member} />
+              <div key={member.id} style={{ width: "100%", maxWidth: "280px" }}>
+                <TeamMemberCard member={member} />
+              </div>
             ))}
           </div>
 
