@@ -6,6 +6,11 @@ import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import Image from "next/image";
 import Link from "next/link";
+import { 
+  ArrowRight, Map, Users, CheckCircle2, Globe, Award, 
+  Eye, Network, Rocket, Brain, Shield, UserCheck, 
+  Leaf, Cpu, Lightbulb, Handshake, Quote 
+} from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -15,11 +20,11 @@ export const metadata: Metadata = {
 };
 
 const defaultStats = [
-  { value: "7+", label: "Area Layanan Terintegrasi", icon: "map", bg: "bg-primary-container/10", text: "text-primary" },
-  { value: "25+", label: "Tenaga Ahli Multidisiplin", icon: "groups", bg: "bg-tertiary-container/10", text: "text-tertiary" },
-  { value: "100+", label: "Proyek dan Studi", icon: "task_alt", bg: "bg-primary/10", text: "text-primary" },
-  { value: "Nasional", label: "Cakupan Layanan", icon: "language", bg: "bg-tertiary-container/10", text: "text-tertiary" },
-  { value: "Banyak", label: "Klien Terpercaya", icon: "verified", bg: "bg-primary-container/10", text: "text-primary" },
+  { value: "7+", label: "Area Layanan Terintegrasi", icon: Map, bg: "bg-primary-container/10", text: "text-primary" },
+  { value: "25+", label: "Tenaga Ahli Multidisiplin", icon: Users, bg: "bg-tertiary-container/10", text: "text-tertiary" },
+  { value: "100+", label: "Proyek dan Studi", icon: CheckCircle2, bg: "bg-primary/10", text: "text-primary" },
+  { value: "Nasional", label: "Cakupan Layanan", icon: Globe, bg: "bg-tertiary-container/10", text: "text-tertiary" },
+  { value: "Banyak", label: "Klien Terpercaya", icon: Award, bg: "bg-primary-container/10", text: "text-primary" },
 ];
 
 const defaultMisi = [
@@ -29,16 +34,16 @@ const defaultMisi = [
 ];
 
 const defaultCoreValues = [
-  { letter: "F", name: "Foresight", desc: "Berpikir Jauh Ke Depan, Merancang Masa Depan Pembangunan.", icon: "visibility" },
-  { letter: "U", name: "Unit", desc: "Mengutamakan Kerja Sama Lintas Sektor Dan Pemangku Kepentingan.", icon: "hub" },
-  { letter: "T", name: "Transformation", desc: "Mendorong Perubahan Nyata Melalui Pemberdayaan Dan Pengembangan.", icon: "rocket_launch" },
-  { letter: "U", name: "Understanding", desc: "Memahami Kebutuhan Masyarakat Dan Dinamika Daerah Secara Mendalam.", icon: "psychology" },
-  { letter: "R", name: "Responsibility", desc: "Bertindak Dengan Tanggung Jawab Dan Komitmen Terhadap Hasil.", icon: "shield_with_heart" },
-  { letter: "I", name: "Integrity", desc: "Menjaga Kejujuran, Etika, Dan Akuntabilitas Dalam Setiap Langkah.", icon: "verified_user" },
-  { letter: "S", name: "Sustainability", desc: "Berorientasi Pada Dampak Jangka Panjang Dan Berkelanjutan.", icon: "eco" },
-  { letter: "T", name: "Technology", desc: "Memanfaatkan Teknologi Untuk Tata Kelola Dan Perencanaan Yang Lebih Baik.", icon: "memory" },
-  { letter: "I", name: "Innovation", desc: "Terus Berinovasi Untuk Menjawab Tantangan Masa Kini Dan Mendatang.", icon: "lightbulb" },
-  { letter: "C", name: "Collaboration", desc: "Membangun Sinergi Dengan Masyarakat, Pemerintah, Dan Mitra Profesional.", icon: "handshake" }
+  { letter: "F", name: "Foresight", desc: "Berpikir Jauh Ke Depan, Merancang Masa Depan Pembangunan.", icon: Eye },
+  { letter: "U", name: "Unit", desc: "Mengutamakan Kerja Sama Lintas Sektor Dan Pemangku Kepentingan.", icon: Network },
+  { letter: "T", name: "Transformation", desc: "Mendorong Perubahan Nyata Melalui Pemberdayaan Dan Pengembangan.", icon: Rocket },
+  { letter: "U", name: "Understanding", desc: "Memahami Kebutuhan Masyarakat Dan Dinamika Daerah Secara Mendalam.", icon: Brain },
+  { letter: "R", name: "Responsibility", desc: "Bertindak Dengan Tanggung Jawab Dan Komitmen Terhadap Hasil.", icon: Shield },
+  { letter: "I", name: "Integrity", desc: "Menjaga Kejujuran, Etika, Dan Akuntabilitas Dalam Setiap Langkah.", icon: UserCheck },
+  { letter: "S", name: "Sustainability", desc: "Berorientasi Pada Dampak Jangka Panjang Dan Berkelanjutan.", icon: Leaf },
+  { letter: "T", name: "Technology", desc: "Memanfaatkan Teknologi Untuk Tata Kelola Dan Perencanaan Yang Lebih Baik.", icon: Cpu },
+  { letter: "I", name: "Innovation", desc: "Terus Berinovasi Untuk Menjawab Tantangan Masa Kini Dan Mendatang.", icon: Lightbulb },
+  { letter: "C", name: "Collaboration", desc: "Membangun Sinergi Dengan Masyarakat, Pemerintah, Dan Mitra Profesional.", icon: Handshake }
 ];
 
 export default async function TentangKamiPage() {
@@ -59,7 +64,7 @@ export default async function TentangKamiPage() {
     ceo = ceoDocs[0] || {
       name: "SHELLA H. VALSI, S.AP.,M.AP",
       role: "Direktur",
-      imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuDHq8XmpNRHjhI_wDfEsG5jakTrPT8MQkq_t8A_-AJM-e_1fAiO1agUvcZgaU3MV4_2uC7uPlugpGJrt7-d7VlLAa_KWtmx0nze-ZFv4huoyd2lFrXlzYgrY3XmyvOTn1JSkJ5_h217bOVDcG32VpvAakhc0aYK6C4ZjStThySkhjn8WUyaB0v99O52Jgg_kU4gkPPtV-WTqZEJ-9G7KFE_4BOZytK4LYeUgT0SEGq2JfihrK_29np-"
+      imageUrl: "/media/dr_endang.jpg"
     };
   }
   
@@ -83,7 +88,7 @@ export default async function TentangKamiPage() {
       <section className="relative min-h-[90vh] flex items-center pt-16 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/70 to-transparent z-10"></div>
-          <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCW8ZfIghtxK1LcC30iQLmq0D_2DZhOjV1i-RoHbdLoRw8jvPua77-dHFfdje6dDMx3lqrBuAcmrvyUhbEk3mez31oPc7J9JpzkySwQ8d7r_IMdyuMzIj88VO20C1FxZHYquy3OpX73e3y5KEm4MRjvGPTeJrovXXnlyzWypGWCqwTgMlXZPt0dto2Na7NTSfH6nhI_EomVY1PkOjC6jEmqAICrRBogho2wSHqpHgnF6v0ARchGa6pi')" }}></div>
+          <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('/media/tentang_kami_hero_bg.png')" }}></div>
         </div>
         <div className="container mx-auto px-6 md:px-12 relative z-20">
           <div className="max-w-3xl">
@@ -103,7 +108,7 @@ export default async function TentangKamiPage() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/layanan/konsultasi" className="flex items-center justify-center gap-2 px-8 py-4 bg-primary-container text-white rounded-xl font-headline-md text-headline-md hover:shadow-xl hover:translate-y-[-2px] transition-all">
                   Konsultasi Sekarang
-                  <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                  <ArrowRight size={20} />
               </Link>
               <Link href="/layanan" className="flex items-center justify-center gap-2 px-8 py-4 bg-white/10 border border-white/30 text-white backdrop-blur-md rounded-xl font-headline-md text-headline-md hover:bg-white/20 transition-all">
                   Pelajari Layanan
@@ -124,10 +129,11 @@ export default async function TentangKamiPage() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {defaultStats.map((stat, idx) => {
             const isLast = idx === defaultStats.length - 1;
+            const Icon = stat.icon;
             return (
               <div key={idx} className={`bg-surface p-8 rounded-2xl border border-outline-variant flex flex-col items-center text-center ${isLast ? 'md:col-span-3 lg:col-span-1' : ''}`}>
-                <div className={`w-14 h-14 ${stat.bg} rounded-xl flex items-center justify-center mb-4`}>
-                  <span className={`material-symbols-outlined ${stat.text} text-3xl`} style={{ fontVariationSettings: "'FILL' 1" }}>{stat.icon}</span>
+                <div className={`w-14 h-14 ${stat.bg} rounded-xl flex items-center justify-center mb-4 ${stat.text}`}>
+                  <Icon size={28} />
                 </div>
                 <h3 className="font-headline-lg text-headline-lg text-primary mb-1">{stat.value}</h3>
                 <p className="font-label-md text-label-md text-on-surface-variant uppercase">{stat.label}</p>
@@ -143,7 +149,7 @@ export default async function TentangKamiPage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative">
               <div className="rounded-3xl overflow-hidden shadow-2xl relative z-10 aspect-[4/5] w-full">
-                <Image src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoNVpktAqDg2kFpDo5IJXvQUASZIlVnItLrsvPMr92HLYkfTe3PyrlOeZOBwbj7hdytXrN0_7jWNRm4ejPDObxEg7GLM1Qfez09iLqxRpyvRzWOsxXySwBihkzEAZaC6ciYRHyQRn9h_YRdTbPHQZdyDuUDxWJ0fmRGHd0hwTjxWTkcwdoYN9dJARa-gkMpqsd9vf-CSz8OEn0gsl57uPHAnnHylpaDCQ6fA-ZXCuRADoXkMjlL_Cn" alt="Visi" fill className="object-cover" />
+                <Image src="/media/tentang_kami_visi_img.png" alt="Visi" fill className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                 <div className="absolute bottom-8 left-8 right-8">
                   <h2 className="font-headline-lg text-headline-lg text-white mb-2">Visi Kami</h2>
@@ -189,11 +195,12 @@ export default async function TentangKamiPage() {
               "", "lg:mt-8", "", "lg:mt-8", "",
               "lg:-mt-4", "lg:mt-4", "lg:-mt-4", "lg:mt-4", "lg:-mt-4"
             ];
+            const Icon = cv.icon;
             return (
               <div key={cv.letter + index} className={`group relative p-8 bg-surface rounded-2xl border border-outline-variant overflow-hidden ${staggerClasses[index]}`}>
-                <div className="absolute -top-4 -right-4 text-8xl font-black text-primary/5 group-hover:text-primary/10 transition-colors">{cv.letter}</div>
+                <div className="absolute -top-4 -right-4 text-8xl font-black text-primary/5 group-hover:text-primary/10 transition-colors select-none">{cv.letter}</div>
                 <div className="relative z-10">
-                  <span className="material-symbols-outlined text-primary mb-4 block">{cv.icon}</span>
+                  <div className="text-primary mb-4 block"><Icon size={28} /></div>
                   <h4 className="font-headline-md text-headline-md text-on-surface mb-2">{cv.name}</h4>
                   <p className="font-body-md text-on-surface-variant">{cv.desc}</p>
                 </div>
@@ -209,17 +216,17 @@ export default async function TentangKamiPage() {
         <div className="container mx-auto px-6 md:px-12 max-w-5xl text-center">
           <span className="font-label-md text-label-md text-primary font-bold uppercase tracking-widest mb-8 block">Pesan Direktur</span>
           <div className="relative mb-12">
-            <span className="material-symbols-outlined text-8xl text-primary/10 absolute -top-12 left-0 select-none">format_quote</span>
+            <Quote size={80} className="absolute -top-12 left-0 text-primary/10 rotate-180" />
             <p className="font-headline-lg text-headline-lg italic text-on-surface leading-relaxed relative z-10">
               "{ceoQuote}"
             </p>
-            <span className="material-symbols-outlined text-8xl text-primary/10 absolute -bottom-12 right-0 rotate-180 select-none">format_quote</span>
+            <Quote size={80} className="absolute -bottom-12 right-0 text-primary/10" />
           </div>
           <div className="flex flex-col items-center">
             <div className="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden mb-4 relative">
               <Image 
                 className="object-cover" 
-                src={ceo?.imageUrl || ceo?.photo?.url || "https://lh3.googleusercontent.com/aida-public/AB6AXuDHq8XmpNRHjhI_wDfEsG5jakTrPT8MQkq_t8A_-AJM-e_1fAiO1agUvcZgaU3MV4_2uC7uPlugpGJrt7-d7VlLAa_KWtmx0nze-ZFv4huoyd2lFrXlzYgrY3XmyvOTn1JSkJ5_h217bOVDcG32VpvAakhc0aYK6C4ZjStThySkhjn8WUyaB0v99O52Jgg_kU4gkPPtV-WTqZEJ-9G7KFE_4BOZytK4LYeUgT0SEGq2JfihrK_29np-"}
+                src={ceo?.imageUrl || ceo?.photo?.url || "/media/dr_endang.jpg"}
                 alt={ceo?.name} 
                 fill
               />
