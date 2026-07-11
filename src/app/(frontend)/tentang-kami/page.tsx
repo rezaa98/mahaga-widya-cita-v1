@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
-import { CheckCircle2, Award, Target, Eye, Users, Building2, Globe, BookOpen } from "lucide-react";
+import { CheckCircle2, Award, Target, Eye, Users, Building2, Globe, BookOpen, Network, Rocket, Brain, Shield, UserCheck, Leaf, Cpu, Lightbulb, Handshake } from "lucide-react";
 import { WaveDivider } from "@/components/ui/WaveDivider";
 import TeamMemberCard from "@/components/ui/TeamMemberCard";
 import { getPayload } from "payload";
@@ -66,17 +66,40 @@ const stats = [
 ];
 
 const coreValuesList = [
-  { letter: "F", name: "FORESIGHT", desc: "Berpikir jauh ke depan, merancang masa depan pembangunan." },
-  { letter: "U", name: "UNIT", desc: "Mengutamakan kerja sama lintas sektor dan pemangku kepentingan." },
-  { letter: "T", name: "TRANSFORMATION", desc: "Mendorong perubahan nyata melalui pemberdayaan dan pengembangan." },
-  { letter: "U", name: "UNDERSTANDING", desc: "Memahami kebutuhan masyarakat dan dinamika daerah secara mendalam." },
-  { letter: "R", name: "RESPONSIBILITY", desc: "Bertindak dengan tanggung jawab dan komitmen terhadap hasil." },
-  { letter: "I", name: "INTEGRITY", desc: "Menjaga kejujuran, etika, dan akuntabilitas dalam setiap langkah." },
-  { letter: "S", name: "SUSTAINABILITY", desc: "Berorientasi pada dampak jangka panjang dan berkelanjutan." },
-  { letter: "T", name: "TECHNOLOGY", desc: "Memanfaatkan teknologi untuk tata kelola dan perencanaan yang lebih baik." },
-  { letter: "I", name: "INNOVATION", desc: "Terus berinovasi untuk menjawab tantangan masa kini dan mendatang." },
-  { letter: "C", name: "COLLABORATION", desc: "Membangun sinergi dengan masyarakat, pemerintah, dan mitra profesional." }
+  { letter: "F", name: "Foresight", desc: "Berpikir Jauh Ke Depan, Merancang Masa Depan Pembangunan.", icon: Eye },
+  { letter: "U", name: "Unit", desc: "Mengutamakan Kerja Sama Lintas Sektor Dan Pemangku Kepentingan.", icon: Network },
+  { letter: "T", name: "Transformation", desc: "Mendorong Perubahan Nyata Melalui Pemberdayaan Dan Pengembangan.", icon: Rocket },
+  { letter: "U", name: "Understanding", desc: "Memahami Kebutuhan Masyarakat Dan Dinamika Daerah Secara Mendalam.", icon: Brain },
+  { letter: "R", name: "Responsibility", desc: "Bertindak Dengan Tanggung Jawab Dan Komitmen Terhadap Hasil.", icon: Shield },
+  { letter: "I", name: "Integrity", desc: "Menjaga Kejujuran, Etika, Dan Akuntabilitas Dalam Setiap Langkah.", icon: UserCheck },
+  { letter: "S", name: "Sustainability", desc: "Berorientasi Pada Dampak Jangka Panjang Dan Berkelanjutan.", icon: Leaf },
+  { letter: "T", name: "Technology", desc: "Memanfaatkan Teknologi Untuk Tata Kelola Dan Perencanaan Yang Lebih Baik.", icon: Cpu },
+  { letter: "I", name: "Innovation", desc: "Terus Berinovasi Untuk Menjawab Tantangan Masa Kini Dan Mendatang.", icon: Lightbulb },
+  { letter: "C", name: "Collaboration", desc: "Membangun Sinergi Dengan Masyarakat, Pemerintah, Dan Mitra Profesional.", icon: Handshake }
 ];
+
+const iconMap: { [key: string]: any } = {
+  Eye, Network, Rocket, Brain, Shield, UserCheck, Leaf, Cpu, Lightbulb, Handshake,
+  visibility: Eye,
+  hub: Network,
+  rocket_launch: Rocket,
+  psychology: Brain,
+  shield_with_heart: Shield,
+  verified_user: UserCheck,
+  eco: Leaf,
+  memory: Cpu,
+  lightbulb: Lightbulb,
+  handshake: Handshake
+};
+
+const getIcon = (cv: any, index: number) => {
+  const key = cv.icon || coreValuesList[index]?.icon;
+  if (typeof key === 'string') {
+    return iconMap[key] || Eye;
+  }
+  if (key) return key;
+  return coreValuesList[index]?.icon || Eye;
+};
 
 export default async function TentangKamiPage() {
   const payload = await getPayload({ config: configPromise });
@@ -256,34 +279,26 @@ export default async function TentangKamiPage() {
 
 
       {/* CORE VALUE */}
-      <section className="section">
-        <div className="container">
-          <div className="section-title">
-            <span className="overline">Core Value</span>
-            <h2 style={{ fontSize: "2.5rem", letterSpacing: "0.1em", color: "var(--color-primary-900)" }}>FUTURISTIC</h2>
-            <div className="gold-divider" />
+      <section className="section bg-white" style={{ padding: "6rem 0" }}>
+        <div className="container mx-auto px-6 md:px-12">
+          <div className="text-center mb-16">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#165EC8]">Our DNA</span>
+            <h2 className="text-5xl font-black italic tracking-[0.2em] text-[#0B2D6B] mt-4 uppercase">FUTURISTIC</h2>
           </div>
-          <div className="core-values-grid" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
-            {coreValuesData.map((cv: any) => (
-              <div key={cv.name} className="card" style={{ padding: "2rem", textAlign: "center", width: "100%", maxWidth: "280px", flexGrow: 1 }}>
-                <div style={{ width: "56px", height: "56px", background: "var(--color-primary-100)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem" }}>
-                  <div style={{ 
-                    fontSize: "2rem", 
-                    fontWeight: 900, 
-                    color: "var(--color-primary-600)", 
-                    fontFamily: "'Plus Jakarta Sans', sans-serif"
-                  }}>
-                    {cv.letter}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            {coreValuesData.map((cv: any, index: number) => {
+              const Icon = getIcon(cv, index);
+              return (
+                <div key={cv.name + index} className="group relative p-6 bg-[#faf8ff] rounded-3xl border border-[#c3c6d7] overflow-hidden h-full flex flex-col justify-start hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                  <div className="absolute -bottom-8 -right-4 text-[130px] font-black text-[#0B2D6B]/5 group-hover:text-[#0B2D6B]/10 transition-colors select-none leading-none">{cv.letter}</div>
+                  <div className="relative z-10 flex flex-col h-full">
+                    <div className="text-[#165EC8] mb-4 block"><Icon size={28} /></div>
+                    <h4 className="text-lg font-extrabold text-[#0B2D6B] mb-2">{cv.name}</h4>
+                    <p className="text-sm text-[#545469] leading-relaxed">{cv.desc}</p>
                   </div>
                 </div>
-                <h3 style={{ fontSize: "1.125rem", color: "var(--color-primary-900)", marginBottom: "0.625rem", letterSpacing: "0.05em", fontWeight: 800 }}>
-                  {cv.name}
-                </h3>
-                <p style={{ fontSize: "0.875rem", color: "var(--color-neutral-500)", lineHeight: "1.6", textTransform: "capitalize" }}>
-                  {cv.desc.toLowerCase()}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
