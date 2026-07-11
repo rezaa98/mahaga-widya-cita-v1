@@ -85,9 +85,9 @@ export default async function TentangKamiPage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center pt-16 overflow-hidden">
+      <section className="relative min-h-[90vh] flex items-center pt-[100px] pb-24 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/70 to-transparent z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/60 to-transparent z-10"></div>
           <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('/media/tentang_kami_hero_bg.png')" }}></div>
         </div>
         <div className="container mx-auto px-6 md:px-12 relative z-20">
@@ -131,7 +131,7 @@ export default async function TentangKamiPage() {
             const isLast = idx === defaultStats.length - 1;
             const Icon = stat.icon;
             return (
-              <div key={idx} className={`bg-surface p-8 rounded-2xl border border-outline-variant flex flex-col items-center text-center ${isLast ? 'md:col-span-3 lg:col-span-1' : ''}`}>
+              <div key={idx} className={`bg-surface p-6 rounded-2xl border border-outline-variant flex flex-col items-center text-center h-full justify-center ${isLast ? 'md:col-span-3 lg:col-span-1' : ''}`}>
                 <div className={`w-14 h-14 ${stat.bg} rounded-xl flex items-center justify-center mb-4 ${stat.text}`}>
                   <Icon size={28} />
                 </div>
@@ -197,12 +197,12 @@ export default async function TentangKamiPage() {
             ];
             const Icon = cv.icon;
             return (
-              <div key={cv.letter + index} className={`group relative p-8 bg-surface rounded-2xl border border-outline-variant overflow-hidden ${staggerClasses[index]}`}>
+              <div key={cv.letter + index} className={`group relative p-6 bg-surface rounded-2xl border border-outline-variant overflow-hidden h-full flex flex-col justify-start ${staggerClasses[index]}`}>
                 <div className="absolute -top-4 -right-4 text-8xl font-black text-primary/5 group-hover:text-primary/10 transition-colors select-none">{cv.letter}</div>
-                <div className="relative z-10">
+                <div className="relative z-10 flex flex-col h-full">
                   <div className="text-primary mb-4 block"><Icon size={28} /></div>
                   <h4 className="font-headline-md text-headline-md text-on-surface mb-2">{cv.name}</h4>
-                  <p className="font-body-md text-on-surface-variant">{cv.desc}</p>
+                  <p className="font-body-md text-on-surface-variant leading-relaxed">{cv.desc}</p>
                 </div>
               </div>
             );
@@ -216,11 +216,11 @@ export default async function TentangKamiPage() {
         <div className="container mx-auto px-6 md:px-12 max-w-5xl text-center">
           <span className="font-label-md text-label-md text-primary font-bold uppercase tracking-widest mb-8 block">Pesan Direktur</span>
           <div className="relative mb-12">
-            <span className="absolute -top-16 -left-8 text-[120px] leading-none text-primary/10 select-none font-serif">&ldquo;</span>
-            <p className="font-headline-lg text-headline-lg italic text-on-surface leading-relaxed relative z-10 px-8">
+            <Quote size={64} className="absolute -top-6 -left-2 text-primary/10 rotate-180" />
+            <p className="font-headline-md text-headline-md italic text-on-surface leading-relaxed relative z-10 px-8 md:px-16">
               "{ceoQuote}"
             </p>
-            <span className="absolute -bottom-24 -right-8 text-[120px] leading-none text-primary/10 select-none font-serif">&rdquo;</span>
+            <Quote size={64} className="absolute -bottom-6 -right-2 text-primary/10" />
           </div>
           <div className="flex flex-col items-center">
             <div className="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden mb-4 relative">
