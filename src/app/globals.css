@@ -214,12 +214,12 @@ body#frontend-app {
   overflow-x: hidden;
 }
 
-body#frontend-app h1, 
+:where(body#frontend-app h1, 
 body#frontend-app h2, 
 body#frontend-app h3, 
 body#frontend-app h4, 
 body#frontend-app h5, 
-body#frontend-app h6 {
+body#frontend-app h6) {
   font-family: "Plus Jakarta Sans", system-ui, sans-serif;
   font-weight: 700;
   line-height: 1.2;
