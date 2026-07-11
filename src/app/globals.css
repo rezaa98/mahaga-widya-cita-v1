@@ -645,16 +645,189 @@ label {
 }
 
 /* ============================================
-   RESPONSIVE UTILITIES
+   RESPONSIVE UTILITIES — MOBILE FIRST
    ============================================ */
 
+/* ---------- Tablet (max 1024px) ---------- */
+@media (max-width: 1024px) {
+  .section {
+    padding-block: 4rem;
+  }
+}
+
+/* ---------- Mobile (max 768px) ---------- */
 @media (max-width: 768px) {
   .section {
-    padding-block: 3.5rem;
+    padding-block: 3rem;
   }
 
   .container {
-    padding-inline: 1.25rem;
+    padding-inline: 1rem;
+  }
+
+  /* ── Section title ── */
+  .section-title {
+    margin-bottom: 2rem;
+  }
+
+  /* ── Hero Section ── */
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .hero-floating-cards {
+    display: none !important;
+  }
+
+  .hero-section {
+    min-height: auto !important;
+    padding-bottom: 5rem !important;
+  }
+
+  /* ── Stats bar below hero ── */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .stats-grid > div:nth-child(2) {
+    border-right: none !important;
+  }
+
+  /* ── Services: single column ── */
+  .services-grid > a {
+    max-width: 100% !important;
+  }
+
+  /* ── Articles: full width ── */
+  .articles-grid > a {
+    max-width: 100% !important;
+  }
+
+  /* ── Team: 2 columns ── */
+  .team-grid > div {
+    max-width: calc(50% - 0.75rem) !important;
+    min-width: 140px;
+  }
+
+  /* ── About page: profil grid ── */
+  .about-profil-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  /* ── About page: stats 2x3 ── */
+  .about-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* ── Core values: 1 column ── */
+  .core-values-grid > div {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* ── Footer grid: stack to 2 cols ── */
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 2rem !important;
+  }
+
+  /* ── Article detail ── */
+  .article-detail-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  .article-sidebar {
+    order: -1;
+  }
+
+  .article-content {
+    font-size: 1rem !important;
+  }
+
+  .article-content h2 {
+    font-size: 1.375rem !important;
+  }
+
+  .article-content h3 {
+    font-size: 1.125rem !important;
+  }
+
+  .article-content blockquote {
+    padding: 1rem 1.25rem !important;
+    font-size: 1.05rem !important;
+  }
+
+  /* ── CTA Banner: button stack ── */
+  .cta-buttons {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .cta-buttons .btn {
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
+  }
+
+  /* ── Artikel list: filter bar ── */
+  .artikel-filter-bar {
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+  }
+}
+
+/* ---------- Small Mobile (max 480px) ---------- */
+@media (max-width: 480px) {
+  .text-display {
+    font-size: 2rem !important;
+  }
+
+  .text-heading-xl {
+    font-size: 1.5rem !important;
+  }
+
+  .section-title h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* ── Stats: full width ── */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* ── Team: 1 column on very small screens ── */
+  .team-grid > div {
+    max-width: 100% !important;
+  }
+
+  /* ── Footer: 1 column ── */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Artikel page header ── */
+  .artikel-header-flex {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+  }
+
+  /* ── About page: stats 1 column ── */
+  .about-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Drop cap too large on small screens */
+  .article-content .rich-text > p:first-of-type::first-letter {
+    font-size: 3rem !important;
+  }
+
+  .btn-lg {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.9375rem !important;
   }
 }
 

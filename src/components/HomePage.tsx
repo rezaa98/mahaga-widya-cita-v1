@@ -335,9 +335,9 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
   return (
     <main>
       {/* =================== HERO =================== */}
-      <section className="hero-gradient" style={{ paddingTop: "72px", minHeight: "100vh", display: "flex", alignItems: "center" }}>
+      <section className="hero-gradient hero-section" style={{ paddingTop: "72px", minHeight: "100vh", display: "flex", alignItems: "center" }}>
         <div className="container" style={{ position: "relative", zIndex: 1, paddingBlock: "5rem" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
+          <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
             {/* Left: Text */}
             <div>
               <div className="animate-fade-in-up" style={{ marginBottom: "1.5rem" }}>
@@ -390,7 +390,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
             </div>
 
             {/* Right: Floating Stats Cards */}
-            <div className="animate-fade-in delay-300" style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <div className="animate-fade-in delay-300 hero-floating-cards" style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
               <div style={{ position: "relative", width: "100%", maxWidth: "420px", height: "380px" }}>
                 {/* Central element */}
                 <div
@@ -467,6 +467,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
       <section style={{ paddingBlock: "0" }} ref={statsRef}>
         <div className="container">
           <div
+            className="stats-grid"
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(4, 1fr)",
@@ -502,6 +503,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
           </div>
 
           <div
+            className="services-grid"
             style={{
               display: "flex",
               flexWrap: "wrap",
@@ -594,7 +596,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
             </Link>
           </div>
 
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
+          <div className="articles-grid" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
             {displayArticles.map((article: any) => (
               <Link key={article.id} href={`/artikel/${article.slug}`} style={{ textDecoration: "none", display: "block", width: "100%", maxWidth: "360px", flexGrow: 1 }}>
                 <div className="card" style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
@@ -673,7 +675,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
             <div className="gold-divider" />
           </div>
 
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
+          <div className="team-grid" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
             {displayTeamMembers.map((member: any) => (
               <div key={member.id} style={{ width: "100%", maxWidth: "280px" }}>
                 <TeamMemberCard member={member} />
@@ -757,7 +759,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
           <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "1.0625rem", marginBottom: "2.5rem", maxWidth: "560px", margin: "0 auto 2.5rem" }}>
             Lebih dari 200 instansi pemerintah dan swasta telah mempercayakan pengembangan SDM dan tata kelola mereka kepada PT Mahaga Widya Cita.
           </p>
-          <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+          <div className="cta-buttons" style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
             <a
               href="https://wa.me/6221123456789?text=Halo%2C%20saya%20ingin%20konsultasi%20mengenai%20layanan%20PT%20Mahaga%20Widya%20Cita"
               target="_blank"

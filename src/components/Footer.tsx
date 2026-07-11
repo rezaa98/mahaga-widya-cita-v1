@@ -57,6 +57,7 @@ export default async function Footer() {
       <div className="container" style={{ position: "relative" }}>
         {/* Main footer grid */}
         <div
+          className="footer-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",

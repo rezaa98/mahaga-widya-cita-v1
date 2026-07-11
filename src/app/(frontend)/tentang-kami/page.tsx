@@ -180,7 +180,7 @@ export default async function TentangKamiPage() {
       {/* STATS BAR */}
       <section style={{ padding: "3rem 0" }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "1rem" }}>
+          <div className="about-stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "1rem" }}>
             {statsData.map(({ value, label, icon: iconName }: any) => {
               const Icon = IconMap[iconName] || Target;
               return (
@@ -200,7 +200,7 @@ export default async function TentangKamiPage() {
       {/* PROFIL */}
       <section className="section section-alt">
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "center" }}>
+          <div className="about-profil-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "center" }}>
             <div>
               <span className="badge badge-primary" style={{ marginBottom: "1rem" }}>Profil Perusahaan</span>
               <h2 className="text-heading-xl" style={{ marginBottom: "1.25rem" }}>
@@ -263,7 +263,7 @@ export default async function TentangKamiPage() {
             <h2 style={{ fontSize: "2.5rem", letterSpacing: "0.1em", color: "var(--color-primary-900)" }}>FUTURISTIC</h2>
             <div className="gold-divider" />
           </div>
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
+          <div className="core-values-grid" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
             {coreValuesData.map((cv: any) => (
               <div key={cv.name} className="card" style={{ padding: "2rem", textAlign: "center", width: "100%", maxWidth: "280px", flexGrow: 1 }}>
                 <div style={{ width: "56px", height: "56px", background: "var(--color-primary-100)", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem" }}>

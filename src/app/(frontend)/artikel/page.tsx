@@ -62,7 +62,7 @@ export default async function ArtikelPage(props: { searchParams?: Promise<{ [key
             </p>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '2.5rem' }}>
+          <div className="artikel-filter-bar" style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '2.5rem' }}>
             <Link 
               href="/artikel" 
               style={{ 
@@ -108,7 +108,7 @@ export default async function ArtikelPage(props: { searchParams?: Promise<{ [key
             </div>
           ) : (
             <>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 320px), 1fr))", gap: "1.5rem" }}>
                 {articles.map((article: any) => (
                   <Link key={article.id} href={`/artikel/${article.slug || article.id}`} style={{ textDecoration: "none", display: "block" }}>
                     <div className="card" style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
