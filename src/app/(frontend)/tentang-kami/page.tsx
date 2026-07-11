@@ -279,22 +279,34 @@ export default async function TentangKamiPage() {
 
 
       {/* CORE VALUE */}
-      <section className="section bg-white" style={{ padding: "6rem 0" }}>
+      <section className="section bg-[#fcfbfe]" style={{ padding: "6rem 0 8rem" }}>
         <div className="container mx-auto px-6 md:px-12">
-          <div className="text-center mb-16">
+          <div className="text-center mb-20">
             <span className="text-xs font-bold uppercase tracking-widest text-[#165EC8]">Our DNA</span>
-            <h2 className="text-5xl font-black italic tracking-[0.2em] text-[#0B2D6B] mt-4 uppercase">FUTURISTIC</h2>
+            <h2 className="text-5xl font-black italic text-[#165EC8] mt-4 uppercase flex justify-center items-center gap-1">
+              {"FUTURISTIC".split("").map((letter, i) => (
+                <span key={i} className={`inline-block ${i % 2 !== 0 ? 'translate-y-3' : '-translate-y-3'}`}>
+                  {letter}
+                </span>
+              ))}
+            </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
             {coreValuesData.map((cv: any, index: number) => {
               const Icon = getIcon(cv, index);
+              const colIndex = index % 5;
+              const isLow = colIndex % 2 !== 0; // Columns 2 and 4
+              
               return (
-                <div key={cv.name + index} className="group relative p-6 bg-[#faf8ff] rounded-3xl border border-[#c3c6d7] overflow-hidden h-full flex flex-col justify-start hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
-                  <div className="absolute -bottom-8 -right-4 text-[130px] font-black text-[#0B2D6B]/5 group-hover:text-[#0B2D6B]/10 transition-colors select-none leading-none">{cv.letter}</div>
+                <div 
+                  key={cv.name + index} 
+                  className={`group relative p-6 bg-white rounded-3xl border border-[#e5e7eb] shadow-sm overflow-hidden h-full flex flex-col justify-start hover:shadow-md transition-all duration-300 ${isLow ? 'lg:translate-y-10' : ''}`}
+                >
+                  <div className="absolute -bottom-6 -right-2 text-[140px] font-black text-[#f1f3f7] group-hover:text-[#e8ebf3] transition-colors select-none leading-none z-0">{cv.letter}</div>
                   <div className="relative z-10 flex flex-col h-full">
                     <div className="text-[#165EC8] mb-4 block"><Icon size={28} /></div>
-                    <h4 className="text-lg font-extrabold text-[#0B2D6B] mb-2">{cv.name}</h4>
-                    <p className="text-sm text-[#545469] leading-relaxed">{cv.desc}</p>
+                    <h4 className="text-lg font-extrabold text-[#111827] mb-2">{cv.name}</h4>
+                    <p className="text-sm text-[#4b5563] leading-relaxed">{cv.desc}</p>
                   </div>
                 </div>
               );
