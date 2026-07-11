@@ -280,14 +280,14 @@ export default async function TentangKamiPage() {
 
       {/* CORE VALUE */}
       <section className="section bg-[#fcfbfe]" style={{ padding: "6rem 0 8rem" }}>
-        <div className="container mx-auto px-6 md:px-12 max-w-7xl">
+        <div className="container mx-auto px-4 md:px-8 max-w-[1440px]">
           <div className="text-center mb-16">
             <span className="text-xs font-bold uppercase tracking-widest text-[#165EC8]">Our DNA</span>
             <h2 className="text-5xl font-black italic tracking-wide text-[#165EC8] mt-4 uppercase">
               FUTURISTIC
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 lg:gap-6">
             {coreValuesData.map((cv: any, index: number) => {
               const Icon = getIcon(cv, index);
               const colIndex = index % 5;
@@ -301,8 +301,8 @@ export default async function TentangKamiPage() {
                   <div className="absolute top-0 right-0 -mt-2 -mr-2 text-[120px] font-black text-[#f1f3f7] group-hover:text-[#e8ebf3] transition-colors select-none leading-none z-0">{cv.letter}</div>
                   <div className="relative z-10 flex flex-col items-start w-full">
                     <div className="text-[#165EC8] mb-6 block"><Icon size={32} /></div>
-                    <h4 className="text-[19px] font-bold text-[#111827] mb-4 leading-tight">{cv.name}</h4>
-                    <p className="text-[14.5px] text-[#4b5563] leading-[1.65]">{cv.desc}</p>
+                    <h4 className="text-[18px] font-bold text-[#111827] mb-4 leading-tight">{cv.name}</h4>
+                    <p className="text-[14px] text-[#4b5563] leading-[1.7]">{cv.desc}</p>
                   </div>
                 </div>
               );
