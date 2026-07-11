@@ -132,14 +132,61 @@
   --color-surface-container-highest: #e1e2ed;
   --color-primary: #004ac6;
 
-  /* Fonts for M3 */
-  --font-body-md: "Inter";
-  --font-body-lg: "Inter";
-  --font-headline-md: "Inter";
-  --font-label-md: "Inter";
-  --font-headline-lg-mobile: "Inter";
-  --font-label-sm: "Inter";
-  --font-headline-lg: "Inter";
+  /* Fonts for M3 (Defined as CSS variables for reference, but we use classes below) */
+  --font-inter: "Inter", system-ui, sans-serif;
+}
+
+@layer utilities {
+  .text-headline-lg, .font-headline-lg {
+    font-family: var(--font-inter);
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 38px;
+    letter-spacing: -0.02em;
+  }
+  
+  .text-headline-lg-mobile, .font-headline-lg-mobile {
+    font-family: var(--font-inter);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32px;
+  }
+  
+  .text-headline-md, .font-headline-md {
+    font-family: var(--font-inter);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 28px;
+  }
+  
+  .text-body-lg, .font-body-lg {
+    font-family: var(--font-inter);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+  }
+  
+  .text-body-md, .font-body-md {
+    font-family: var(--font-inter);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+  
+  .text-label-md, .font-label-md {
+    font-family: var(--font-inter);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    letter-spacing: 0.05em;
+  }
+  
+  .text-label-sm, .font-label-sm {
+    font-family: var(--font-inter);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 14px;
+  }
 }
 
 /* ============================================

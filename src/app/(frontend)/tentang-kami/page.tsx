@@ -147,7 +147,7 @@ export default async function TentangKamiPage() {
       <section className="py-24 bg-surface-container-low overflow-hidden">
         <div className="container mx-auto px-6 md:px-12">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="relative">
+            <div className="relative mx-auto w-full max-w-md lg:max-w-[440px]">
               <div className="rounded-3xl overflow-hidden shadow-2xl relative z-10 aspect-[4/5] w-full">
                 <Image src="/media/tentang_kami_visi_img.png" alt="Visi" fill className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
@@ -216,11 +216,11 @@ export default async function TentangKamiPage() {
         <div className="container mx-auto px-6 md:px-12 max-w-5xl text-center">
           <span className="font-label-md text-label-md text-primary font-bold uppercase tracking-widest mb-8 block">Pesan Direktur</span>
           <div className="relative mb-12">
-            <Quote size={80} className="absolute -top-12 left-0 text-primary/10 rotate-180" />
-            <p className="font-headline-lg text-headline-lg italic text-on-surface leading-relaxed relative z-10">
+            <span className="absolute -top-16 -left-8 text-[120px] leading-none text-primary/10 select-none font-serif">&ldquo;</span>
+            <p className="font-headline-lg text-headline-lg italic text-on-surface leading-relaxed relative z-10 px-8">
               "{ceoQuote}"
             </p>
-            <Quote size={80} className="absolute -bottom-12 right-0 text-primary/10" />
+            <span className="absolute -bottom-24 -right-8 text-[120px] leading-none text-primary/10 select-none font-serif">&rdquo;</span>
           </div>
           <div className="flex flex-col items-center">
             <div className="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden mb-4 relative">
