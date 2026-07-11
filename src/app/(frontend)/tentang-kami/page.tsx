@@ -283,12 +283,8 @@ export default async function TentangKamiPage() {
         <div className="container mx-auto px-6 md:px-12">
           <div className="text-center mb-20">
             <span className="text-xs font-bold uppercase tracking-widest text-[#165EC8]">Our DNA</span>
-            <h2 className="text-5xl font-black italic text-[#165EC8] mt-4 uppercase flex justify-center items-center gap-1">
-              {"FUTURISTIC".split("").map((letter, i) => (
-                <span key={i} className={`inline-block ${i % 2 !== 0 ? 'translate-y-3' : '-translate-y-3'}`}>
-                  {letter}
-                </span>
-              ))}
+            <h2 className="text-5xl font-black italic tracking-[0.2em] text-[#165EC8] mt-4 uppercase">
+              FUTURISTIC
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
@@ -300,13 +296,13 @@ export default async function TentangKamiPage() {
               return (
                 <div 
                   key={cv.name + index} 
-                  className={`group relative p-6 bg-white rounded-3xl border border-[#e5e7eb] shadow-sm overflow-hidden h-full flex flex-col justify-start hover:shadow-md transition-all duration-300 ${isLow ? 'lg:translate-y-10' : ''}`}
+                  className={`group relative p-8 bg-white rounded-[2rem] border border-[#e5e7eb] shadow-sm overflow-hidden h-full min-h-[320px] flex flex-col justify-start hover:shadow-md transition-all duration-300 ${isLow ? 'lg:translate-y-12' : ''}`}
                 >
-                  <div className="absolute -bottom-6 -right-2 text-[140px] font-black text-[#f1f3f7] group-hover:text-[#e8ebf3] transition-colors select-none leading-none z-0">{cv.letter}</div>
-                  <div className="relative z-10 flex flex-col h-full">
-                    <div className="text-[#165EC8] mb-4 block"><Icon size={28} /></div>
-                    <h4 className="text-lg font-extrabold text-[#111827] mb-2">{cv.name}</h4>
-                    <p className="text-sm text-[#4b5563] leading-relaxed">{cv.desc}</p>
+                  <div className="absolute -top-4 -right-2 text-[160px] font-black text-[#f1f3f7] group-hover:text-[#e8ebf3] transition-colors select-none leading-none z-0">{cv.letter}</div>
+                  <div className="relative z-10 flex flex-col h-full mt-2">
+                    <div className="text-[#165EC8] mb-6 block"><Icon size={32} /></div>
+                    <h4 className="text-xl font-bold text-[#111827] mb-3">{cv.name}</h4>
+                    <p className="text-[15px] text-[#4b5563] leading-relaxed">{cv.desc}</p>
                   </div>
                 </div>
               );
