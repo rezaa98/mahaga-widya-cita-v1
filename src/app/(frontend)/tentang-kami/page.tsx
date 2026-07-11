@@ -296,14 +296,14 @@ export default async function TentangKamiPage() {
               return (
                 <div 
                   key={cv.name + index} 
-                  className={`group relative bg-white rounded-[1.5rem] border border-[#e5e7eb] shadow-sm overflow-hidden h-full min-h-[340px] flex flex-col justify-start hover:shadow-md transition-all duration-300 ${isLow ? 'lg:translate-y-8' : ''}`}
-                  style={{ padding: '2.5rem 2rem' }}
+                  className={`group relative bg-white rounded-[1.5rem] border border-[#e5e7eb] shadow-sm overflow-hidden h-full min-h-[240px] flex flex-col justify-start hover:shadow-md transition-all duration-300 ${isLow ? 'lg:translate-y-8' : ''}`}
+                  style={{ padding: '1.75rem 1.5rem' }}
                 >
                   <div className="absolute top-0 right-0 -mt-2 -mr-2 text-[120px] font-black text-[#f1f3f7] group-hover:text-[#e8ebf3] transition-colors select-none leading-none z-0">{cv.letter}</div>
                   <div className="relative z-10 flex flex-col items-start w-full">
-                    <div className="text-[#165EC8] mb-5 block"><Icon size={32} /></div>
-                    <h4 className="text-[18px] font-bold text-[#111827] mb-3 leading-tight">{cv.name}</h4>
-                    <p className="text-[13.5px] text-[#6b7280] leading-[1.7]">{cv.desc}</p>
+                    <div className="text-[#165EC8] mb-3 block"><Icon size={28} /></div>
+                    <h4 className="text-[17px] font-bold text-[#111827] mb-2 leading-tight">{cv.name}</h4>
+                    <p className="text-[13px] text-[#6b7280] leading-[1.6]">{cv.desc}</p>
                   </div>
                 </div>
               );
