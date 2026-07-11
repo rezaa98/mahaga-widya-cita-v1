@@ -92,14 +92,16 @@ export default async function TentangKamiPage() {
         </div>
         <div className="container mx-auto px-6 md:px-12 relative z-20">
           <div className="max-w-3xl">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white font-label-md text-label-md mb-6 backdrop-blur-md uppercase tracking-widest">
-              {heroData.badge}
+            <span className="inline-block px-4 py-2 rounded-full border border-white/30 text-white font-label-md text-label-md mb-8 backdrop-blur-md uppercase tracking-widest">
+              YOUR ONE-STOP CONSULTING PARTNER
             </span>
-            <h1 className="font-headline-lg text-headline-lg lg:text-[64px] lg:leading-[1.1] text-white mb-6">
-              {heroData.title} <span className="text-secondary-fixed">{heroData.titleHighlight}</span> {heroData.description.split('.')[0]}. <br />
-              <span className="relative">
-                  {heroData.description.split('.').slice(1).join('.').trim()}
-                  <span className="absolute -bottom-2 left-0 w-32 h-1.5 bg-tertiary-container rounded-full"></span>
+            <h1 className="font-headline-lg text-headline-lg lg:text-[72px] lg:leading-[1.1] text-white mb-6 font-bold tracking-tight">
+              Building Better <br className="hidden md:block" />
+              Decisions. <br className="hidden md:block" />
+              Creating Sustainable <br className="hidden md:block" />
+              <span className="relative inline-block mt-2">
+                  Impact.
+                  <span className="absolute -bottom-2 left-0 w-32 h-2 bg-tertiary-container rounded-full"></span>
               </span>
             </h1>
             <p className="font-body-lg text-body-lg text-white/80 mb-10 max-w-xl leading-relaxed">
@@ -125,13 +127,13 @@ export default async function TentangKamiPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 container mx-auto px-6 md:px-12 relative -mt-20 z-30">
+      <section className="container mx-auto px-6 md:px-12 relative -mt-32 z-30 mb-24">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {defaultStats.map((stat, idx) => {
             const isLast = idx === defaultStats.length - 1;
             const Icon = stat.icon;
             return (
-              <div key={idx} className={`bg-surface p-6 rounded-2xl border border-outline-variant flex flex-col items-center text-center h-full justify-center ${isLast ? 'md:col-span-3 lg:col-span-1' : ''}`}>
+              <div key={idx} className={`bg-surface p-6 md:p-8 rounded-3xl border border-outline-variant flex flex-col items-center justify-center text-center h-full shadow-lg aspect-square ${isLast ? 'col-span-2 md:col-span-3 lg:col-span-1' : ''}`}>
                 <div className={`w-14 h-14 ${stat.bg} rounded-xl flex items-center justify-center mb-4 ${stat.text}`}>
                   <Icon size={28} />
                 </div>
