@@ -28,9 +28,9 @@ const defaultStats = [
 ];
 
 const defaultMisi = [
-  { title: "Memberikan Solusi Strategis", text: "Solusi praktis, terukur, dan berkelanjutan bagi pemerintah, dunia usaha, dan berbagai institusi." },
-  { title: "Mendorong Pengambilan Keputusan Berbasis Data", text: "Mendukung penyusunan kebijakan dan strategi bisnis melalui riset berkualitas, analisis data, serta kajian strategis yang komprehensif." },
-  { title: "Mengembangkan Sumber Daya Manusia", text: "Meningkatkan kapasitas organisasi melalui pengembangan kompetensi, pelatihan profesional, konsultasi SDM, dan penyediaan tenaga profesional." }
+  { title: "Memberikan Solusi Strategis", text: "Solusi praktis, terukur, dan berkelanjutan bagi pemerintah dan swasta." },
+  { title: "Pengambilan Keputusan Berbasis Data", text: "Mendukung kebijakan dan strategi bisnis melalui riset berkualitas." },
+  { title: "Mempercepat Transformasi Digital", text: "Mendorong peningkatan efisiensi melalui penerapan teknologi modern." }
 ];
 
 const defaultCoreValues = [
@@ -146,7 +146,7 @@ export default async function TentangKamiPage() {
       </section>
 
       {/* Visi & Misi */}
-      <section className="py-24 bg-surface-container-low overflow-hidden">
+      <section className="pt-36 pb-24 bg-surface-container-low overflow-hidden">
         <div className="container mx-auto px-6 md:px-12">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative mx-auto w-full max-w-md lg:max-w-[440px]">
@@ -172,7 +172,7 @@ export default async function TentangKamiPage() {
               <div className="grid gap-6">
                 {misiData.slice(0, 3).map((misi: any, index: number) => (
                   <div key={index} className="flex gap-4 p-4 rounded-xl hover:bg-white transition-all border border-transparent hover:border-outline-variant group">
-                    <div className="flex-shrink-0 w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform">{index + 1}</div>
+                    <div className="flex-shrink-0 w-12 h-12 bg-primary rounded-full flex items-center justify-center !text-white font-headline-md group-hover:scale-110 transition-transform">{index + 1}</div>
                     <div>
                       <h4 className="font-headline-md text-headline-md text-on-surface mb-1">{misi.title}</h4>
                       <p className="text-on-surface-variant">{misi.text}</p>
@@ -193,14 +193,10 @@ export default async function TentangKamiPage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           {defaultCoreValues.map((cv, index) => {
-            const staggerClasses = [
-              "", "lg:mt-8", "", "lg:mt-8", "",
-              "lg:-mt-4", "lg:mt-4", "lg:-mt-4", "lg:mt-4", "lg:-mt-4"
-            ];
             const Icon = cv.icon;
             return (
-              <div key={cv.letter + index} className={`group relative p-6 bg-surface rounded-2xl border border-outline-variant overflow-hidden h-full flex flex-col justify-start ${staggerClasses[index]}`}>
-                <div className="absolute -top-4 -right-4 text-8xl font-black text-primary/5 group-hover:text-primary/10 transition-colors select-none">{cv.letter}</div>
+              <div key={cv.letter + index} className="group relative p-6 bg-surface rounded-2xl border border-outline-variant overflow-hidden h-full flex flex-col justify-start">
+                <div className="absolute -bottom-8 -right-4 text-[130px] font-black text-primary/5 group-hover:text-primary/10 transition-colors select-none leading-none">{cv.letter}</div>
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="text-primary mb-4 block"><Icon size={28} /></div>
                   <h4 className="font-headline-md text-headline-md text-on-surface mb-2">{cv.name}</h4>
