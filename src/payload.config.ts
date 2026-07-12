@@ -29,7 +29,7 @@ export default buildConfig({
     },
     components: {
       providers: ['@/components/admin/ThemeForceProvider#ThemeForceProvider'],
-      beforeNavLinks: ['@/components/admin/DashboardNavLink#DashboardNavLink'],
+      Nav: '@/components/admin/CustomNav#CustomNav',
       views: {
         dashboard: {
           Component: '@/components/admin/DashboardWidget#DashboardWidget',
