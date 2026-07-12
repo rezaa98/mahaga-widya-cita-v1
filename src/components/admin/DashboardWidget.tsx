@@ -1,5 +1,31 @@
 "use client"
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+type Stats = {
+  articles: { total: number; published: number; draft: number }
+  users: { total: number }
+  subscribers: { total: number; recentCount: number }
+  media: { total: number }
+  contacts: { total: number; recentCount: number }
+}
+
+type ActivityItem = {
+  type: 'article' | 'contact' | 'subscriber' | 'media'
+  label: string
+  detail: string
+  time: string
+  link: string
+}
+
+type DashboardData = {
+  stats: Stats
+  recentActivity: ActivityItem[]
+  weeklyArticles: number[]
+}
+
+// ─── Styles ───────────────────────────────────────────────────────────────────
 
 const styles = {
   main: {
@@ -116,10 +142,15 @@ const styles = {
     margin: 0,
   },
   statValue: {
-    fontSize: '20px',
-    lineHeight: '28px',
-    fontWeight: 600,
+    fontSize: '28px',
+    lineHeight: '36px',
+    fontWeight: 700,
     color: '#191b23',
+    marginTop: '6px',
+  },
+  statSub: {
+    fontSize: '11px',
+    color: '#6b7280',
     marginTop: '4px',
   },
   badge: {
@@ -134,10 +165,27 @@ const styles = {
     lineHeight: '14px',
     fontWeight: 500,
   },
+  badgeNeutral: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+    padding: '4px 8px',
+    borderRadius: '9999px',
+    backgroundColor: '#eff6ff',
+    color: '#1d4ed8',
+    fontSize: '11px',
+    lineHeight: '14px',
+    fontWeight: 500,
+  },
   sparklineContainer: {
     height: '40px',
     width: '100%',
     marginTop: '8px',
+  },
+  skeletonBlock: {
+    backgroundColor: '#e1e2ed',
+    borderRadius: '6px',
+    animation: 'pulse 1.5s ease-in-out infinite',
   },
   chartsGrid: {
     display: 'grid',
@@ -166,36 +214,6 @@ const styles = {
     color: '#191b23',
     margin: 0,
   },
-  toggleGroup: {
-    display: 'flex',
-    gap: '8px',
-  },
-  toggleActive: {
-    padding: '4px 12px',
-    fontSize: '11px',
-    lineHeight: '14px',
-    fontWeight: 600,
-    letterSpacing: '0.05em',
-    borderRadius: '9999px',
-    backgroundColor: '#e7e7f3',
-    color: '#191b23',
-    border: 'none',
-    cursor: 'pointer',
-    fontFamily: 'Inter, sans-serif',
-  },
-  toggleInactive: {
-    padding: '4px 12px',
-    fontSize: '11px',
-    lineHeight: '14px',
-    fontWeight: 600,
-    letterSpacing: '0.05em',
-    borderRadius: '9999px',
-    backgroundColor: 'transparent',
-    color: '#434655',
-    border: 'none',
-    cursor: 'pointer',
-    fontFamily: 'Inter, sans-serif',
-  },
   chartArea: {
     height: '256px',
     width: '100%',
@@ -220,9 +238,9 @@ const styles = {
     left: 0,
     right: 0,
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     fontSize: '11px',
-    color: '#c3c6d7',
+    color: '#9ca3af',
     padding: '0 8px',
   },
   activityCard: {
@@ -243,7 +261,7 @@ const styles = {
     flex: 1,
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: '16px',
+    gap: '14px',
   },
   activityItem: {
     display: 'flex',
@@ -263,8 +281,8 @@ const styles = {
     marginTop: '2px',
   }),
   activityText: {
-    fontSize: '14px',
-    lineHeight: '20px',
+    fontSize: '13px',
+    lineHeight: '18px',
     color: '#191b23',
     margin: 0,
   },
@@ -272,7 +290,7 @@ const styles = {
     fontSize: '11px',
     lineHeight: '14px',
     fontWeight: 500,
-    color: '#c3c6d7',
+    color: '#9ca3af',
     marginTop: '2px',
   },
   viewAllBtn: {
@@ -290,6 +308,8 @@ const styles = {
     borderRadius: '8px',
     cursor: 'pointer',
     fontFamily: 'Inter, sans-serif',
+    textDecoration: 'none',
+    display: 'block',
   },
   iconSmall: {
     fontFamily: 'Material Symbols Outlined',
@@ -359,29 +379,119 @@ const cssAnimation = `
     from { stroke-dashoffset: 1000; }
     to { stroke-dashoffset: 0; }
   }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
 `
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function timeAgo(dateStr: string): string {
+  const diff = Date.now() - new Date(dateStr).getTime()
+  const mins = Math.floor(diff / 60000)
+  const hours = Math.floor(mins / 60)
+  const days = Math.floor(hours / 24)
+  if (mins < 2) return 'Baru saja'
+  if (mins < 60) return `${mins} menit lalu`
+  if (hours < 24) return `${hours} jam lalu`
+  if (days < 7) return `${days} hari lalu`
+  return new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })
+}
+
+function activityConfig(type: ActivityItem['type']): { bg: string; color: string; icon: string } {
+  switch (type) {
+    case 'article': return { bg: '#b4c5ff', color: '#004ac6', icon: 'edit_document' }
+    case 'contact': return { bg: '#fef3c7', color: '#b45309', icon: 'mail' }
+    case 'subscriber': return { bg: '#dcfce7', color: '#15803d', icon: 'person_add' }
+    case 'media': return { bg: '#e1e2ed', color: '#434655', icon: 'image' }
+  }
+}
+
+function buildChartPath(data: number[]): string {
+  if (!data || data.length === 0) return ''
+  const max = Math.max(...data, 1)
+  const points = data.map((v, i) => {
+    const x = (i / (data.length - 1)) * 100
+    const y = 35 - (v / max) * 30
+    return `${x},${y}`
+  })
+  const pathParts: string[] = []
+  for (let i = 0; i < points.length; i++) {
+    if (i === 0) {
+      pathParts.push(`M${points[0]}`)
+    } else {
+      const [prevX, prevY] = points[i - 1].split(',').map(Number)
+      const [curX, curY] = points[i].split(',').map(Number)
+      const cpX = (prevX + curX) / 2
+      pathParts.push(`C${cpX},${prevY} ${cpX},${curY} ${curX},${curY}`)
+    }
+  }
+  return pathParts.join(' ')
+}
+
+// ─── Skeleton ─────────────────────────────────────────────────────────────────
+
+function SkeletonStatCard() {
+  return (
+    <div style={styles.statCard}>
+      <div style={styles.statHeader}>
+        <div>
+          <div style={{ ...styles.skeletonBlock, width: '80px', height: '12px', marginBottom: '10px' }} />
+          <div style={{ ...styles.skeletonBlock, width: '60px', height: '28px' }} />
+        </div>
+        <div style={{ ...styles.skeletonBlock, width: '50px', height: '22px', borderRadius: '9999px' }} />
+      </div>
+      <div style={{ ...styles.skeletonBlock, width: '100%', height: '40px' }} />
+    </div>
+  )
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
+
 export const DashboardWidget: React.FC = () => {
+  const [data, setData] = useState<DashboardData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+  const [greeting, setGreeting] = useState('Selamat Datang')
+
   useEffect(() => {
-    // Load Material Symbols font
-    const linkId = 'material-symbols-font'
-    if (!document.getElementById(linkId)) {
+    // Load fonts
+    const materialId = 'material-symbols-font'
+    if (!document.getElementById(materialId)) {
       const link = document.createElement('link')
-      link.id = linkId
+      link.id = materialId
       link.rel = 'stylesheet'
       link.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap'
       document.head.appendChild(link)
     }
-
-    // Load Inter font
-    const interLinkId = 'inter-font'
-    if (!document.getElementById(interLinkId)) {
+    const interId = 'inter-font'
+    if (!document.getElementById(interId)) {
       const link = document.createElement('link')
-      link.id = interLinkId
+      link.id = interId
       link.rel = 'stylesheet'
       link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
       document.head.appendChild(link)
     }
+
+    // Dynamic greeting
+    const hour = new Date().getHours()
+    if (hour < 12) setGreeting('Selamat Pagi')
+    else if (hour < 15) setGreeting('Selamat Siang')
+    else if (hour < 18) setGreeting('Selamat Sore')
+    else setGreeting('Selamat Malam')
+
+    // Fetch dashboard stats
+    fetch('/api/admin/dashboard-stats')
+      .then(r => r.json())
+      .then((json: DashboardData) => {
+        setData(json)
+        setLoading(false)
+      })
+      .catch(() => {
+        setError(true)
+        setLoading(false)
+      })
   }, [])
 
   const sparklineStyle: React.CSSProperties = {
@@ -390,26 +500,45 @@ export const DashboardWidget: React.FC = () => {
     animation: 'sparklineDraw 2s ease-out forwards',
   }
 
+  const weekLabels = ['3 Mgg Lalu', '2 Mgg Lalu', 'Mgg Lalu', 'Minggu Ini']
+  const chartPath = data ? buildChartPath(data.weeklyArticles) : ''
+  const maxWeekly = data ? Math.max(...data.weeklyArticles, 1) : 1
+
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: cssAnimation }} />
       <main style={styles.main}>
         <div style={styles.contentCanvas}>
-          {/* Welcome Section */}
+
+          {/* Welcome */}
           <div style={styles.welcomeSection}>
-            <h2 style={styles.welcomeTitle}>Good Morning, Admin</h2>
-            <p style={styles.welcomeSubtitle}>Here&apos;s what&apos;s happening with your content today.</p>
+            <h2 style={styles.welcomeTitle}>{greeting}, Admin 👋</h2>
+            <p style={styles.welcomeSubtitle}>
+              {loading
+                ? 'Memuat data dashboard...'
+                : error
+                  ? 'Tidak dapat memuat data. Cek koneksi atau server.'
+                  : `Ada ${data?.stats.contacts.recentCount ?? 0} pesan kontak baru dalam 30 hari terakhir.`}
+            </p>
           </div>
 
           {/* Quick Actions */}
           <div style={styles.quickActions}>
             <a href="/admin/collections/articles/create" style={styles.btnPrimary}>
               <span style={styles.iconMedium}>post_add</span>
-              New Article
+              Artikel Baru
             </a>
             <a href="/admin/collections/users/create" style={styles.btnPrimary}>
               <span style={styles.iconMedium}>person_add</span>
-              New User
+              User Baru
+            </a>
+            <a href="/admin/collections/contact-submissions" style={styles.btnOutline}>
+              <span style={styles.iconMedium}>mail</span>
+              Lihat Pesan Kontak
+            </a>
+            <a href="/admin/collections/subscribers" style={styles.btnOutline}>
+              <span style={styles.iconMedium}>people</span>
+              Subscriber
             </a>
             <a href="/admin/collections/media/create" style={styles.btnOutline}>
               <span style={styles.iconMedium}>upload_file</span>
@@ -417,174 +546,204 @@ export const DashboardWidget: React.FC = () => {
             </a>
           </div>
 
-          {/* Bento Grid */}
+          {/* Stat Cards */}
           <div style={styles.bentoGrid}>
-            {/* Stat Card 1 */}
-            <div style={styles.statCard}>
-              <div style={styles.statHeader}>
-                <div>
-                  <p style={styles.statLabel}>Total Articles</p>
-                  <h3 style={styles.statValue}>2.4k</h3>
+            {loading ? (
+              <>
+                <SkeletonStatCard />
+                <SkeletonStatCard />
+                <SkeletonStatCard />
+                <SkeletonStatCard />
+              </>
+            ) : (
+              <>
+                {/* Articles */}
+                <div style={styles.statCard}>
+                  <div style={styles.statHeader}>
+                    <div>
+                      <p style={styles.statLabel}>Total Artikel</p>
+                      <h3 style={styles.statValue}>{data?.stats.articles.total ?? 0}</h3>
+                      <p style={styles.statSub}>
+                        {data?.stats.articles.published ?? 0} Published · {data?.stats.articles.draft ?? 0} Draft
+                      </p>
+                    </div>
+                    <span style={styles.badge}>
+                      <span style={styles.iconSmall}>article</span>
+                      Artikel
+                    </span>
+                  </div>
+                  <div style={styles.sparklineContainer}>
+                    <svg style={{ width: '100%', height: '100%', overflow: 'visible' }} preserveAspectRatio="none" viewBox="0 0 100 30">
+                      <path style={{ ...sparklineStyle }} d="M0,25 Q10,15 20,20 T40,10 T60,15 T80,5 T100,0" fill="none" stroke="#004ac6" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                    </svg>
+                  </div>
                 </div>
-                <span style={styles.badge}>
-                  <span style={styles.iconSmall}>trending_up</span>
-                  +12%
-                </span>
-              </div>
-              <div style={styles.sparklineContainer}>
-                <svg style={{ width: '100%', height: '100%', overflow: 'visible' }} preserveAspectRatio="none" viewBox="0 0 100 30">
-                  <path style={{ ...sparklineStyle, color: '#004ac6' }} d="M0,25 Q10,15 20,20 T40,10 T60,15 T80,5 T100,0" fill="none" stroke="#004ac6" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-                </svg>
-              </div>
-            </div>
 
-            {/* Stat Card 2 */}
-            <div style={styles.statCard}>
-              <div style={styles.statHeader}>
-                <div>
-                  <p style={styles.statLabel}>Total Users</p>
-                  <h3 style={styles.statValue}>850</h3>
+                {/* Contacts */}
+                <div style={styles.statCard}>
+                  <div style={styles.statHeader}>
+                    <div>
+                      <p style={styles.statLabel}>Pesan Kontak</p>
+                      <h3 style={styles.statValue}>{data?.stats.contacts.total ?? 0}</h3>
+                      <p style={styles.statSub}>{data?.stats.contacts.recentCount ?? 0} baru 30 hari ini</p>
+                    </div>
+                    <span style={styles.badgeNeutral}>
+                      <span style={styles.iconSmall}>mail</span>
+                      Baru
+                    </span>
+                  </div>
+                  <div style={styles.sparklineContainer}>
+                    <svg style={{ width: '100%', height: '100%', overflow: 'visible' }} preserveAspectRatio="none" viewBox="0 0 100 30">
+                      <path style={{ ...sparklineStyle }} d="M0,15 Q20,25 40,15 T60,20 T80,10 T100,5" fill="none" stroke="#f59e0b" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                    </svg>
+                  </div>
                 </div>
-                <span style={styles.badge}>
-                  <span style={styles.iconSmall}>trending_up</span>
-                  +5%
-                </span>
-              </div>
-              <div style={styles.sparklineContainer}>
-                <svg style={{ width: '100%', height: '100%', overflow: 'visible' }} preserveAspectRatio="none" viewBox="0 0 100 30">
-                  <path style={{ ...sparklineStyle, color: '#004ac6' }} d="M0,15 Q20,25 40,15 T60,20 T80,10 T100,5" fill="none" stroke="#004ac6" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-                </svg>
-              </div>
-            </div>
 
-            {/* Stat Card 3 */}
-            <div style={styles.statCard}>
-              <div style={styles.statHeader}>
-                <div>
-                  <p style={styles.statLabel}>Subscribers</p>
-                  <h3 style={styles.statValue}>1.2k</h3>
+                {/* Subscribers */}
+                <div style={styles.statCard}>
+                  <div style={styles.statHeader}>
+                    <div>
+                      <p style={styles.statLabel}>Subscribers</p>
+                      <h3 style={styles.statValue}>{data?.stats.subscribers.total ?? 0}</h3>
+                      <p style={styles.statSub}>{data?.stats.subscribers.recentCount ?? 0} baru 30 hari ini</p>
+                    </div>
+                    <span style={styles.badge}>
+                      <span style={styles.iconSmall}>trending_up</span>
+                      Aktif
+                    </span>
+                  </div>
+                  <div style={styles.sparklineContainer}>
+                    <svg style={{ width: '100%', height: '100%', overflow: 'visible' }} preserveAspectRatio="none" viewBox="0 0 100 30">
+                      <path style={{ ...sparklineStyle }} d="M0,20 Q20,10 40,15 T60,5 T80,10 T100,0" fill="none" stroke="#10b981" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                    </svg>
+                  </div>
                 </div>
-                <span style={styles.badge}>
-                  <span style={styles.iconSmall}>trending_up</span>
-                  +8%
-                </span>
-              </div>
-              <div style={styles.sparklineContainer}>
-                <svg style={{ width: '100%', height: '100%', overflow: 'visible' }} preserveAspectRatio="none" viewBox="0 0 100 30">
-                  <path style={{ ...sparklineStyle, color: '#004ac6' }} d="M0,20 Q20,10 40,15 T60,5 T80,10 T100,0" fill="none" stroke="#004ac6" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-                </svg>
-              </div>
-            </div>
 
-            {/* Stat Card 4 */}
-            <div style={styles.statCard}>
-              <div style={styles.statHeader}>
-                <div>
-                  <p style={styles.statLabel}>Media Files</p>
-                  <h3 style={styles.statValue}>4.2k</h3>
+                {/* Media */}
+                <div style={styles.statCard}>
+                  <div style={styles.statHeader}>
+                    <div>
+                      <p style={styles.statLabel}>Media Files</p>
+                      <h3 style={styles.statValue}>{data?.stats.media.total ?? 0}</h3>
+                      <p style={styles.statSub}>{data?.stats.users.total ?? 0} admin users</p>
+                    </div>
+                    <span style={styles.outlineIcon}>perm_media</span>
+                  </div>
+                  <div style={styles.sparklineContainer}>
+                    <svg style={{ width: '100%', height: '100%', overflow: 'visible' }} preserveAspectRatio="none" viewBox="0 0 100 30">
+                      <path style={{ ...sparklineStyle }} d="M0,5 Q20,15 40,5 T60,20 T80,15 T100,10" fill="none" stroke="#c3c6d7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                    </svg>
+                  </div>
                 </div>
-                <span style={styles.outlineIcon}>perm_media</span>
-              </div>
-              <div style={styles.sparklineContainer}>
-                <svg style={{ width: '100%', height: '100%', overflow: 'visible' }} preserveAspectRatio="none" viewBox="0 0 100 30">
-                  <path style={{ ...sparklineStyle, color: '#c3c6d7' }} d="M0,5 Q20,15 40,5 T60,20 T80,15 T100,10" fill="none" stroke="#c3c6d7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-                </svg>
-              </div>
-            </div>
+              </>
+            )}
           </div>
 
-          {/* Charts & Activity Grid */}
+          {/* Charts & Activity */}
           <div style={styles.chartsGrid}>
-            {/* Main Chart Area */}
+            {/* Weekly Articles Chart */}
             <div style={styles.chartCard}>
               <div style={styles.chartHeader}>
-                <h3 style={styles.chartTitle}>Content Activity</h3>
-                <div style={styles.toggleGroup}>
-                  <button style={styles.toggleActive}>Week</button>
-                  <button style={styles.toggleInactive}>Month</button>
-                </div>
+                <h3 style={styles.chartTitle}>Artikel per Minggu</h3>
+                <span style={{ fontSize: '12px', color: '#9ca3af' }}>4 minggu terakhir</span>
               </div>
-              
-              {/* Simulated Area Chart */}
               <div style={styles.chartArea}>
                 <div style={styles.chartGridLines}>
-                  <div style={styles.gridLine}></div>
-                  <div style={styles.gridLine}></div>
-                  <div style={styles.gridLine}></div>
-                  <div style={styles.gridLine}></div>
-                  <div style={styles.gridLine}></div>
+                  {[0, 1, 2, 3, 4].map(i => (
+                    <div key={i} style={styles.gridLine} />
+                  ))}
                 </div>
-                <svg style={{ width: '100%', height: '100%', position: 'absolute', inset: 0, zIndex: 10, paddingTop: '8px', paddingBottom: '32px' }} preserveAspectRatio="none" viewBox="0 0 100 40">
-                  <defs>
-                    <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="0%" stopColor="#004ac6" stopOpacity="0.2" />
-                      <stop offset="100%" stopColor="#004ac6" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M0,30 Q10,10 20,20 T40,15 T60,25 T80,5 T100,10 L100,40 L0,40 Z" fill="url(#chartGradient)" />
-                  <path style={sparklineStyle} d="M0,30 Q10,10 20,20 T40,15 T60,25 T80,5 T100,10" fill="none" stroke="#004ac6" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.5" />
-                </svg>
+                {data && data.weeklyArticles.length > 0 ? (
+                  <svg
+                    style={{ width: '100%', height: '100%', position: 'absolute', inset: 0, zIndex: 10, paddingTop: '8px', paddingBottom: '32px' }}
+                    preserveAspectRatio="none"
+                    viewBox="0 0 100 40"
+                  >
+                    <defs>
+                      <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0%" stopColor="#004ac6" stopOpacity="0.25" />
+                        <stop offset="100%" stopColor="#004ac6" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <path d={`${chartPath} L100,40 L0,40 Z`} fill="url(#chartGradient)" />
+                    <path style={sparklineStyle} d={chartPath} fill="none" stroke="#004ac6" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.8" />
+                    {/* Data labels */}
+                    {data.weeklyArticles.map((v, i) => {
+                      const x = (i / (data.weeklyArticles.length - 1)) * 100
+                      const y = 35 - (v / maxWeekly) * 30
+                      return (
+                        <g key={i}>
+                          <circle cx={x} cy={y} r="1.5" fill="#004ac6" />
+                          {v > 0 && (
+                            <text x={x} y={y - 3} fontSize="4" textAnchor="middle" fill="#004ac6" fontWeight="600">{v}</text>
+                          )}
+                        </g>
+                      )
+                    })}
+                  </svg>
+                ) : (
+                  <div style={{
+                    position: 'absolute', inset: 0, display: 'flex',
+                    alignItems: 'center', justifyContent: 'center',
+                    color: '#9ca3af', fontSize: '13px', paddingBottom: '32px',
+                  }}>
+                    {loading ? 'Memuat data chart...' : 'Belum ada data artikel'}
+                  </div>
+                )}
                 <div style={styles.chartLabels}>
-                  <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                  {weekLabels.map(l => <span key={l}>{l}</span>)}
                 </div>
               </div>
             </div>
 
-            {/* Recent Activity List */}
+            {/* Recent Activity */}
             <div style={styles.activityCard}>
               <div style={styles.activityHeader}>
-                <h3 style={styles.chartTitle}>Recent Activity</h3>
+                <h3 style={styles.chartTitle}>Aktivitas Terbaru</h3>
               </div>
               <div style={styles.activityList}>
-                {/* Activity Item 1 */}
-                <div style={styles.activityItem}>
-                  <div style={styles.activityIcon('#b4c5ff', '#004ac6')}>
-                    <span style={styles.iconLarge}>edit_document</span>
+                {loading ? (
+                  [0, 1, 2, 3].map(i => (
+                    <div key={i} style={styles.activityItem}>
+                      <div style={{ ...styles.skeletonBlock, width: '32px', height: '32px', borderRadius: '50%', flexShrink: 0 }} />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ ...styles.skeletonBlock, width: '80%', height: '12px', marginBottom: '6px' }} />
+                        <div style={{ ...styles.skeletonBlock, width: '50%', height: '10px' }} />
+                      </div>
+                    </div>
+                  ))
+                ) : !data || data.recentActivity.length === 0 ? (
+                  <div style={{ color: '#9ca3af', fontSize: '13px', textAlign: 'center', padding: '24px 0' }}>
+                    Belum ada aktivitas tercatat.
                   </div>
-                  <div>
-                    <p style={styles.activityText}><span style={{ fontWeight: 600 }}>Sarah Jenkins</span> updated article &quot;Q3 Product Roadmap&quot;</p>
-                    <div style={styles.activityTime}>2 hours ago</div>
-                  </div>
-                </div>
-
-                {/* Activity Item 2 */}
-                <div style={styles.activityItem}>
-                  <div style={styles.activityIcon('#dcfce7', '#15803d')}>
-                    <span style={styles.iconLarge}>person_add</span>
-                  </div>
-                  <div>
-                    <p style={styles.activityText}><span style={{ fontWeight: 600 }}>New User</span> registered: michael.c@example.com</p>
-                    <div style={styles.activityTime}>4 hours ago</div>
-                  </div>
-                </div>
-
-                {/* Activity Item 3 */}
-                <div style={styles.activityItem}>
-                  <div style={styles.activityIcon('#e1e2ed', '#434655')}>
-                    <span style={styles.iconLarge}>image</span>
-                  </div>
-                  <div>
-                    <p style={styles.activityText}><span style={{ fontWeight: 600 }}>Admin</span> uploaded 5 new assets to &quot;Hero Banners&quot;</p>
-                    <div style={styles.activityTime}>5 hours ago</div>
-                  </div>
-                </div>
-
-                {/* Activity Item 4 */}
-                <div style={styles.activityItem}>
-                  <div style={styles.activityIcon('#fee2e2', '#b91c1c')}>
-                    <span style={styles.iconLarge}>delete</span>
-                  </div>
-                  <div>
-                    <p style={styles.activityText}><span style={{ fontWeight: 600 }}>System</span> removed archived category &quot;Old Promo&quot;</p>
-                    <div style={styles.activityTime}>Yesterday</div>
-                  </div>
-                </div>
+                ) : (
+                  data.recentActivity.map((item, idx) => {
+                    const cfg = activityConfig(item.type)
+                    return (
+                      <a key={idx} href={item.link} style={{ textDecoration: 'none' }}>
+                        <div style={styles.activityItem}>
+                          <div style={styles.activityIcon(cfg.bg, cfg.color)}>
+                            <span style={styles.iconLarge}>{cfg.icon}</span>
+                          </div>
+                          <div>
+                            <p style={styles.activityText}>
+                              <span style={{ fontWeight: 600 }}>{item.label}</span>{' '}
+                              <span style={{ color: '#6b7280' }}>{item.detail}</span>
+                            </p>
+                            <div style={styles.activityTime}>{timeAgo(item.time)}</div>
+                          </div>
+                        </div>
+                      </a>
+                    )
+                  })
+                )}
               </div>
-              <button style={styles.viewAllBtn}>
-                View All Activity
-              </button>
+              <a href="/admin/collections/articles" style={styles.viewAllBtn}>
+                Lihat Semua Aktivitas →
+              </a>
             </div>
           </div>
+
         </div>
       </main>
     </>
