@@ -124,24 +124,42 @@ export async function GET() {
     activities.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
     const recentActivity = activities.slice(0, 8);
 
-    // --- Weekly articles chart (last 4 weeks) ---
-    const weeklyData: number[] = [];
+    // --- Weekly chart data (last 4 weeks for all metrics) ---
+    const weekLabels = ['3 Mgg Lalu', '2 Mgg Lalu', '1 Mgg Lalu', 'Minggu Ini'];
+    const weeklyChartData = [];
+    
     for (let i = 3; i >= 0; i--) {
       const weekStart = new Date(now);
       weekStart.setDate(weekStart.getDate() - (i + 1) * 7);
       const weekEnd = new Date(now);
       weekEnd.setDate(weekEnd.getDate() - i * 7);
 
-      const count = await payload.count({
-        collection: 'articles',
-        where: {
-          createdAt: {
-            greater_than: weekStart.toISOString(),
-            less_than: weekEnd.toISOString(),
-          },
-        },
+      const [cArticles, cContacts, cSubscribers, cMedia] = await Promise.all([
+        payload.count({
+          collection: 'articles',
+          where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
+        }),
+        payload.count({
+          collection: 'contact-submissions',
+          where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
+        }),
+        payload.count({
+          collection: 'subscribers',
+          where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
+        }),
+        payload.count({
+          collection: 'media',
+          where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
+        })
+      ]);
+
+      weeklyChartData.push({
+        name: weekLabels[3 - i],
+        articles: cArticles.totalDocs,
+        contacts: cContacts.totalDocs,
+        subscribers: cSubscribers.totalDocs,
+        media: cMedia.totalDocs,
       });
-      weeklyData.push(count.totalDocs);
     }
 
     return NextResponse.json({
@@ -167,7 +185,7 @@ export async function GET() {
         },
       },
       recentActivity,
-      weeklyArticles: weeklyData,
+      weeklyChartData,
     });
   } catch (error) {
     console.error('[dashboard-stats] Error:', error);
