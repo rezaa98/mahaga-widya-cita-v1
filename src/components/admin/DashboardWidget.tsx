@@ -675,7 +675,16 @@ export const DashboardWidget: React.FC = () => {
                         <g key={i}>
                           <circle cx={x} cy={y} r="1.5" fill="#004ac6" />
                           {v > 0 && (
-                            <text x={x} y={y - 3} fontSize="4" textAnchor="middle" fill="#004ac6" fontWeight="600">{v}</text>
+                            <text 
+                              x={x} 
+                              y={y - 3} 
+                              fontSize="4" 
+                              textAnchor={i === 0 ? "start" : i === data.weeklyArticles.length - 1 ? "end" : "middle"} 
+                              fill="#004ac6" 
+                              fontWeight="600"
+                            >
+                              {v}
+                            </text>
                           )}
                         </g>
                       )
