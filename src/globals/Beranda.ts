@@ -238,6 +238,56 @@ export const Beranda: GlobalConfig = {
           }
         }
       ]
+    },
+    {
+      name: 'cta',
+      label: 'Call to Action (Bawah)',
+      type: 'group',
+      fields: [
+        {
+          name: 'title',
+          label: 'Judul Utama',
+          type: 'text',
+          required: true,
+          defaultValue: 'Siap Melakukan Transformasi\nInstansi Anda Bersama Kami?',
+          admin: { description: 'Gunakan Enter/Baris Baru untuk memisahkan baris teks.' }
+        },
+        {
+          name: 'description',
+          label: 'Deskripsi',
+          type: 'textarea',
+          required: true,
+          defaultValue: 'Lebih dari 200 instansi pemerintah dan swasta telah mempercayakan pengembangan SDM dan tata kelola mereka kepada PT Mahaga Widya Cita.',
+        },
+        {
+          name: 'waNumber',
+          label: 'Nomor WhatsApp',
+          type: 'text',
+          required: true,
+          defaultValue: '6221123456789',
+          admin: { description: 'Gunakan format internasional tanpa awalan + (contoh: 62812...)' }
+        },
+        {
+          name: 'waMessage',
+          label: 'Pesan Default WhatsApp',
+          type: 'text',
+          required: true,
+          defaultValue: 'Halo, saya ingin konsultasi mengenai layanan PT Mahaga Widya Cita',
+        },
+        {
+          name: 'features',
+          label: 'Poin Fitur (Bawah Tombol)',
+          type: 'array',
+          fields: [
+            { name: 'text', type: 'text', required: true }
+          ],
+          defaultValue: [
+            { text: 'Respons dalam 24 Jam' },
+            { text: 'Konsultasi Awal Gratis' },
+            { text: 'Tim Berpengalaman 10+ Tahun' }
+          ]
+        }
+      ]
     }
   ]
 }

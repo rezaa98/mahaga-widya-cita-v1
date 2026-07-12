@@ -753,15 +753,14 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
           <div style={{ marginBottom: "1.25rem" }}>
             <Award size={48} color="var(--color-gold-300)" style={{ margin: "0 auto" }} />
           </div>
-          <h2 style={{ color: "white", fontSize: "clamp(1.75rem, 3vw, 2.5rem)", marginBottom: "1rem", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-            Siap Melakukan Transformasi<br />Instansi Anda Bersama Kami?
+          <h2 style={{ color: "white", fontSize: "clamp(1.75rem, 3vw, 2.5rem)", marginBottom: "1rem", fontFamily: "'Plus Jakarta Sans', sans-serif" }} dangerouslySetInnerHTML={{ __html: (berandaData?.cta?.title || "Siap Melakukan Transformasi\\nInstansi Anda Bersama Kami?").replace(/\\n/g, "<br />") }}>
           </h2>
           <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "1.0625rem", marginBottom: "2.5rem", maxWidth: "560px", margin: "0 auto 2.5rem" }}>
-            Lebih dari 200 instansi pemerintah dan swasta telah mempercayakan pengembangan SDM dan tata kelola mereka kepada PT Mahaga Widya Cita.
+            {berandaData?.cta?.description || "Lebih dari 200 instansi pemerintah dan swasta telah mempercayakan pengembangan SDM dan tata kelola mereka kepada PT Mahaga Widya Cita."}
           </p>
           <div className="cta-buttons" style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
             <a
-              href="https://wa.me/6221123456789?text=Halo%2C%20saya%20ingin%20konsultasi%20mengenai%20layanan%20PT%20Mahaga%20Widya%20Cita"
+              href={`https://wa.me/${berandaData?.cta?.waNumber || "6221123456789"}?text=${encodeURIComponent(berandaData?.cta?.waMessage || "Halo, saya ingin konsultasi mengenai layanan PT Mahaga Widya Cita")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-gold btn-lg"
@@ -775,7 +774,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
             </Link>
           </div>
           <div style={{ display: "flex", gap: "2rem", justifyContent: "center", marginTop: "2.5rem", flexWrap: "wrap" }}>
-            {["Respons dalam 24 Jam", "Konsultasi Awal Gratis", "Tim Berpengalaman 10+ Tahun"].map((item) => (
+            {(berandaData?.cta?.features?.length > 0 ? berandaData.cta.features.map((f: any) => f.text) : ["Respons dalam 24 Jam", "Konsultasi Awal Gratis", "Tim Berpengalaman 10+ Tahun"]).map((item: string) => (
               <div key={item} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <CheckCircle2 size={15} color="var(--color-gold-300)" />
                 <span style={{ fontSize: "0.875rem", color: "rgba(255,255,255,0.8)", fontWeight: "500" }}>
