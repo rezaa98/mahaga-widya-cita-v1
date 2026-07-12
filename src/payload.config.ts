@@ -17,6 +17,7 @@ import { TeamMembers } from './collections/TeamMembers'
 import { Beranda } from './globals/Beranda'
 import { TentangKami } from './globals/TentangKami'
 import { Kontak } from './globals/Kontak'
+import { Footer } from './globals/Footer'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -48,6 +49,7 @@ export default buildConfig({
     Beranda,
     TentangKami,
     Kontak,
+    Footer,
   ],
   collections: [
     Users,

@@ -3,34 +3,59 @@ import Image from "next/image";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
-import NewsletterForm from "./NewsletterForm";
 import { IconInstagram, IconYoutube, IconLinkedin, IconXTwitter } from "./icons/SocialIcons";
 
-const footerLinks = {
+const defaultFooterLinks = {
   company: [
-    { label: "Profil Perusahaan", href: "/tentang-kami" },
-    { label: "Manajemen", href: "/tentang-kami#manajemen" },
-    { label: "Tenaga Ahli", href: "/tentang-kami#ahli" },
-    { label: "Mitra", href: "/mitra" },
-    { label: "Karir", href: "/karir" },
+    { label: "Profil Perusahaan", url: "/tentang-kami" },
+    { label: "Manajemen", url: "/tentang-kami#manajemen" },
+    { label: "Tenaga Ahli", url: "/tentang-kami#ahli" },
+    { label: "Mitra", url: "/mitra" },
+    { label: "Karir", url: "/karir" },
   ],
   services: [
-    { label: "Smart Consulting", href: "/layanan/konsultasi" },
-    { label: "Smart Executive Education", href: "/layanan/edukasi" },
-    { label: "Smart Software Service", href: "/layanan/software" },
-    { label: "Smart Governance Review", href: "/layanan/governance-review" },
-    { label: "Smart Online Course", href: "/kursus" },
-    { label: "Smart Digital Conference", href: "/webinar" },
+    { label: "Smart Consulting", url: "/layanan/konsultasi" },
+    { label: "Smart Executive Education", url: "/layanan/edukasi" },
+    { label: "Smart Software Service", url: "/layanan/software" },
+    { label: "Smart Governance Review", url: "/layanan/governance-review" },
+    { label: "Smart Online Course", url: "/kursus" },
+    { label: "Smart Digital Conference", url: "/webinar" },
   ],
+};
+
+const socialIconsMap: Record<string, any> = {
+  instagram: IconInstagram,
+  youtube: IconYoutube,
+  linkedin: IconLinkedin,
+  twitter: IconXTwitter,
 };
 
 export default async function Footer() {
   const payload = await getPayload({ config: configPromise });
   const kontakData = await payload.findGlobal({ slug: "kontak" });
+  let footerData: any = null;
+  try {
+    footerData = await payload.findGlobal({ slug: "footer" });
+  } catch (e) {
+    console.error("Footer global not found, using defaults");
+  }
   
   const phone = kontakData?.phone || "+62 21 1234 5678";
   const email = kontakData?.email || "info@mahagawidyacita.co.id";
   const address = kontakData?.address || "Jakarta, Indonesia";
+
+  const companyDesc = footerData?.companyDescription || "Platform terdepan untuk edukasi profesional dan penguatan tata kelola bagi ASN dan profesional Indonesia.";
+  const copyrightText = footerData?.copyrightText || "PT Mahaga Widya Cita. Hak Cipta Dilindungi.";
+  
+  const displayCompanyLinks = footerData?.linksCompany?.length > 0 ? footerData.linksCompany : defaultFooterLinks.company;
+  const displayServicesLinks = footerData?.linksServices?.length > 0 ? footerData.linksServices : defaultFooterLinks.services;
+  
+  const displaySocials = footerData?.socialMedia?.length > 0 ? footerData.socialMedia : [
+    { platform: "instagram", url: "#" },
+    { platform: "youtube", url: "#" },
+    { platform: "linkedin", url: "#" },
+    { platform: "twitter", url: "#" },
+  ];
 
   return (
     <footer
@@ -89,35 +114,35 @@ export default async function Footer() {
                 </div>
               </div>
             </div>
-            <p style={{ fontSize: "0.875rem", lineHeight: "1.7", marginBottom: "1.5rem", color: "rgba(255,255,255,0.65)" }}>
-              Platform terdepan untuk edukasi profesional dan penguatan tata kelola bagi ASN dan profesional Indonesia.
+            <p style={{ fontSize: "0.875rem", lineHeight: "1.7", marginBottom: "1.5rem", color: "rgba(255,255,255,0.65)", whiteSpace: "pre-line" }}>
+              {companyDesc}
             </p>
-            <div style={{ display: "flex", gap: "0.75rem" }}>
-            {[
-                { icon: IconInstagram, href: "#", label: "Instagram" },
-                { icon: IconYoutube, href: "#", label: "YouTube" },
-                { icon: IconLinkedin, href: "#", label: "LinkedIn" },
-                { icon: IconXTwitter, href: "#", label: "Twitter/X" },
-              ].map(({ icon: Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className="footer-social"
-                  style={{
-                    width: "36px",
-                    height: "36px",
-                    borderWidth: "1px",
-                    borderStyle: "solid",
-                    borderRadius: "8px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Icon size={16} />
-                </a>
-              ))}
+            <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+              {displaySocials.map(({ platform, url }: any) => {
+                const Icon = socialIconsMap[platform] || IconInstagram;
+                return (
+                  <a
+                    key={platform}
+                    href={url}
+                    aria-label={platform}
+                    className="footer-social"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      width: "36px",
+                      height: "36px",
+                      borderWidth: "1px",
+                      borderStyle: "solid",
+                      borderRadius: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Icon size={16} />
+                  </a>
+                );
+              })}
             </div>
           </div>
 
@@ -127,10 +152,10 @@ export default async function Footer() {
               Perusahaan
             </h4>
             <ul style={{ listStyle: "none" }}>
-              {footerLinks.company.map((link) => (
+              {displayCompanyLinks.map((link: any) => (
                 <li key={link.label} style={{ marginBottom: "0.625rem" }}>
                   <Link
-                    href={link.href}
+                    href={link.url}
                     className="footer-link"
                     style={{ fontSize: "0.875rem" }}
                   >
@@ -147,10 +172,10 @@ export default async function Footer() {
               Layanan
             </h4>
             <ul style={{ listStyle: "none" }}>
-              {footerLinks.services.map((link) => (
+              {displayServicesLinks.map((link: any) => (
                 <li key={link.label} style={{ marginBottom: "0.625rem" }}>
                   <Link
-                    href={link.href}
+                    href={link.url}
                     className="footer-link"
                     style={{ fontSize: "0.875rem" }}
                   >
@@ -195,7 +220,7 @@ export default async function Footer() {
           }}
         >
           <p style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.45)", textAlign: "center" }}>
-            © {new Date().getFullYear()} PT Mahaga Widya Cita. Hak Cipta Dilindungi.
+            © {new Date().getFullYear()} {copyrightText}
           </p>
         </div>
       </div>
