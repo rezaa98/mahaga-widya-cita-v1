@@ -282,7 +282,7 @@ export default function Navbar() {
                   >
                     {link.label}
                   </Link>
-                  {link.children?.map((child) => (
+                  {link.children?.map((child: any) => (
                     <Link
                       key={child.label}
                       href={child.href}
