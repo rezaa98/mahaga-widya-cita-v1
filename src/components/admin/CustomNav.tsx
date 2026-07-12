@@ -131,7 +131,6 @@ export const CustomNav: React.FC = () => {
           color: '#434655',
           fontWeight: 500,
           fontSize: '14px',
-          marginBottom: '12px',
           transition: 'all 0.2s ease',
         }}
         onMouseEnter={(e) => e.currentTarget.style.background = '#f3f4f8'}
@@ -140,6 +139,47 @@ export const CustomNav: React.FC = () => {
             settings
           </span>
           Settings
+        </Link>
+        
+        <Link href="/admin" style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          padding: '10px 14px',
+          borderRadius: '8px',
+          textDecoration: 'none',
+          color: '#434655',
+          fontWeight: 500,
+          fontSize: '14px',
+          transition: 'all 0.2s ease',
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.background = '#f3f4f8'}
+        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
+          <span className="material-symbols-outlined" style={{ fontSize: '20px', color: '#7a7e90' }}>
+            help_center
+          </span>
+          Help Center
+        </Link>
+        
+        <Link href="/admin/logout" style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          padding: '10px 14px',
+          borderRadius: '8px',
+          textDecoration: 'none',
+          color: '#dc2626',
+          fontWeight: 500,
+          fontSize: '14px',
+          marginBottom: '12px',
+          transition: 'all 0.2s ease',
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.background = '#fee2e2'}
+        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
+          <span className="material-symbols-outlined" style={{ fontSize: '20px', color: '#dc2626' }}>
+            logout
+          </span>
+          Logout
         </Link>
 
         {user && (
