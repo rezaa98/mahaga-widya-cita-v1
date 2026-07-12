@@ -56,7 +56,7 @@ export const Navbar: GlobalConfig = {
             { label: "Profil Perusahaan", href: "/tentang-kami" },
             { label: "Manajemen", href: "/tim#manajemen" },
             { label: "Tenaga Ahli", href: "/tim#ahli" },
-            { label: "Pesan CEO", href: "/tentang-kami#ceo" },
+            { label: "Our DNA", href: "/tentang-kami#our-dna" },
           ],
         },
         {

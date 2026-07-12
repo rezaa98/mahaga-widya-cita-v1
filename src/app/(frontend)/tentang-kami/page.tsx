@@ -279,7 +279,7 @@ export default async function TentangKamiPage() {
 
 
       {/* CORE VALUE */}
-      <section className="section bg-[#fcfbfe]" style={{ padding: "6rem 0 8rem" }}>
+      <section id="our-dna" className="section bg-[#fcfbfe]" style={{ padding: "6rem 0 8rem" }}>
         <div className="container mx-auto px-6 md:px-12">
           <div className="text-center mb-16">
             <span className="text-xs font-bold uppercase tracking-widest text-[#165EC8]">Our DNA</span>
