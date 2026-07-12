@@ -6,7 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 
-const navLinks = [
+const defaultNavLinks = [
   {
     label: "Tentang Kami",
     href: "/tentang-kami",
@@ -43,6 +43,7 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const [links, setLinks] = useState<any[]>(defaultNavLinks);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -54,6 +55,17 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
+    
+    // Fetch dynamic navbar links from CMS
+    fetch('/api/globals/navbar')
+      .then(res => res.json())
+      .then(data => {
+        if (data?.links && Array.isArray(data.links) && data.links.length > 0) {
+          setLinks(data.links);
+        }
+      })
+      .catch(err => console.error("Error fetching navbar links:", err));
+      
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -107,11 +119,11 @@ export default function Navbar() {
               }}
               className="desktop-nav"
             >
-              {navLinks.map((link) => (
+              {links.map((link) => (
                 <div
                   key={link.label}
                   style={{ position: "relative" }}
-                  onMouseEnter={() => link.children && setOpenDropdown(link.label)}
+                  onMouseEnter={() => link.children && link.children.length > 0 && setOpenDropdown(link.label)}
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
                   <Link
@@ -145,11 +157,11 @@ export default function Navbar() {
                     }}
                   >
                     {link.label}
-                    {link.children && <ChevronDown size={14} />}
+                    {link.children && link.children.length > 0 && <ChevronDown size={14} />}
                   </Link>
 
                   {/* Dropdown */}
-                  {link.children && openDropdown === link.label && (
+                  {link.children && link.children.length > 0 && openDropdown === link.label && (
                     <div
                       style={{
                         position: "absolute",
@@ -171,7 +183,7 @@ export default function Navbar() {
                           animation: "fadeInUp 0.2s ease",
                         }}
                       >
-                      {link.children.map((child) => (
+                      {link.children.map((child: any) => (
                         <Link
                           key={child.label}
                           href={child.href}
@@ -253,7 +265,7 @@ export default function Navbar() {
             }}
           >
             <div className="container">
-              {navLinks.map((link) => (
+              {links.map((link) => (
                 <div key={link.label}>
                   <Link
                     href={link.href}

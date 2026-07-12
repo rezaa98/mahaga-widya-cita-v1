@@ -20,6 +20,7 @@ const menuGroups = [
       { label: 'Landing Page', href: '/admin/globals/beranda', icon: 'web' },
       { label: 'About Us', href: '/admin/globals/tentang-kami', icon: 'info' },
       { label: 'Contact Us', href: '/admin/globals/kontak', icon: 'contact_mail' },
+      { label: 'Navbar', href: '/admin/globals/navbar', icon: 'menu' },
       { label: 'Footer', href: '/admin/globals/footer', icon: 'border_bottom' },
       { label: 'Services', href: '/admin/collections/services', icon: 'handshake' },
       { label: 'Team Members', href: '/admin/collections/team-members', icon: 'group' },

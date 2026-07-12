@@ -18,6 +18,7 @@ import { Beranda } from './globals/Beranda'
 import { TentangKami } from './globals/TentangKami'
 import { Kontak } from './globals/Kontak'
 import { Footer } from './globals/Footer'
+import { Navbar } from './globals/Navbar'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -50,6 +51,7 @@ export default buildConfig({
     TentangKami,
     Kontak,
     Footer,
+    Navbar,
   ],
   collections: [
     Users,
