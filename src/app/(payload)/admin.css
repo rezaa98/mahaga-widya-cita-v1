@@ -301,6 +301,17 @@ input::placeholder, textarea::placeholder {
   color: #9da1b3 !important;
 }
 
+/* Fix for react-select inner input getting the global input styles */
+.rs__input input,
+.react-select__input input,
+.rs__input,
+.react-select__input {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
 label {
   color: #434655 !important;
   font-weight: 600 !important;
