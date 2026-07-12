@@ -83,8 +83,9 @@ export const CustomLogin = () => {
         }
         
         .custom-input {
-          width: 100%;
-          padding: 0.75rem 1rem 0.75rem 2.75rem;
+          width: 100% !important;
+          box-sizing: border-box !important;
+          padding: 0.75rem 1rem 0.75rem 2.75rem !important;
           background: #ffffff;
           border: 1px solid #c3c6d7;
           border-radius: 0.5rem;
@@ -94,6 +95,10 @@ export const CustomLogin = () => {
         }
         .custom-input:focus {
           border-color: #004ac6;
+        }
+        
+        .custom-input-password {
+          padding-right: 3rem !important;
         }
         
         .btn-primary {
@@ -149,7 +154,7 @@ export const CustomLogin = () => {
                   />
                 </div>
                 <h1 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#191b23', margin: 0 }}>Welcome back</h1>
-                <p style={{ fontSize: '0.875rem', color: '#434655', marginTop: '0.5rem', margin: '0.5rem 0 0 0' }}>Sign in to your Nexus Admin account</p>
+                <p style={{ fontSize: '0.875rem', color: '#434655', marginTop: '0.5rem', margin: '0.5rem 0 0 0' }}>Sign in to your Mahaga Widya Cita Admin account</p>
               </div>
 
               {/* Login Form */}
@@ -195,8 +200,7 @@ export const CustomLogin = () => {
                       type={showPassword ? "text" : "password"} 
                       required 
                       placeholder="••••••••" 
-                      className="custom-input"
-                      style={{ paddingRight: '3rem' }}
+                      className="custom-input custom-input-password"
                       value={password}
                       onChange={e => setPassword(e.target.value)}
                     />
@@ -262,8 +266,8 @@ export const CustomLogin = () => {
           gap: '1rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 900, color: '#191b23' }}>Nexus Systems</span>
-            <span style={{ fontSize: '11px', fontWeight: 500, color: '#54647a' }}>© 2024 Nexus Systems. All rights reserved.</span>
+            <span style={{ fontSize: '0.75rem', fontWeight: 900, color: '#191b23' }}>Mahaga Widya Cita</span>
+            <span style={{ fontSize: '11px', fontWeight: 500, color: '#54647a' }}>© 2026 PT Mahaga Widya Cita. All rights reserved.</span>
           </div>
           <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
             <a href="#" style={{ fontSize: '11px', fontWeight: 500, color: '#004ac6', textDecoration: 'none' }}>Privacy Policy</a>
