@@ -301,7 +301,7 @@ export default async function TentangKamiPage() {
                 >
                   <div className="absolute top-0 right-0 -mt-2 -mr-2 text-[120px] font-black text-[#f1f3f7] group-hover:text-[#e8ebf3] transition-colors select-none leading-none z-0">{cv.letter}</div>
                   <div className="relative z-10 flex flex-col items-start w-full">
-                    <div className="text-[#165EC8] mb-3 block"><Icon size={48} /></div>
+                    <div className="text-[#165EC8] mb-3 block"><Icon size={40} /></div>
                     <h4 className="text-[17px] font-bold text-[#111827] mb-2 leading-tight">{cv.name}</h4>
                     <p className="text-[13px] text-[#6b7280] leading-[1.6]">{cv.desc}</p>
                   </div>
