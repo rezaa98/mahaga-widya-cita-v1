@@ -3,6 +3,9 @@ import { GlobalConfig } from 'payload'
 export const TentangKami: GlobalConfig = {
   slug: 'tentang-kami',
   label: 'Halaman Tentang Kami',
+  admin: {
+    group: 'Website',
+  },
   access: {
     read: () => true,
   },

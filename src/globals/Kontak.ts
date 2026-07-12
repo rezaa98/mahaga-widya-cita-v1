@@ -3,6 +3,9 @@ import { GlobalConfig } from 'payload'
 export const Kontak: GlobalConfig = {
   slug: 'kontak',
   label: 'Informasi Kontak',
+  admin: {
+    group: 'Website',
+  },
   access: {
     read: () => true,
   },

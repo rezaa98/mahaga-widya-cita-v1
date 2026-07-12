@@ -1,42 +1,45 @@
 /* ============================================
-   PAYLOAD ADMIN PANEL — CLEAN LIGHT THEME
+   PAYLOAD ADMIN PANEL — MODERN REVAMP THEME
    PT Mahaga Widya Cita CMS
-   Referensi: Modern SaaS Admin Dashboard
+   Design Reference: Stitch Modern CMS Admin
    ============================================ */
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
 
-/* Force ALL theme variables to light — regardless of data-theme attribute */
+/* ==================
+   CSS VARIABLES — Force Light Theme
+   ================== */
 :root,
 html,
 html[data-theme="light"],
 html[data-theme="dark"] {
   /* Background hierarchy */
-  --theme-bg: #faf8ff !important;
+  --theme-bg: #f3f4f8 !important;
   --theme-elevation-0: #ffffff !important;
-  --theme-elevation-50: #f3f3fe !important;
-  --theme-elevation-100: #ededf9 !important;
-  --theme-elevation-150: #e7e7f3 !important;
-  --theme-elevation-200: #e1e2ed !important;
-  --theme-elevation-250: #d9d9e5 !important;
-  --theme-elevation-300: #c3c6d7 !important;
-  --theme-elevation-350: #9fa3b5 !important;
-  --theme-elevation-400: #737686 !important;
+  --theme-elevation-50: #f7f8fc !important;
+  --theme-elevation-100: #eef0f6 !important;
+  --theme-elevation-150: #e4e6ee !important;
+  --theme-elevation-200: #dcdee8 !important;
+  --theme-elevation-250: #d0d3df !important;
+  --theme-elevation-300: #c0c3d1 !important;
+  --theme-elevation-350: #9da1b3 !important;
+  --theme-elevation-400: #7a7e90 !important;
   --theme-elevation-450: #5c5f6e !important;
   --theme-elevation-500: #434655 !important;
   --theme-elevation-600: #2e3039 !important;
-  --theme-elevation-700: #191b23 !important;
+  --theme-elevation-700: #1a1c27 !important;
   --theme-elevation-800: #0f1117 !important;
   --theme-elevation-900: #080a0e !important;
   --theme-elevation-1000: #000000 !important;
 
   /* Text */
-  --theme-text: #191b23 !important;
+  --theme-text: #1a1c27 !important;
 
-  /* Brand */
+  /* Brand colors */
   --theme-success-500: #16a34a !important;
-  --theme-error-500: #ba1a1a !important;
-  --theme-warning-500: #d97706 !important;
+  --theme-error-500: #dc2626 !important;
+  --theme-warning-500: #f59e0b !important;
 
   /* Input */
   --theme-input-bg: #ffffff !important;
@@ -53,23 +56,19 @@ html[data-theme="dark"] {
 }
 
 /* ==================
-   RESET dark overrides from old glassmorphism
+   BODY — BASE RESET
    ================== */
 html[data-theme='dark'] body,
-html[data-theme='light'] body {
-  background: #faf8ff !important;
+html[data-theme='light'] body,
+body {
+  background: #f3f4f8 !important;
   background-attachment: unset !important;
   background-size: unset !important;
-  color: #191b23 !important;
-}
-
-body {
-  background: #faf8ff !important;
-  color: #191b23 !important;
+  color: #1a1c27 !important;
 }
 
 /* ==================
-   NAV / SIDEBAR
+   NAV / SIDEBAR — Clean White with Blue Active Indicator
    ================== */
 .nav,
 .nav__wrapper,
@@ -77,53 +76,79 @@ nav {
   background-color: #ffffff !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  border-right: 1px solid #e1e2ed !important;
+  border-right: 1px solid #e4e6ee !important;
 }
 
+/* Nav Group Labels (COLLECTIONS, GLOBALS, etc.) */
 .nav-group__toggle,
 .nav-group__label {
-  color: #737686 !important;
-  font-weight: 600 !important;
-  font-size: 11px !important;
-  letter-spacing: 0.05em !important;
+  color: #7a7e90 !important;
+  font-weight: 700 !important;
+  font-size: 10px !important;
+  letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
+  padding: 8px 20px 4px !important;
 }
 
+/* Nav Links — Default */
 .nav a,
 .nav__link {
-  color: #505f76 !important;
-  border-radius: 8px !important;
+  color: #434655 !important;
+  border-radius: 0 !important;
   transition: all 0.15s ease !important;
   font-size: 14px !important;
   font-weight: 500 !important;
+  padding: 9px 20px !important;
+  border-left: 3px solid transparent !important;
+  margin: 0 !important;
 }
 
+/* Nav Links — Hover */
 .nav a:hover,
 .nav__link:hover {
-  background-color: #f3f3fe !important;
-  color: #191b23 !important;
+  background-color: #f7f8fc !important;
+  color: #1a1c27 !important;
+  border-left-color: #c0c3d1 !important;
 }
 
+/* Nav Links — Active: Blue left border, blue text, light blue bg */
 .nav a.active,
-.nav__link.active {
-  background-color: #dbe1ff !important;
-  color: #004ac6 !important;
+.nav__link.active,
+.nav a[aria-current="page"],
+.nav__link[aria-current="page"] {
+  background-color: #eef2ff !important;
+  color: #2563eb !important;
   font-weight: 600 !important;
+  border-left: 3px solid #2563eb !important;
+  border-radius: 0 !important;
+}
+
+/* Nav link icons (Payload uses SVG icons) */
+.nav a svg,
+.nav__link svg {
+  color: inherit !important;
+  opacity: 0.7;
+}
+
+.nav a.active svg,
+.nav__link.active svg {
+  color: #2563eb !important;
+  opacity: 1;
 }
 
 /* ==================
-   HEADER
+   HEADER — Clean Top Bar
    ================== */
 header,
 .app-header {
   background-color: #ffffff !important;
-  border-bottom: 1px solid #e1e2ed !important;
+  border-bottom: 1px solid #e4e6ee !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
 }
 
 /* ==================
-   MAIN CONTENT
+   MAIN CONTENT AREA
    ================== */
 .template-default,
 .template-default__content,
@@ -132,36 +157,70 @@ header,
 .dashboard,
 main,
 .payload__app {
-  background-color: #faf8ff !important;
-  background: #faf8ff !important;
+  background-color: #f3f4f8 !important;
+  background: #f3f4f8 !important;
   backdrop-filter: none !important;
 }
 
 /* ==================
-   CARDS & PANELS
+   CARDS & PANELS — White with subtle border
    ================== */
 .card,
 .collection-list__table,
-.collection-list__table thead,
-.collection-list__table tr,
 .payload__page-header,
 .form,
-.field-type,
-.tabs-field,
-.collapsible,
-.tabs-field__tabs,
-.tabs-field__tab-content,
 .document-fields,
 .render-fields {
   background: #ffffff !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  border: 1px solid #e1e2ed !important;
+  border: 1px solid #e4e6ee !important;
   border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Table container */
+.collection-list__table thead,
+.collection-list__table tr {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+/* Tabs field styling */
+.tabs-field,
+.tabs-field__tabs,
+.tabs-field__tab-content {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Collapsible sections */
+.collapsible {
+  background: #ffffff !important;
+  border: 1px solid #e4e6ee !important;
+  border-radius: 10px !important;
+  margin-bottom: 12px !important;
+  box-shadow: none !important;
+}
+
+.collapsible__toggle-wrap {
+  padding: 14px 18px !important;
+}
+
+/* Field type wrapper cleanup */
+.field-type {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 /* ==================
-   TEXT COLORS — override old white text
+   TEXT COLORS
    ================== */
 h1, h2, h3, h4, h5, h6,
 label, p, span, th, td, div,
@@ -169,72 +228,104 @@ label, p, span, th, td, div,
   color: inherit !important;
 }
 
+/* Page titles */
+.doc-header__title h1,
+h1 {
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+}
+
 /* ==================
-   BUTTONS
+   BUTTONS — Modern Blue Primary
    ================== */
 button.btn, a.btn,
 .btn {
   border-radius: 8px !important;
   font-weight: 600 !important;
   font-size: 13px !important;
-  letter-spacing: 0.02em !important;
+  letter-spacing: 0.01em !important;
   transition: all 0.2s ease !important;
   backdrop-filter: none !important;
 }
 
+/* Primary button: Solid blue */
 .btn--style-primary,
 button.btn--style-primary {
-  background-color: #004ac6 !important;
-  background: #004ac6 !important;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
   color: #ffffff !important;
   border: none !important;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3) !important;
 }
 
-.btn--style-primary:hover {
-  background-color: #003ea8 !important;
-  background: #003ea8 !important;
+.btn--style-primary:hover,
+button.btn--style-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
   transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(0, 74, 198, 0.3) !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
 }
 
+/* Secondary button: White with border */
 .btn--style-secondary {
   background-color: #ffffff !important;
   background: #ffffff !important;
-  color: #004ac6 !important;
-  border: 1px solid #c3c6d7 !important;
+  color: #2563eb !important;
+  border: 1px solid #dcdee8 !important;
 }
 
 .btn--style-secondary:hover {
-  background-color: #f3f3fe !important;
-  border-color: #004ac6 !important;
+  background-color: #f7f8fc !important;
+  border-color: #2563eb !important;
+  color: #1d4ed8 !important;
 }
 
 /* ==================
-   FORM INPUTS
+   FORM INPUTS — Clean Modern Style
    ================== */
 input, textarea, select, .rich-text {
   background: #ffffff !important;
-  border: 1px solid #c3c6d7 !important;
+  border: 1px solid #dcdee8 !important;
   border-radius: 8px !important;
-  color: #191b23 !important;
+  color: #1a1c27 !important;
   font-size: 14px !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  padding: 10px 14px !important;
 }
 
 input:focus, textarea:focus, select:focus {
-  border-color: #004ac6 !important;
-  box-shadow: 0 0 0 3px rgba(0, 74, 198, 0.1) !important;
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
   outline: none !important;
 }
 
 input::placeholder, textarea::placeholder {
-  color: #9fa3b5 !important;
+  color: #9da1b3 !important;
 }
 
 label {
   color: #434655 !important;
   font-weight: 600 !important;
   font-size: 12px !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* Date input special styling */
+input[type="date"] {
+  padding: 9px 14px !important;
+}
+
+/* Select dropdown */
+.rs__control,
+.react-select__control {
+  border: 1px solid #dcdee8 !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.rs__control--is-focused,
+.react-select__control--is-focused {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
 }
 
 /* ==================
@@ -243,41 +334,48 @@ label {
 .collection-list__table th,
 .collection-list__table td {
   background: transparent !important;
-  border-bottom: 1px solid #f3f3fe !important;
-  color: #191b23 !important;
+  border-bottom: 1px solid #eef0f6 !important;
+  color: #1a1c27 !important;
+  padding: 12px 16px !important;
 }
 
 .collection-list__table thead th {
-  color: #434655 !important;
+  color: #7a7e90 !important;
   font-weight: 600 !important;
   font-size: 11px !important;
   letter-spacing: 0.05em !important;
   text-transform: uppercase !important;
-  background-color: #f3f3fe !important;
+  background-color: #f7f8fc !important;
 }
 
 .collection-list__table tbody tr:hover td {
-  background-color: #f3f3fe !important;
+  background-color: #f7f8fc !important;
 }
 
 .cell-link {
-  color: #004ac6 !important;
+  color: #2563eb !important;
   font-weight: 500 !important;
 }
 
 .cell-link:hover {
-  color: #003ea8 !important;
+  color: #1d4ed8 !important;
   text-decoration: underline !important;
 }
 
 /* ==================
-   SEARCH
+   SEARCH BAR
    ================== */
 .search-filter__input {
-  background-color: #f3f3fe !important;
-  border: 1px solid #c3c6d7 !important;
+  background-color: #f7f8fc !important;
+  border: 1px solid #dcdee8 !important;
   border-radius: 9999px !important;
-  color: #191b23 !important;
+  color: #1a1c27 !important;
+  padding: 8px 16px 8px 40px !important;
+}
+
+.search-filter__input:focus {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
 }
 
 /* ==================
@@ -290,8 +388,34 @@ label {
 }
 
 .pill--style-light {
-  background-color: #dbe1ff !important;
-  color: #004ac6 !important;
+  background-color: #eef2ff !important;
+  color: #2563eb !important;
+}
+
+/* Status pills */
+.pill--has-action {
+  cursor: pointer !important;
+}
+
+/* ==================
+   BREADCRUMBS
+   ================== */
+.step-nav {
+  font-size: 13px !important;
+}
+
+.step-nav a {
+  color: #9da1b3 !important;
+  font-weight: 500 !important;
+}
+
+.step-nav a:hover {
+  color: #2563eb !important;
+}
+
+.step-nav__last {
+  color: #2563eb !important;
+  font-weight: 600 !important;
 }
 
 /* ==================
@@ -304,7 +428,7 @@ label {
 .modal__content {
   background-color: #ffffff !important;
   border-radius: 16px !important;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12) !important;
 }
 
 /* ==================
@@ -312,47 +436,79 @@ label {
    ================== */
 .rich-text-lexical {
   background-color: #ffffff !important;
-  border: 1px solid #c3c6d7 !important;
-  border-radius: 8px !important;
+  border: 1px solid #dcdee8 !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
 }
 
-/* ==================
-   LOGIN PAGE
-   ================== */
-.login {
-  background-color: #faf8ff !important;
-}
-
-.login__form {
-  background-color: #ffffff !important;
-  border: 1px solid #e1e2ed !important;
-  border-radius: 16px !important;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06) !important;
-}
-
-/* ==================
-   BREADCRUMBS
-   ================== */
-.step-nav a {
-  color: #737686 !important;
-}
-
-.step-nav a:hover {
-  color: #004ac6 !important;
+.rich-text-lexical__toolbar {
+  border-bottom: 1px solid #eef0f6 !important;
+  background: #f7f8fc !important;
 }
 
 /* ==================
    UPLOAD AREA
    ================== */
 .file-field__upload {
-  background-color: #f3f3fe !important;
-  border: 2px dashed #c3c6d7 !important;
+  background-color: #f7f8fc !important;
+  border: 2px dashed #c0c3d1 !important;
   border-radius: 12px !important;
+  transition: all 0.2s ease !important;
 }
 
 .file-field__upload:hover {
-  border-color: #004ac6 !important;
-  background-color: #dbe1ff !important;
+  border-color: #2563eb !important;
+  background-color: #eef2ff !important;
+}
+
+/* ==================
+   PAGINATION
+   ================== */
+.paginator {
+  border-top: 1px solid #eef0f6 !important;
+  padding: 16px !important;
+}
+
+.paginator__page {
+  border-radius: 6px !important;
+}
+
+.paginator__page.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+/* ==================
+   PUBLISH SIDEBAR (right column in edit view)
+   ================== */
+.doc-controls,
+.sidebar {
+  background: #ffffff !important;
+  border: 1px solid #e4e6ee !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* ==================
+   TABS — Active tab with blue underline
+   ================== */
+.tabs-field__tab-button {
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  color: #7a7e90 !important;
+  padding: 12px 20px !important;
+  border-bottom: 2px solid transparent !important;
+  transition: all 0.15s ease !important;
+}
+
+.tabs-field__tab-button:hover {
+  color: #1a1c27 !important;
+}
+
+.tabs-field__tab-button--active {
+  color: #2563eb !important;
+  font-weight: 600 !important;
+  border-bottom: 2px solid #2563eb !important;
 }
 
 /* ==================
@@ -364,22 +520,60 @@ label {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f3f3fe;
+  background: #f7f8fc;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c3c6d7;
+  background: #c0c3d1;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9fa3b5;
+  background: #9da1b3;
 }
 
 /* ==================
    FOCUS RING
    ================== */
 :focus-visible {
-  outline: 2px solid #004ac6 !important;
+  outline: 2px solid #2563eb !important;
   outline-offset: 2px !important;
+}
+
+/* ==================
+   LOGIN PAGE
+   ================== */
+.login {
+  background-color: #f3f4f8 !important;
+}
+
+.login__form {
+  background-color: #ffffff !important;
+  border: 1px solid #e4e6ee !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* ==================
+   TOOLTIP / POPUP
+   ================== */
+.tooltip {
+  background: #1a1c27 !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+}
+
+/* ==================
+   ANIMATION UTILITIES
+   ================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.template-default__content,
+.edit-view,
+.collection-list {
+  animation: fadeIn 0.2s ease-out !important;
 }

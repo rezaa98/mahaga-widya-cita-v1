@@ -3,6 +3,9 @@ import { GlobalConfig } from 'payload'
 export const Beranda: GlobalConfig = {
   slug: 'beranda',
   label: 'Beranda (Landing Page)',
+  admin: {
+    group: 'Website',
+  },
   access: {
     read: () => true,
   },
