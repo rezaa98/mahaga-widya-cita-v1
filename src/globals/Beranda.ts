@@ -15,6 +15,20 @@ export const Beranda: GlobalConfig = {
   },
   fields: [
     {
+      name: 'visibility',
+      type: 'group',
+      label: 'Pengaturan Visibilitas Bagian (Hide/Show Sections)',
+      fields: [
+        { name: 'showHero', type: 'checkbox', defaultValue: true, label: 'Tampilkan Hero Section' },
+        { name: 'showStats', type: 'checkbox', defaultValue: true, label: 'Tampilkan Statistik' },
+        { name: 'showPartners', type: 'checkbox', defaultValue: true, label: 'Tampilkan Mitra' },
+        { name: 'showServices', type: 'checkbox', defaultValue: true, label: 'Tampilkan Area Layanan' },
+        { name: 'showArticles', type: 'checkbox', defaultValue: true, label: 'Tampilkan Artikel Terbaru' },
+        { name: 'showTeam', type: 'checkbox', defaultValue: true, label: 'Tampilkan Tim Ahli' },
+        { name: 'showCTA', type: 'checkbox', defaultValue: true, label: 'Tampilkan Call to Action (CTA)' },
+      ],
+    },
+    {
       name: "hero",
       label: "Pengaturan Hero (Atas)",
       type: "group",

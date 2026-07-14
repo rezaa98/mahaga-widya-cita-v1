@@ -320,6 +320,15 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
     return { ...p, logoUrl: correctedUrl };
   });
 
+  const v = berandaData?.visibility || {};
+  const showHero = v.showHero !== false;
+  const showStats = v.showStats !== false;
+  const showServices = v.showServices !== false;
+  const showArticles = v.showArticles !== false;
+  const showTeam = v.showTeam !== false;
+  const showPartners = v.showPartners !== false;
+  const showCTA = v.showCTA !== false;
+
   const [statsVisible, setStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
 
@@ -335,6 +344,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
   return (
     <main>
       {/* =================== HERO =================== */}
+      {showHero && (
       <section className="hero-gradient hero-section" style={{ paddingTop: "72px", minHeight: "100vh", display: "flex", alignItems: "center" }}>
         <div className="container" style={{ position: "relative", zIndex: 1, paddingBlock: "5rem" }}>
           <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
@@ -462,8 +472,10 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
           </svg>
         </div>
       </section>
+      )}
 
       {/* =================== STATS =================== */}
+      {showStats && (
       <section style={{ paddingBlock: "0" }} ref={statsRef}>
         <div className="container">
           <div
@@ -489,8 +501,10 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
           </div>
         </div>
       </section>
+      )}
 
       {/* =================== SERVICES =================== */}
+      {showServices && (
       <section className="section">
         <div className="container">
           <div className="section-title">
@@ -579,10 +593,12 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
           </div>
         </div>
       </section>
+      )}
 
 
 
       {/* =================== ARTICLES =================== */}
+      {showArticles && (
       <section className="section">
         <div className="container">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "2.5rem", flexWrap: "wrap", gap: "1rem" }}>
@@ -665,8 +681,10 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
           </div>
         </div>
       </section>
+      )}
 
       {/* =================== TEAM =================== */}
+      {showTeam && (
       <section className="section section-alt">
         <div className="container">
           <div className="section-title">
@@ -690,8 +708,10 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
           </div>
         </div>
       </section>
+      )}
 
       {/* =================== PARTNERS =================== */}
+      {showPartners && (
       <section className="section-sm" style={{ overflow: "hidden", borderTop: "1px solid var(--color-neutral-100)", borderBottom: "1px solid var(--color-neutral-100)" }}>
         <div className="container" style={{ marginBottom: "1.5rem", textAlign: "center" }}>
           <p style={{ fontSize: "0.8125rem", color: "var(--color-neutral-400)", fontWeight: "600", textTransform: "uppercase", letterSpacing: "0.08em" }}>
@@ -738,8 +758,10 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
           </div>
         </div>
       </section>
+      )}
 
       {/* =================== CTA BANNER =================== */}
+      {showCTA && (
       <section
         style={{
           background: "linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-700) 100%)",
@@ -785,6 +807,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
           </div>
         </div>
       </section>
+      )}
     </main>
   );
 }
