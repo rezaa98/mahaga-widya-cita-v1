@@ -256,15 +256,17 @@ const IconMapping: Record<string, any> = {
   'digital-conference': Video,
 };
 
-export default function HomePage({ articles: payloadArticles = [], teamMembers: payloadTeamMembers = [], services: payloadServices = [], berandaData }: { articles?: any[], teamMembers?: any[], services?: any[], berandaData?: any }) {
+export default function HomePage({ articles: payloadArticles = [], teamMembers: payloadTeamMembers = [], services: payloadServices = [], berandaData, locale = 'id' }: { articles?: any[], teamMembers?: any[], services?: any[], berandaData?: any, locale?: string }) {
+  const isEn = locale === 'en';
+  const dateLocale = isEn ? 'en-US' : 'id-ID';
   const displayArticles = payloadArticles.length > 0 ? payloadArticles.map(a => ({
     id: a.id,
-    category: typeof a.category === 'object' && a.category ? a.category.name : 'UMUM',
+    category: typeof a.category === 'object' && a.category ? a.category.name : (isEn ? 'GENERAL' : 'UMUM'),
     title: a.title,
-    excerpt: 'Klik untuk membaca lebih lanjut...',
+    excerpt: isEn ? 'Click to read more...' : 'Klik untuk membaca lebih lanjut...',
     author: typeof a.author === 'object' && a.author ? a.author.name || 'Admin' : 'Admin',
-    date: new Date(a.publishedAt || new Date()).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }),
-    readTime: '5 menit',
+    date: new Date(a.publishedAt || new Date()).toLocaleDateString(dateLocale, { year: 'numeric', month: 'long', day: 'numeric' }),
+    readTime: isEn ? '5 min read' : '5 menit',
     categoryColor: "var(--color-primary-500)",
     categoryBg: "var(--color-primary-100)",
     imageUrl: a.imageUrl,
@@ -383,7 +385,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
 
               <div className="animate-fade-in-up delay-300" style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
                 <Link href="/layanan" className="btn btn-outline-white btn-lg" id="hero-cta-layanan">
-                  Lihat Layanan Kami
+                  {isEn ? 'View Our Services' : 'Lihat Layanan Kami'}
                 </Link>
               </div>
 
@@ -585,7 +587,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
                       color: "var(--color-primary-600)",
                     }}
                   >
-                    Selengkapnya <ChevronRight size={16} />
+                    {isEn ? 'Learn More' : 'Selengkapnya'} <ChevronRight size={16} />
                   </span>
                 </div>
               </Link>
@@ -603,12 +605,12 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
         <div className="container">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "2.5rem", flexWrap: "wrap", gap: "1rem" }}>
             <div>
-              <span className="badge badge-primary" style={{ marginBottom: "0.75rem" }}>Artikel & Insight</span>
-              <h2 className="text-heading-xl" style={{ margin: "0" }}>Pengetahuan untuk Profesional</h2>
+              <span className="badge badge-primary" style={{ marginBottom: "0.75rem" }}>{isEn ? 'Articles & Insights' : 'Artikel & Insight'}</span>
+              <h2 className="text-heading-xl" style={{ margin: "0" }}>{isEn ? 'Knowledge for Professionals' : 'Pengetahuan untuk Profesional'}</h2>
               <div className="gold-divider" style={{ margin: "0.75rem 0 0" }} />
             </div>
             <Link href="/artikel" className="btn btn-secondary" id="see-all-articles">
-              Lihat Semua Artikel <ArrowRight size={16} />
+              {isEn ? 'View All Articles' : 'Lihat Semua Artikel'} <ArrowRight size={16} />
             </Link>
           </div>
 
@@ -688,8 +690,8 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
       <section className="section section-alt">
         <div className="container">
           <div className="section-title">
-            <span className="overline">Tim Pakar</span>
-            <h2>Dipercaya oleh Para Profesional<br />Terbaik Indonesia</h2>
+            <span className="overline">{isEn ? 'Expert Team' : 'Tim Pakar'}</span>
+            <h2>{isEn ? 'Trusted by Indonesia\'s Top Professionals' : 'Dipercaya oleh Para Profesional\nTerbaik Indonesia'}</h2>
             <div className="gold-divider" />
           </div>
 
@@ -703,7 +705,7 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
 
           <div style={{ textAlign: "center", marginTop: "2.5rem" }}>
             <Link href="/tim" className="btn btn-secondary" id="see-all-team">
-              Lihat Semua Tim & Pakar <ArrowRight size={16} />
+              {isEn ? 'View All Team & Experts' : 'Lihat Semua Tim & Pakar'} <ArrowRight size={16} />
             </Link>
           </div>
         </div>

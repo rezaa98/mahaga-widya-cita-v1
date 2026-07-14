@@ -41,7 +41,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   return (
     <>
       <Navbar />
-      <HomePage articles={articles} teamMembers={teamMembers} services={services} berandaData={berandaData} />
+      <HomePage articles={articles} teamMembers={teamMembers} services={services} berandaData={berandaData} locale={locale} />
       <Footer locale={locale} />
       <WhatsAppFloat />
     </>
