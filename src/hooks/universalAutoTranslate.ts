@@ -80,7 +80,9 @@ export const universalCollectionAutoTranslate: CollectionAfterChangeHook = async
   req,
   collection,
 }) => {
-  return processTranslation(req, doc, collection.slug, false);
+  // Run translation in the background (fire-and-forget) to avoid blocking the save operation
+  processTranslation(req, doc, collection.slug, false).catch(console.error);
+  return doc;
 };
 
 export const universalGlobalAutoTranslate: GlobalAfterChangeHook = async ({
@@ -88,5 +90,7 @@ export const universalGlobalAutoTranslate: GlobalAfterChangeHook = async ({
   req,
   global,
 }) => {
-  return processTranslation(req, doc, global.slug, true);
+  // Run translation in the background (fire-and-forget) to avoid blocking the save operation
+  processTranslation(req, doc, global.slug, true).catch(console.error);
+  return doc;
 };
