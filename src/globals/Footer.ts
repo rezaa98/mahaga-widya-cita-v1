@@ -1,4 +1,5 @@
 import { GlobalConfig } from "payload";
+import { universalGlobalAutoTranslate } from "../hooks/universalAutoTranslate";
 
 export const Footer: GlobalConfig = {
   slug: "footer",
@@ -8,6 +9,9 @@ export const Footer: GlobalConfig = {
   },
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [universalGlobalAutoTranslate],
   },
   fields: [
     {

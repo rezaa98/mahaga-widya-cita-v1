@@ -1,4 +1,5 @@
 import { GlobalConfig } from "payload";
+import { universalGlobalAutoTranslate } from "../hooks/universalAutoTranslate";
 
 export const Kontak: GlobalConfig = {
   slug: "kontak",
@@ -8,6 +9,9 @@ export const Kontak: GlobalConfig = {
   },
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [universalGlobalAutoTranslate],
   },
   fields: [
     {

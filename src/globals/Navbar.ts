@@ -1,4 +1,5 @@
 import { GlobalConfig } from "payload";
+import { universalGlobalAutoTranslate } from "../hooks/universalAutoTranslate";
 
 export const Navbar: GlobalConfig = {
   slug: "navbar",
@@ -8,6 +9,9 @@ export const Navbar: GlobalConfig = {
   },
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [universalGlobalAutoTranslate],
   },
   fields: [
     {

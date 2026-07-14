@@ -1,4 +1,5 @@
 import { GlobalConfig } from "payload";
+import { universalGlobalAutoTranslate } from "../hooks/universalAutoTranslate";
 
 export const TentangKami: GlobalConfig = {
   slug: "tentang-kami",
@@ -8,6 +9,9 @@ export const TentangKami: GlobalConfig = {
   },
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [universalGlobalAutoTranslate],
   },
   fields: [
     {

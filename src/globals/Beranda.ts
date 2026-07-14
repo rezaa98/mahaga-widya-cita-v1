@@ -1,4 +1,5 @@
 import { GlobalConfig } from "payload";
+import { universalGlobalAutoTranslate } from "../hooks/universalAutoTranslate";
 
 export const Beranda: GlobalConfig = {
   slug: "beranda",
@@ -8,6 +9,9 @@ export const Beranda: GlobalConfig = {
   },
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [universalGlobalAutoTranslate],
   },
   fields: [
     {

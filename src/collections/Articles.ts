@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { autoTranslateHook } from '../hooks/autoTranslate'
+import { universalCollectionAutoTranslate } from '../hooks/universalAutoTranslate'
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
@@ -12,7 +12,7 @@ export const Articles: CollectionConfig = {
     read: () => true,
   },
   hooks: {
-    afterChange: [autoTranslateHook],
+    afterChange: [universalCollectionAutoTranslate],
   },
   fields: [
     {

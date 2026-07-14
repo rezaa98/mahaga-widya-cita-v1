@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { universalCollectionAutoTranslate } from '../hooks/universalAutoTranslate'
 
 export const TeamMembers: CollectionConfig = {
   slug: 'team-members',
@@ -9,6 +10,9 @@ export const TeamMembers: CollectionConfig = {
   },
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [universalCollectionAutoTranslate],
   },
   fields: [
     {
