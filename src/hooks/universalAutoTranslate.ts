@@ -1,17 +1,18 @@
 import { CollectionAfterChangeHook, GlobalAfterChangeHook } from 'payload';
 import { translateDocumentJSON } from '../utils/translate';
 
+import { after } from 'next/server';
+
 // Generic translator logic for both collections and globals
 async function processTranslation(req: any, doc: any, identifier: string, isGlobal: boolean = false) {
-  // Temporarily disable auto-translation on save.
-  // Calling the LLM API synchronously (or even async in Vercel) causes a 1-3 minute delay 
-  // and Vercel 504 timeouts, which prevents the data from saving at all.
-  // Users can manually edit the English locale via the CMS for now.
-  return doc;
+  // Only auto-translate when the user is saving the default 'id' locale
+  // and we haven't already skipped it to prevent infinite loops
+  if (req.locale !== 'id' || req.context?.skipAutoTranslate) {
+    return doc;
+  }
 
   try {
     // 1. Fetch the 'en' locale version of this document without fallback
-    // For collections, identifier is collection.slug. For globals, identifier is global.slug.
     let enDocNoFallback;
     if (isGlobal) {
       enDocNoFallback = await req.payload.findGlobal({
@@ -30,21 +31,9 @@ async function processTranslation(req: any, doc: any, identifier: string, isGlob
       });
     }
 
-    // A simple heuristic: if 'en' version has data that differs from 'id' version 
-    // in one of the main fields, or if we want to be safe, we only auto-translate if 
-    // it's an initial translation (e.g. they just created it, or they explicitly requested it)
-    // Actually, since this is universal, we can just check if any key exists in the DB for 'en'
-    // but findGlobal/findByID always returns the structure.
-    // If the translation shouldn't overwrite manual edits, we could check timestamps or specific fields.
-    // We will assume that if they save 'id' and we get here, we will translate the 'id' doc and update 'en'.
-    // NOTE: To prevent overwriting manual 'en' edits, they should edit 'en' locale explicitly.
-    // Since this runs after 'id' changes, it WILL overwrite 'en'.
-    
     console.log(`[Auto-Translate] Translating ${identifier} to English...`);
     
     // We don't want to translate the entire doc with system fields like id, createdAt, etc.
-    // But translateDocumentJSON handles this by preserving JSON structure and only translating text.
-    // Let's remove system fields just to save AI tokens and prevent accidental modifications.
     const { id, createdAt, updatedAt, ...docToTranslate } = doc;
     
     const translatedData = await translateDocumentJSON(docToTranslate);
@@ -80,8 +69,16 @@ export const universalCollectionAutoTranslate: CollectionAfterChangeHook = async
   req,
   collection,
 }) => {
-  // Run translation in the background (fire-and-forget) to avoid blocking the save operation
-  processTranslation(req, doc, collection.slug, false).catch(console.error);
+  // Run translation properly in the background using Next.js after()
+  // This sends the response immediately and runs the LLM in the background.
+  try {
+    after(async () => {
+      await processTranslation(req, doc, collection.slug, false);
+    });
+  } catch (err) {
+    // Fallback if after() is not available in the current context
+    processTranslation(req, doc, collection.slug, false).catch(console.error);
+  }
   return doc;
 };
 
@@ -90,7 +87,12 @@ export const universalGlobalAutoTranslate: GlobalAfterChangeHook = async ({
   req,
   global,
 }) => {
-  // Run translation in the background (fire-and-forget) to avoid blocking the save operation
-  processTranslation(req, doc, global.slug, true).catch(console.error);
+  try {
+    after(async () => {
+      await processTranslation(req, doc, global.slug, true);
+    });
+  } catch (err) {
+    processTranslation(req, doc, global.slug, true).catch(console.error);
+  }
   return doc;
 };
