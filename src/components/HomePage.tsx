@@ -26,6 +26,11 @@ import {
   TrendingUp,
   Users,
   Video,
+  Landmark,
+  Calculator,
+  ClipboardList,
+  MonitorSmartphone,
+  UserPlus
 } from "lucide-react";
 
 /* ============================================
@@ -249,11 +254,13 @@ function StatCard({ stat, index, total, visible }: { stat: StatItem; index: numb
    ============================================ */
 
 const IconMapping: Record<string, any> = {
-  'konsultasi': Lightbulb,
-  'edukasi': GraduationCap,
-  'software': Cpu,
-  'governance-review': Shield,
-  'digital-conference': Video,
+  'government-consulting': Landmark,
+  'business-investment-advisory': TrendingUp,
+  'tax-financial-advisory': Calculator,
+  'research-strategic-studies': ClipboardList,
+  'human-capital-development': Users,
+  'technology-digital-solutions': MonitorSmartphone,
+  'workforce-solutions': UserPlus,
 };
 
 export default function HomePage({ articles: payloadArticles = [], teamMembers: payloadTeamMembers = [], services: payloadServices = [], berandaData, locale = 'id' }: { articles?: any[], teamMembers?: any[], services?: any[], berandaData?: any, locale?: string }) {
