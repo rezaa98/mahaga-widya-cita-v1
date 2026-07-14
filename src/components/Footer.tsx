@@ -31,6 +31,7 @@ const socialIconsMap: Record<string, any> = {
 };
 
 export default async function Footer({ locale = 'id' }: { locale?: string }) {
+  const isEn = locale === 'en';
   const payload = await getPayload({ config: configPromise });
   const kontakData = await payload.findGlobal({ slug: "kontak", locale: locale as any });
   let footerData: any = null;
@@ -149,7 +150,7 @@ export default async function Footer({ locale = 'id' }: { locale?: string }) {
           {/* Perusahaan */}
           <div>
             <h4 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "0.875rem", fontWeight: "600", color: "white", marginBottom: "1.25rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-              Perusahaan
+              {isEn ? 'Company' : 'Perusahaan'}
             </h4>
             <ul style={{ listStyle: "none" }}>
               {displayCompanyLinks.map((link: any) => (
@@ -169,7 +170,7 @@ export default async function Footer({ locale = 'id' }: { locale?: string }) {
           {/* Layanan */}
           <div>
             <h4 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "0.875rem", fontWeight: "600", color: "white", marginBottom: "1.25rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-              Layanan
+              {isEn ? 'Services' : 'Layanan'}
             </h4>
             <ul style={{ listStyle: "none" }}>
               {displayServicesLinks.map((link: any) => (
@@ -189,7 +190,7 @@ export default async function Footer({ locale = 'id' }: { locale?: string }) {
           {/* Kontak */}
           <div>
             <h4 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "0.875rem", fontWeight: "600", color: "white", marginBottom: "1.25rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-              Kontak
+              {isEn ? 'Contact' : 'Kontak'}
             </h4>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
               {[
