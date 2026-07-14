@@ -21,6 +21,7 @@ export const Services: CollectionConfig = {
               name: 'title',
               type: 'text',
               required: true,
+              localized: true,
               label: 'Judul Layanan',
             },
             {
@@ -35,12 +36,14 @@ export const Services: CollectionConfig = {
               name: 'tagline',
               type: 'text',
               required: true,
+              localized: true,
               label: 'Tagline Singkat',
             },
             {
               name: 'description',
               type: 'textarea',
               required: true,
+              localized: true,
               label: 'Deskripsi Layanan',
             },
           ]
@@ -75,6 +78,7 @@ export const Services: CollectionConfig = {
                 {
                   name: 'feature',
                   type: 'text',
+                  localized: true,
                   required: true,
                 },
               ],
@@ -87,11 +91,13 @@ export const Services: CollectionConfig = {
                 {
                   name: 'title',
                   type: 'text',
+                  localized: true,
                   required: true,
                 },
                 {
                   name: 'desc',
                   type: 'text',
+                  localized: true,
                   required: true,
                 },
               ],
@@ -104,6 +110,7 @@ export const Services: CollectionConfig = {
                 {
                   name: 'audience',
                   type: 'text',
+                  localized: true,
                   required: true,
                 },
               ],

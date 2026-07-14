@@ -27,6 +27,7 @@ export const TeamMembers: CollectionConfig = {
               name: 'name',
               type: 'text',
               required: true,
+              localized: true,
               label: 'Nama Lengkap',
             },
             {
@@ -39,6 +40,7 @@ export const TeamMembers: CollectionConfig = {
             {
               name: 'bio',
               type: 'textarea',
+              localized: true,
               label: 'Profil Singkat (Khusus Manajemen)',
               admin: {
                 condition: (data) => data.category === 'management',
@@ -63,6 +65,7 @@ export const TeamMembers: CollectionConfig = {
             {
               name: 'role',
               type: 'text',
+              localized: true,
               label: 'Jabatan (Khusus Manajemen)',
               admin: {
                 condition: (data) => data.category === 'management',
@@ -72,11 +75,13 @@ export const TeamMembers: CollectionConfig = {
               name: 'expertise',
               type: 'text',
               required: true,
+              localized: true,
               label: 'Bidang Keahlian',
             },
             {
               name: 'institution',
               type: 'text',
+              localized: true,
               label: 'Instansi Asal (Khusus Tenaga Ahli)',
               admin: {
                 condition: (data) => data.category === 'expert',

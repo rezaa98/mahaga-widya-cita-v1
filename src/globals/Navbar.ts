@@ -1,52 +1,56 @@
-import { GlobalConfig } from 'payload'
+import { GlobalConfig } from "payload";
 
 export const Navbar: GlobalConfig = {
-  slug: 'navbar',
-  label: 'Navbar (Menu Atas)',
+  slug: "navbar",
+  label: "Navbar (Menu Atas)",
   admin: {
-    group: 'Website',
+    group: "Website",
   },
   access: {
     read: () => true,
   },
   fields: [
     {
-      name: 'links',
-      label: 'Daftar Menu Navigasi',
-      type: 'array',
+      name: "links",
+      label: "Daftar Menu Navigasi",
+      type: "array",
       required: true,
       fields: [
         {
-          name: 'label',
-          label: 'Label Menu (contoh: Tentang Kami)',
-          type: 'text',
+          name: "label",
+          label: "Label Menu (contoh: Tentang Kami)",
+          type: "text",
+          localized: true,
           required: true,
         },
         {
-          name: 'href',
-          label: 'URL Tautan',
-          type: 'text',
+          name: "href",
+          label: "URL Tautan",
+          type: "text",
+          localized: true,
           required: true,
         },
         {
-          name: 'children',
-          label: 'Sub Menu (Dropdown) - Opsional',
-          type: 'array',
+          name: "children",
+          label: "Sub Menu (Dropdown) - Opsional",
+          type: "array",
           fields: [
             {
-              name: 'label',
-              label: 'Label Sub Menu',
-              type: 'text',
+              name: "label",
+              label: "Label Sub Menu",
+              type: "text",
+              localized: true,
               required: true,
             },
             {
-              name: 'href',
-              label: 'URL Tautan',
-              type: 'text',
+              name: "href",
+              label: "URL Tautan",
+              type: "text",
+              localized: true,
               required: true,
             },
-          ]
-        }
+          ],
+        },
       ],
       defaultValue: [
         {
@@ -82,7 +86,7 @@ export const Navbar: GlobalConfig = {
           ],
         },
         { label: "Kontak", href: "/kontak" },
-      ]
-    }
+      ],
+    },
   ],
-}
+};

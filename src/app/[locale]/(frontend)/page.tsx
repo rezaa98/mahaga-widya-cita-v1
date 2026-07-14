@@ -7,9 +7,10 @@ import configPromise from "@payload-config";
 
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const payload = await getPayload({ config: configPromise });
-  const berandaData: any = await payload.findGlobal({ slug: "beranda", depth: 2 });
+  const berandaData: any = await payload.findGlobal({ slug: "beranda", depth: 2, locale: locale as any });
   
   // Use CMS selected articles, otherwise fallback to latest 3
   const articles = berandaData?.featuredData?.articles?.length > 0 
@@ -21,6 +22,7 @@ export default async function Home() {
         },
         sort: "-publishedAt",
         limit: 3,
+        locale: locale as any,
       })).docs;
 
   // Use CMS selected team, otherwise fallback to top 4
@@ -40,7 +42,7 @@ export default async function Home() {
     <>
       <Navbar />
       <HomePage articles={articles} teamMembers={teamMembers} services={services} berandaData={berandaData} />
-      <Footer />
+      <Footer locale={locale} />
       <WhatsAppFloat />
     </>
   );

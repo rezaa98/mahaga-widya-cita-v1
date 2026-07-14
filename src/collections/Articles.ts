@@ -21,12 +21,14 @@ export const Articles: CollectionConfig = {
               name: 'title',
               type: 'text',
               required: true,
+              localized: true,
               label: 'Judul Artikel',
             },
             {
               name: 'content',
               type: 'richText',
               required: true,
+              localized: true,
               label: 'Isi Artikel',
             },
           ]

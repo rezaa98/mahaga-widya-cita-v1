@@ -30,12 +30,12 @@ const socialIconsMap: Record<string, any> = {
   twitter: IconXTwitter,
 };
 
-export default async function Footer() {
+export default async function Footer({ locale = 'id' }: { locale?: string }) {
   const payload = await getPayload({ config: configPromise });
-  const kontakData = await payload.findGlobal({ slug: "kontak" });
+  const kontakData = await payload.findGlobal({ slug: "kontak", locale: locale as any });
   let footerData: any = null;
   try {
-    footerData = await payload.findGlobal({ slug: "footer" });
+    footerData = await payload.findGlobal({ slug: "footer", locale: locale as any });
   } catch (e) {
     console.error("Footer global not found, using defaults");
   }
@@ -155,7 +155,7 @@ export default async function Footer() {
               {displayCompanyLinks.map((link: any) => (
                 <li key={link.label} style={{ marginBottom: "0.625rem" }}>
                   <Link
-                    href={link.url}
+                    href={link.url.startsWith('/') ? `/${locale}${link.url}` : link.url}
                     className="footer-link"
                     style={{ fontSize: "0.875rem" }}
                   >
@@ -175,7 +175,7 @@ export default async function Footer() {
               {displayServicesLinks.map((link: any) => (
                 <li key={link.label} style={{ marginBottom: "0.625rem" }}>
                   <Link
-                    href={link.url}
+                    href={link.url.startsWith('/') ? `/${locale}${link.url}` : link.url}
                     className="footer-link"
                     style={{ fontSize: "0.875rem" }}
                   >

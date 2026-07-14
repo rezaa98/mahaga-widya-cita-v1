@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 
 const defaultNavLinks = [
@@ -47,17 +47,21 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [langDropdown, setLangDropdown] = useState(false);
   
   const pathname = usePathname();
-  const isDarkHero = pathname === '/' || pathname === '/tentang-kami';
+  const params = useParams();
+  const locale = (params?.locale as string) || 'id';
+  
+  const isDarkHero = pathname === `/${locale}` || pathname === `/${locale}/tentang-kami` || pathname === '/' || pathname === '/tentang-kami';
   const shouldBeSolid = scrolled || !isDarkHero;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
     
-    // Fetch dynamic navbar links from CMS
-    fetch('/api/globals/navbar')
+    // Fetch dynamic navbar links from CMS with locale
+    fetch(`/api/globals/navbar?locale=${locale}`)
       .then(res => res.json())
       .then(data => {
         if (data?.links && Array.isArray(data.links) && data.links.length > 0) {
@@ -67,7 +71,19 @@ export default function Navbar() {
       .catch(err => console.error("Error fetching navbar links:", err));
       
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [locale]);
+
+  const switchLanguage = (newLocale: string) => {
+    if (newLocale === locale) return;
+    const currentPath = pathname || '/';
+    // Remove the current locale prefix from the path if it exists
+    const pathWithoutLocale = currentPath.startsWith(`/${locale}`) 
+      ? currentPath.replace(`/${locale}`, '') 
+      : currentPath;
+    
+    const newPath = `/${newLocale}${pathWithoutLocale.startsWith('/') ? pathWithoutLocale : '/' + pathWithoutLocale}`;
+    window.location.href = newPath;
+  };
 
   return (
     <>
@@ -127,7 +143,7 @@ export default function Navbar() {
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
                   <Link
-                    href={link.href}
+                    href={link.href?.startsWith('/') ? `/${locale}${link.href}` : (link.href || '#')}
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -186,7 +202,7 @@ export default function Navbar() {
                       {link.children.map((child: any) => (
                         <Link
                           key={child.label}
-                          href={child.href}
+                          href={child.href?.startsWith('/') ? `/${locale}${child.href}` : (child.href || '#')}
                           style={{
                             display: "block",
                             padding: "0.625rem 0.875rem",
@@ -215,12 +231,100 @@ export default function Navbar() {
               ))}
             </div>
 
-            {/* CTA Buttons */}
+            {/* Language Switcher & CTA Buttons */}
             <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexShrink: 0 }}
               className="desktop-nav"
             >
+              <div 
+                style={{ position: "relative" }}
+                onMouseEnter={() => setLangDropdown(true)}
+                onMouseLeave={() => setLangDropdown(false)}
+              >
+                <button
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.25rem",
+                    cursor: "pointer",
+                    padding: "0.5rem 0.75rem",
+                    fontSize: "0.875rem",
+                    fontWeight: "600",
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    color: shouldBeSolid ? "var(--color-neutral-700)" : "white",
+                  }}
+                >
+                  {locale.toUpperCase()} <ChevronDown size={14} />
+                </button>
+                {langDropdown && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "100%",
+                      right: 0,
+                      paddingTop: "8px",
+                      zIndex: 100,
+                    }}
+                  >
+                    <div
+                      style={{
+                        background: "white",
+                        borderRadius: "8px",
+                        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                        border: "1px solid var(--color-neutral-100)",
+                        padding: "0.5rem",
+                        minWidth: "120px",
+                        animation: "fadeInUp 0.2s ease",
+                      }}
+                    >
+                      <button
+                        onClick={() => switchLanguage('id')}
+                        style={{
+                          display: "block",
+                          width: "100%",
+                          textAlign: "left",
+                          padding: "0.5rem 0.75rem",
+                          fontSize: "0.875rem",
+                          color: locale === 'id' ? "var(--color-primary-600)" : "var(--color-neutral-700)",
+                          fontWeight: locale === 'id' ? "700" : "500",
+                          background: "transparent",
+                          border: "none",
+                          cursor: "pointer",
+                          borderRadius: "4px",
+                        }}
+                        onMouseOver={(e) => (e.currentTarget.style.background = "var(--color-primary-50)")}
+                        onMouseOut={(e) => (e.currentTarget.style.background = "transparent")}
+                      >
+                        ID - Indonesia
+                      </button>
+                      <button
+                        onClick={() => switchLanguage('en')}
+                        style={{
+                          display: "block",
+                          width: "100%",
+                          textAlign: "left",
+                          padding: "0.5rem 0.75rem",
+                          fontSize: "0.875rem",
+                          color: locale === 'en' ? "var(--color-primary-600)" : "var(--color-neutral-700)",
+                          fontWeight: locale === 'en' ? "700" : "500",
+                          background: "transparent",
+                          border: "none",
+                          cursor: "pointer",
+                          borderRadius: "4px",
+                        }}
+                        onMouseOver={(e) => (e.currentTarget.style.background = "var(--color-primary-50)")}
+                        onMouseOut={(e) => (e.currentTarget.style.background = "transparent")}
+                      >
+                        EN - English
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <Link
-                href="/login"
+                href={`/${locale}/login`}
                 className="btn btn-sm"
                 style={{
                   background: "transparent",
@@ -230,7 +334,7 @@ export default function Navbar() {
                   transition: "all 0.25s ease",
                 }}
               >
-                Masuk
+                {locale === 'en' ? 'Login' : 'Masuk'}
               </Link>
             </div>
 
@@ -268,7 +372,7 @@ export default function Navbar() {
               {links.map((link) => (
                 <div key={link.label}>
                   <Link
-                    href={link.href}
+                    href={link.href?.startsWith('/') ? `/${locale}${link.href}` : (link.href || '#')}
                     onClick={() => setMobileOpen(false)}
                     style={{
                       display: "block",
@@ -285,7 +389,7 @@ export default function Navbar() {
                   {link.children?.map((child: any) => (
                     <Link
                       key={child.label}
-                      href={child.href}
+                      href={child.href?.startsWith('/') ? `/${locale}${child.href}` : (child.href || '#')}
                       onClick={() => setMobileOpen(false)}
                       style={{
                         display: "block",

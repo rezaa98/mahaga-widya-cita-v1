@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "../globals.css";
+import "../../globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://mahagawidyacita.co.id"),
@@ -51,13 +51,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale } = await params;
   return (
-    <html lang="id">
+    <html lang={locale}>
       <body id="frontend-app">
         {children}
       </body>
