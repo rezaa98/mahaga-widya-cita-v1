@@ -2,10 +2,13 @@ import { CollectionAfterChangeHook, GlobalAfterChangeHook } from 'payload';
 
 // Trigger the webhook in the background without awaiting it
 function triggerTranslationWebhook(req: any, doc: any, identifier: string, isGlobal: boolean) {
-  // Only auto-translate when the user is saving the default 'id' locale
-  if (req.locale !== 'id' || req.context?.skipAutoTranslate) {
+  if (req.context?.skipAutoTranslate) {
     return;
   }
+
+  // Determine source and target locales
+  const sourceLocale = req.locale || 'id';
+  const targetLocale = sourceLocale === 'id' ? 'en' : 'id';
 
   // Get the base URL (handles local dev, Vercel edge, and production)
   const baseUrl = process.env.PAYLOAD_PUBLIC_SERVER_URL 
@@ -26,6 +29,8 @@ function triggerTranslationWebhook(req: any, doc: any, identifier: string, isGlo
       identifier,
       id: doc.id,
       isGlobal,
+      sourceLocale,
+      targetLocale
     }),
   }).catch((err) => {
     console.error('[Auto-Translate] Webhook trigger failed:', err);

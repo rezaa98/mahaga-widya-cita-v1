@@ -77,7 +77,7 @@ function needsTranslation(str: string) {
   return typeof str === 'string' && /[a-zA-Z]/.test(str) && str.trim().length > 0;
 }
 
-export async function translateDocumentJSON(jsonObj: any, targetLanguage: string = 'English'): Promise<any> {
+export async function translateDocumentJSON(jsonObj: any, targetLanguage: string = 'English', sourceLanguage: string = 'Indonesian'): Promise<any> {
   if (!jsonObj) return jsonObj;
   if (!apiKey) {
     console.warn('GEMINI_API_KEY is not set. Translation skipped.');
@@ -122,7 +122,7 @@ export async function translateDocumentJSON(jsonObj: any, targetLanguage: string
   
   for (let i = 0; i < stringsToTranslate.length; i += batchSize) {
     const batch = stringsToTranslate.slice(i, i + batchSize);
-    const prompt = `Translate the following array of Indonesian strings into ${targetLanguage}. 
+    const prompt = `Translate the following array of strings from ${sourceLanguage} to ${targetLanguage}. 
 IMPORTANT RULES:
 1. You MUST return ONLY a valid JSON array of strings.
 2. The returned array MUST have exactly ${batch.length} elements.

@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { identifier, id, isGlobal } = body;
+    const { identifier, id, isGlobal, sourceLocale = 'id', targetLocale = 'en' } = body;
     
     if (!identifier) {
       return NextResponse.json({ error: 'Missing identifier' }, { status: 400 });
@@ -18,12 +18,12 @@ export async function POST(req: Request) {
 
     const payload = await getPayload({ config: configPromise });
 
-    // 1. Fetch the 'id' locale version to translate
+    // 1. Fetch the source locale version to translate
     let docToTranslate;
     if (isGlobal) {
       docToTranslate = await payload.findGlobal({
         slug: identifier as any,
-        locale: 'id',
+        locale: sourceLocale,
         fallbackLocale: 'none',
         depth: 0,
       });
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       docToTranslate = await payload.findByID({
         collection: identifier as any,
         id,
-        locale: 'id',
+        locale: sourceLocale,
         fallbackLocale: 'none',
         depth: 0,
       });
@@ -42,26 +42,28 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Document not found' }, { status: 404 });
     }
 
-    console.log(`[Auto-Translate Webhook] Translating ${identifier}...`);
+    console.log(`[Auto-Translate Webhook] Translating ${identifier} from ${sourceLocale} to ${targetLocale}...`);
     
     // Remove system fields
     const { id: docId, createdAt, updatedAt, ...cleanDoc } = docToTranslate;
     
     // Process translation
-    const translatedData = await translateDocumentJSON(cleanDoc);
+    const sourceLangStr = sourceLocale === 'id' ? 'Indonesian' : 'English';
+    const targetLangStr = targetLocale === 'id' ? 'Indonesian' : 'English';
+    const translatedData = await translateDocumentJSON(cleanDoc, targetLangStr, sourceLangStr);
 
-    // Update 'en' locale
+    // Update target locale
     if (isGlobal) {
       await payload.updateGlobal({
         slug: identifier as any,
-        locale: 'en',
+        locale: targetLocale,
         data: translatedData,
       });
     } else {
       await payload.update({
         collection: identifier as any,
         id: docId,
-        locale: 'en',
+        locale: targetLocale,
         data: translatedData,
       });
     }
