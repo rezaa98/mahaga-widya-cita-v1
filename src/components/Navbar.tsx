@@ -143,7 +143,7 @@ export default function Navbar() {
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
                   <Link
-                    href={link.href?.startsWith('/') ? `/${locale}${link.href}` : (link.href || '#')}
+                    href={link.href && link.href.startsWith('/') ? `/${locale}${link.href}` : (link.href || '#')}
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -202,7 +202,7 @@ export default function Navbar() {
                       {link.children.map((child: any) => (
                         <Link
                           key={child.label}
-                          href={child.href?.startsWith('/') ? `/${locale}${child.href}` : (child.href || '#')}
+                          href={(child.href && child.href.startsWith('/')) ? `/${locale}${child.href}` : (child.href || '#')}
                           style={{
                             display: "block",
                             padding: "0.625rem 0.875rem",
@@ -372,7 +372,7 @@ export default function Navbar() {
               {links.map((link) => (
                 <div key={link.label}>
                   <Link
-                    href={link.href?.startsWith('/') ? `/${locale}${link.href}` : (link.href || '#')}
+                    href={link.href && link.href.startsWith('/') ? `/${locale}${link.href}` : (link.href || '#')}
                     onClick={() => setMobileOpen(false)}
                     style={{
                       display: "block",
@@ -389,7 +389,7 @@ export default function Navbar() {
                   {link.children?.map((child: any) => (
                     <Link
                       key={child.label}
-                      href={child.href?.startsWith('/') ? `/${locale}${child.href}` : (child.href || '#')}
+                      href={(child.href && child.href.startsWith('/')) ? `/${locale}${child.href}` : (child.href || '#')}
                       onClick={() => setMobileOpen(false)}
                       style={{
                         display: "block",

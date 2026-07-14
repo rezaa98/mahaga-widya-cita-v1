@@ -155,7 +155,7 @@ export default async function Footer({ locale = 'id' }: { locale?: string }) {
               {displayCompanyLinks.map((link: any) => (
                 <li key={link.label} style={{ marginBottom: "0.625rem" }}>
                   <Link
-                    href={link.url.startsWith('/') ? `/${locale}${link.url}` : link.url}
+                    href={(link.url && link.url.startsWith('/')) ? `/${locale}${link.url}` : (link.url || '#')}
                     className="footer-link"
                     style={{ fontSize: "0.875rem" }}
                   >
@@ -175,7 +175,7 @@ export default async function Footer({ locale = 'id' }: { locale?: string }) {
               {displayServicesLinks.map((link: any) => (
                 <li key={link.label} style={{ marginBottom: "0.625rem" }}>
                   <Link
-                    href={link.url.startsWith('/') ? `/${locale}${link.url}` : link.url}
+                    href={(link.url && link.url.startsWith('/')) ? `/${locale}${link.url}` : (link.url || '#')}
                     className="footer-link"
                     style={{ fontSize: "0.875rem" }}
                   >
