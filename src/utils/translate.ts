@@ -80,57 +80,110 @@ export async function translateDocumentJSON(jsonObj: any, targetLanguage: string
   }
 
   // To prevent the AI from removing necessary fields, we send the entire object.
-  // The prompt must be very explicit.
-  try {
-    const prompt = `You are a professional JSON translator. Your task is to translate ALL human-readable Indonesian text inside the following JSON object to ${targetLanguage}.
+  
+  // 1. Extract all strings from the JSON object while keeping their paths
+  const stringsToTranslate: string[] = [];
+  const paths: any[][] = [];
+  
+  function traverseAndExtract(obj: any, currentPath: any[] = []) {
+    if (!obj) return;
+    if (typeof obj === 'string') {
+      if (needsTranslation(obj)) {
+        stringsToTranslate.push(obj);
+        paths.push(currentPath);
+      }
+      return;
+    }
+    if (Array.isArray(obj)) {
+      obj.forEach((item, index) => traverseAndExtract(item, [...currentPath, index]));
+      return;
+    }
+    if (typeof obj === 'object') {
+      for (const key in obj) {
+        // Skip some system or technical fields
+        if (key === 'url' || key === 'href' || key === 'id' || key === 'blockType' || key === 'mimeType' || key === 'filename') continue;
+        traverseAndExtract(obj[key], [...currentPath, key]);
+      }
+    }
+  }
+  
+  traverseAndExtract(jsonObj);
+  
+  if (stringsToTranslate.length === 0) return jsonObj;
 
-CRITICAL RULES:
-1. ONLY translate text strings that are meant for human reading (like titles, descriptions, content).
-2. DO NOT translate keys, property names, IDs, dates, URLs, slugs, or internal codes.
-3. DO NOT add, remove, or modify the structure of the JSON. Return the exact same JSON structure.
-4. If a value is a number, boolean, array, or object, preserve it perfectly.
-5. Return ONLY valid JSON. DO NOT include markdown code blocks (e.g. \`\`\`json) in your response, just the raw JSON text.
+  // 2. Translate the strings in batches to avoid overwhelming the model
+  const translatedStrings: string[] = [];
+  const batchSize = 30; // Small batch size for Gemma
+  
+  for (let i = 0; i < stringsToTranslate.length; i += batchSize) {
+    const batch = stringsToTranslate.slice(i, i + batchSize);
+    const prompt = `Translate the following array of Indonesian strings into ${targetLanguage}. 
+IMPORTANT RULES:
+1. You MUST return ONLY a valid JSON array of strings.
+2. The returned array MUST have exactly ${batch.length} elements.
+3. Keep the exact same order as the input.
+4. Do NOT include markdown code blocks. Output the raw JSON array.
 
-JSON to translate:
-${JSON.stringify(jsonObj)}
-`;
-    
-    const result = await model.generateContent(prompt);
-    let responseText = await result.response.text();
-    
-    // Robust JSON extraction to handle chatty/duplicate outputs from Gemma
-    let jsonStr = responseText.trim();
-    
-    // Try simple parse first
+INPUT ARRAY:
+${JSON.stringify(batch)}`;
+
     try {
-      return JSON.parse(jsonStr);
-    } catch (e) {
-      // Find all possible JSON-like blocks and try parsing them
-      const potentialBlocks = responseText.match(/\{[\s\S]*?\}/g) || [];
-      // Combine adjacent blocks if it's a nested structure, but it's safer to just find the largest valid block
-      // Instead of regex, let's just find the first valid JSON by balancing braces
-      let startIdx = responseText.indexOf('{');
-      while (startIdx !== -1) {
+      const result = await model.generateContent(prompt);
+      let responseText = await result.response.text();
+      
+      let parsedArray: string[] = [];
+      let jsonStr = responseText.trim();
+      
+      try {
+        parsedArray = JSON.parse(jsonStr);
+      } catch (e) {
+        // Robust extraction
+        let startIdx = responseText.indexOf('[');
         let braces = 0;
-        for (let i = startIdx; i < responseText.length; i++) {
-          if (responseText[i] === '{') braces++;
-          if (responseText[i] === '}') braces--;
-          if (braces === 0) {
-            try {
-              const extracted = responseText.substring(startIdx, i + 1);
-              return JSON.parse(extracted);
-            } catch (err) {
-              break; // Not valid JSON, continue searching
+        let found = false;
+        if (startIdx !== -1) {
+          for (let j = startIdx; j < responseText.length; j++) {
+            if (responseText[j] === '[') braces++;
+            if (responseText[j] === ']') braces--;
+            if (braces === 0) {
+              try {
+                parsedArray = JSON.parse(responseText.substring(startIdx, j + 1));
+                found = true;
+                break;
+              } catch (err) {}
             }
           }
         }
-        startIdx = responseText.indexOf('{', startIdx + 1);
+        if (!found) throw new Error("Could not extract valid JSON array");
       }
-      throw new Error("Could not extract valid JSON from response");
+      
+      if (Array.isArray(parsedArray) && parsedArray.length === batch.length) {
+        translatedStrings.push(...parsedArray);
+      } else {
+        // Fallback to original strings for this batch if length mismatches
+        translatedStrings.push(...batch);
+      }
+    } catch (error) {
+      console.error('Batch translation error:', error);
+      translatedStrings.push(...batch);
     }
-  } catch (error) {
-    console.error('Gemini Document Translation Error:', error);
-    return jsonObj;
   }
+  
+  // 3. Reconstruct the object with translated strings
+  // Deep clone to avoid mutating original
+  const resultObj = JSON.parse(JSON.stringify(jsonObj));
+  
+  for (let i = 0; i < paths.length; i++) {
+    const path = paths[i];
+    const translatedText = translatedStrings[i] || stringsToTranslate[i];
+    
+    // Navigate and set
+    let current = resultObj;
+    for (let j = 0; j < path.length - 1; j++) {
+      current = current[path[j]];
+    }
+    current[path[path.length - 1]] = translatedText;
+  }
+  
+  return resultObj;
 }
-
