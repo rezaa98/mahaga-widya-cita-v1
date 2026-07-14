@@ -72,6 +72,11 @@ ${JSON.stringify(jsonObj)}`;
   }
 }
 
+// Helper to check if a string contains any letters (needs translation)
+function needsTranslation(str: string) {
+  return typeof str === 'string' && /[a-zA-Z]/.test(str) && str.trim().length > 0;
+}
+
 export async function translateDocumentJSON(jsonObj: any, targetLanguage: string = 'English'): Promise<any> {
   if (!jsonObj) return jsonObj;
   if (!apiKey) {
@@ -101,7 +106,7 @@ export async function translateDocumentJSON(jsonObj: any, targetLanguage: string
     if (typeof obj === 'object') {
       for (const key in obj) {
         // Skip some system or technical fields
-        if (key === 'url' || key === 'href' || key === 'id' || key === 'blockType' || key === 'mimeType' || key === 'filename') continue;
+        if (key === 'url' || key === 'href' || key === 'id' || key === 'blockType' || key === 'mimeType' || key === 'filename' || key === 'platform' || key === 'icon') continue;
         traverseAndExtract(obj[key], [...currentPath, key]);
       }
     }
