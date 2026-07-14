@@ -44,14 +44,28 @@ ${JSON.stringify(jsonObj)}`;
     const result = await model.generateContent(prompt);
     let responseText = await result.response.text();
     
-    // Aggressively extract JSON from Gemma's chatty output
-    const startIdx = responseText.indexOf('{');
-    const endIdx = responseText.lastIndexOf('}');
-    if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
-      responseText = responseText.substring(startIdx, endIdx + 1);
+    let jsonStr = responseText.trim();
+    try {
+      return JSON.parse(jsonStr);
+    } catch (e) {
+      let startIdx = responseText.indexOf('{');
+      while (startIdx !== -1) {
+        let braces = 0;
+        for (let i = startIdx; i < responseText.length; i++) {
+          if (responseText[i] === '{') braces++;
+          if (responseText[i] === '}') braces--;
+          if (braces === 0) {
+            try {
+              return JSON.parse(responseText.substring(startIdx, i + 1));
+            } catch (err) {
+              break;
+            }
+          }
+        }
+        startIdx = responseText.indexOf('{', startIdx + 1);
+      }
+      throw new Error("Could not extract valid JSON from response");
     }
-    
-    return JSON.parse(responseText.trim());
   } catch (error) {
     console.error('Gemini Lexical Translation Error:', error);
     return jsonObj;
@@ -84,14 +98,36 @@ ${JSON.stringify(jsonObj)}
     const result = await model.generateContent(prompt);
     let responseText = await result.response.text();
     
-    // Aggressively extract JSON from Gemma's chatty output
-    const startIdx = responseText.indexOf('{');
-    const endIdx = responseText.lastIndexOf('}');
-    if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
-      responseText = responseText.substring(startIdx, endIdx + 1);
-    }
+    // Robust JSON extraction to handle chatty/duplicate outputs from Gemma
+    let jsonStr = responseText.trim();
     
-    return JSON.parse(responseText.trim());
+    // Try simple parse first
+    try {
+      return JSON.parse(jsonStr);
+    } catch (e) {
+      // Find all possible JSON-like blocks and try parsing them
+      const potentialBlocks = responseText.match(/\{[\s\S]*?\}/g) || [];
+      // Combine adjacent blocks if it's a nested structure, but it's safer to just find the largest valid block
+      // Instead of regex, let's just find the first valid JSON by balancing braces
+      let startIdx = responseText.indexOf('{');
+      while (startIdx !== -1) {
+        let braces = 0;
+        for (let i = startIdx; i < responseText.length; i++) {
+          if (responseText[i] === '{') braces++;
+          if (responseText[i] === '}') braces--;
+          if (braces === 0) {
+            try {
+              const extracted = responseText.substring(startIdx, i + 1);
+              return JSON.parse(extracted);
+            } catch (err) {
+              break; // Not valid JSON, continue searching
+            }
+          }
+        }
+        startIdx = responseText.indexOf('{', startIdx + 1);
+      }
+      throw new Error("Could not extract valid JSON from response");
+    }
   } catch (error) {
     console.error('Gemini Document Translation Error:', error);
     return jsonObj;
