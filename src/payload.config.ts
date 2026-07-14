@@ -64,6 +64,11 @@ export default buildConfig({
     Services,
     TeamMembers,
   ],
+  localization: {
+    locales: ['id', 'en'],
+    defaultLocale: 'id',
+    fallback: true,
+  },
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || 'fallback-secret-key', // Ensure to set this in production
   typescript: {
