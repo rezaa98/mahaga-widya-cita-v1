@@ -2,7 +2,8 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const apiKey = process.env.GEMINI_API_KEY || '';
 const genAI = new GoogleGenerativeAI(apiKey);
-const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+// Using Gemma as fallback because Gemini has quota limit 0 for this key
+const model = genAI.getGenerativeModel({ model: 'gemma-4-26b-a4b-it' });
 
 export async function translateText(text: string, targetLanguage: string = 'English'): Promise<string> {
   if (!text) return text;
@@ -12,14 +13,14 @@ export async function translateText(text: string, targetLanguage: string = 'Engl
   }
 
   try {
-    const prompt = `Translate the following text from Indonesian to ${targetLanguage}. Provide ONLY the translation without any quotes, markdown formatting, or additional explanations.\n\nText:\n${text}`;
+    const prompt = `Translate the following text from Indonesian to ${targetLanguage}. Provide ONLY the translation without any quotes, markdown formatting, or explanations.\n\nText:\n${text}`;
     
     const result = await model.generateContent(prompt);
     const response = await result.response;
     return response.text().trim();
   } catch (error) {
     console.error('Gemini Translation Error:', error);
-    return text; // Fallback to original text if error
+    return text; 
   }
 }
 
@@ -35,28 +36,25 @@ export async function translateLexicalJSON(jsonObj: any, targetLanguage: string 
 CRITICAL RULES:
 1. ONLY translate the text content.
 2. DO NOT change ANY JSON keys, structure, or non-text values (like numbers, booleans, IDs).
-3. Return ONLY valid JSON, with NO markdown code blocks (do not wrap in \`\`\`json).
-4. If there is a "text" key inside a node, translate its value.
+3. Return ONLY valid JSON, with NO markdown code blocks.
 
 JSON to translate:
-${JSON.stringify(jsonObj)}
-`;
+${JSON.stringify(jsonObj)}`;
     
     const result = await model.generateContent(prompt);
-    const responseText = await result.response.text();
+    let responseText = await result.response.text();
     
-    // Clean up potential markdown formatting from the response
-    let cleanJsonStr = responseText.trim();
-    if (cleanJsonStr.startsWith('```json')) {
-      cleanJsonStr = cleanJsonStr.replace(/^```json\n/, '').replace(/\n```$/, '');
-    } else if (cleanJsonStr.startsWith('```')) {
-      cleanJsonStr = cleanJsonStr.replace(/^```\n/, '').replace(/\n```$/, '');
+    // Aggressively extract JSON from Gemma's chatty output
+    const startIdx = responseText.indexOf('{');
+    const endIdx = responseText.lastIndexOf('}');
+    if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+      responseText = responseText.substring(startIdx, endIdx + 1);
     }
     
-    return JSON.parse(cleanJsonStr);
+    return JSON.parse(responseText.trim());
   } catch (error) {
     console.error('Gemini Lexical Translation Error:', error);
-    return jsonObj; // Fallback to original if error
+    return jsonObj;
   }
 }
 
@@ -84,19 +82,19 @@ ${JSON.stringify(jsonObj)}
 `;
     
     const result = await model.generateContent(prompt);
-    const responseText = await result.response.text();
+    let responseText = await result.response.text();
     
-    let cleanJsonStr = responseText.trim();
-    if (cleanJsonStr.startsWith('```json')) {
-      cleanJsonStr = cleanJsonStr.replace(/^```json\n/, '').replace(/\n```$/, '');
-    } else if (cleanJsonStr.startsWith('```')) {
-      cleanJsonStr = cleanJsonStr.replace(/^```\n/, '').replace(/\n```$/, '');
+    // Aggressively extract JSON from Gemma's chatty output
+    const startIdx = responseText.indexOf('{');
+    const endIdx = responseText.lastIndexOf('}');
+    if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+      responseText = responseText.substring(startIdx, endIdx + 1);
     }
     
-    return JSON.parse(cleanJsonStr);
+    return JSON.parse(responseText.trim());
   } catch (error) {
     console.error('Gemini Document Translation Error:', error);
-    return jsonObj; // Fallback to original
+    return jsonObj;
   }
 }
 
