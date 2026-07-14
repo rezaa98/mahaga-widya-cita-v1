@@ -78,6 +78,7 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/postgres',
     },
+    push: true,
   }),
   plugins: [
     vercelBlobStorage({
