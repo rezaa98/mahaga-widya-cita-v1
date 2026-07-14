@@ -3,11 +3,11 @@ import { translateDocumentJSON } from '../utils/translate';
 
 // Generic translator logic for both collections and globals
 async function processTranslation(req: any, doc: any, identifier: string, isGlobal: boolean = false) {
-  // Only auto-translate when the user is saving the default 'id' locale
-  // and we haven't already skipped it to prevent infinite loops
-  if (req.locale !== 'id' || req.context?.skipAutoTranslate) {
-    return doc;
-  }
+  // Temporarily disable auto-translation on save.
+  // Calling the LLM API synchronously (or even async in Vercel) causes a 1-3 minute delay 
+  // and Vercel 504 timeouts, which prevents the data from saving at all.
+  // Users can manually edit the English locale via the CMS for now.
+  return doc;
 
   try {
     // 1. Fetch the 'en' locale version of this document without fallback
