@@ -270,6 +270,20 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
 
   const servicesCarouselRef = useRef<HTMLDivElement>(null);
   const teamScrollRef = useRef<HTMLDivElement>(null);
+  const [isTeamScrollable, setIsTeamScrollable] = useState(false);
+
+  const checkTeamScrollable = () => {
+    if (teamScrollRef.current) {
+      const { scrollWidth, clientWidth } = teamScrollRef.current;
+      setIsTeamScrollable(scrollWidth > clientWidth + 10); // +10px threshold to avoid rounding glitches
+    }
+  };
+
+  useEffect(() => {
+    checkTeamScrollable();
+    window.addEventListener('resize', checkTeamScrollable);
+    return () => window.removeEventListener('resize', checkTeamScrollable);
+  }, [payloadTeamMembers]);
 
   const scrollTeam = (direction: 'left' | 'right') => {
     if (teamScrollRef.current) {
@@ -802,36 +816,38 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
             ))}
           </div>
 
-          <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginTop: "1rem" }}>
-            <button 
-              onClick={() => scrollTeam('left')} 
-              style={{
-                width: "44px", height: "44px", borderRadius: "50%", 
-                backgroundColor: "var(--color-primary-50)", color: "var(--color-primary-700)",
-                border: "1px solid var(--color-primary-100)",
-                display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
-                transition: "all 0.2s"
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--color-primary-100)"}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--color-primary-50)"}
-            >
-              <ChevronLeft size={24} />
-            </button>
-            <button 
-              onClick={() => scrollTeam('right')} 
-              style={{
-                width: "44px", height: "44px", borderRadius: "50%", 
-                backgroundColor: "var(--color-primary-50)", color: "var(--color-primary-700)",
-                border: "1px solid var(--color-primary-100)",
-                display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
-                transition: "all 0.2s"
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--color-primary-100)"}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--color-primary-50)"}
-            >
-              <ChevronRight size={24} />
-            </button>
-          </div>
+          {isTeamScrollable && (
+            <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginTop: "1rem" }}>
+              <button 
+                onClick={() => scrollTeam('left')} 
+                style={{
+                  width: "44px", height: "44px", borderRadius: "50%", 
+                  backgroundColor: "var(--color-primary-50)", color: "var(--color-primary-700)",
+                  border: "1px solid var(--color-primary-100)",
+                  display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+                  transition: "all 0.2s"
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--color-primary-100)"}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--color-primary-50)"}
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <button 
+                onClick={() => scrollTeam('right')} 
+                style={{
+                  width: "44px", height: "44px", borderRadius: "50%", 
+                  backgroundColor: "var(--color-primary-50)", color: "var(--color-primary-700)",
+                  border: "1px solid var(--color-primary-100)",
+                  display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+                  transition: "all 0.2s"
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--color-primary-100)"}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--color-primary-50)"}
+              >
+                <ChevronRight size={24} />
+              </button>
+            </div>
+          )}
         </div>
       </section>
       )}
