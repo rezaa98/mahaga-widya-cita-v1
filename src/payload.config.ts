@@ -31,6 +31,7 @@ export default buildConfig({
     },
     components: {
       providers: ['@/components/admin/ThemeForceProvider#ThemeForceProvider'],
+      afterNavLinks: ['@/components/admin/InteractiveHelpWidget#InteractiveHelpWidget'],
       Nav: '@/components/admin/CustomNav#CustomNav',
       views: {
         dashboard: {
