@@ -754,10 +754,19 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
       {showTeam && (
       <section className="section section-alt">
         <div className="container">
-          <div className="section-title">
-            <span className="overline">{isEn ? 'Expert Team' : 'Tim Pakar'}</span>
-            <h2>{isEn ? 'Trusted by Indonesia\'s Top Professionals' : 'Dipercaya oleh Para Profesional\nTerbaik Indonesia'}</h2>
-            <div className="gold-divider" />
+          <div className="section-title" style={{ maxWidth: "800px", margin: "0 auto 3rem" }}>
+            <span className="overline">{isEn ? 'OUR EXPERTS' : 'PAKAR KAMI'}</span>
+            <h2 style={{ fontSize: "clamp(1.75rem, 3vw, 2.25rem)", lineHeight: "1.3" }}>
+              {isEn 
+                ? 'Multidisciplinary Experts Delivering Research, Strategy & Sustainable Solutions' 
+                : 'Pakar Multidisiplin yang Memberikan Solusi Riset, Strategi & Berkelanjutan'}
+            </h2>
+            <div className="gold-divider" style={{ margin: "1.5rem auto" }} />
+            <p style={{ color: "var(--color-neutral-600)", fontSize: "1.0625rem", lineHeight: "1.6" }}>
+              {isEn
+                ? 'Our team brings together experienced professionals from diverse fields to help governments, businesses, and communities address complex challenges through evidence-based research, strategic consulting, and capacity development.'
+                : 'Tim kami menyatukan para profesional berpengalaman dari berbagai bidang untuk membantu pemerintah, bisnis, dan masyarakat mengatasi tantangan kompleks melalui riset berbasis bukti, konsultasi strategis, dan pengembangan kapasitas.'}
+            </p>
           </div>
 
           <div className="team-grid" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
