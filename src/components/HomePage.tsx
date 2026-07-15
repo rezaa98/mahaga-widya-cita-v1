@@ -11,6 +11,7 @@ import {
   Building2,
   Calendar,
   CheckCircle2,
+  ChevronLeft,
   ChevronRight,
   Cpu,
   FileText,
@@ -268,6 +269,14 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
   const dateLocale = isEn ? 'en-US' : 'id-ID';
 
   const servicesCarouselRef = useRef<HTMLDivElement>(null);
+  const teamScrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollTeam = (direction: 'left' | 'right') => {
+    if (teamScrollRef.current) {
+      const scrollAmount = 300;
+      teamScrollRef.current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -769,19 +778,59 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
             </p>
           </div>
 
-          <div className="team-grid" style={{ 
+          <div 
+            className="team-grid" 
+            ref={teamScrollRef}
+            style={{ 
             display: "flex", 
             flexWrap: "nowrap", 
             gap: "1.5rem", 
             overflowX: "auto", 
             paddingBottom: "1.5rem",
             WebkitOverflowScrolling: "touch",
+            scrollbarWidth: "none",
           }}>
+            <style jsx>{`
+              .team-grid::-webkit-scrollbar {
+                display: none;
+              }
+            `}</style>
             {displayTeamMembers.map((member: any) => (
               <div key={member.id} style={{ flex: "0 0 auto", width: "280px" }}>
                 <TeamMemberCard member={member} />
               </div>
             ))}
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginTop: "1rem" }}>
+            <button 
+              onClick={() => scrollTeam('left')} 
+              style={{
+                width: "44px", height: "44px", borderRadius: "50%", 
+                backgroundColor: "var(--color-primary-50)", color: "var(--color-primary-700)",
+                border: "1px solid var(--color-primary-100)",
+                display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+                transition: "all 0.2s"
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--color-primary-100)"}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--color-primary-50)"}
+            >
+              <ChevronLeft size={24} />
+            </button>
+            <button 
+              onClick={() => scrollTeam('right')} 
+              style={{
+                width: "44px", height: "44px", borderRadius: "50%", 
+                backgroundColor: "var(--color-primary-50)", color: "var(--color-primary-700)",
+                border: "1px solid var(--color-primary-100)",
+                display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+                transition: "all 0.2s"
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--color-primary-100)"}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--color-primary-50)"}
+            >
+              <ChevronRight size={24} />
+            </button>
           </div>
         </div>
       </section>
