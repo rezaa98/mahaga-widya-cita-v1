@@ -73,7 +73,7 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
 
   return (
     <>
-      <Navbar locale={locale} />
+      <Navbar />
 
       {/* HERO SECTION */}
       <section style={{ background: service.gradient, paddingTop: "calc(72px + 4rem)", paddingBottom: "4rem", position: "relative", overflow: "hidden" }}>
@@ -191,7 +191,7 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
       </section>
 
       <Footer locale={locale} />
-      <WhatsAppFloat locale={locale} />
+      <WhatsAppFloat />
     </>
   );
 }

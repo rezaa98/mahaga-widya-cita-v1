@@ -36,7 +36,7 @@ export default async function LayananPage({ params }: { params: Promise<{ locale
 
   return (
     <>
-      <Navbar locale={locale} />
+      <Navbar />
 
       {/* HERO SECTION */}
       <section style={{ 
@@ -174,7 +174,7 @@ export default async function LayananPage({ params }: { params: Promise<{ locale
       </section>
 
       <Footer locale={locale} />
-      <WhatsAppFloat locale={locale} />
+      <WhatsAppFloat />
     </>
   );
 }
