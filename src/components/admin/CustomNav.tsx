@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@payloadcms/ui';
 import { startInteractiveTour } from './interactiveTour';
+import { HelpCenterModal } from './HelpCenterModal';
 
 const menuGroups = [
   {
@@ -32,6 +33,21 @@ const menuGroups = [
 export const CustomNav: React.FC = () => {
   const pathname = usePathname();
   const { user } = useAuth();
+  const [isHelpModalOpen, setIsHelpModalOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('tour=1')) {
+      // Remove tour=1 from URL without reloading
+      const url = new URL(window.location.href)
+      url.searchParams.delete('tour')
+      window.history.replaceState({}, '', url.toString())
+      
+      // Add slight delay to allow page transition and elements to mount
+      setTimeout(() => {
+        startInteractiveTour(pathname)
+      }, 500)
+    }
+  }, [pathname])
 
   return (
     <nav className="custom-nav" style={{
@@ -144,7 +160,7 @@ export const CustomNav: React.FC = () => {
           Settings
         </Link>
         
-        <button onClick={(e) => { e.preventDefault(); startInteractiveTour(pathname); }} style={{
+        <button onClick={(e) => { e.preventDefault(); setIsHelpModalOpen(true); }} style={{
           display: 'flex',
           alignItems: 'center',
           gap: '12px',
@@ -225,6 +241,7 @@ export const CustomNav: React.FC = () => {
           </div>
         )}
       </div>
+      <HelpCenterModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
     </nav>
   );
 };
