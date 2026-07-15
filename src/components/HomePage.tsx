@@ -856,10 +856,10 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
               id="cta-whatsapp-consulting"
             >
               <MessageSquare size={18} />
-              Konsultasi Gratis via WhatsApp
+              {isEn ? "Free Consultation via WhatsApp" : "Konsultasi Gratis via WhatsApp"}
             </a>
             <Link href="/kontak" className="btn btn-outline-white btn-lg" id="cta-contact-form">
-              Kirim Email ke Kami
+              {isEn ? "Email Us" : "Kirim Email ke Kami"}
             </Link>
           </div>
           <div style={{ display: "flex", gap: "2rem", justifyContent: "center", marginTop: "2.5rem", flexWrap: "wrap" }}>
