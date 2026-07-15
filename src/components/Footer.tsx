@@ -64,9 +64,9 @@ export default async function Footer({ locale = 'id' }: { locale?: string }) {
   const copyrightText = footerData?.copyrightText || "PT Mahaga Widya Cita. Hak Cipta Dilindungi.";
   
   const displayCompanyLinks = footerData?.linksCompany?.length > 0 ? footerData.linksCompany : defaultFooterLinks.company;
-  const displayServicesLinks = footerData?.linksServices?.length > 0 
-    ? footerData.linksServices 
-    : (dynamicServicesLinks.length > 0 ? dynamicServicesLinks : defaultFooterLinks.services);
+  const displayServicesLinks = dynamicServicesLinks.length > 0 
+    ? dynamicServicesLinks 
+    : (footerData?.linksServices?.length > 0 ? footerData.linksServices : defaultFooterLinks.services);
   
   const displaySocials = footerData?.socialMedia?.length > 0 ? footerData.socialMedia : [
     { platform: "instagram", url: "#" },

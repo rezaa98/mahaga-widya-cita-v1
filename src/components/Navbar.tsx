@@ -60,15 +60,43 @@ export default function Navbar() {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
     
-    // Fetch dynamic navbar links from CMS with locale
-    fetch(`/api/globals/navbar?locale=${locale}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data?.links && Array.isArray(data.links) && data.links.length > 0) {
-          setLinks(data.links);
+    // Fetch dynamic navbar links and services from CMS with locale
+    Promise.all([
+      fetch(`/api/globals/navbar?locale=${locale}`).then(res => res.json()).catch(() => null),
+      fetch(`/api/services?locale=${locale}&limit=10`).then(res => res.json()).catch(() => null)
+    ]).then(([navbarData, servicesData]) => {
+      let currentLinks = [...defaultNavLinks];
+      
+      if (navbarData?.links && Array.isArray(navbarData.links) && navbarData.links.length > 0) {
+        currentLinks = navbarData.links;
+      }
+      
+      // Inject live services into the "Layanan" / "Services" dropdown
+      if (servicesData?.docs && Array.isArray(servicesData.docs)) {
+        const dynamicServiceChildren = servicesData.docs.map((s: any) => ({
+          label: s.title,
+          href: `/${locale}/layanan/${s.slug}`,
+        }));
+        
+        // Find the Services link (either 'Layanan' or 'Services')
+        const servicesLinkIndex = currentLinks.findIndex((l: any) => 
+          l.label.toLowerCase() === 'layanan' || l.label.toLowerCase() === 'services' || l.href?.includes('/layanan')
+        );
+        
+        if (servicesLinkIndex !== -1) {
+          currentLinks[servicesLinkIndex].children = dynamicServiceChildren;
+        } else {
+          // If not found, add it
+          currentLinks.splice(1, 0, {
+            label: locale === 'en' ? 'Services' : 'Layanan',
+            href: `/${locale}/layanan`,
+            children: dynamicServiceChildren
+          });
         }
-      })
-      .catch(err => console.error("Error fetching navbar links:", err));
+      }
+      
+      setLinks(currentLinks);
+    });
       
     return () => window.removeEventListener("scroll", handleScroll);
   }, [locale]);
