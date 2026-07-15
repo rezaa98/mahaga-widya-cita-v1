@@ -769,18 +769,19 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
             </p>
           </div>
 
-          <div className="team-grid" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
+          <div className="team-grid" style={{ 
+            display: "flex", 
+            flexWrap: "nowrap", 
+            gap: "1.5rem", 
+            overflowX: "auto", 
+            paddingBottom: "1.5rem",
+            WebkitOverflowScrolling: "touch",
+          }}>
             {displayTeamMembers.map((member: any) => (
-              <div key={member.id} style={{ width: "100%", maxWidth: "280px" }}>
+              <div key={member.id} style={{ flex: "0 0 auto", width: "280px" }}>
                 <TeamMemberCard member={member} />
               </div>
             ))}
-          </div>
-
-          <div style={{ textAlign: "center", marginTop: "2.5rem" }}>
-            <Link href="/tim" className="btn btn-secondary" id="see-all-team">
-              {isEn ? 'View All Team & Experts' : 'Lihat Semua Tim & Pakar'} <ArrowRight size={16} />
-            </Link>
           </div>
         </div>
       </section>

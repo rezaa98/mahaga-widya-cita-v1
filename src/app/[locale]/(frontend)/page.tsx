@@ -25,12 +25,12 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         locale: locale as any,
       })).docs;
 
-  // Use CMS selected team, otherwise fallback to top 4
+  // Use CMS selected team, otherwise fallback to top 100
   const teamMembers = berandaData?.featuredData?.team?.length > 0
     ? berandaData.featuredData.team
     : (await payload.find({
         collection: "team-members",
-        limit: 4,
+        limit: 100,
         sort: "order",
         locale: locale as any,
       })).docs;
