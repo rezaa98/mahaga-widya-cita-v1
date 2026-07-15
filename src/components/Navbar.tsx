@@ -139,16 +139,18 @@ export default function Navbar() {
                 style={{ objectFit: 'contain' }}
               />
               <span
+                className="logo-text"
                 style={{
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
                   fontWeight: "700",
-                  fontSize: "0.9375rem",
+                  fontSize: "1.125rem",
                   color: shouldBeSolid ? "var(--color-primary-900)" : "white",
                   lineHeight: "1.2",
+                  letterSpacing: "-0.02em",
                   transition: "color 0.25s ease",
                 }}
               >
-                PT Mahaga<br />Widya Cita
+                PT Mahaga Widya Cita
               </span>
             </Link>
 
