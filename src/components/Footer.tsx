@@ -41,6 +41,21 @@ export default async function Footer({ locale = 'id' }: { locale?: string }) {
     console.error("Footer global not found, using defaults");
   }
   
+  let dynamicServicesLinks: any[] = [];
+  try {
+    const servicesRes = await payload.find({
+      collection: "services",
+      locale: locale as any,
+      limit: 7,
+    });
+    dynamicServicesLinks = servicesRes.docs.map(s => ({
+      label: s.title,
+      url: `/layanan/${s.slug}`,
+    }));
+  } catch (e) {
+    console.error("Failed to fetch services for footer");
+  }
+
   const phone = kontakData?.phone || "+62 21 1234 5678";
   const email = kontakData?.email || "info@mahagawidyacita.co.id";
   const address = kontakData?.address || "Jakarta, Indonesia";
@@ -49,7 +64,9 @@ export default async function Footer({ locale = 'id' }: { locale?: string }) {
   const copyrightText = footerData?.copyrightText || "PT Mahaga Widya Cita. Hak Cipta Dilindungi.";
   
   const displayCompanyLinks = footerData?.linksCompany?.length > 0 ? footerData.linksCompany : defaultFooterLinks.company;
-  const displayServicesLinks = footerData?.linksServices?.length > 0 ? footerData.linksServices : defaultFooterLinks.services;
+  const displayServicesLinks = footerData?.linksServices?.length > 0 
+    ? footerData.linksServices 
+    : (dynamicServicesLinks.length > 0 ? dynamicServicesLinks : defaultFooterLinks.services);
   
   const displaySocials = footerData?.socialMedia?.length > 0 ? footerData.socialMedia : [
     { platform: "instagram", url: "#" },
