@@ -175,10 +175,10 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
         <div className="container">
           <div className="card" style={{ padding: "4rem", textAlign: "center", background: service.gradient, color: "white" }}>
             <MessageSquare size={48} style={{ opacity: 0.8, margin: "0 auto 1.5rem" }} />
-            <h2 style={{ fontSize: "2rem", marginBottom: "1rem" }}>
+            <h2 style={{ fontSize: "2rem", marginBottom: "1rem", color: "white" }}>
               {isEn ? 'Start Your Institutional Transformation' : 'Mulai Transformasi Instansi Anda'}
             </h2>
-            <p style={{ fontSize: "1.125rem", opacity: 0.85, maxWidth: "600px", margin: "0 auto 2rem" }}>
+            <p style={{ fontSize: "1.125rem", color: "white", opacity: 0.85, maxWidth: "600px", margin: "0 auto 2rem" }}>
               {isEn
                 ? 'Discuss your specific needs with our consultant team. We are ready to provide measurable and impactful solutions.'
                 : 'Diskusikan kebutuhan spesifik Anda dengan tim konsultan kami. Kami siap memberikan solusi yang terukur dan berdampak nyata.'}
