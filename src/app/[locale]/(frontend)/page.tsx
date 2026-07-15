@@ -36,7 +36,11 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       
   const services = berandaData?.featuredData?.services?.length > 0
     ? berandaData.featuredData.services
-    : undefined;
+    : (await payload.find({
+        collection: "services",
+        limit: 10,
+        locale: locale as any,
+      })).docs;
 
   return (
     <>
