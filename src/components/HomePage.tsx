@@ -266,6 +266,25 @@ const IconMapping: Record<string, any> = {
 export default function HomePage({ articles: payloadArticles = [], teamMembers: payloadTeamMembers = [], services: payloadServices = [], berandaData, locale = 'id' }: { articles?: any[], teamMembers?: any[], services?: any[], berandaData?: any, locale?: string }) {
   const isEn = locale === 'en';
   const dateLocale = isEn ? 'en-US' : 'id-ID';
+
+  const servicesCarouselRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (servicesCarouselRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = servicesCarouselRef.current;
+        // If we've reached the end, scroll back to 0. Otherwise, scroll right by one item width
+        if (scrollLeft + clientWidth >= scrollWidth - 10) {
+          servicesCarouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          // Calculate width of one child item
+          const itemWidth = servicesCarouselRef.current.children[0]?.clientWidth || clientWidth / 3;
+          servicesCarouselRef.current.scrollBy({ left: itemWidth, behavior: 'smooth' });
+        }
+      }
+    }, 4000); // 4 seconds
+    return () => clearInterval(interval);
+  }, []);
   const displayArticles = payloadArticles.length > 0 ? payloadArticles.map(a => ({
     id: a.id,
     category: typeof a.category === 'object' && a.category ? a.category.name : (isEn ? 'GENERAL' : 'UMUM'),
@@ -527,21 +546,25 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
 
           <div
             className="services-grid"
+            ref={servicesCarouselRef}
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-              gap: "0",
+              display: "flex",
               overflowX: "auto",
+              gap: "0",
               paddingBottom: "1rem",
               margin: "0 -1rem",
               padding: "0 1rem",
               scrollSnapType: "x mandatory",
+              scrollbarWidth: "none", // Hide scrollbar for Firefox
+              msOverflowStyle: "none", // Hide scrollbar for IE/Edge
             }}
           >
             <style>{`
+              .services-grid::-webkit-scrollbar {
+                display: none; // Hide scrollbar for Chrome/Safari
+              }
               @media (min-width: 1024px) {
                 .services-grid {
-                  grid-template-columns: repeat(7, 1fr) !important;
                   margin: 0 !important;
                   padding: 0 !important;
                   border: 1px solid var(--color-neutral-200);
@@ -557,13 +580,29 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
                   position: "relative",
                   borderRight: idx === displayServices.length - 1 ? "none" : "1px solid var(--color-neutral-200)",
                   borderBottom: "1px solid var(--color-neutral-200)", // For mobile stacking if it wraps
-                  minWidth: "160px",
+                  minWidth: "100%",
+                  flex: "0 0 100%",
                   scrollSnapAlign: "start",
                   display: "flex",
                   flexDirection: "column",
                 }}
                 className="service-col"
               >
+                <style>{`
+                  @media (min-width: 768px) {
+                    .service-col {
+                      min-width: 50% !important;
+                      flex: 0 0 50% !important;
+                    }
+                  }
+                  @media (min-width: 1024px) {
+                    .service-col { 
+                      border-bottom: none !important; 
+                      min-width: 33.333% !important;
+                      flex: 0 0 33.333% !important;
+                    }
+                  }
+                `}</style>
                 <style>{`
                   @media (min-width: 1024px) {
                     .service-col { border-bottom: none !important; }
