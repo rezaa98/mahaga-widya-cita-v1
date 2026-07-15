@@ -12,8 +12,9 @@ import { WaveDivider } from "@/components/ui/WaveDivider";
 export const dynamic = "force-dynamic";
 
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params;
+export async function generateMetadata({ params }: { params: Promise<{ slug: string, locale: string }> }): Promise<Metadata> {
+  const { slug, locale } = await params;
+  const isEn = locale === 'en';
   const payload = await getPayload({ config: configPromise });
   const result = await payload.find({
     collection: 'services',
@@ -22,13 +23,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         equals: slug,
       },
     },
+    locale: locale as any,
     limit: 1,
   });
 
   const service = result.docs[0];
 
   if (!service) {
-    return { title: "Layanan Tidak Ditemukan" };
+    return { title: isEn ? "Service Not Found" : "Layanan Tidak Ditemukan" };
   }
 
   return {
@@ -37,7 +39,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       title: `${service.title} - Mahaga Widya Cita`,
       description: service.description,
-      url: `https://mahagawidyacita.co.id/layanan/${service.slug}`,
+      url: `https://mahagawidyacita.co.id/${locale}/layanan/${service.slug}`,
       type: 'website',
     },
     twitter: {
@@ -48,8 +50,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function LayananDetail({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function LayananDetail({ params }: { params: Promise<{ slug: string, locale: string }> }) {
+  const { slug, locale } = await params;
+  const isEn = locale === 'en';
   const payload = await getPayload({ config: configPromise });
   const result = await payload.find({
     collection: 'services',
@@ -58,6 +61,7 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
         equals: slug,
       },
     },
+    locale: locale as any,
     limit: 1,
   });
 
@@ -69,7 +73,7 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
 
   return (
     <>
-      <Navbar />
+      <Navbar locale={locale} />
 
       {/* HERO SECTION */}
       <section style={{ background: service.gradient, paddingTop: "calc(72px + 4rem)", paddingBottom: "4rem", position: "relative", overflow: "hidden" }}>
@@ -77,7 +81,7 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
         <div className="container" style={{ position: "relative" }}>
           <div style={{ maxWidth: "800px" }}>
             <div className="badge" style={{ background: "rgba(255,255,255,0.2)", color: "white", marginBottom: "1.25rem" }}>
-              Layanan Utama
+              {isEn ? 'Core Service' : 'Layanan Utama'}
             </div>
             <h1 className="text-display" style={{ color: "white", marginBottom: "1rem" }}>
               {service.title}
@@ -89,8 +93,8 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
               {service.description}
             </p>
             <div style={{ display: "flex", gap: "1rem" }}>
-              <Link href="/kontak" className="btn" style={{ background: "white", color: service.color, border: "none" }}>
-                Konsultasikan Sekarang <ArrowRight size={18} style={{ marginLeft: "0.5rem" }} />
+              <Link href={`/${locale}/kontak`} className="btn" style={{ background: "white", color: service.color, border: "none" }}>
+                {isEn ? 'Consult Now' : 'Konsultasikan Sekarang'} <ArrowRight size={18} style={{ marginLeft: "0.5rem" }} />
               </Link>
             </div>
           </div>
@@ -109,7 +113,7 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
               {/* Features List */}
               <div className="card" style={{ padding: "2.5rem" }}>
                 <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem", color: "var(--color-neutral-900)" }}>
-                  Fitur Layanan
+                  {isEn ? 'Service Features' : 'Fitur Layanan'}
                 </h2>
                 <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
                   {service.features?.map((f: any, idx: number) => (
@@ -118,7 +122,7 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
                         <CheckCircle2 size={18} />
                       </div>
                       <span style={{ fontSize: "1.0625rem", color: "var(--color-neutral-700)", lineHeight: "1.6" }}>
-                        {f.feature}
+                        {f.feature || f.title || f.text}
                       </span>
                     </li>
                   ))}
@@ -126,37 +130,41 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
               </div>
 
               {/* Benefits */}
-              <div>
-                <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem", color: "var(--color-neutral-900)" }}>
-                  Keuntungan bagi Instansi Anda
+              {service.benefits?.length > 0 && (
+                <div>
+                  <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem", color: "var(--color-neutral-900)" }}>
+                    {isEn ? 'Benefits for Your Institution' : 'Keuntungan bagi Instansi Anda'}
+                  </h2>
+                  <div style={{ display: "grid", gap: "1.5rem" }}>
+                    {service.benefits.map((b: any, idx: number) => (
+                      <div key={idx} className="card" style={{ padding: "1.5rem", borderLeft: `4px solid ${service.color}` }}>
+                        <h3 style={{ fontSize: "1.125rem", marginBottom: "0.5rem" }}>{b.title}</h3>
+                        <p style={{ color: "var(--color-neutral-600)", fontSize: "0.9375rem" }}>{b.desc || b.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Target Audience */}
+            {service.targetAudience?.length > 0 && (
+              <div className="card" style={{ padding: "3rem", background: "white", textAlign: "center" }}>
+                <div className="badge" style={{ background: "rgba(30,111,217,0.1)", color: "var(--color-primary-600)", marginBottom: "1rem", display: "inline-block" }}>
+                  {isEn ? 'Suitability' : 'Kesesuaian'}
+                </div>
+                <h2 style={{ fontSize: "1.75rem", marginBottom: "2rem" }}>
+                  {isEn ? 'Who Needs This Service?' : 'Siapa yang Membutuhkan Layanan Ini?'}
                 </h2>
-                <div style={{ display: "grid", gap: "1.5rem" }}>
-                  {service.benefits?.map((b: any, idx: number) => (
-                    <div key={idx} className="card" style={{ padding: "1.5rem", borderLeft: `4px solid ${service.color}` }}>
-                      <h3 style={{ fontSize: "1.125rem", marginBottom: "0.5rem" }}>{b.title}</h3>
-                      <p style={{ color: "var(--color-neutral-600)", fontSize: "0.9375rem" }}>{b.desc}</p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1.5rem" }}>
+                  {service.targetAudience.map((ta: any, idx: number) => (
+                    <div key={idx} style={{ background: "var(--color-neutral-50)", padding: "1.5rem", borderRadius: "12px", border: "1px solid var(--color-neutral-200)" }}>
+                      <span style={{ fontWeight: "500", color: "var(--color-neutral-800)" }}>{ta.audience}</span>
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
-
-            {/* Target Audience */}
-            <div className="card" style={{ padding: "3rem", background: "white", textAlign: "center" }}>
-              <div className="badge" style={{ background: "rgba(30,111,217,0.1)", color: "var(--color-primary-600)", marginBottom: "1rem" }}>
-                Kesesuaian
-              </div>
-              <h2 style={{ fontSize: "1.75rem", marginBottom: "2rem" }}>
-                Siapa yang Membutuhkan Layanan Ini?
-              </h2>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1.5rem" }}>
-                {service.targetAudience?.map((ta: any, idx: number) => (
-                  <div key={idx} style={{ background: "var(--color-neutral-50)", padding: "1.5rem", borderRadius: "12px", border: "1px solid var(--color-neutral-200)" }}>
-                    <span style={{ fontWeight: "500", color: "var(--color-neutral-800)" }}>{ta.audience}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            )}
 
           </div>
         </div>
@@ -167,19 +175,23 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
         <div className="container">
           <div className="card" style={{ padding: "4rem", textAlign: "center", background: service.gradient, color: "white" }}>
             <MessageSquare size={48} style={{ opacity: 0.8, margin: "0 auto 1.5rem" }} />
-            <h2 style={{ fontSize: "2rem", marginBottom: "1rem" }}>Mulai Transformasi Instansi Anda</h2>
+            <h2 style={{ fontSize: "2rem", marginBottom: "1rem" }}>
+              {isEn ? 'Start Your Institutional Transformation' : 'Mulai Transformasi Instansi Anda'}
+            </h2>
             <p style={{ fontSize: "1.125rem", opacity: 0.85, maxWidth: "600px", margin: "0 auto 2rem" }}>
-              Diskusikan kebutuhan spesifik Anda dengan tim konsultan kami. Kami siap memberikan solusi yang terukur dan berdampak nyata.
+              {isEn
+                ? 'Discuss your specific needs with our consultant team. We are ready to provide measurable and impactful solutions.'
+                : 'Diskusikan kebutuhan spesifik Anda dengan tim konsultan kami. Kami siap memberikan solusi yang terukur dan berdampak nyata.'}
             </p>
-            <Link href="/kontak" className="btn" style={{ background: "white", color: service.color, fontSize: "1.0625rem", padding: "0.875rem 2rem", border: "none" }}>
-              Hubungi Konsultan Kami
+            <Link href={`/${locale}/kontak`} className="btn" style={{ background: "white", color: service.color, fontSize: "1.0625rem", padding: "0.875rem 2rem", border: "none" }}>
+              {isEn ? 'Contact Our Consultants' : 'Hubungi Konsultan Kami'}
             </Link>
           </div>
         </div>
       </section>
 
-      <Footer />
-      <WhatsAppFloat />
+      <Footer locale={locale} />
+      <WhatsAppFloat locale={locale} />
     </>
   );
 }
