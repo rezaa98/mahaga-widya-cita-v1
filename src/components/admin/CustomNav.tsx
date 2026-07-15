@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@payloadcms/ui';
+import { startInteractiveTour } from './interactiveTour';
 
 const menuGroups = [
   {
@@ -143,16 +144,20 @@ export const CustomNav: React.FC = () => {
           Settings
         </Link>
         
-        <Link href="/admin" style={{
+        <button onClick={(e) => { e.preventDefault(); startInteractiveTour(pathname); }} style={{
           display: 'flex',
           alignItems: 'center',
           gap: '12px',
           padding: '10px 14px',
           borderRadius: '8px',
-          textDecoration: 'none',
+          border: 'none',
+          background: 'transparent',
           color: '#434655',
           fontWeight: 500,
           fontSize: '14px',
+          cursor: 'pointer',
+          width: '100%',
+          textAlign: 'left',
           transition: 'all 0.2s ease',
         }}
         onMouseEnter={(e) => e.currentTarget.style.background = '#f3f4f8'}
@@ -161,7 +166,7 @@ export const CustomNav: React.FC = () => {
             help_center
           </span>
           Help Center
-        </Link>
+        </button>
         
         <Link href="/admin/logout" style={{
           display: 'flex',
