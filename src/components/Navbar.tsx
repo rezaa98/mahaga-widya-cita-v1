@@ -75,7 +75,7 @@ export default function Navbar() {
       if (servicesData?.docs && Array.isArray(servicesData.docs)) {
         const dynamicServiceChildren = servicesData.docs.map((s: any) => ({
           label: s.title,
-          href: `/${locale}/layanan/${s.slug}`,
+          href: `/layanan/${s.slug}`,
         }));
         
         // Find the Services link (either 'Layanan' or 'Services')
@@ -89,7 +89,7 @@ export default function Navbar() {
           // If not found, add it
           currentLinks.splice(1, 0, {
             label: locale === 'en' ? 'Services' : 'Layanan',
-            href: `/${locale}/layanan`,
+            href: `/layanan`,
             children: dynamicServiceChildren
           });
         }
