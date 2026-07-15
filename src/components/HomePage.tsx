@@ -528,76 +528,98 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
           <div
             className="services-grid"
             style={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: "1.5rem",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+              gap: "0",
+              overflowX: "auto",
+              paddingBottom: "1rem",
+              margin: "0 -1rem",
+              padding: "0 1rem",
+              scrollSnapType: "x mandatory",
             }}
           >
-            {displayServices.map((service: any) => (
-              <Link
+            <style>{`
+              @media (min-width: 1024px) {
+                .services-grid {
+                  grid-template-columns: repeat(7, 1fr) !important;
+                  margin: 0 !important;
+                  padding: 0 !important;
+                  border: 1px solid var(--color-neutral-200);
+                  border-radius: 12px;
+                }
+              }
+            `}</style>
+            {displayServices.map((service: any, idx: number) => (
+              <div
                 key={service.title}
-                href={service.href}
-                style={{ textDecoration: "none", width: "100%", maxWidth: "360px", flexGrow: 1 }}
+                style={{ 
+                  padding: "2rem 1.25rem", 
+                  position: "relative",
+                  borderRight: idx === displayServices.length - 1 ? "none" : "1px solid var(--color-neutral-200)",
+                  borderBottom: "1px solid var(--color-neutral-200)", // For mobile stacking if it wraps
+                  minWidth: "160px",
+                  scrollSnapAlign: "start",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+                className="service-col"
               >
-                <div
-                  className="card"
-                  style={{ padding: "2rem", height: "100%", cursor: "pointer", position: "relative", overflow: "hidden" }}
-                >
-                  {/* Decorative gradient strip */}
+                <style>{`
+                  @media (min-width: 1024px) {
+                    .service-col { border-bottom: none !important; }
+                  }
+                `}</style>
+                {/* Icon & Badge Container */}
+                <div style={{ position: "relative", marginBottom: "2rem", width: "fit-content" }}>
+                  <div
+                    style={{
+                      width: "64px", height: "64px",
+                      background: "#0A2540", // Dark Navy Blue
+                      borderRadius: "50%",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                    }}
+                  >
+                    <service.icon size={28} color="#F59E0B" strokeWidth={1.5} /> {/* Gold Icon */}
+                  </div>
+                  {/* Number Badge */}
                   <div
                     style={{
                       position: "absolute",
-                      top: 0, left: 0, right: 0,
-                      height: "4px",
-                      background: service.gradient,
-                    }}
-                  />
-                  <div
-                    style={{
-                      width: "52px", height: "52px",
-                      background: service.gradient,
-                      borderRadius: "14px",
+                      bottom: "-8px",
+                      left: "-8px",
+                      width: "24px", height: "24px",
+                      background: "#F59E0B", // Gold Yellow
+                      color: "#fff",
+                      borderRadius: "50%",
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      marginBottom: "1.25rem",
-                      boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
+                      fontSize: "0.625rem",
+                      fontWeight: "bold",
+                      border: "2px solid #fff"
                     }}
                   >
-                    <service.icon size={24} color="white" />
+                    {(idx + 1).toString().padStart(2, '0')}
                   </div>
-                  <span
-                    style={{
-                      display: "inline-block",
-                      fontSize: "0.6875rem",
-                      fontWeight: "600",
-                      color: "var(--color-gold-600)",
-                      background: "var(--color-gold-100)",
-                      borderRadius: "99px",
-                      padding: "0.2rem 0.625rem",
-                      marginBottom: "0.75rem",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.06em",
-                    }}
-                  >
-                    {service.tag}
-                  </span>
-                  <h3 style={{ fontSize: "1.125rem", marginBottom: "0.75rem", color: "var(--color-neutral-900)" }}>
-                    {service.title}
-                  </h3>
-                  <p style={{ fontSize: "0.875rem", color: "var(--color-neutral-500)", lineHeight: "1.6", marginBottom: "1.5rem" }}>
-                    {service.description}
-                  </p>
-                  <span
-                    style={{
-                      display: "inline-flex", alignItems: "center", gap: "0.375rem",
-                      fontSize: "0.875rem", fontWeight: "600",
-                      color: "var(--color-primary-600)",
-                    }}
-                  >
-                    {isEn ? 'Learn More' : 'Selengkapnya'} <ChevronRight size={16} />
-                  </span>
                 </div>
-              </Link>
+
+                <h3 style={{ fontSize: "1rem", marginBottom: "1rem", color: "#0A2540", fontWeight: "700", lineHeight: "1.3" }}>
+                  {service.title}
+                </h3>
+                <p style={{ fontSize: "0.75rem", color: "var(--color-neutral-600)", lineHeight: "1.5", marginBottom: "1.5rem" }}>
+                  {service.description || service.tagline}
+                </p>
+                
+                {/* Feature List */}
+                {service.features && service.features.length > 0 && (
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.5rem", flexGrow: 1 }}>
+                    {service.features.map((feat: any, fIdx: number) => (
+                      <li key={fIdx} style={{ fontSize: "0.75rem", color: "#0A2540", display: "flex", alignItems: "flex-start", gap: "0.375rem", fontWeight: "500", lineHeight: "1.4" }}>
+                        <span style={{ color: "#0A2540", fontSize: "0.5rem", marginTop: "0.25rem" }}>•</span>
+                        <span>{feat.feature || feat.title || feat.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             ))}
           </div>
         </div>
