@@ -550,113 +550,110 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
             style={{
               display: "flex",
               overflowX: "auto",
-              gap: "0",
-              paddingBottom: "1rem",
-              margin: "0 -1rem",
-              padding: "0 1rem",
+              gap: "1.5rem",
+              paddingBottom: "2rem",
+              paddingTop: "1rem",
               scrollSnapType: "x mandatory",
-              scrollbarWidth: "none", // Hide scrollbar for Firefox
-              msOverflowStyle: "none", // Hide scrollbar for IE/Edge
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
             }}
           >
             <style>{`
-              .services-grid::-webkit-scrollbar {
-                display: none; // Hide scrollbar for Chrome/Safari
-              }
-              @media (min-width: 1024px) {
-                .services-grid {
-                  margin: 0 !important;
-                  padding: 0 !important;
-                  border: 1px solid var(--color-neutral-200);
-                  border-radius: 12px;
-                }
-              }
+              .services-grid::-webkit-scrollbar { display: none; }
             `}</style>
             {displayServices.map((service: any, idx: number) => (
               <div
                 key={service.title}
+                className="service-col"
                 style={{ 
-                  padding: "2rem 1.25rem", 
+                  background: "#fff",
+                  borderRadius: "16px",
+                  padding: "2rem", 
                   position: "relative",
-                  borderRight: idx === displayServices.length - 1 ? "none" : "1px solid var(--color-neutral-200)",
-                  borderBottom: "1px solid var(--color-neutral-200)", // For mobile stacking if it wraps
                   minWidth: "100%",
                   flex: "0 0 100%",
                   scrollSnapAlign: "start",
                   display: "flex",
                   flexDirection: "column",
+                  boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
+                  border: "1px solid var(--color-neutral-200)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 }}
-                className="service-col"
               >
                 <style>{`
                   @media (min-width: 768px) {
                     .service-col {
-                      min-width: 50% !important;
-                      flex: 0 0 50% !important;
+                      min-width: calc(50% - 0.75rem) !important;
+                      flex: 0 0 calc(50% - 0.75rem) !important;
                     }
                   }
                   @media (min-width: 1024px) {
                     .service-col { 
-                      border-bottom: none !important; 
-                      min-width: 33.333% !important;
-                      flex: 0 0 33.333% !important;
+                      min-width: calc(33.333% - 1rem) !important;
+                      flex: 0 0 calc(33.333% - 1rem) !important;
                     }
                   }
-                `}</style>
-                <style>{`
-                  @media (min-width: 1024px) {
-                    .service-col { border-bottom: none !important; }
+                  .service-col:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
                   }
                 `}</style>
+
                 {/* Icon & Badge Container */}
-                <div style={{ position: "relative", marginBottom: "2rem", width: "fit-content" }}>
+                <div style={{ position: "relative", marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                   <div
                     style={{
-                      width: "64px", height: "64px",
-                      background: "#0A2540", // Dark Navy Blue
+                      width: "72px", height: "72px",
+                      background: "var(--color-primary-600)", 
                       borderRadius: "50%",
                       display: "flex", alignItems: "center", justifyContent: "center",
+                      boxShadow: "0 8px 24px rgba(30, 111, 217, 0.25)"
                     }}
                   >
-                    <service.icon size={28} color="#F59E0B" strokeWidth={1.5} /> {/* Gold Icon */}
+                    <service.icon size={32} color="var(--color-gold-400)" strokeWidth={1.5} />
                   </div>
                   {/* Number Badge */}
                   <div
                     style={{
                       position: "absolute",
-                      bottom: "-8px",
-                      left: "-8px",
-                      width: "24px", height: "24px",
-                      background: "#F59E0B", // Gold Yellow
+                      bottom: "-4px",
+                      left: "-4px",
+                      width: "28px", height: "28px",
+                      background: "var(--color-gold-500)",
                       color: "#fff",
                       borderRadius: "50%",
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: "0.625rem",
+                      fontSize: "0.75rem",
                       fontWeight: "bold",
-                      border: "2px solid #fff"
+                      border: "3px solid #fff",
+                      boxShadow: "0 4px 8px rgba(0,0,0,0.1)"
                     }}
                   >
                     {(idx + 1).toString().padStart(2, '0')}
                   </div>
+                  
+                  {/* Title beside icon on larger cards if preferred, but let's keep it below */}
                 </div>
 
-                <h3 style={{ fontSize: "1rem", marginBottom: "1rem", color: "#0A2540", fontWeight: "700", lineHeight: "1.3" }}>
+                <h3 style={{ fontSize: "1.125rem", marginBottom: "0.75rem", color: "var(--color-primary-900)", fontWeight: "700", lineHeight: "1.4" }}>
                   {service.title}
                 </h3>
-                <p style={{ fontSize: "0.75rem", color: "var(--color-neutral-600)", lineHeight: "1.5", marginBottom: "1.5rem" }}>
+                <p style={{ fontSize: "0.875rem", color: "var(--color-neutral-600)", lineHeight: "1.6", marginBottom: "1.5rem", flexGrow: 0 }}>
                   {service.description || service.tagline}
                 </p>
                 
                 {/* Feature List */}
                 {service.features && service.features.length > 0 && (
-                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.5rem", flexGrow: 1 }}>
-                    {service.features.map((feat: any, fIdx: number) => (
-                      <li key={fIdx} style={{ fontSize: "0.75rem", color: "#0A2540", display: "flex", alignItems: "flex-start", gap: "0.375rem", fontWeight: "500", lineHeight: "1.4" }}>
-                        <span style={{ color: "#0A2540", fontSize: "0.5rem", marginTop: "0.25rem" }}>•</span>
-                        <span>{feat.feature || feat.title || feat.text}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <div style={{ background: "var(--color-neutral-50)", padding: "1.25rem", borderRadius: "12px", flexGrow: 1 }}>
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                      {service.features.map((feat: any, fIdx: number) => (
+                        <li key={fIdx} style={{ fontSize: "0.8125rem", color: "var(--color-primary-800)", display: "flex", alignItems: "flex-start", gap: "0.5rem", fontWeight: "500", lineHeight: "1.4" }}>
+                          <CheckCircle2 size={14} color="var(--color-gold-500)" style={{ flexShrink: 0, marginTop: "0.125rem" }} />
+                          <span>{feat.feature || feat.title || feat.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
               </div>
             ))}
