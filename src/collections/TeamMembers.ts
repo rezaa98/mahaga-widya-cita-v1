@@ -45,10 +45,7 @@ export const TeamMembers: CollectionConfig = {
               name: 'bio',
               type: 'textarea',
               localized: true,
-              label: 'Profil Singkat (Khusus Manajemen)',
-              admin: {
-                condition: (data) => data.category === 'management',
-              },
+              label: 'Profil Singkat',
             },
           ]
         },

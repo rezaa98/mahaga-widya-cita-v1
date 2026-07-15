@@ -198,15 +198,19 @@ export default function TeamMemberCard({ member }: { member: any }) {
               </p>
               
               <div style={{ color: "#475569", lineHeight: "1.8", fontSize: "1.125rem" }}>
-                {member.bio ? (
-                  member.bio.split('\n').map((paragraph: string, idx: number) => (
-                    <p key={idx} style={{ marginBottom: "1.5rem" }}>{paragraph}</p>
-                  ))
-                ) : (
-                  <>
-                    <p style={{ marginBottom: "1rem" }}><strong>Spesialisasi:</strong> {member.expertise}</p>
-                    <p><strong>Instansi:</strong> {member.institution}</p>
-                  </>
+                {member.expertise && (
+                  <p style={{ marginBottom: "1rem" }}><strong>Spesialisasi:</strong> {member.expertise}</p>
+                )}
+                {member.institution && (
+                  <p style={{ marginBottom: member.bio ? "1.5rem" : "1rem" }}><strong>Instansi:</strong> {member.institution}</p>
+                )}
+                
+                {member.bio && (
+                  <div style={{ marginTop: "1rem" }}>
+                    {member.bio.split('\n').map((paragraph: string, idx: number) => (
+                      <p key={idx} style={{ marginBottom: "1.5rem" }}>{paragraph}</p>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
