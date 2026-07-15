@@ -8,7 +8,10 @@ export const ContactSubmissions: CollectionConfig = {
     defaultColumns: ['name', 'email', 'subject', 'createdAt'],
   },
   access: {
-    read: () => true,
+    read: ({ req }) => {
+      // Only authenticated users (admins) can read contact submissions
+      return !!req.user;
+    },
     create: () => true, // allow public form submissions
     update: () => false,
     delete: () => false,

@@ -23,6 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         equals: resolvedParams.slug,
       },
     },
+    locale: (resolvedParams as any).locale,
   });
 
   if (!docs || docs.length === 0) {
@@ -64,6 +65,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
         equals: resolvedParams.slug,
       },
     },
+    locale: (resolvedParams as any).locale,
   });
 
   if (!docs || docs.length === 0) {
@@ -86,6 +88,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
       },
       sort: "-publishedAt",
       limit: 3,
+      locale: (resolvedParams as any).locale,
     });
     relatedDocs = rel;
   }
@@ -99,6 +102,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
       },
       sort: "-publishedAt",
       limit: 3 - relatedDocs.length,
+      locale: (resolvedParams as any).locale,
     });
     relatedDocs = [...relatedDocs, ...relFallback];
   }

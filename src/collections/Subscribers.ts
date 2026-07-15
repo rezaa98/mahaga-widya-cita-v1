@@ -8,7 +8,10 @@ export const Subscribers: CollectionConfig = {
     defaultColumns: ['email', 'createdAt'],
   },
   access: {
-    read: () => true,
+    read: ({ req }) => {
+      // Only authenticated users (admins) can read subscriber list
+      return !!req.user;
+    },
     create: () => true, // allow public subscriptions
     update: () => false,
     delete: () => false,

@@ -2,12 +2,16 @@ import { NextResponse } from 'next/server';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { translateDocumentJSON } from '@/utils/translate';
+import { requireAdminAuth } from '@/utils/adminAuth';
 
 // Allow this route to run up to 5 minutes on Vercel Pro (or max allowed on Hobby)
 export const maxDuration = 300;
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
+  const authError = await requireAdminAuth(req);
+  if (authError) return authError;
+  
   try {
     const body = await req.json();
     const { identifier, id, isGlobal, sourceLocale = 'id', targetLocale = 'en' } = body;
@@ -58,6 +62,7 @@ export async function POST(req: Request) {
         slug: identifier as any,
         locale: targetLocale,
         data: translatedData,
+        context: { skipAutoTranslate: true },
       });
     } else {
       await payload.update({
@@ -65,6 +70,7 @@ export async function POST(req: Request) {
         id: docId,
         locale: targetLocale,
         data: translatedData,
+        context: { skipAutoTranslate: true },
       });
     }
     

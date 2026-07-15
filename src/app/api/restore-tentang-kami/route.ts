@@ -3,6 +3,7 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { translateDocumentJSON } from '@/utils/translate';
 import { TentangKami } from '@/globals/TentangKami';
+import { requireAdminAuth } from '@/utils/adminAuth';
 
 function extractDefaults(fields: any[]): any {
   const result: any = {};

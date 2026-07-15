@@ -3,6 +3,7 @@ import configPromise from '@payload-config'
 import { NextResponse } from 'next/server'
 import path from 'path'
 import fs from 'fs'
+import { requireAdminAuth } from '@/utils/adminAuth'
 
 const BRAIN_DIR = path.join(process.cwd(), 'public/media');
 
@@ -21,7 +22,9 @@ const experts = [
   { initials: "HS", name: "Dr. Hendra Saputra, M.Sos.", category: "expert", expertise: "Sosiologi Pemerintahan & Otonomi Daerah", institution: "Universitas Airlangga", color: "linear-gradient(135deg, #0B2D6B, #1247A8)", order: 9, imageFile: "dr_hendra_1783667613293.png" },
 ];
 
-export async function GET() {
+export async function GET(req: Request) {
+  const authError = await requireAdminAuth(req);
+  if (authError) return authError;
   try {
     const payload = await getPayload({ config: configPromise })
 

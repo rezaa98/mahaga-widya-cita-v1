@@ -14,12 +14,14 @@ export const metadata = {
   description: "Dokumen analisis kebijakan dan review komprehensif oleh pakar PT Mahaga Widya Cita.",
 };
 
-export default async function PolicyReviewsPage() {
+export default async function PolicyReviewsPage(props: { params: Promise<{ locale: string }> }) {
+  const params = await props.params;
   const payload = await getPayload({ config: configPromise });
   
   const { docs: reviews } = await payload.find({
     collection: "policy-reviews",
     sort: "-createdAt",
+    locale: params.locale as any,
   });
 
   return (

@@ -2,8 +2,11 @@ import { NextResponse } from 'next/server';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { sql } from 'drizzle-orm';
+import { requireAdminAuth } from '@/utils/adminAuth';
 
-export async function GET() {
+export async function GET(req: Request) {
+  const authError = await requireAdminAuth(req);
+  if (authError) return authError;
   const payload = await getPayload({ config: configPromise });
   const db = payload.db as any;
   const drizzle = db.drizzle;
@@ -67,6 +70,7 @@ export async function GET() {
 
     return NextResponse.json({ success: true, log });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message, stack: error.stack?.slice(0, 500) });
+    console.error('[schema-check] Error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

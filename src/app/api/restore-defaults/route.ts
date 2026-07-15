@@ -7,6 +7,7 @@ import { Footer } from '@/globals/Footer';
 import { Beranda } from '@/globals/Beranda';
 import { TentangKami } from '@/globals/TentangKami';
 import { Kontak } from '@/globals/Kontak';
+import { requireAdminAuth } from '@/utils/adminAuth';
 
 function extractDefaults(fields: any[]): any {
   const result: any = {};
@@ -25,6 +26,8 @@ function extractDefaults(fields: any[]): any {
 }
 
 export async function GET(request: Request) {
+  const authError = await requireAdminAuth(request);
+  if (authError) return authError;
   try {
     const payload = await getPayload({ config: configPromise });
 

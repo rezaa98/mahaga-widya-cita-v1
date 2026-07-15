@@ -24,6 +24,7 @@ function triggerTranslationWebhook(req: any, doc: any, identifier: string, isGlo
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'x-admin-secret': process.env.ADMIN_API_SECRET || '',
     },
     body: JSON.stringify({
       identifier,

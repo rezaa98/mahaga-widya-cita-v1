@@ -3,8 +3,11 @@ import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { articlesPart1 } from './data1';
 import { articlesPart2 } from './data2';
+import { requireAdminAuth } from '@/utils/adminAuth';
 
-export async function GET() {
+export async function GET(req: Request) {
+  const authError = await requireAdminAuth(req);
+  if (authError) return authError;
   try {
     const payload = await getPayload({ config: configPromise });
     

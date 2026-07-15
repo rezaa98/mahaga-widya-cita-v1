@@ -70,7 +70,7 @@ export default buildConfig({
     fallback: true,
   },
   editor: lexicalEditor({}),
-  secret: process.env.PAYLOAD_SECRET || 'fallback-secret-key', // Ensure to set this in production
+  secret: process.env.PAYLOAD_SECRET || (process.env.NODE_ENV === 'production' ? (() => { throw new Error('PAYLOAD_SECRET is missing in production!') })() : 'fallback-secret-key'),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },

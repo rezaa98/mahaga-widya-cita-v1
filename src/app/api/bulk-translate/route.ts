@@ -1,11 +1,17 @@
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import { translateDocumentJSON } from '@/utils/translate';
+import { requireAdminAuth } from '@/utils/adminAuth';
 
 const COLLECTIONS = ['articles', 'categories', 'services', 'team-members'] as const;
 const GLOBALS = ['beranda', 'footer', 'kontak', 'navbar', 'tentang-kami'] as const;
 
+export const maxDuration = 300; // Allow up to 5 minutes on Vercel
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: Request) {
+  const authError = await requireAdminAuth(req);
+  if (authError) return authError;
   try {
     const payload = await getPayload({ config: configPromise });
     

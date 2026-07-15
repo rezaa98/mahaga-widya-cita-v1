@@ -66,14 +66,9 @@ export const CustomNav: React.FC = () => {
       <div style={{ padding: '0 24px', marginBottom: '32px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <img src="/logo-transparent.png" alt="Logo" style={{ height: '32px', width: 'auto', flexShrink: 0 }} />
-          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
-            <span style={{ fontWeight: 800, fontSize: '16px', color: '#1a1c27', letterSpacing: '-0.02em' }}>
-              Mahaga Admin
-            </span>
-            <span style={{ fontWeight: 600, fontSize: '9px', color: '#7a7e90', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              Content Management System
-            </span>
-          </div>
+          <span style={{ fontWeight: 800, fontSize: '18px', color: '#1a1c27', letterSpacing: '-0.02em' }}>
+            Mahaga Admin
+          </span>
         </div>
       </div>
 
@@ -205,41 +200,6 @@ export const CustomNav: React.FC = () => {
           Logout
         </Link>
 
-        {user && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            padding: '12px',
-            background: '#f3f4f8',
-            borderRadius: '12px',
-            marginTop: '8px',
-          }}>
-            <div style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '18px',
-              background: '#2563eb',
-              color: 'white',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 700,
-              fontSize: '14px',
-              flexShrink: 0,
-            }}>
-              {user.email ? user.email.charAt(0).toUpperCase() : 'A'}
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-              <span style={{ fontWeight: 600, fontSize: '13px', color: '#1a1c27', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                {user.email?.split('@')[0] || 'Admin User'}
-              </span>
-              <span style={{ fontWeight: 500, fontSize: '11px', color: '#7a7e90', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                {user.email || 'admin@mahaga.id'}
-              </span>
-            </div>
-          </div>
-        )}
       </div>
       <HelpCenterModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
     </nav>

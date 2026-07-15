@@ -101,9 +101,10 @@ const getIcon = (cv: any, index: number) => {
   return coreValuesList[index]?.icon || Eye;
 };
 
-export default async function TentangKamiPage() {
+export default async function TentangKamiPage(props: { params: Promise<{ locale: string }> }) {
+  const params = await props.params;
   const payload = await getPayload({ config: configPromise });
-  const tentangKami: any = await payload.findGlobal({ slug: "tentang-kami" });
+  const tentangKami: any = await payload.findGlobal({ slug: "tentang-kami", locale: params.locale as any });
   
   let ceo = tentangKami?.ceoMessage?.ceo;
   
@@ -112,6 +113,7 @@ export default async function TentangKamiPage() {
     ceo = await payload.findByID({
       collection: "team-members",
       id: ceo,
+      locale: params.locale as any,
     });
   }
 
@@ -125,6 +127,7 @@ export default async function TentangKamiPage() {
         }
       },
       limit: 1,
+      locale: params.locale as any,
     });
     ceo = ceoDocs[0] || {
       name: "Prof. Dr. Hj. Endang Larasati, M.S.",

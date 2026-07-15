@@ -4,8 +4,12 @@ import configPromise from '@payload-config';
 import { dataIndividu } from '../seed-articles/data_individu';
 import { dataBisnis } from '../seed-articles/data_bisnis';
 import { dataPemerintah } from '../seed-articles/data_pemerintah';
+import { requireAdminAuth } from '@/utils/adminAuth';
 
-export async function GET() {
+export async function GET(req: Request) {
+  const authError = await requireAdminAuth(req);
+  if (authError) return authError;
+
   try {
     const payload = await getPayload({ config: configPromise });
     

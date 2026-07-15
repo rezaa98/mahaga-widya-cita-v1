@@ -15,14 +15,19 @@ export const metadata = {
   description: "Kumpulan artikel, insight, dan berita terbaru dari PT Mahaga Widya Cita.",
 };
 
-export default async function ArtikelPage(props: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
+export default async function ArtikelPage(props: { params: Promise<{ locale: string }>, searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const params = await props.params;
   const searchParams = props.searchParams ? await props.searchParams : {};
   const page = typeof searchParams.page === 'string' ? parseInt(searchParams.page, 10) : 1;
   const selectedKategori = typeof searchParams.kategori === 'string' ? searchParams.kategori : '';
 
   const payload = await getPayload({ config: configPromise });
   
-  const { docs: categories } = await payload.find({ collection: 'categories', limit: 100 });
+  const { docs: categories } = await payload.find({ 
+    collection: 'categories', 
+    limit: 100,
+    locale: params.locale as any,
+  });
   
   let categoryFilter = {};
   if (selectedKategori) {
@@ -43,6 +48,7 @@ export default async function ArtikelPage(props: { searchParams?: Promise<{ [key
     sort: "-publishedAt",
     limit: 9,
     page: page,
+    locale: params.locale as any,
   });
 
   const getPaginationUrl = (targetPage: number) => {

@@ -21,6 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         equals: resolvedParams.slug,
       },
     },
+    locale: (resolvedParams as any).locale,
   });
 
   if (!docs || docs.length === 0) {
@@ -57,6 +58,7 @@ export default async function PolicyReviewDetailPage({ params }: { params: Promi
         equals: resolvedParams.slug,
       },
     },
+    locale: (resolvedParams as any).locale,
   });
 
   if (!docs || docs.length === 0) {

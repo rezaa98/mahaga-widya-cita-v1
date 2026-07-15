@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
+import { requireAdminAuth } from '@/utils/adminAuth';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(req: Request) {
+  const authError = await requireAdminAuth(req);
+  if (authError) return authError;
   try {
     const payload = await getPayload({ config: configPromise });
 

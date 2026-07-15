@@ -15,9 +15,10 @@ export const metadata: Metadata = {
   description: "Hubungi PT Mahaga Widya Cita untuk konsultasi, kerjasama, dan informasi layanan lebih lanjut.",
 };
 
-export default async function KontakPage() {
+export default async function KontakPage(props: { params: Promise<{ locale: string }> }) {
+  const params = await props.params;
   const payload = await getPayload({ config: configPromise });
-  const kontakData: any = await payload.findGlobal({ slug: "kontak" });
+  const kontakData: any = await payload.findGlobal({ slug: "kontak", locale: params.locale as any });
 
   const phone = kontakData?.phone || "+62 21 1234 5678";
   const email = kontakData?.email || "info@mahagawidyacita.co.id";

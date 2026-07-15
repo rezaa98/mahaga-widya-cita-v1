@@ -32,6 +32,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         collection: "team-members",
         limit: 4,
         sort: "order",
+        locale: locale as any,
       })).docs;
       
   const services = berandaData?.featuredData?.services?.length > 0
