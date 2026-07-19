@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { canBootstrapOrManageUsers, canManageUsers } from '../utils/access'
+import { canBootstrapOrManageUsers, canManageUsers, canReadUser, canUpdateUser } from '../utils/access'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -11,8 +11,8 @@ export const Users: CollectionConfig = {
     // The first account becomes a super administrator. Every following user
     // management action is limited to an existing super administrator.
     create: canBootstrapOrManageUsers,
-    read: canManageUsers,
-    update: canManageUsers,
+    read: canReadUser,
+    update: canUpdateUser,
     delete: canManageUsers,
   },
   hooks: {

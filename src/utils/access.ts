@@ -40,6 +40,7 @@ const capabilityMatrix: Record<UserRole, readonly Capability[]> = {
   ],
   admin: [
     'accessAdmin',
+    'manageUsers',
     'manageSiteContent',
     'manageContent',
     'reviewContent',
@@ -78,6 +79,28 @@ export function isAdminApiUser(user: UserLike): boolean {
 
 export function canManageUsers({ req }: { req: RequestWithUser }): boolean {
   return hasCapability(req.user, 'manageUsers')
+}
+
+/**
+ * Users can always read their own account profile. Super admins and admins
+ * can read all accounts.
+ */
+export const canReadUser: Access = ({ req, id }): AccessResult => {
+  if (canManageUsers({ req })) return true
+  if (req.user && id && String(req.user.id) === String(id)) return true
+  if (req.user) return { id: { equals: req.user.id } }
+  return false
+}
+
+/**
+ * Users can update their own account profile (password, email, name).
+ * Super admins and admins can update all accounts.
+ */
+export const canUpdateUser: Access = ({ req, id }): AccessResult => {
+  if (canManageUsers({ req })) return true
+  if (req.user && id && String(req.user.id) === String(id)) return true
+  if (req.user) return { id: { equals: req.user.id } }
+  return false
 }
 
 /**
