@@ -355,4 +355,43 @@ aside.nav {
 .nav__link[href*="/globals/footer"]::before { content: "dock" !important; }
 .nav__link[href*="/globals/navbar"]::before { content: "web" !important; }
 
+/* --- Scrollable Timeline (Aktivitas Terbaru) --- */
+.mwc-activity__list {
+  max-height: 280px !important;
+  overflow-y: auto !important;
+  padding-right: 6px !important;
+  scroll-behavior: smooth !important;
+}
+
+.mwc-activity__list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.mwc-activity__list::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.mwc-activity__list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.mwc-activity__list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* --- Nav Logout Button Label --- */
+.nav__log-out::after,
+.nav__logout::after,
+a[href*="/logout"]::after,
+button.nav__log-out::after {
+  content: " Log Out / Keluar";
+  font-size: 13px;
+  font-weight: 600;
+  color: #dc2626;
+  white-space: nowrap;
+}
+
+
 

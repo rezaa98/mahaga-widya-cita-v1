@@ -24,6 +24,15 @@ export const CustomNavLinks: React.FC = () => {
         <span>Bantuan</span>
       </button>
 
+      <a 
+        href="/admin/logout" 
+        title="Keluar dari akun (Log Out)" 
+        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', color: '#dc2626', fontWeight: 600, fontSize: '0.9rem', marginTop: '0.25rem' }}
+      >
+        <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: '1.2rem', color: '#dc2626' }}>logout</span>
+        <span>Keluar / Log Out</span>
+      </a>
+
       <HelpCenterModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
     </div>
   )
