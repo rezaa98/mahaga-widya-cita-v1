@@ -32,7 +32,7 @@ export default buildConfig({
     },
     components: {
       providers: ['@/components/admin/ThemeForceProvider#ThemeForceProvider'],
-      Nav: '@/components/admin/CustomNav#CustomNav',
+      afterNavLinks: ['@/components/admin/CustomNavLinks#CustomNavLinks'],
       views: {
         dashboard: {
           Component: '@/components/admin/DashboardWidget#DashboardWidget',

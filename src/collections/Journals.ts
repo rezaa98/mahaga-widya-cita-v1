@@ -296,42 +296,6 @@ export const Journals: CollectionConfig = {
             },
           ],
         },
-        {
-          fields: [
-            {
-              name: 'metaTitle',
-              type: 'text',
-              localized: true,
-              label: 'Meta Title',
-              maxLength: 60,
-              access: { update: canManageContent },
-            },
-            {
-              name: 'metaDescription',
-              type: 'textarea',
-              localized: true,
-              label: 'Meta Description',
-              maxLength: 160,
-              access: { update: canManageContent },
-            },
-            {
-              name: 'canonicalUrl',
-              type: 'text',
-              label: 'Canonical URL (Opsional)',
-              admin: {
-                description: 'Kosongkan untuk menggunakan URL jurnal pada website ini.',
-              },
-              access: { update: canManageContent },
-            },
-            {
-              name: 'ogImage',
-              type: 'upload',
-              relationTo: 'media',
-              label: 'Open Graph Image',
-              access: { update: canManageContent },
-            },
-          ],
-        },
       ],
     },
     {
