@@ -23,10 +23,15 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { EditorialStatusCell as EditorialStatusCell_ecbc8b49ad488ed400aa2b7bb20a2fc3 } from '@/components/admin/EditorialStatusCell'
+import { OverviewComponent as OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
+import { MetaTitleComponent as MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
+import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
+import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
+import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { JournalTitleCell as JournalTitleCell_3b568554b167eaeaa081125997ee6af6 } from '@/components/admin/JournalTitleCell'
-import { CustomNav as CustomNav_9870fd18da5f585b086dac7c5b924c68 } from '@/components/admin/CustomNav'
 import { Icon as Icon_534076e2c753ea5d539a54b05f456b1b } from '@/components/admin/Icon'
 import { Logo as Logo_a44df17d0fc3dcd873dae43dc3bf66bd } from '@/components/admin/Logo'
+import { CustomNavLinks as CustomNavLinks_2933d2a8f89709880c8e9b62dfcc7d84 } from '@/components/admin/CustomNavLinks'
 import { ThemeForceProvider as ThemeForceProvider_bafdd812978598fcfadcb4693fefc9da } from '@/components/admin/ThemeForceProvider'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 import { DashboardWidget as DashboardWidget_c5192f80c64fc937341a06e8b5136d0d } from '@/components/admin/DashboardWidget'
@@ -60,10 +65,15 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/components/admin/EditorialStatusCell#EditorialStatusCell": EditorialStatusCell_ecbc8b49ad488ed400aa2b7bb20a2fc3,
+  "@payloadcms/plugin-seo/client#OverviewComponent": OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
+  "@payloadcms/plugin-seo/client#MetaTitleComponent": MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860,
+  "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860,
+  "@payloadcms/plugin-seo/client#MetaImageComponent": MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860,
+  "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@/components/admin/JournalTitleCell#JournalTitleCell": JournalTitleCell_3b568554b167eaeaa081125997ee6af6,
-  "@/components/admin/CustomNav#CustomNav": CustomNav_9870fd18da5f585b086dac7c5b924c68,
   "@/components/admin/Icon#Icon": Icon_534076e2c753ea5d539a54b05f456b1b,
   "@/components/admin/Logo#Logo": Logo_a44df17d0fc3dcd873dae43dc3bf66bd,
+  "@/components/admin/CustomNavLinks#CustomNavLinks": CustomNavLinks_2933d2a8f89709880c8e9b62dfcc7d84,
   "@/components/admin/ThemeForceProvider#ThemeForceProvider": ThemeForceProvider_bafdd812978598fcfadcb4693fefc9da,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
   "@/components/admin/DashboardWidget#DashboardWidget": DashboardWidget_c5192f80c64fc937341a06e8b5136d0d,
