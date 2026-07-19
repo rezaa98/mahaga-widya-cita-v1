@@ -297,10 +297,6 @@ export const Journals: CollectionConfig = {
           ],
         },
         {
-          label: 'SEO',
-          admin: {
-            description: 'Opsional. Gunakan metadata khusus bila judul atau abstrak jurnal perlu disesuaikan untuk mesin pencari.',
-          },
           fields: [
             {
               name: 'metaTitle',
