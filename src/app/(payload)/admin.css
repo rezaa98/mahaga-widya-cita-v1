@@ -259,3 +259,54 @@ html[data-theme="dark"] {
     justify-content: flex-end;
   }
 }
+
+/* --- Sidebar Nav Visual Polish --- */
+.nav,
+.nav__wrapper,
+aside.nav {
+  background-color: #ffffff !important;
+  border-right: 1px solid #e2e8f0 !important;
+}
+
+.nav__brand {
+  min-height: 56px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 8px 16px !important;
+}
+
+.nav-group__toggle {
+  color: #475569 !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  padding: 8px 12px !important;
+  transition: color 0.15s ease, background-color 0.15s ease !important;
+}
+
+.nav-group__toggle:hover {
+  color: #1e293b !important;
+  background-color: #f1f5f9 !important;
+  border-radius: 6px !important;
+}
+
+.nav__link {
+  color: #334155 !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  border-radius: 6px !important;
+  padding: 6px 12px !important;
+  transition: all 0.15s ease !important;
+}
+
+.nav__link:hover {
+  color: #1d4ed8 !important;
+  background-color: #eff6ff !important;
+}
+
+.nav__link--active,
+.nav__link[aria-current="page"] {
+  color: #1d4ed8 !important;
+  background-color: #eff6ff !important;
+  font-weight: 600 !important;
+}
+
