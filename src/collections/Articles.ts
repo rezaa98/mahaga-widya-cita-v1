@@ -59,7 +59,8 @@ export const Articles: CollectionConfig = {
   admin: {
     group: 'Manajemen Konten',
     useAsTitle: 'title',
-    defaultColumns: ['featuredImage', 'title', 'category', 'status', 'author', 'updatedAt'],
+    defaultColumns: ['title', 'status', 'author', 'updatedAt'],
+    listSearchableFields: ['title', 'slug', 'excerpt'],
     description: 'Kelola draft, proses review, dan publikasi artikel. Gunakan tombol Preview untuk memeriksa artikel yang sudah dipublikasikan.',
     preview: (doc, { locale }) => {
       const slug = typeof doc.slug === 'string' ? doc.slug : null
@@ -93,6 +94,11 @@ export const Articles: CollectionConfig = {
               type: 'text',
               required: true,
               localized: true,
+              admin: {
+                components: {
+                  Cell: '@/components/admin/ArticleTitleCell#ArticleTitleCell',
+                },
+              },
               label: 'Judul Artikel',
               access: {
                 update: canManageContent,

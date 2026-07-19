@@ -73,7 +73,8 @@ export const Journals: CollectionConfig = {
   admin: {
     group: 'Manajemen Konten',
     useAsTitle: 'title',
-    defaultColumns: ['coverImage', 'title', 'publicationYear', 'status', 'updatedAt'],
+    defaultColumns: ['title', 'publicationYear', 'status', 'updatedAt'],
+    listSearchableFields: ['title', 'slug', 'doi'],
     description: 'Kelola metadata publikasi, dokumen PDF, proses review, dan status publikasi jurnal.',
     preview: (doc, { locale }) => {
       const slug = typeof doc.slug === 'string' ? doc.slug : null
@@ -106,6 +107,11 @@ export const Journals: CollectionConfig = {
               required: true,
               localized: true,
               label: 'Judul Jurnal',
+              admin: {
+                components: {
+                  Cell: '@/components/admin/JournalTitleCell#JournalTitleCell',
+                },
+              },
               access: { update: canManageContent },
             },
             {

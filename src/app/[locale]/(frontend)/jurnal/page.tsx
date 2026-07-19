@@ -23,50 +23,63 @@ export default async function JournalListPage({ params, searchParams }: { params
   const categorySlug = typeof query.kategori === 'string' ? query.kategori : ''
   const parsedPage = typeof query.page === 'string' ? Number.parseInt(query.page, 10) : 1
   const page = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1
-  const payload = await getPayloadClient()
 
-  const { docs: categories } = await payload.find({ collection: 'categories', locale: locale as any, limit: 100 })
-  const yearResult: any = await payload.find({
-    collection: 'journals',
-    where: publishedJournalWhere(),
-    locale: locale as any,
-    depth: 0,
-    limit: 1000,
-    select: { publicationYear: true },
-  } as any)
-  const selectedCategory = categories.find((category: any) => category.slug === categorySlug)
-  const filters: Record<string, unknown>[] = []
-  if (q) filters.push({ title: { contains: q } })
-  if (year) filters.push({ publicationYear: { equals: Number(year) } })
-  if (selectedCategory) filters.push({ category: { equals: selectedCategory.id } })
+  const dateLocale = locale === 'en' ? 'en-US' : 'id-ID'
+  const labels = locale === 'en'
+    ? { badge: 'Research & Publications', title: 'Journals and Publications', copy: 'Explore professional research, analysis, and knowledge publications by our experts.', search: 'Search title or topic', all: 'All categories', allYears: 'All years', read: 'Read publication', empty: 'No publications found', reset: 'Reset filters', page: 'Page' }
+    : { badge: 'Riset & Publikasi', title: 'Jurnal dan Publikasi', copy: 'Telusuri riset, kajian, dan publikasi pengetahuan profesional dari para ahli kami.', search: 'Cari judul atau topik', all: 'Semua kategori', allYears: 'Semua tahun', read: 'Baca publikasi', empty: 'Belum ada publikasi yang sesuai', reset: 'Atur ulang filter', page: 'Halaman' }
 
-  // The journals collection is registered in the Phase 1 config. `any` keeps this
-  // route buildable while Payload's generated types are refreshed in another step.
-  const result: any = await payload.find({
-    collection: 'journals' as any,
-    where: publishedJournalWhere(filters),
-    locale: locale as any,
-    depth: 1,
-    sort: '-publishedAt',
-    limit: 9,
-    page,
-  } as any)
-  const journals: Journal[] = result.docs || []
-  const years = Array.from(new Set<number>(
-    (yearResult.docs || [])
-      .map((journal: Journal) => journal.publicationYear)
-      .filter((value: unknown): value is number => typeof value === 'number'),
-  )).sort((a, b) => b - a)
+  let payload: Awaited<ReturnType<typeof getPayloadClient>>
+  let categories: any[] = []
+  let journals: Journal[] = []
+  let years: number[] = []
+  let result: any = { totalPages: 0, hasPrevPage: false, hasNextPage: false, page: 1, prevPage: null, nextPage: null }
+
+  try {
+    payload = await getPayloadClient()
+    const catResult = await payload.find({ collection: 'categories', locale: locale as any, limit: 100 })
+    categories = catResult.docs || []
+
+    const yearResult: any = await payload.find({
+      collection: 'journals',
+      where: publishedJournalWhere(),
+      locale: locale as any,
+      depth: 0,
+      limit: 1000,
+      select: { publicationYear: true },
+    } as any)
+
+    const selectedCategory = categories.find((category: any) => category.slug === categorySlug)
+    const filters: Record<string, unknown>[] = []
+    if (q) filters.push({ title: { contains: q } })
+    if (year) filters.push({ publicationYear: { equals: Number(year) } })
+    if (selectedCategory) filters.push({ category: { equals: selectedCategory.id } })
+
+    result = await payload.find({
+      collection: 'journals' as any,
+      where: publishedJournalWhere(filters),
+      locale: locale as any,
+      depth: 1,
+      sort: '-publishedAt',
+      limit: 9,
+      page,
+    } as any)
+    journals = result.docs || []
+    years = Array.from(new Set<number>(
+      (yearResult.docs || [])
+        .map((journal: Journal) => journal.publicationYear)
+        .filter((value: unknown): value is number => typeof value === 'number'),
+    )).sort((a, b) => b - a)
+  } catch (err) {
+    console.error('[JournalListPage] Failed to load journals (collection may not exist yet):', err)
+  }
+
   const buildHref = (overrides: Record<string, string | undefined> = {}) => {
     const values = { q: q || undefined, year: year || undefined, kategori: categorySlug || undefined, ...overrides }
     const encoded = new URLSearchParams()
     Object.entries(values).forEach(([key, value]) => value && encoded.set(key, value))
     return journalListHref(locale, encoded.size ? `?${encoded.toString()}` : '')
   }
-  const dateLocale = locale === 'en' ? 'en-US' : 'id-ID'
-  const labels = locale === 'en'
-    ? { badge: 'Research & Publications', title: 'Journals and Publications', copy: 'Explore professional research, analysis, and knowledge publications by our experts.', search: 'Search title or topic', all: 'All categories', allYears: 'All years', read: 'Read publication', empty: 'No publications found', reset: 'Reset filters', page: 'Page' }
-    : { badge: 'Riset & Publikasi', title: 'Jurnal dan Publikasi', copy: 'Telusuri riset, kajian, dan publikasi pengetahuan profesional dari para ahli kami.', search: 'Cari judul atau topik', all: 'Semua kategori', allYears: 'Semua tahun', read: 'Baca publikasi', empty: 'Belum ada publikasi yang sesuai', reset: 'Atur ulang filter', page: 'Halaman' }
 
   return <><Navbar /><main style={{ paddingTop: 100, minHeight: '80vh', background: '#f8f9fa', paddingBottom: 60 }}><div className="container">
     <header style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 32px' }}><span className="badge badge-primary">{labels.badge}</span><h1 style={{ color: '#1a2b4c', margin: '16px 0' }}>{labels.title}</h1><p style={{ color: '#64748b' }}>{labels.copy}</p></header>
@@ -85,3 +98,4 @@ export default async function JournalListPage({ params, searchParams }: { params
     {result.totalPages > 1 && <nav aria-label="Pagination" style={{ display: 'flex', justifyContent: 'center', gap: 16, marginTop: 36 }}>{result.hasPrevPage && <Link className="btn btn-outline" href={buildHref({ page: String(result.prevPage) })}>←</Link>}<span style={{ alignSelf: 'center' }}>{labels.page} {result.page} / {result.totalPages}</span>{result.hasNextPage && <Link className="btn btn-outline" href={buildHref({ page: String(result.nextPage) })}>→</Link>}</nav>}
   </div></main><Footer /><WhatsAppFloat /></>
 }
+

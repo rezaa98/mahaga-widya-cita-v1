@@ -1,3 +1,4 @@
+import { ArticleTitleCell as ArticleTitleCell_14cd3d6d7823fade05f016bb6ac83670 } from '@/components/admin/ArticleTitleCell'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { LexicalDiffComponent as LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -22,6 +23,7 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { EditorialStatusCell as EditorialStatusCell_ecbc8b49ad488ed400aa2b7bb20a2fc3 } from '@/components/admin/EditorialStatusCell'
+import { JournalTitleCell as JournalTitleCell_3b568554b167eaeaa081125997ee6af6 } from '@/components/admin/JournalTitleCell'
 import { CustomNav as CustomNav_9870fd18da5f585b086dac7c5b924c68 } from '@/components/admin/CustomNav'
 import { Icon as Icon_534076e2c753ea5d539a54b05f456b1b } from '@/components/admin/Icon'
 import { Logo as Logo_a44df17d0fc3dcd873dae43dc3bf66bd } from '@/components/admin/Logo'
@@ -33,6 +35,7 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "@/components/admin/ArticleTitleCell#ArticleTitleCell": ArticleTitleCell_14cd3d6d7823fade05f016bb6ac83670,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#LexicalDiffComponent": LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -57,6 +60,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/components/admin/EditorialStatusCell#EditorialStatusCell": EditorialStatusCell_ecbc8b49ad488ed400aa2b7bb20a2fc3,
+  "@/components/admin/JournalTitleCell#JournalTitleCell": JournalTitleCell_3b568554b167eaeaa081125997ee6af6,
   "@/components/admin/CustomNav#CustomNav": CustomNav_9870fd18da5f585b086dac7c5b924c68,
   "@/components/admin/Icon#Icon": Icon_534076e2c753ea5d539a54b05f456b1b,
   "@/components/admin/Logo#Logo": Logo_a44df17d0fc3dcd873dae43dc3bf66bd,

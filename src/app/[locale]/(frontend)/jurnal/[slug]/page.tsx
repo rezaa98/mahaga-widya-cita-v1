@@ -13,9 +13,14 @@ export const dynamic = 'force-dynamic'
 type RouteParams = { locale: string; slug: string }
 
 async function getJournal({ locale, slug }: RouteParams) {
-  const payload = await getPayloadClient()
-  const result: any = await payload.find({ collection: 'journals' as any, where: publishedJournalWhere([{ slug: { equals: slug } }]), locale: locale as any, depth: 1, limit: 1 } as any)
-  return result.docs?.[0]
+  try {
+    const payload = await getPayloadClient()
+    const result: any = await payload.find({ collection: 'journals' as any, where: publishedJournalWhere([{ slug: { equals: slug } }]), locale: locale as any, depth: 1, limit: 1 } as any)
+    return result.docs?.[0]
+  } catch (err) {
+    console.error('[JournalDetail] Failed to load journal (collection may not exist):', err)
+    return null
+  }
 }
 
 export async function generateMetadata({ params }: { params: Promise<RouteParams> }) {
@@ -30,9 +35,15 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
 export default async function JournalDetailPage({ params }: { params: Promise<RouteParams> }) {
   const resolved = await params; const journal = await getJournal(resolved)
   if (!journal) notFound()
-  const payload = await getPayloadClient(); const categoryID = typeof journal.category === 'object' ? journal.category?.id : journal.category
-  const relatedResult: any = await payload.find({ collection: 'journals' as any, where: publishedJournalWhere([{ id: { not_equals: journal.id } }, ...(categoryID ? [{ category: { equals: categoryID } }] : [])]), locale: resolved.locale as any, depth: 1, sort: '-publishedAt', limit: 3 } as any)
-  const related = relatedResult.docs || []; const cover = mediaURL(journal.coverImage); const document = mediaURL(journal.document); const authors = journalAuthors(journal); const isEn = resolved.locale === 'en'; const dateLocale = isEn ? 'en-US' : 'id-ID'
+  let related: any[] = []
+  try {
+    const payload = await getPayloadClient(); const categoryID = typeof journal.category === 'object' ? journal.category?.id : journal.category
+    const relatedResult: any = await payload.find({ collection: 'journals' as any, where: publishedJournalWhere([{ id: { not_equals: journal.id } }, ...(categoryID ? [{ category: { equals: categoryID } }] : [])]), locale: resolved.locale as any, depth: 1, sort: '-publishedAt', limit: 3 } as any)
+    related = relatedResult.docs || []
+  } catch (err) {
+    console.error('[JournalDetail] Failed to load related journals:', err)
+  }
+  const cover = mediaURL(journal.coverImage); const document = mediaURL(journal.document); const authors = journalAuthors(journal); const isEn = resolved.locale === 'en'; const dateLocale = isEn ? 'en-US' : 'id-ID'
   const citation = journalCitation(journal)
   const schema = { '@context': 'https://schema.org', '@type': 'ScholarlyArticle', headline: journal.title, datePublished: journal.publishedAt || undefined, inLanguage: journal.language || resolved.locale, author: authors.map((author: any) => ({ '@type': 'Person', name: author.name, affiliation: author.affiliation ? { '@type': 'Organization', name: author.affiliation } : undefined })), abstract: richTextToPlain(journal.abstract), keywords: Array.isArray(journal.keywords) ? journal.keywords.map((keyword: any) => keyword.keyword || keyword).filter(Boolean).join(', ') : undefined, pagination: journal.pages || undefined, sameAs: journal.doi ? `https://doi.org/${journal.doi}` : undefined, url: `https://mahagawidyacita.co.id${journalHref(resolved.locale, journal.slug || journal.id)}` }
   return <><Navbar /><main style={{ paddingTop: 112, minHeight: '100vh', background: '#f8f9fa', paddingBottom: 64 }}><div className="container" style={{ maxWidth: 960 }}><Link href={journalListHref(resolved.locale)} style={{ display: 'inline-flex', gap: 8, alignItems: 'center', color: 'var(--color-primary-600)', marginBottom: 24 }}><ArrowLeft size={16} />{isEn ? 'All journals' : 'Semua jurnal'}</Link><article className="card" style={{ padding: 'clamp(24px, 5vw, 48px)' }}>

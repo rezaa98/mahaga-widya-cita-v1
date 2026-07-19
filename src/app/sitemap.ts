@@ -29,52 +29,72 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   })));
 
   // Dynamic articles
-  const { docs: articles } = await payload.find({
-    collection: 'articles',
-    where: { status: { equals: 'published' } },
-    limit: 1000,
-  });
-  const articleRoutes = articles.flatMap((article) => locales.map((locale) => ({
-    url: `${baseUrl}/${locale}/artikel/${article.slug}`,
-    lastModified: new Date(article.updatedAt || article.createdAt),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  })));
+  let articleRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const { docs: articles } = await payload.find({
+      collection: 'articles',
+      where: { status: { equals: 'published' } },
+      limit: 1000,
+    });
+    articleRoutes = articles.flatMap((article) => locales.map((locale) => ({
+      url: `${baseUrl}/${locale}/artikel/${article.slug}`,
+      lastModified: new Date(article.updatedAt || article.createdAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })));
+  } catch (err) {
+    console.error('[sitemap] Failed to load articles:', err);
+  }
 
   // Dynamic journals
-  const { docs: journals } = await payload.find({
-    collection: 'journals',
-    where: { status: { equals: 'published' } },
-    limit: 1000,
-  });
-  const journalRoutes = journals.flatMap((journal) => locales.map((locale) => ({
-    url: `${baseUrl}/${locale}/jurnal/${journal.slug}`,
-    lastModified: new Date(journal.updatedAt || journal.createdAt),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  })));
+  let journalRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const { docs: journals } = await payload.find({
+      collection: 'journals',
+      where: { status: { equals: 'published' } },
+      limit: 1000,
+    });
+    journalRoutes = journals.flatMap((journal) => locales.map((locale) => ({
+      url: `${baseUrl}/${locale}/jurnal/${journal.slug}`,
+      lastModified: new Date(journal.updatedAt || journal.createdAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })));
+  } catch (err) {
+    console.error('[sitemap] Failed to load journals (collection may not exist):', err);
+  }
 
   // Dynamic policy reviews
-  const { docs: policyReviews } = await payload.find({
-    collection: 'policy-reviews',
-    where: { status: { equals: 'published' } },
-    limit: 1000,
-  });
-  const policyRoutes = policyReviews.flatMap((review) => locales.map((locale) => ({
-    url: `${baseUrl}/${locale}/policy-reviews/${review.slug}`,
-    lastModified: new Date(review.updatedAt || review.createdAt),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  })));
+  let policyRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const { docs: policyReviews } = await payload.find({
+      collection: 'policy-reviews',
+      where: { status: { equals: 'published' } },
+      limit: 1000,
+    });
+    policyRoutes = policyReviews.flatMap((review) => locales.map((locale) => ({
+      url: `${baseUrl}/${locale}/policy-reviews/${review.slug}`,
+      lastModified: new Date(review.updatedAt || review.createdAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })));
+  } catch (err) {
+    console.error('[sitemap] Failed to load policy reviews:', err);
+  }
 
   // Dynamic services
-  const { docs: services } = await payload.find({ collection: 'services', limit: 100 });
-  const serviceRoutes = services.flatMap((service) => locales.map((locale) => ({
-    url: `${baseUrl}/${locale}/layanan/${service.slug}`,
-    lastModified: new Date(service.updatedAt || service.createdAt),
-    changeFrequency: "monthly" as const,
-    priority: 0.9,
-  })));
+  let serviceRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const { docs: services } = await payload.find({ collection: 'services', limit: 100 });
+    serviceRoutes = services.flatMap((service) => locales.map((locale) => ({
+      url: `${baseUrl}/${locale}/layanan/${service.slug}`,
+      lastModified: new Date(service.updatedAt || service.createdAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.9,
+    })));
+  } catch (err) {
+    console.error('[sitemap] Failed to load services:', err);
+  }
 
   return [...staticRoutes, ...articleRoutes, ...journalRoutes, ...policyRoutes, ...serviceRoutes];
 }

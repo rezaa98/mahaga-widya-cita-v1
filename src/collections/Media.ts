@@ -6,6 +6,7 @@ export const Media: CollectionConfig = {
   admin: {
     useAsTitle: 'alt',
     defaultColumns: ['filename', 'alt', 'mimeType', 'updatedAt'],
+    listSearchableFields: ['alt', 'filename'],
   },
   access: {
     read: () => true,

@@ -90,7 +90,10 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI || process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/postgres',
     },
-    push: true,
+    // push: true syncs schema on cold start — safe for dev but dangerous in
+    // production where concurrent serverless functions may race or lack DDL
+    // permission. Use `payload migrate` for production schema changes instead.
+    push: process.env.NODE_ENV !== 'production',
   }),
   plugins: [
     vercelBlobStorage({

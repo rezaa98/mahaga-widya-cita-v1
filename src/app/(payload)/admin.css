@@ -984,3 +984,170 @@ input[type="date"] {
 @keyframes mwc-pulse { 50% { opacity: .48; } }
 @media (max-width: 1180px) { .mwc-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }.mwc-dashboard__content, .mwc-dashboard__primary { grid-template-columns: 1fr; } }
 @media (max-width: 700px) { .mwc-dashboard { margin: -12px -12px 0; }.mwc-dashboard__canvas { padding: 20px 16px; }.mwc-dashboard__header { flex-direction: column; }.mwc-dashboard__site-link { width: 100%; }.mwc-actions { display: grid; grid-template-columns: 1fr 1fr; }.mwc-action { padding-inline: 8px; }.mwc-metrics { grid-template-columns: 1fr; }.mwc-dashboard__error { align-items: flex-start; flex-direction: column; gap: 10px; }.mwc-chart__area { height: 220px; } }
+
+/* ============================================
+   SPRINT 4 — EDITORIAL EXPERIENCE
+   Custom list cells, editor action bar,
+   review panel, and accessibility.
+   ============================================ */
+
+/* --- Editorial Status Tokens --- */
+:root {
+  --admin-status-draft-bg: #f1f5f9;
+  --admin-status-draft-fg: #475569;
+  --admin-status-review-bg: #fef3c7;
+  --admin-status-review-fg: #92400e;
+  --admin-status-revision-bg: #fee2e2;
+  --admin-status-revision-fg: #991b1b;
+  --admin-status-approved-bg: #d1fae5;
+  --admin-status-approved-fg: #065f46;
+  --admin-status-scheduled-bg: #dbeafe;
+  --admin-status-scheduled-fg: #1e40af;
+  --admin-status-published-bg: #dcfce7;
+  --admin-status-published-fg: #166534;
+  --admin-status-archived-bg: #f3f4f6;
+  --admin-status-archived-fg: #6b7280;
+  --admin-focus-ring: 0 0 0 2px #93c5fd;
+}
+
+/* --- Custom List Cell: Article --- */
+.mwc-cell-article__category {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #1d4ed8;
+  background: #eff6ff;
+  padding: 2px 8px;
+  border-radius: 100px;
+  margin-top: 3px;
+  line-height: 1.3;
+}
+
+/* --- Custom List Cell: Journal --- */
+.mwc-cell-journal__thumb {
+  box-shadow: 0 1px 4px rgb(0 0 0 / 8%);
+}
+
+/* --- Status Badge --- */
+.mwc-status-badge {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.mwc-status-badge:hover {
+  transform: scale(1.04);
+}
+.mwc-status-badge:focus-visible {
+  outline: none;
+  box-shadow: var(--admin-focus-ring);
+  border-radius: 100px;
+}
+
+/* --- Editor Action Bar --- */
+.mwc-editor-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  margin: -1px -1px 16px;
+  background: linear-gradient(to right, #f8fafc, #eff6ff);
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  flex-wrap: wrap;
+}
+.mwc-editor-action-bar__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #475569;
+}
+.mwc-editor-action-bar__status strong {
+  color: #1a2b4c;
+}
+.mwc-editor-action-bar__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.mwc-editor-action-bar__preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 7px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.mwc-editor-action-bar__preview:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+.mwc-editor-action-bar__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 7px;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.12s;
+}
+.mwc-editor-action-bar__btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+.mwc-editor-action-bar__btn:active {
+  transform: translateY(0);
+}
+.mwc-editor-action-bar__btn:focus-visible,
+.mwc-editor-action-bar__preview:focus-visible {
+  outline: none;
+  box-shadow: var(--admin-focus-ring);
+}
+
+/* --- Review Panel --- */
+.mwc-review-panel {
+  transition: border-color 0.2s ease;
+}
+
+/* --- Accessibility: Focus ring on all interactive admin elements --- */
+.custom-nav__item:focus-visible,
+.custom-nav__utility:focus-visible,
+.custom-nav__mobile-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--admin-focus-ring);
+}
+
+/* --- Admin list cell responsive --- */
+@media (max-width: 900px) {
+  .mwc-cell-article,
+  .mwc-cell-journal,
+  .mwc-cell-media {
+    gap: 8px !important;
+  }
+  .mwc-cell-article__thumb {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .mwc-cell-journal__thumb {
+    width: 32px !important;
+    height: 44px !important;
+  }
+  .mwc-editor-action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .mwc-editor-action-bar__actions {
+    justify-content: flex-end;
+  }
+}
