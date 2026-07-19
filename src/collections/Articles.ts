@@ -59,7 +59,12 @@ export const Articles: CollectionConfig = {
   admin: {
     group: 'Manajemen Konten',
     useAsTitle: 'title',
-    defaultColumns: ['title', 'category', 'status', 'updatedAt', 'publishedAt'],
+    defaultColumns: ['featuredImage', 'title', 'category', 'status', 'author', 'updatedAt'],
+    description: 'Kelola draft, proses review, dan publikasi artikel. Gunakan tombol Preview untuk memeriksa artikel yang sudah dipublikasikan.',
+    preview: (doc, { locale }) => {
+      const slug = typeof doc.slug === 'string' ? doc.slug : null
+      return slug ? `/${locale || 'id'}/artikel/${slug}` : null
+    },
   },
   access: {
     // Visitors only see published articles; authenticated CMS users retain
@@ -79,6 +84,9 @@ export const Articles: CollectionConfig = {
       tabs: [
         {
           label: 'Konten Penulisan',
+          admin: {
+            description: 'Isi judul, ringkasan, dan artikel. Gambar dapat diunggah langsung melalui tombol media di editor.',
+          },
           fields: [
             {
               name: 'title',
@@ -117,6 +125,9 @@ export const Articles: CollectionConfig = {
         },
         {
           label: 'Media',
+          admin: {
+            description: 'Pilih thumbnail dari Media Library. Field URL lama hanya digunakan sebagai fallback untuk artikel yang belum dimigrasikan.',
+          },
           fields: [
             {
               name: 'featuredImage',
@@ -227,6 +238,10 @@ export const Articles: CollectionConfig = {
       defaultValue: 'draft',
       admin: {
         position: 'sidebar',
+        description: 'Editor dapat mengirim review; reviewer dapat menyetujui atau meminta revisi; hanya admin yang dapat menjadwalkan atau menerbitkan.',
+        components: {
+          Cell: '@/components/admin/EditorialStatusCell#EditorialStatusCell',
+        },
       },
     },
     {

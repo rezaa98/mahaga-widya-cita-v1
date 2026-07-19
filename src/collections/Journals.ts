@@ -73,7 +73,12 @@ export const Journals: CollectionConfig = {
   admin: {
     group: 'Manajemen Konten',
     useAsTitle: 'title',
-    defaultColumns: ['title', 'publicationYear', 'status', 'updatedAt', 'publishedAt'],
+    defaultColumns: ['coverImage', 'title', 'publicationYear', 'status', 'updatedAt'],
+    description: 'Kelola metadata publikasi, dokumen PDF, proses review, dan status publikasi jurnal.',
+    preview: (doc, { locale }) => {
+      const slug = typeof doc.slug === 'string' ? doc.slug : null
+      return slug ? `/${locale || 'id'}/jurnal/${slug}` : null
+    },
   },
   access: {
     read: canReadPublishedOrAuthenticated,
@@ -91,6 +96,9 @@ export const Journals: CollectionConfig = {
       tabs: [
         {
           label: 'Konten Jurnal',
+          admin: {
+            description: 'Tambahkan judul, abstrak, ringkasan, dan kata kunci dalam bahasa aktif.',
+          },
           fields: [
             {
               name: 'title',
@@ -138,6 +146,9 @@ export const Journals: CollectionConfig = {
         },
         {
           label: 'Media & Publikasi',
+          admin: {
+            description: 'Upload cover dan PDF final, lalu lengkapi metadata penerbitan agar jurnal mudah ditemukan dan dikutip.',
+          },
           fields: [
             {
               name: 'coverImage',
@@ -227,6 +238,9 @@ export const Journals: CollectionConfig = {
         },
         {
           label: 'Penulis',
+          admin: {
+            description: 'Tambahkan penulis sesuai urutan kontribusi dan sertakan afiliasi institusinya.',
+          },
           fields: [
             {
               name: 'authors',
@@ -277,6 +291,9 @@ export const Journals: CollectionConfig = {
         },
         {
           label: 'SEO',
+          admin: {
+            description: 'Opsional. Gunakan metadata khusus bila judul atau abstrak jurnal perlu disesuaikan untuk mesin pencari.',
+          },
           fields: [
             {
               name: 'metaTitle',
@@ -350,7 +367,13 @@ export const Journals: CollectionConfig = {
       name: 'status',
       type: 'select',
       defaultValue: 'draft',
-      admin: { position: 'sidebar' },
+      admin: {
+        position: 'sidebar',
+        description: 'Editor dapat mengirim review; reviewer dapat menyetujui atau meminta revisi; hanya admin yang dapat menjadwalkan atau menerbitkan.',
+        components: {
+          Cell: '@/components/admin/EditorialStatusCell#EditorialStatusCell',
+        },
+      },
       options: [
         { label: 'Draft', value: 'draft' },
         { label: 'Menunggu Review', value: 'in_review' },
