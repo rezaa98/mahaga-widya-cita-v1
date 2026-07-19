@@ -310,3 +310,49 @@ aside.nav {
   font-weight: 600 !important;
 }
 
+/* --- Force All Sidebar Nav Groups Expanded --- */
+.nav-group__content {
+  display: block !important;
+  height: auto !important;
+  max-height: none !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* --- Nav Link Material Icons --- */
+.nav__link::before {
+  font-family: 'Material Symbols Outlined' !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  margin-right: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  vertical-align: middle !important;
+  color: #64748b !important;
+  transition: color 0.15s ease !important;
+}
+
+.nav__link:hover::before,
+.nav__link--active::before,
+.nav__link[aria-current="page"]::before {
+  color: #1d4ed8 !important;
+}
+
+/* Route-specific icons */
+.nav__link[href*="/collections/articles"]::before { content: "article" !important; }
+.nav__link[href*="/collections/journals"]::before { content: "menu_book" !important; }
+.nav__link[href*="/collections/policy-reviews"]::before { content: "gavel" !important; }
+.nav__link[href*="/collections/categories"]::before { content: "category" !important; }
+.nav__link[href*="/collections/services"]::before { content: "handshake" !important; }
+.nav__link[href*="/collections/team-members"]::before { content: "group" !important; }
+.nav__link[href*="/collections/media"]::before { content: "perm_media" !important; }
+.nav__link[href*="/collections/contact-submissions"]::before { content: "mail" !important; }
+.nav__link[href*="/collections/subscribers"]::before { content: "mark_email_read" !important; }
+.nav__link[href*="/collections/users"]::before { content: "manage_accounts" !important; }
+.nav__link[href*="/globals/beranda"]::before { content: "home" !important; }
+.nav__link[href*="/globals/tentang-kami"]::before { content: "info" !important; }
+.nav__link[href*="/globals/kontak"]::before { content: "call" !important; }
+.nav__link[href*="/globals/footer"]::before { content: "dock" !important; }
+.nav__link[href*="/globals/navbar"]::before { content: "web" !important; }
+
+
