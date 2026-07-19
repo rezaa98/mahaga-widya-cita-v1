@@ -8,9 +8,9 @@ import Link from "next/link";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { WaveDivider } from "@/components/ui/WaveDivider";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 export const dynamic = "force-dynamic";
-
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string, locale: string }> }): Promise<Metadata> {
   const { slug, locale } = await params;
@@ -27,25 +27,31 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     limit: 1,
   });
 
-  const service = result.docs[0];
+  const service: any = result.docs[0];
 
   if (!service) {
     return { title: isEn ? "Service Not Found" : "Layanan Tidak Ditemukan" };
   }
 
+  const title = service.meta?.title || `${service.title} | Mahaga Widya Cita`;
+  const description = service.meta?.description || service.description;
+  const imageUrl = service.meta?.image ? (typeof service.meta.image === 'object' ? service.meta.image.url : null) : null;
+
   return {
-    title: `${service.title} | Mahaga Widya Cita`,
-    description: service.description,
+    title,
+    description,
     openGraph: {
-      title: `${service.title} - Mahaga Widya Cita`,
-      description: service.description,
+      title,
+      description,
       url: `https://mahagawidyacita.co.id/${locale}/layanan/${service.slug}`,
       type: 'website',
+      images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : [],
     },
     twitter: {
       card: 'summary_large_image',
-      title: service.title,
-      description: service.description,
+      title,
+      description,
+      images: imageUrl ? [imageUrl] : [],
     }
   };
 }
@@ -82,6 +88,11 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
       <section style={{ background: service.gradient, paddingTop: "calc(72px + 4rem)", paddingBottom: "4rem", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)", pointerEvents: "none" }} />
         <div className="container" style={{ position: "relative" }}>
+          <Breadcrumbs items={[
+            { label: isEn ? 'Services' : 'Layanan', href: `/${locale}/layanan` },
+            { label: service.title }
+          ]} />
+          
           <div style={{ maxWidth: "800px" }}>
             <div className="badge" style={{ background: "rgba(255,255,255,0.2)", color: "white", marginBottom: "1.25rem" }}>
               {isEn ? 'Core Service' : 'Layanan Utama'}

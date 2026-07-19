@@ -40,6 +40,7 @@ function guardPolicyReviewStatusTransition({ data, originalDoc, operation, req }
 
 export const PolicyReviews: CollectionConfig = {
   slug: 'policy-reviews',
+  versions: { drafts: { autosave: true }, maxPerDoc: 15 },
   admin: {
     group: 'Manajemen Konten',
     useAsTitle: 'title',

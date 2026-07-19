@@ -70,6 +70,7 @@ async function validatePDF(value: unknown, { req }: { req: any }) {
 
 export const Journals: CollectionConfig = {
   slug: 'journals',
+  versions: { drafts: { autosave: true }, maxPerDoc: 15 },
   admin: {
     group: 'Manajemen Konten',
     useAsTitle: 'title',

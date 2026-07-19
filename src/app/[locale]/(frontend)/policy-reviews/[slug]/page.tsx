@@ -7,6 +7,7 @@ import configPromise from "@payload-config";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, User, Download, FileText } from "lucide-react";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 export const dynamic = "force-dynamic";
 
@@ -29,22 +30,27 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     return { title: "Policy Review Tidak Ditemukan" };
   }
 
-  const review = docs[0];
+  const review: any = docs[0];
+  const title = review.meta?.title || review.title;
+  const description = review.meta?.description || review.excerpt || `Baca analisis kebijakan publik "${review.title}" di Mahaga Widya Cita.`;
+  const imageUrl = review.meta?.image ? (typeof review.meta.image === 'object' ? review.meta.image.url : null) : null;
 
   return {
-    title: `${review.title}`,
-    description: review.excerpt || `Baca analisis kebijakan publik "${review.title}" di Mahaga Widya Cita.`,
+    title,
+    description,
     openGraph: {
-      title: review.title,
-      description: review.excerpt || `Baca analisis kebijakan publik "${review.title}" di Mahaga Widya Cita.`,
+      title,
+      description,
       url: `https://mahagawidyacita.co.id/${resolvedParams.locale}/policy-reviews/${review.slug}`,
       type: 'article',
       publishedTime: review.publishedAt || review.createdAt,
+      images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : [],
     },
     twitter: {
       card: 'summary_large_image',
-      title: review.title,
-      description: review.excerpt || `Baca analisis kebijakan publik "${review.title}" di Mahaga Widya Cita.`,
+      title,
+      description,
+      images: imageUrl ? [imageUrl] : [],
     }
   };
 }
@@ -69,15 +75,17 @@ export default async function PolicyReviewDetailPage({ params }: { params: Promi
 
   const review: any = docs[0];
   const documentUrl = typeof review.document === 'object' && review.document ? review.document.url : null;
+  const isEn = resolvedParams.locale === 'en';
 
   return (
     <>
       <Navbar />
       <main style={{ paddingTop: "120px", minHeight: "100vh", backgroundColor: "#f8f9fa", paddingBottom: "60px" }}>
         <div className="container" style={{ maxWidth: "800px" }}>
-          <Link href={`/${resolvedParams.locale}/policy-reviews`} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "var(--color-primary-600)", textDecoration: "none", marginBottom: "2rem", fontWeight: 500 }}>
-            <ArrowLeft size={16} /> Kembali ke Daftar Review
-          </Link>
+          <Breadcrumbs items={[
+            { label: isEn ? 'Policy Reviews' : 'Daftar Review', href: `/${resolvedParams.locale}/policy-reviews` },
+            { label: review.title }
+          ]} />
           
           <div style={{ backgroundColor: "#fff", padding: "40px", borderRadius: "16px", boxShadow: "0 10px 30px rgba(0,0,0,0.05)" }}>
             <span style={{ 

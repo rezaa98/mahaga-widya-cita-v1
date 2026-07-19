@@ -10,7 +10,7 @@ import { Categories } from './collections/Categories'
 import { Articles } from './collections/Articles'
 import { Journals } from './collections/Journals'
 import { PolicyReviews } from './collections/PolicyReviews'
-
+import { seoPlugin } from '@payloadcms/plugin-seo'
 import { ContactSubmissions } from './collections/ContactSubmissions'
 import { Subscribers } from './collections/Subscribers'
 import { Services } from './collections/Services'
@@ -102,6 +102,12 @@ export default buildConfig({
         media: true,
       },
       token: process.env.BLOB_READ_WRITE_TOKEN || '',
-    })
+    }),
+    seoPlugin({
+      collections: ['articles', 'journals', 'policy-reviews', 'services'],
+      uploadsCollection: 'media',
+      generateTitle: ({ doc }) => `Mahaga Widya Cita — ${doc?.title || doc?.name || ''}`,
+      generateDescription: ({ doc }) => doc?.excerpt || doc?.description || '',
+    }),
   ],
 })

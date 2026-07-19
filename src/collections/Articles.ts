@@ -56,6 +56,12 @@ function guardArticleStatusTransition({ data, originalDoc, operation, req }: any
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
+  versions: {
+    drafts: {
+      autosave: true,
+    },
+    maxPerDoc: 15,
+  },
   admin: {
     group: 'Manajemen Konten',
     useAsTitle: 'title',

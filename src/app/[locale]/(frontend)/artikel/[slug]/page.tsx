@@ -9,10 +9,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, User, Share2, Link as LinkIcon, BookOpen, ArrowRight } from "lucide-react";
 import { IconLinkedin, IconXTwitter } from "@/components/icons/SocialIcons";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { getContentImage, getContentImageAlt, getLocalizedArticleHref, getLocalizedArticlesHref } from "@/utils/contentMedia";
 
 export const dynamic = "force-dynamic";
-
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const resolvedParams = await params;
@@ -32,15 +32,17 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     return { title: "Artikel Tidak Ditemukan" };
   }
 
-  const article = docs[0];
-  const imageUrl = getContentImage(article);
+  const article: any = docs[0];
+  const imageUrl = article.meta?.image ? (typeof article.meta.image === 'object' ? article.meta.image.url : null) : getContentImage(article);
+  const title = article.meta?.title || article.title;
+  const description = article.meta?.description || article.excerpt || `Baca selengkapnya mengenai ${article.title} di Mahaga Widya Cita.`;
 
   return {
-    title: `${article.title}`,
-    description: article.excerpt || `Baca selengkapnya mengenai ${article.title} di Mahaga Widya Cita.`,
+    title,
+    description,
     openGraph: {
-      title: article.title,
-      description: article.excerpt || `Baca selengkapnya mengenai ${article.title} di Mahaga Widya Cita.`,
+      title,
+      description,
       url: `https://mahagawidyacita.co.id/${resolvedParams.locale}/artikel/${article.slug}`,
       type: 'article',
       publishedTime: article.publishedAt || article.createdAt,
@@ -48,8 +50,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     },
     twitter: {
       card: 'summary_large_image',
-      title: article.title,
-      description: article.excerpt || `Baca selengkapnya mengenai ${article.title} di Mahaga Widya Cita.`,
+      title,
+      description,
       images: imageUrl ? [imageUrl] : [],
     }
   };
@@ -111,15 +113,20 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
   const articleImage = getContentImage(article);
   const articleImageAlt = getContentImageAlt(article, article.title);
   const shareUrl = `https://mahagawidyacita.co.id${getLocalizedArticleHref(resolvedParams.locale, article.slug)}`;
+  
+  const categoryName = typeof article.category === 'object' && article.category ? article.category.name : 'UMUM';
 
   return (
     <>
       <Navbar />
       <main style={{ paddingTop: "120px", minHeight: "100vh", backgroundColor: "#f8f9fa", paddingBottom: "60px" }}>
         <div className="container" style={{ maxWidth: "800px" }}>
-          <Link href={getLocalizedArticlesHref(resolvedParams.locale)} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "var(--color-primary-600)", textDecoration: "none", marginBottom: "2rem", fontWeight: 500 }}>
-            <ArrowLeft size={16} /> Kembali ke Artikel
-          </Link>
+          
+          <Breadcrumbs items={[
+            { label: 'Artikel', href: getLocalizedArticlesHref(resolvedParams.locale) },
+            { label: categoryName, href: `${getLocalizedArticlesHref(resolvedParams.locale)}?category=${categoryId}` },
+            { label: article.title }
+          ]} />
           
           <div style={{ backgroundColor: "#fff", padding: "40px", borderRadius: "16px", boxShadow: "0 10px 30px rgba(0,0,0,0.05)" }}>
             <span style={{ 
@@ -132,7 +139,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
               display: "inline-block",
               marginBottom: "1.5rem"
             }}>
-              {typeof article.category === 'object' && article.category ? article.category.name : 'UMUM'}
+              {categoryName}
             </span>
             
             <h1 style={{ color: "#1a2b4c", marginBottom: "1.5rem", fontSize: "2.5rem", lineHeight: 1.2 }}>

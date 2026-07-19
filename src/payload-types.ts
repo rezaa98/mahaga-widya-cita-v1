@@ -285,8 +285,17 @@ export interface Article {
   status?: ('draft' | 'in_review' | 'revision_requested' | 'approved' | 'scheduled' | 'published' | 'archived') | null;
   reviewNotes?: string | null;
   publishedAt?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * Kelola metadata publikasi, dokumen PDF, proses review, dan status publikasi jurnal.
@@ -368,8 +377,17 @@ export interface Journal {
   status?: ('draft' | 'in_review' | 'revision_requested' | 'approved' | 'scheduled' | 'published' | 'archived') | null;
   reviewNotes?: string | null;
   publishedAt?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -403,8 +421,17 @@ export interface PolicyReview {
   status: 'draft' | 'in_review' | 'revision_requested' | 'approved' | 'scheduled' | 'published' | 'archived';
   publishedAt?: string | null;
   reviewNotes?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -462,6 +489,14 @@ export interface Service {
         id?: string | null;
       }[]
     | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -698,8 +733,16 @@ export interface ArticlesSelect<T extends boolean = true> {
   status?: T;
   reviewNotes?: T;
   publishedAt?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -743,8 +786,16 @@ export interface JournalsSelect<T extends boolean = true> {
   status?: T;
   reviewNotes?: T;
   publishedAt?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -760,8 +811,16 @@ export interface PolicyReviewsSelect<T extends boolean = true> {
   status?: T;
   publishedAt?: T;
   reviewNotes?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -815,6 +874,13 @@ export interface ServicesSelect<T extends boolean = true> {
     | {
         audience?: T;
         id?: T;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
       };
   updatedAt?: T;
   createdAt?: T;
