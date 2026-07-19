@@ -56,6 +56,10 @@ function guardArticleStatusTransition({ data, originalDoc, operation, req }: any
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
+  labels: {
+    singular: { id: 'Artikel', en: 'Article' },
+    plural: { id: 'Artikel', en: 'Articles' },
+  },
   versions: {
     drafts: {
       autosave: true,
@@ -63,7 +67,7 @@ export const Articles: CollectionConfig = {
     maxPerDoc: 15,
   },
   admin: {
-    group: 'Manajemen Konten',
+    group: { id: 'Manajemen Konten', en: 'Content Management' },
     useAsTitle: 'title',
     defaultColumns: ['title', 'status', 'author', 'updatedAt'],
     listSearchableFields: ['title', 'slug', 'excerpt'],

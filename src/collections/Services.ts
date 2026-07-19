@@ -4,8 +4,12 @@ import { canManageSiteContent } from '../utils/access'
 
 export const Services: CollectionConfig = {
   slug: 'services',
+  labels: {
+    singular: { id: 'Layanan', en: 'Service' },
+    plural: { id: 'Layanan', en: 'Services' },
+  },
   admin: {
-    group: 'Manajemen Konten',
+    group: { id: 'Manajemen Konten', en: 'Content Management' },
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', 'updatedAt'],
   },

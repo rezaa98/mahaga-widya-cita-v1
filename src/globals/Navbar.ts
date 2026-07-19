@@ -4,9 +4,9 @@ import { canManageSiteContent } from '../utils/access';
 
 export const Navbar: GlobalConfig = {
   slug: "navbar",
-  label: "Navbar (Menu Atas)",
+  label: { id: "Navbar (Menu Atas)", en: "Navbar (Top Menu)" },
   admin: {
-    group: "Website",
+    group: { id: "Website", en: "Website" },
   },
   access: {
     read: () => true,

@@ -3,8 +3,12 @@ import { canManageAudience, canViewAudience } from '../utils/access'
 
 export const Subscribers: CollectionConfig = {
   slug: 'subscribers',
+  labels: {
+    singular: { id: 'Pelanggan Newsletter', en: 'Subscriber' },
+    plural: { id: 'Subscribers', en: 'Subscribers' },
+  },
   admin: {
-    group: 'Data Audiens',
+    group: { id: 'Data Audiens', en: 'Audience Data' },
     useAsTitle: 'email',
     defaultColumns: ['email', 'createdAt'],
   },

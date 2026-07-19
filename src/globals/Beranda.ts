@@ -4,9 +4,9 @@ import { canManageSiteContent } from '../utils/access';
 
 export const Beranda: GlobalConfig = {
   slug: "beranda",
-  label: "Beranda (Landing Page)",
+  label: { id: "Beranda (Landing Page)", en: "Home (Landing Page)" },
   admin: {
-    group: "Website",
+    group: { id: "Website", en: "Website" },
   },
   access: {
     read: () => true,
@@ -19,25 +19,25 @@ export const Beranda: GlobalConfig = {
     {
       name: 'visibility',
       type: 'group',
-      label: 'Pengaturan Visibilitas Bagian (Hide/Show Sections)',
+      label: { id: 'Pengaturan Visibilitas Bagian (Hide/Show Sections)', en: 'Section Visibility Settings (Hide/Show)' },
       fields: [
-        { name: 'showHero', type: 'checkbox', defaultValue: true, label: 'Tampilkan Hero Section' },
-        { name: 'showStats', type: 'checkbox', defaultValue: true, label: 'Tampilkan Statistik' },
-        { name: 'showPartners', type: 'checkbox', defaultValue: true, label: 'Tampilkan Mitra' },
-        { name: 'showServices', type: 'checkbox', defaultValue: true, label: 'Tampilkan Area Layanan' },
-        { name: 'showArticles', type: 'checkbox', defaultValue: true, label: 'Tampilkan Artikel Terbaru' },
-        { name: 'showTeam', type: 'checkbox', defaultValue: true, label: 'Tampilkan Tim Ahli' },
-        { name: 'showCTA', type: 'checkbox', defaultValue: true, label: 'Tampilkan Call to Action (CTA)' },
+        { name: 'showHero', type: 'checkbox', defaultValue: true, label: { id: 'Tampilkan Hero Section', en: 'Show Hero Section' } },
+        { name: 'showStats', type: 'checkbox', defaultValue: true, label: { id: 'Tampilkan Statistik', en: 'Show Statistics' } },
+        { name: 'showPartners', type: 'checkbox', defaultValue: true, label: { id: 'Tampilkan Mitra', en: 'Show Partners' } },
+        { name: 'showServices', type: 'checkbox', defaultValue: true, label: { id: 'Tampilkan Area Layanan', en: 'Show Services Area' } },
+        { name: 'showArticles', type: 'checkbox', defaultValue: true, label: { id: 'Tampilkan Artikel Terbaru', en: 'Show Latest Articles' } },
+        { name: 'showTeam', type: 'checkbox', defaultValue: true, label: { id: 'Tampilkan Tim Ahli', en: 'Show Expert Team' } },
+        { name: 'showCTA', type: 'checkbox', defaultValue: true, label: { id: 'Tampilkan Call to Action (CTA)', en: 'Show Call to Action (CTA)' } },
       ],
     },
     {
       name: "hero",
-      label: "Pengaturan Hero (Atas)",
+      label: { id: "Pengaturan Hero (Atas)", en: "Hero Section Settings (Top)" },
       type: "group",
       fields: [
         {
           name: "badge",
-          label: "Teks Badge / Label",
+          label: { id: "Teks Badge / Label", en: "Badge Text / Label" },
           type: "text",
           localized: true,
           required: true,
@@ -45,7 +45,7 @@ export const Beranda: GlobalConfig = {
         },
         {
           name: "title",
-          label: "Judul Utama",
+          label: { id: "Judul Utama", en: "Main Title" },
           type: "text",
           localized: true,
           required: true,
@@ -53,7 +53,7 @@ export const Beranda: GlobalConfig = {
         },
         {
           name: "titleHighlight",
-          label: "Teks Sorotan (Warna Emas)",
+          label: { id: "Teks Sorotan (Warna Emas)", en: "Highlighted Text (Gold)" },
           type: "text",
           localized: true,
           required: true,
@@ -61,7 +61,7 @@ export const Beranda: GlobalConfig = {
         },
         {
           name: "titleSuffix",
-          label: "Teks Setelah Sorotan",
+          label: { id: "Teks Setelah Sorotan", en: "Text After Highlight" },
           type: "text",
           localized: true,
           required: true,

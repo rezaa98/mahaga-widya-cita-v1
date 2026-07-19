@@ -4,8 +4,12 @@ import { canManageSiteContent } from '../utils/access'
 
 export const TeamMembers: CollectionConfig = {
   slug: 'team-members',
+  labels: {
+    singular: { id: 'Anggota Tim', en: 'Team Member' },
+    plural: { id: 'Tim Ahli', en: 'Team Members' },
+  },
   admin: {
-    group: 'Manajemen Konten',
+    group: { id: 'Manajemen Konten', en: 'Content Management' },
     useAsTitle: 'name',
     defaultColumns: ['name', 'category', 'expertise', 'updatedAt'],
   },

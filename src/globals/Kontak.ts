@@ -4,9 +4,9 @@ import { canManageSiteContent } from '../utils/access';
 
 export const Kontak: GlobalConfig = {
   slug: "kontak",
-  label: "Informasi Kontak",
+  label: { id: "Informasi Kontak", en: "Contact Information" },
   admin: {
-    group: "Website",
+    group: { id: "Website", en: "Website" },
   },
   access: {
     read: () => true,

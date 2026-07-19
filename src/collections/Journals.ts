@@ -70,9 +70,13 @@ async function validatePDF(value: unknown, { req }: { req: any }) {
 
 export const Journals: CollectionConfig = {
   slug: 'journals',
+  labels: {
+    singular: { id: 'Jurnal', en: 'Journal' },
+    plural: { id: 'Jurnal', en: 'Journals' },
+  },
   versions: { drafts: { autosave: true }, maxPerDoc: 15 },
   admin: {
-    group: 'Manajemen Konten',
+    group: { id: 'Manajemen Konten', en: 'Content Management' },
     useAsTitle: 'title',
     defaultColumns: ['title', 'publicationYear', 'status', 'updatedAt'],
     listSearchableFields: ['title', 'slug', 'doi'],

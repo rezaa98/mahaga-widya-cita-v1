@@ -4,8 +4,12 @@ import { canManageContent } from '../utils/access'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
+  labels: {
+    singular: { id: 'Kategori', en: 'Category' },
+    plural: { id: 'Kategori', en: 'Categories' },
+  },
   admin: {
-    group: 'Manajemen Konten',
+    group: { id: 'Manajemen Konten', en: 'Content Management' },
     useAsTitle: 'name',
   },
   access: {

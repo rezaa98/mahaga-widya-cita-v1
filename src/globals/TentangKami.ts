@@ -4,9 +4,9 @@ import { canManageSiteContent } from '../utils/access';
 
 export const TentangKami: GlobalConfig = {
   slug: "tentang-kami",
-  label: "Halaman Tentang Kami",
+  label: { id: "Halaman Tentang Kami", en: "About Us Page" },
   admin: {
-    group: "Website",
+    group: { id: "Website", en: "Website" },
   },
   access: {
     read: () => true,

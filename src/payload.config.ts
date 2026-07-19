@@ -21,10 +21,16 @@ import { Kontak } from './globals/Kontak'
 import { Footer } from './globals/Footer'
 import { Navbar } from './globals/Navbar'
 
+import { id } from '@payloadcms/translations/languages/id'
+import { en } from '@payloadcms/translations/languages/en'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  i18n: {
+    supportedLanguages: { id, en },
+  },
   admin: {
     user: Users.slug,
     meta: {

@@ -4,9 +4,9 @@ import { canManageSiteContent } from '../utils/access';
 
 export const Footer: GlobalConfig = {
   slug: "footer",
-  label: "Footer",
+  label: { id: "Footer", en: "Footer" },
   admin: {
-    group: "Website",
+    group: { id: "Website", en: "Website" },
   },
   access: {
     read: () => true,
