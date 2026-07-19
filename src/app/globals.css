@@ -416,6 +416,39 @@ img, video {
   line-height: 1.7;
 }
 
+/* Rich-text uploaded media is rendered as semantic, responsive content. */
+.rich-text__media {
+  margin: 2rem 0;
+}
+
+.rich-text__media picture,
+.rich-text__media img {
+  display: block;
+  max-width: 100%;
+}
+
+.rich-text__media img {
+  height: auto;
+  border-radius: 0.75rem;
+}
+
+.rich-text__media figcaption {
+  margin-top: 0.625rem;
+  color: var(--color-neutral-500);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.rich-text__media-credit {
+  font-style: italic;
+}
+
+.rich-text__file-link {
+  color: var(--color-primary-600);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 /* ============================================
    NAVBAR STYLES
    ============================================ */
@@ -966,4 +999,29 @@ label {
 
 .article-content a:hover {
   color: var(--color-primary-800);
+}
+
+.journal-filter-form {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(2, minmax(150px, 1fr)) auto;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.journal-detail-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.25rem;
+  align-items: start;
+}
+
+.journal-detail-hero--with-cover {
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 340px);
+}
+
+@media (max-width: 767px) {
+  .journal-filter-form,
+  .journal-detail-hero--with-cover {
+    grid-template-columns: 1fr;
+  }
 }

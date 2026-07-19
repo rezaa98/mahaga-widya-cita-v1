@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpen } from "lucide-react";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
+import { getContentImage, getContentImageAlt, getLocalizedArticleHref, getLocalizedArticlesHref } from "@/utils/contentMedia";
 
 export const dynamic = "force-dynamic";
 
@@ -52,7 +53,7 @@ export default async function ArtikelPage(props: { params: Promise<{ locale: str
   });
 
   const getPaginationUrl = (targetPage: number) => {
-    return `/artikel?page=${targetPage}${selectedKategori ? `&kategori=${selectedKategori}` : ''}`;
+    return getLocalizedArticlesHref(params.locale, `?page=${targetPage}${selectedKategori ? `&kategori=${selectedKategori}` : ''}`);
   };
 
   return (
@@ -70,7 +71,7 @@ export default async function ArtikelPage(props: { params: Promise<{ locale: str
 
           <div className="artikel-filter-bar" style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '2.5rem' }}>
             <Link 
-              href="/artikel" 
+              href={getLocalizedArticlesHref(params.locale)}
               style={{ 
                 padding: '0.5rem 1.25rem', 
                 borderRadius: '100px', 
@@ -88,7 +89,7 @@ export default async function ArtikelPage(props: { params: Promise<{ locale: str
             {categories.map((cat: any) => (
               <Link 
                 key={cat.id} 
-                href={`/artikel?kategori=${cat.slug}`} 
+                href={getLocalizedArticlesHref(params.locale, `?kategori=${cat.slug}`)}
                 style={{ 
                   padding: '0.5rem 1.25rem', 
                   borderRadius: '100px', 
@@ -116,7 +117,7 @@ export default async function ArtikelPage(props: { params: Promise<{ locale: str
             <>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 320px), 1fr))", gap: "1.5rem" }}>
                 {articles.map((article: any) => (
-                  <Link key={article.id} href={`/artikel/${article.slug || article.id}`} style={{ textDecoration: "none", display: "block" }}>
+                  <Link key={article.id} href={getLocalizedArticleHref(params.locale, article.slug || article.id)} style={{ textDecoration: "none", display: "block" }}>
                     <div className="card" style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
                       <div style={{ 
                         height: "200px", 
@@ -126,8 +127,8 @@ export default async function ArtikelPage(props: { params: Promise<{ locale: str
                         justifyContent: "center",
                         color: "#94a3b8",
                         overflow: "hidden", position: "relative" }}>
-                        {article.imageUrl ? (
-                          <Image src={article.imageUrl} alt={article.title} fill style={{ objectFit: "cover" }} sizes="(max-width: 768px) 100vw, 33vw" />
+                        {getContentImage(article) ? (
+                          <Image src={getContentImage(article)!} alt={getContentImageAlt(article, article.title)} fill style={{ objectFit: "cover" }} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 320px" />
                         ) : (
                           <span>[Image Placeholder]</span>
                         )}

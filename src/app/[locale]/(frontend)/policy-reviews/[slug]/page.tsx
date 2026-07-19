@@ -11,17 +11,18 @@ import { ArrowLeft, Calendar, User, Download, FileText } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const resolvedParams = await params;
   const payload = await getPayload({ config: configPromise });
   const { docs } = await payload.find({
     collection: "policy-reviews",
     where: {
-      slug: {
-        equals: resolvedParams.slug,
-      },
+      and: [
+        { slug: { equals: resolvedParams.slug } },
+        { status: { equals: "published" } },
+      ],
     },
-    locale: (resolvedParams as any).locale,
+    locale: resolvedParams.locale as any,
   });
 
   if (!docs || docs.length === 0) {
@@ -36,7 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       title: review.title,
       description: review.excerpt || `Baca analisis kebijakan publik "${review.title}" di Mahaga Widya Cita.`,
-      url: `https://mahagawidyacita.co.id/policy-reviews/${review.slug}`,
+      url: `https://mahagawidyacita.co.id/${resolvedParams.locale}/policy-reviews/${review.slug}`,
       type: 'article',
       publishedTime: review.publishedAt || review.createdAt,
     },
@@ -48,17 +49,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function PolicyReviewDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function PolicyReviewDetailPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const resolvedParams = await params;
   const payload = await getPayload({ config: configPromise });
   const { docs } = await payload.find({
     collection: "policy-reviews",
     where: {
-      slug: {
-        equals: resolvedParams.slug,
-      },
+      and: [
+        { slug: { equals: resolvedParams.slug } },
+        { status: { equals: "published" } },
+      ],
     },
-    locale: (resolvedParams as any).locale,
+    locale: resolvedParams.locale as any,
   });
 
   if (!docs || docs.length === 0) {
@@ -73,7 +75,7 @@ export default async function PolicyReviewDetailPage({ params }: { params: Promi
       <Navbar />
       <main style={{ paddingTop: "120px", minHeight: "100vh", backgroundColor: "#f8f9fa", paddingBottom: "60px" }}>
         <div className="container" style={{ maxWidth: "800px" }}>
-          <Link href="/policy-reviews" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "var(--color-primary-600)", textDecoration: "none", marginBottom: "2rem", fontWeight: 500 }}>
+          <Link href={`/${resolvedParams.locale}/policy-reviews`} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "var(--color-primary-600)", textDecoration: "none", marginBottom: "2rem", fontWeight: 500 }}>
             <ArrowLeft size={16} /> Kembali ke Daftar Review
           </Link>
           

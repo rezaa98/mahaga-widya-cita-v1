@@ -1,6 +1,6 @@
 import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { lexicalEditor, UploadFeature } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
@@ -8,6 +8,7 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Categories } from './collections/Categories'
 import { Articles } from './collections/Articles'
+import { Journals } from './collections/Journals'
 import { PolicyReviews } from './collections/PolicyReviews'
 
 import { ContactSubmissions } from './collections/ContactSubmissions'
@@ -58,6 +59,7 @@ export default buildConfig({
     Media,
     Categories,
     Articles,
+    Journals,
     PolicyReviews,
     ContactSubmissions,
     Subscribers,
@@ -69,7 +71,17 @@ export default buildConfig({
     defaultLocale: 'id',
     fallback: true,
   },
-  editor: lexicalEditor({}),
+  editor: lexicalEditor({
+    features: ({ defaultFeatures }) => [
+      // The default editor includes UploadFeature without a collection allow-list.
+      // Replace only that feature so inline rich-text uploads can use the shared
+      // Media library, never an arbitrary future upload collection.
+      ...defaultFeatures.filter((feature) => feature.key !== 'upload'),
+      UploadFeature({
+        enabledCollections: ['media'],
+      }),
+    ],
+  }),
   secret: process.env.PAYLOAD_SECRET || (process.env.NODE_ENV === 'production' ? (() => { throw new Error('PAYLOAD_SECRET is missing in production!') })() : 'fallback-secret-key'),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

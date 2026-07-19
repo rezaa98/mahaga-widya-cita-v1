@@ -1,5 +1,6 @@
 import { GlobalConfig } from "payload";
 import { universalGlobalAutoTranslate } from "../hooks/universalAutoTranslate";
+import { canManageSiteContent } from '../utils/access';
 
 export const Navbar: GlobalConfig = {
   slug: "navbar",
@@ -9,6 +10,7 @@ export const Navbar: GlobalConfig = {
   },
   access: {
     read: () => true,
+    update: canManageSiteContent,
   },
   hooks: {
     afterChange: [universalGlobalAutoTranslate],
@@ -86,6 +88,7 @@ export const Navbar: GlobalConfig = {
             { label: "Untuk Individu", href: "/artikel?kategori=individu" },
             { label: "Untuk Bisnis", href: "/artikel?kategori=bisnis" },
             { label: "Untuk Pemerintah", href: "/artikel?kategori=pemerintah" },
+            { label: "Jurnal", href: "/jurnal" },
             { label: "Policy Review", href: "/policy-reviews" },
           ],
         },

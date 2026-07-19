@@ -1,5 +1,6 @@
 import { GlobalConfig } from "payload";
 import { universalGlobalAutoTranslate } from "../hooks/universalAutoTranslate";
+import { canManageSiteContent } from '../utils/access';
 
 export const TentangKami: GlobalConfig = {
   slug: "tentang-kami",
@@ -9,6 +10,7 @@ export const TentangKami: GlobalConfig = {
   },
   access: {
     read: () => true,
+    update: canManageSiteContent,
   },
   hooks: {
     afterChange: [universalGlobalAutoTranslate],

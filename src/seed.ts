@@ -40,6 +40,7 @@ async function seed() {
       content: {
         root: {
           type: 'root',
+          direction: null,
           format: '',
           indent: 0,
           version: 1,
@@ -78,6 +79,7 @@ async function seed() {
       content: {
         root: {
           type: 'root',
+          direction: null,
           format: '',
           indent: 0,
           version: 1,
@@ -116,6 +118,7 @@ async function seed() {
       content: {
         root: {
           type: 'root',
+          direction: null,
           format: '',
           indent: 0,
           version: 1,

@@ -45,9 +45,14 @@ async function run() {
     console.log("3. Testing Create Team Member...");
     const teamMember = await payload.create({
       collection: 'team-members',
+      draft: false,
       data: {
         name: 'John Doe Regression',
+        initials: 'JDR',
+        category: 'management',
         role: 'Test Role',
+        expertise: 'Regression testing',
+        color: 'linear-gradient(135deg, #1E6FD9, #0B2D6B)',
         order: 99
       }
     });

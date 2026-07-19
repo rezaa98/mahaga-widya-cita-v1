@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { canManageAudience, canViewAudience } from '../utils/access'
 
 export const Subscribers: CollectionConfig = {
   slug: 'subscribers',
@@ -8,13 +9,10 @@ export const Subscribers: CollectionConfig = {
     defaultColumns: ['email', 'createdAt'],
   },
   access: {
-    read: ({ req }) => {
-      // Only authenticated users (admins) can read subscriber list
-      return !!req.user;
-    },
+    read: canViewAudience,
     create: () => true, // allow public subscriptions
-    update: () => false,
-    delete: () => false,
+    update: canManageAudience,
+    delete: canManageAudience,
   },
   fields: [
     {

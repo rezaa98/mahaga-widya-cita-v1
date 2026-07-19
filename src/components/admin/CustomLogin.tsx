@@ -26,7 +26,9 @@ export const CustomLogin = () => {
       const data = await res.json();
       if (res.ok && data.user) {
         // Force hard refresh to ensure Payload admin state picks up the cookie properly
-        window.location.href = '/admin';
+        window.location.href = ['admin', 'super_admin'].includes(data.user.role)
+          ? '/admin'
+          : '/admin/collections/articles';
       } else {
         setError(data.errors?.[0]?.message || 'Invalid email or password');
         setLoading(false);

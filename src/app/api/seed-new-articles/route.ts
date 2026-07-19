@@ -69,7 +69,8 @@ export async function GET(req: Request) {
       const contentObj = {
         root: {
           type: 'root',
-          format: '',
+          direction: null,
+          format: '' as const,
           indent: 0,
           version: 1,
           children: children,

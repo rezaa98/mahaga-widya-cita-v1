@@ -71,6 +71,9 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
     notFound();
   }
 
+  const benefits = service.benefits ?? [];
+  const targetAudience = service.targetAudience ?? [];
+
   return (
     <>
       <Navbar />
@@ -130,13 +133,13 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
               </div>
 
               {/* Benefits */}
-              {service.benefits?.length > 0 && (
+              {benefits.length > 0 && (
                 <div>
                   <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem", color: "var(--color-neutral-900)" }}>
                     {isEn ? 'Benefits for Your Institution' : 'Keuntungan bagi Instansi Anda'}
                   </h2>
                   <div style={{ display: "grid", gap: "1.5rem" }}>
-                    {service.benefits.map((b: any, idx: number) => (
+                    {benefits.map((b: any, idx: number) => (
                       <div key={idx} className="card" style={{ padding: "1.5rem", borderLeft: `4px solid ${service.color}` }}>
                         <h3 style={{ fontSize: "1.125rem", marginBottom: "0.5rem" }}>{b.title}</h3>
                         <p style={{ color: "var(--color-neutral-600)", fontSize: "0.9375rem" }}>{b.desc || b.description}</p>
@@ -148,7 +151,7 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
             </div>
 
             {/* Target Audience */}
-            {service.targetAudience?.length > 0 && (
+            {targetAudience.length > 0 && (
               <div className="card" style={{ padding: "3rem", background: "white", textAlign: "center" }}>
                 <div className="badge" style={{ background: "rgba(30,111,217,0.1)", color: "var(--color-primary-600)", marginBottom: "1rem", display: "inline-block" }}>
                   {isEn ? 'Suitability' : 'Kesesuaian'}
@@ -157,7 +160,7 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
                   {isEn ? 'Who Needs This Service?' : 'Siapa yang Membutuhkan Layanan Ini?'}
                 </h2>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1.5rem" }}>
-                  {service.targetAudience.map((ta: any, idx: number) => (
+                  {targetAudience.map((ta: any, idx: number) => (
                     <div key={idx} style={{ background: "var(--color-neutral-50)", padding: "1.5rem", borderRadius: "12px", border: "1px solid var(--color-neutral-200)" }}>
                       <span style={{ fontWeight: "500", color: "var(--color-neutral-800)" }}>{ta.audience}</span>
                     </div>

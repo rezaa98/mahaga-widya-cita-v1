@@ -5,35 +5,53 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@payloadcms/ui';
 import { startInteractiveTour } from './interactiveTour';
 import { HelpCenterModal } from './HelpCenterModal';
+import { hasCapability } from '@/utils/access';
 
-const menuGroups = [
-  {
-    label: 'CONTENT MANAGEMENT',
-    items: [
-      { label: 'Dashboard', href: '/admin', icon: 'grid_view' },
-      { label: 'Articles', href: '/admin/collections/articles', icon: 'article' },
-      { label: 'Categories', href: '/admin/collections/categories', icon: 'category' },
-      { label: 'Policy Reviews', href: '/admin/collections/policy-reviews', icon: 'policy' },
-    ]
-  },
-  {
-    label: 'WEBSITE MANAGEMENT',
-    items: [
-      { label: 'Landing Page', href: '/admin/globals/beranda', icon: 'web' },
-      { label: 'About Us', href: '/admin/globals/tentang-kami', icon: 'info' },
-      { label: 'Contact Us', href: '/admin/globals/kontak', icon: 'contact_mail' },
-      { label: 'Navbar', href: '/admin/globals/navbar', icon: 'menu' },
-      { label: 'Footer', href: '/admin/globals/footer', icon: 'border_bottom' },
-      { label: 'Services', href: '/admin/collections/services', icon: 'handshake' },
-      { label: 'Team Members', href: '/admin/collections/team-members', icon: 'group' },
-    ]
-  }
-];
+type MenuItem = { label: string; href: string; icon: string }
+
+function getMenuGroups(user: { role?: unknown } | null | undefined): { label: string; items: MenuItem[] }[] {
+  const canManageContent = hasCapability(user, 'manageContent')
+  const canReviewContent = hasCapability(user, 'reviewContent')
+  const canManageSite = hasCapability(user, 'manageSiteContent')
+  const canUseContent = canManageContent || canReviewContent
+
+  return [
+    {
+      label: 'CONTENT MANAGEMENT',
+      items: [
+        ...(canManageSite ? [{ label: 'Dashboard', href: '/admin', icon: 'grid_view' }] : []),
+        ...(canUseContent ? [
+          { label: 'Articles', href: '/admin/collections/articles', icon: 'article' },
+          { label: 'Journals', href: '/admin/collections/journals', icon: 'menu_book' },
+          { label: 'Policy Reviews', href: '/admin/collections/policy-reviews', icon: 'policy' },
+        ] : []),
+        ...(canManageContent ? [{ label: 'Categories', href: '/admin/collections/categories', icon: 'category' }] : []),
+      ],
+    },
+    {
+      label: 'WEBSITE MANAGEMENT',
+      items: canManageSite ? [
+        { label: 'Landing Page', href: '/admin/globals/beranda', icon: 'web' },
+        { label: 'About Us', href: '/admin/globals/tentang-kami', icon: 'info' },
+        { label: 'Contact Us', href: '/admin/globals/kontak', icon: 'contact_mail' },
+        { label: 'Navbar', href: '/admin/globals/navbar', icon: 'menu' },
+        { label: 'Footer', href: '/admin/globals/footer', icon: 'border_bottom' },
+        { label: 'Services', href: '/admin/collections/services', icon: 'handshake' },
+        { label: 'Team Members', href: '/admin/collections/team-members', icon: 'group' },
+      ] : [],
+    },
+  ].filter((group) => group.items.length > 0)
+}
 
 export const CustomNav: React.FC = () => {
   const pathname = usePathname();
   const { user } = useAuth();
   const [isHelpModalOpen, setIsHelpModalOpen] = React.useState(false);
+  // Payload's client auth type does not include project-specific fields, even
+  // though `role` is saved in the JWT by the Users collection.
+  const authUser = user as unknown as { role?: unknown } | null | undefined;
+  const menuGroups = getMenuGroups(authUser);
+  const canManageUsers = hasCapability(authUser, 'manageUsers');
 
   React.useEffect(() => {
     if (typeof window !== 'undefined' && window.location.search.includes('tour=1')) {
@@ -135,7 +153,7 @@ export const CustomNav: React.FC = () => {
       <div style={{ padding: '0 16px', marginTop: 'auto' }}>
         <div style={{ height: '1px', background: '#e4e6ee', marginBottom: '16px', margin: '0 8px 16px' }} />
         
-        <Link href="/admin/collections/users" style={{
+        {canManageUsers && <Link href="/admin/collections/users" style={{
           display: 'flex',
           alignItems: 'center',
           gap: '12px',
@@ -153,7 +171,7 @@ export const CustomNav: React.FC = () => {
             settings
           </span>
           Settings
-        </Link>
+        </Link>}
         
         <button onClick={(e) => { e.preventDefault(); setIsHelpModalOpen(true); }} style={{
           display: 'flex',

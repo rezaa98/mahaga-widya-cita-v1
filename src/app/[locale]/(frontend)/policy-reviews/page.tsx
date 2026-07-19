@@ -20,6 +20,7 @@ export default async function PolicyReviewsPage(props: { params: Promise<{ local
   
   const { docs: reviews } = await payload.find({
     collection: "policy-reviews",
+    where: { status: { equals: "published" } },
     sort: "-createdAt",
     locale: params.locale as any,
   });
@@ -69,7 +70,7 @@ export default async function PolicyReviewsPage(props: { params: Promise<{ local
                   </div>
                   
                   <div style={{ display: "flex", gap: "1rem", flexShrink: 0 }}>
-                    <Link href={`/policy-reviews/${review.slug || review.id}`} className="btn btn-outline" style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 1rem", fontSize: "0.9rem" }}>
+                    <Link href={`/${params.locale}/policy-reviews/${review.slug || review.id}`} className="btn btn-outline" style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 1rem", fontSize: "0.9rem" }}>
                       Baca Ringkasan <ArrowRight size={16} />
                     </Link>
                   </div>

@@ -9,21 +9,23 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, User, Share2, Link as LinkIcon, BookOpen, ArrowRight } from "lucide-react";
 import { IconLinkedin, IconXTwitter } from "@/components/icons/SocialIcons";
+import { getContentImage, getContentImageAlt, getLocalizedArticleHref, getLocalizedArticlesHref } from "@/utils/contentMedia";
 
 export const dynamic = "force-dynamic";
 
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const resolvedParams = await params;
   const payload = await getPayload({ config: configPromise });
   const { docs } = await payload.find({
     collection: "articles",
     where: {
-      slug: {
-        equals: resolvedParams.slug,
-      },
+      and: [
+        { slug: { equals: resolvedParams.slug } },
+        { status: { equals: "published" } },
+      ],
     },
-    locale: (resolvedParams as any).locale,
+    locale: resolvedParams.locale as any,
   });
 
   if (!docs || docs.length === 0) {
@@ -31,9 +33,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   const article = docs[0];
-  const imageUrl = typeof article.featuredImage === 'object' && article.featuredImage?.url 
-    ? article.featuredImage.url 
-    : undefined;
+  const imageUrl = getContentImage(article);
 
   return {
     title: `${article.title}`,
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       title: article.title,
       description: article.excerpt || `Baca selengkapnya mengenai ${article.title} di Mahaga Widya Cita.`,
-      url: `https://mahagawidyacita.co.id/artikel/${article.slug}`,
+      url: `https://mahagawidyacita.co.id/${resolvedParams.locale}/artikel/${article.slug}`,
       type: 'article',
       publishedTime: article.publishedAt || article.createdAt,
       images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : [],
@@ -55,17 +55,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function ArticleDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ArticleDetailPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const resolvedParams = await params;
   const payload = await getPayload({ config: configPromise });
   const { docs } = await payload.find({
     collection: "articles",
     where: {
-      slug: {
-        equals: resolvedParams.slug,
-      },
+      and: [
+        { slug: { equals: resolvedParams.slug } },
+        { status: { equals: "published" } },
+      ],
     },
-    locale: (resolvedParams as any).locale,
+    locale: resolvedParams.locale as any,
   });
 
   if (!docs || docs.length === 0) {
@@ -88,7 +89,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
       },
       sort: "-publishedAt",
       limit: 3,
-      locale: (resolvedParams as any).locale,
+      locale: resolvedParams.locale as any,
     });
     relatedDocs = rel;
   }
@@ -102,19 +103,21 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
       },
       sort: "-publishedAt",
       limit: 3 - relatedDocs.length,
-      locale: (resolvedParams as any).locale,
+      locale: resolvedParams.locale as any,
     });
     relatedDocs = [...relatedDocs, ...relFallback];
   }
 
-  const shareUrl = `https://mahagawidyacita.co.id/artikel/${article.slug}`;
+  const articleImage = getContentImage(article);
+  const articleImageAlt = getContentImageAlt(article, article.title);
+  const shareUrl = `https://mahagawidyacita.co.id${getLocalizedArticleHref(resolvedParams.locale, article.slug)}`;
 
   return (
     <>
       <Navbar />
       <main style={{ paddingTop: "120px", minHeight: "100vh", backgroundColor: "#f8f9fa", paddingBottom: "60px" }}>
         <div className="container" style={{ maxWidth: "800px" }}>
-          <Link href="/artikel" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "var(--color-primary-600)", textDecoration: "none", marginBottom: "2rem", fontWeight: 500 }}>
+          <Link href={getLocalizedArticlesHref(resolvedParams.locale)} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "var(--color-primary-600)", textDecoration: "none", marginBottom: "2rem", fontWeight: 500 }}>
             <ArrowLeft size={16} /> Kembali ke Artikel
           </Link>
           
@@ -147,9 +150,9 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
               </div>
             </div>
 
-            {article.imageUrl && (
+            {articleImage && (
               <div style={{ position: "relative", width: "100%", height: "400px", borderRadius: "12px", overflow: "hidden", marginBottom: "2.5rem" }}>
-                <Image src={article.imageUrl} alt={article.title} fill style={{ objectFit: "cover" }} priority sizes="100vw" />
+                <Image src={articleImage} alt={articleImageAlt} fill style={{ objectFit: "cover" }} priority sizes="(max-width: 832px) 100vw, 800px" />
               </div>
             )}
 
@@ -185,14 +188,14 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
             <div style={{ marginTop: "4rem" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem" }}>
                 <h3 style={{ fontSize: "1.5rem", color: "#1a2b4c", fontWeight: 700, margin: 0 }}>Baca Juga</h3>
-                <Link href="/artikel" style={{ color: "var(--color-primary-600)", fontWeight: 600, display: "flex", alignItems: "center", gap: "0.25rem", fontSize: "0.9rem", textDecoration: "none" }}>
+                <Link href={getLocalizedArticlesHref(resolvedParams.locale)} style={{ color: "var(--color-primary-600)", fontWeight: 600, display: "flex", alignItems: "center", gap: "0.25rem", fontSize: "0.9rem", textDecoration: "none" }}>
                   Lihat Semua <ArrowRight size={16} />
                 </Link>
               </div>
               
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "1.5rem" }}>
                 {relatedDocs.map((rel: any) => (
-                  <Link key={rel.id} href={`/artikel/${rel.slug || rel.id}`} style={{ textDecoration: "none", display: "block" }}>
+                  <Link key={rel.id} href={getLocalizedArticleHref(resolvedParams.locale, rel.slug || rel.id)} style={{ textDecoration: "none", display: "block" }}>
                     <div className="card" style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.03)" }}>
                       <div style={{ 
                         height: "150px", 
@@ -202,8 +205,8 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
                         justifyContent: "center",
                         color: "#94a3b8",
                         overflow: "hidden", position: "relative" }}>
-                        {rel.imageUrl ? (
-                          <Image src={rel.imageUrl} alt={rel.title} fill style={{ objectFit: "cover" }} sizes="(max-width: 768px) 100vw, 33vw" />
+                        {getContentImage(rel) ? (
+                          <Image src={getContentImage(rel)!} alt={getContentImageAlt(rel, rel.title)} fill style={{ objectFit: "cover" }} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 240px" />
                         ) : (
                           <BookOpen size={24} />
                         )}

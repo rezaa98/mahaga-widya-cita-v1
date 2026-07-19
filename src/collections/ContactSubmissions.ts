@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { canManageAudience, canViewAudience } from '../utils/access'
 
 export const ContactSubmissions: CollectionConfig = {
   slug: 'contact-submissions',
@@ -8,13 +9,10 @@ export const ContactSubmissions: CollectionConfig = {
     defaultColumns: ['name', 'email', 'subject', 'createdAt'],
   },
   access: {
-    read: ({ req }) => {
-      // Only authenticated users (admins) can read contact submissions
-      return !!req.user;
-    },
+    read: canViewAudience,
     create: () => true, // allow public form submissions
-    update: () => false,
-    delete: () => false,
+    update: canManageAudience,
+    delete: canManageAudience,
   },
   fields: [
     {

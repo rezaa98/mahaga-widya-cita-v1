@@ -13,8 +13,14 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const berandaData: any = await payload.findGlobal({ slug: "beranda", depth: 2, locale: locale as any });
   
   // Use CMS selected articles, otherwise fallback to latest 3
-  const articles = berandaData?.featuredData?.articles?.length > 0 
-    ? berandaData.featuredData.articles 
+  const selectedPublishedArticles = Array.isArray(berandaData?.featuredData?.articles)
+    ? berandaData.featuredData.articles.filter(
+        (article: any) => typeof article === 'object' && article?.status === 'published',
+      )
+    : [];
+
+  const articles = selectedPublishedArticles.length > 0
+    ? selectedPublishedArticles
     : (await payload.find({
         collection: "articles",
         where: {

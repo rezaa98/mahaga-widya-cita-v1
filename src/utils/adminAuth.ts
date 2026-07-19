@@ -14,6 +14,7 @@
 import { NextResponse } from 'next/server';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
+import { isAdminApiUser } from './access';
 
 const ADMIN_SECRET = process.env.ADMIN_API_SECRET || '';
 
@@ -28,16 +29,20 @@ export async function requireAdminAuth(req: Request): Promise<NextResponse | nul
     return null; // Authorized
   }
 
-  // Method 2: Check if the Payload CMS session user is authenticated
+  // Method 2: Check the Payload CMS session and its server-side role. A
+  // successful login alone is not enough for operational admin endpoints.
   try {
     const payload = await getPayload({ config: configPromise });
-    const { headers } = req as any;
-    const cookieHeader = headers?.get?.('cookie') || '';
-
-    // Use Payload's built-in auth — it reads the session cookie
-    const result = await (payload as any).auth({ headers: { cookie: cookieHeader } });
-    if (result?.user) {
+    const result = await (payload as any).auth({ headers: req.headers });
+    if (isAdminApiUser(result?.user)) {
       return null; // Authorized — user is logged in
+    }
+
+    if (result?.user) {
+      return NextResponse.json(
+        { error: 'Forbidden. Administrator role required.' },
+        { status: 403 }
+      );
     }
   } catch {
     // Ignore auth check errors — fall through to unauthorized

@@ -129,7 +129,12 @@ export async function GET(req: Request) {
     for (const service of newServices) {
       await payload.create({
         collection: 'services',
-        data: service,
+        data: {
+          ...service,
+          color: 'var(--color-primary-600)',
+          gradient: 'linear-gradient(135deg, #1E6FD9, #0B2D6B)',
+        },
+        draft: false,
         context: { skipAutoTranslate: false }, // trigger translation in webhook!
       });
     }

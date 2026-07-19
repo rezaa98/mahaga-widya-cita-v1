@@ -21,6 +21,9 @@ export async function GET(req: Request) {
       articlesTotal,
       articlesPublished,
       articlesDraft,
+      journalsTotal,
+      journalsPublished,
+      journalsDraft,
       usersTotal,
       subscribersTotal,
       mediaTotal,
@@ -31,6 +34,9 @@ export async function GET(req: Request) {
       payload.count({ collection: 'articles' }),
       payload.count({ collection: 'articles', where: { status: { equals: 'published' } } }),
       payload.count({ collection: 'articles', where: { status: { equals: 'draft' } } }),
+      payload.count({ collection: 'journals' }),
+      payload.count({ collection: 'journals', where: { status: { equals: 'published' } } }),
+      payload.count({ collection: 'journals', where: { status: { equals: 'draft' } } }),
       payload.count({ collection: 'users' }),
       payload.count({ collection: 'subscribers' }),
       payload.count({ collection: 'media' }),
@@ -46,9 +52,15 @@ export async function GET(req: Request) {
     ]);
 
     // --- Recent Activity (merge from multiple collections) ---
-    const [recentArticles, recentContacts, recentSubscribers, recentMedia] = await Promise.all([
+    const [recentArticles, recentJournals, recentContacts, recentSubscribers, recentMedia] = await Promise.all([
       payload.find({
         collection: 'articles',
+        limit: 5,
+        sort: '-updatedAt',
+        depth: 0,
+      }),
+      payload.find({
+        collection: 'journals',
         limit: 5,
         sort: '-updatedAt',
         depth: 0,
@@ -90,6 +102,16 @@ export async function GET(req: Request) {
         detail: doc.status === 'published' ? 'dipublikasikan' : 'diperbarui (draft)',
         time: doc.updatedAt,
         link: `/admin/collections/articles/${doc.id}`,
+      });
+    });
+
+    recentJournals.docs.forEach((doc: any) => {
+      activities.push({
+        type: 'journal',
+        label: `Jurnal "${doc.title}"`,
+        detail: doc.status === 'published' ? 'dipublikasikan' : 'diperbarui',
+        time: doc.updatedAt,
+        link: `/admin/collections/journals/${doc.id}`,
       });
     });
 
@@ -137,9 +159,13 @@ export async function GET(req: Request) {
       const weekEnd = new Date(now);
       weekEnd.setDate(weekEnd.getDate() - i * 7);
 
-      const [cArticles, cContacts, cSubscribers, cMedia] = await Promise.all([
+      const [cArticles, cJournals, cContacts, cSubscribers, cMedia] = await Promise.all([
         payload.count({
           collection: 'articles',
+          where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
+        }),
+        payload.count({
+          collection: 'journals',
           where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
         }),
         payload.count({
@@ -159,6 +185,7 @@ export async function GET(req: Request) {
       weeklyChartData.push({
         name: weekLabels[3 - i],
         articles: cArticles.totalDocs,
+        journals: cJournals.totalDocs,
         contacts: cContacts.totalDocs,
         subscribers: cSubscribers.totalDocs,
         media: cMedia.totalDocs,
@@ -171,6 +198,11 @@ export async function GET(req: Request) {
           total: articlesTotal.totalDocs,
           published: articlesPublished.totalDocs,
           draft: articlesDraft.totalDocs,
+        },
+        journals: {
+          total: journalsTotal.totalDocs,
+          published: journalsPublished.totalDocs,
+          draft: journalsDraft.totalDocs,
         },
         users: {
           total: usersTotal.totalDocs,

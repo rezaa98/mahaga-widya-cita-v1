@@ -6,6 +6,7 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 
 type Stats = {
   articles: { total: number; published: number; draft: number }
+  journals: { total: number; published: number; draft: number }
   users: { total: number }
   subscribers: { total: number; recentCount: number }
   media: { total: number }
@@ -13,7 +14,7 @@ type Stats = {
 }
 
 type ActivityItem = {
-  type: 'article' | 'contact' | 'subscriber' | 'media'
+  type: 'article' | 'journal' | 'contact' | 'subscriber' | 'media'
   label: string
   detail: string
   time: string
@@ -23,6 +24,7 @@ type ActivityItem = {
 type WeeklyChartData = {
   name: string
   articles: number
+  journals: number
   contacts: number
   subscribers: number
   media: number
@@ -384,6 +386,7 @@ function timeAgo(dateStr: string): string {
 function activityConfig(type: ActivityItem['type']): { bg: string; color: string; icon: string } {
   switch (type) {
     case 'article': return { bg: '#b4c5ff', color: '#004ac6', icon: 'edit_document' }
+    case 'journal': return { bg: '#ede9fe', color: '#6d28d9', icon: 'menu_book' }
     case 'contact': return { bg: '#fef3c7', color: '#b45309', icon: 'mail' }
     case 'subscriber': return { bg: '#dcfce7', color: '#15803d', icon: 'person_add' }
     case 'media': return { bg: '#e1e2ed', color: '#434655', icon: 'image' }
@@ -503,9 +506,9 @@ export const DashboardClient: React.FC = () => {
               <span style={styles.iconMedium}>post_add</span>
               Artikel Baru
             </a>
-            <a href="/admin/collections/users/create" style={styles.btnPrimary}>
-              <span style={styles.iconMedium}>person_add</span>
-              User Baru
+            <a href="/admin/collections/journals/create" style={styles.btnPrimary}>
+              <span style={styles.iconMedium}>note_add</span>
+              Jurnal Baru
             </a>
             <a href="/admin/collections/contact-submissions" style={styles.btnOutline}>
               <span style={styles.iconMedium}>mail</span>
@@ -621,27 +624,29 @@ export const DashboardClient: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Media */}
+                {/* Journals */}
                 <div style={styles.statCard}>
                   <div style={styles.statHeader}>
                     <div>
-                      <p style={styles.statLabel}>Media Files</p>
-                      <h3 style={styles.statValue}>{data.stats.media.total}</h3>
-                      <p style={styles.statSub}>{data.stats.users.total} admin users</p>
+                      <p style={styles.statLabel}>Total Jurnal</p>
+                      <h3 style={styles.statValue}>{data.stats.journals.total}</h3>
+                      <p style={styles.statSub}>
+                        {data.stats.journals.published} Published · {data.stats.journals.draft} Draft
+                      </p>
                     </div>
-                    <span style={styles.outlineIcon}>perm_media</span>
+                    <span style={styles.outlineIcon}>menu_book</span>
                   </div>
                   <div style={styles.sparklineContainer}>
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={data.weeklyChartData} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
                         <defs>
-                          <linearGradient id="colorMedia" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#64748b" stopOpacity={0.3}/>
-                            <stop offset="95%" stopColor="#64748b" stopOpacity={0}/>
+                          <linearGradient id="colorJournals" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#7c3aed" stopOpacity={0}/>
                           </linearGradient>
                         </defs>
                         <Tooltip content={<CustomTooltip />} cursor={false} />
-                        <Area type="monotone" dataKey="media" stroke="#64748b" fillOpacity={1} fill="url(#colorMedia)" strokeWidth={2} />
+                        <Area type="monotone" dataKey="journals" stroke="#7c3aed" fillOpacity={1} fill="url(#colorJournals)" strokeWidth={2} />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>

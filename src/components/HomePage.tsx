@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import TeamMemberCard from "@/components/ui/TeamMemberCard";
+import { getContentImage, getContentImageAlt, getLocalizedArticleHref, getLocalizedArticlesHref } from "@/utils/contentMedia";
 import {
   ArrowRight,
   Award,
@@ -318,7 +319,8 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
     readTime: isEn ? '5 min read' : '5 menit',
     categoryColor: "var(--color-primary-500)",
     categoryBg: "var(--color-primary-100)",
-    imageUrl: a.imageUrl,
+    imageUrl: getContentImage(a),
+    imageAlt: getContentImageAlt(a, a.title),
     slug: a.slug,
   })) : articles;
 
@@ -697,18 +699,18 @@ export default function HomePage({ articles: payloadArticles = [], teamMembers: 
               <h2 className="text-heading-xl" style={{ margin: "0" }}>{isEn ? 'Knowledge for Professionals' : 'Pengetahuan untuk Profesional'}</h2>
               <div className="gold-divider" style={{ margin: "0.75rem 0 0" }} />
             </div>
-            <Link href="/artikel" className="btn btn-secondary" id="see-all-articles">
+            <Link href={getLocalizedArticlesHref(locale)} className="btn btn-secondary" id="see-all-articles">
               {isEn ? 'View All Articles' : 'Lihat Semua Artikel'} <ArrowRight size={16} />
             </Link>
           </div>
 
           <div className="articles-grid" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
             {displayArticles.map((article: any) => (
-              <Link key={article.id} href={`/artikel/${article.slug}`} style={{ textDecoration: "none", display: "block", width: "100%", maxWidth: "360px", flexGrow: 1 }}>
+              <Link key={article.id} href={getLocalizedArticleHref(locale, article.slug || article.id)} style={{ textDecoration: "none", display: "block", width: "100%", maxWidth: "360px", flexGrow: 1 }}>
                 <div className="card" style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
                   {article.imageUrl ? (
                     <div style={{ height: "180px", backgroundColor: "#f1f5f9", position: "relative" }}>
-                      <Image src={article.imageUrl} alt={article.title} fill style={{ objectFit: "cover" }} sizes="(max-width: 768px) 100vw, 33vw" />
+                      <Image src={article.imageUrl} alt={article.imageAlt || article.title} fill style={{ objectFit: "cover" }} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 360px" />
                       <span
                         style={{
                           position: "absolute", top: "1rem", left: "1rem",

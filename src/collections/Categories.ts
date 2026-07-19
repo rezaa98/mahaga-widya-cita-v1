@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { universalCollectionAutoTranslate } from '../hooks/universalAutoTranslate'
+import { canManageContent } from '../utils/access'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
@@ -9,6 +10,9 @@ export const Categories: CollectionConfig = {
   },
   access: {
     read: () => true,
+    create: canManageContent,
+    update: canManageContent,
+    delete: canManageContent,
   },
   hooks: {
     afterChange: [universalCollectionAutoTranslate],
