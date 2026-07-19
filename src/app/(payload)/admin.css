@@ -1,0 +1,37 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
+
+:root,
+html,
+html[data-theme="light"],
+html[data-theme="dark"] {
+  --theme-bg: #f3f4f8;
+  --theme-elevation-0: #ffffff;
+  --theme-elevation-50: #f7f8fc;
+  --theme-elevation-100: #eef0f6;
+  --theme-elevation-150: #e4e6ee;
+  --theme-elevation-200: #dcdee8;
+  --theme-elevation-250: #d0d3df;
+  --theme-elevation-300: #c0c3d1;
+  --theme-elevation-350: #9da1b3;
+  --theme-elevation-400: #7a7e90;
+  --theme-elevation-450: #5c5f6e;
+  --theme-elevation-500: #434655;
+  --theme-elevation-600: #2e3039;
+  --theme-elevation-700: #1a1c27;
+  --theme-elevation-800: #0f1117;
+  --theme-elevation-900: #080a0e;
+  --theme-elevation-1000: #000000;
+
+  --theme-text: #1a1c27;
+
+  --theme-success-500: #16a34a;
+  --theme-error-500: #dc2626;
+  --theme-warning-500: #f59e0b;
+
+  --theme-input-bg: #ffffff;
+
+  --style-radius-s: 6px;
+  --style-radius-m: 8px;
+  --style-radius-l: 12px;
+}
