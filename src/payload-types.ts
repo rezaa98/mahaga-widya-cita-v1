@@ -239,6 +239,8 @@ export interface Category {
   createdAt: string;
 }
 /**
+ * Kelola draft, proses review, dan publikasi artikel. Gunakan tombol Preview untuk memeriksa artikel yang sudah dipublikasikan.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "articles".
  */
@@ -277,6 +279,9 @@ export interface Article {
   slug?: string | null;
   author?: (number | null) | User;
   category?: (number | null) | Category;
+  /**
+   * Editor dapat mengirim review; reviewer dapat menyetujui atau meminta revisi; hanya admin yang dapat menjadwalkan atau menerbitkan.
+   */
   status?: ('draft' | 'in_review' | 'revision_requested' | 'approved' | 'scheduled' | 'published' | 'archived') | null;
   reviewNotes?: string | null;
   publishedAt?: string | null;
@@ -284,6 +289,8 @@ export interface Article {
   createdAt: string;
 }
 /**
+ * Kelola metadata publikasi, dokumen PDF, proses review, dan status publikasi jurnal.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "journals".
  */
@@ -355,6 +362,9 @@ export interface Journal {
   slug: string;
   author?: (number | null) | User;
   category?: (number | null) | Category;
+  /**
+   * Editor dapat mengirim review; reviewer dapat menyetujui atau meminta revisi; hanya admin yang dapat menjadwalkan atau menerbitkan.
+   */
   status?: ('draft' | 'in_review' | 'revision_requested' | 'approved' | 'scheduled' | 'published' | 'archived') | null;
   reviewNotes?: string | null;
   publishedAt?: string | null;
