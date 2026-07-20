@@ -354,6 +354,7 @@ aside.nav {
 .nav__link[href*="/globals/kontak"]::before { content: "call" !important; }
 .nav__link[href*="/globals/footer"]::before { content: "dock" !important; }
 .nav__link[href*="/globals/navbar"]::before { content: "web" !important; }
+.nav__link[href*="/globals/pengaturan-fitur"]::before { content: "tune" !important; }
 
 /* --- Scrollable Timeline (Aktivitas Terbaru) --- */
 .mwc-activity__list {
