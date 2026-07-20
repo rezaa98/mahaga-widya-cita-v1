@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   
   let featureSettings: any = null;
   try {
-    featureSettings = await payload.findGlobal({ slug: 'pengaturan-fitur' });
+    featureSettings = await payload.findGlobal({ slug: 'pengaturan-fitur' as any });
   } catch (err) {
     // fallback
   }

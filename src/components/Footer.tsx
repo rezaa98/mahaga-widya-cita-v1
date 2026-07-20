@@ -65,7 +65,7 @@ export default async function Footer({ locale = 'id' }: { locale?: string }) {
   
   let featureSettings: any = null;
   try {
-    featureSettings = await payload.findGlobal({ slug: "pengaturan-fitur" });
+    featureSettings = await payload.findGlobal({ slug: "pengaturan-fitur" as any });
   } catch (e) {
     // default true
   }

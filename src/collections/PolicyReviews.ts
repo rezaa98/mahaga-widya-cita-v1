@@ -52,7 +52,7 @@ export const PolicyReviews: CollectionConfig = {
       if (!req?.user) return true
       if (req.user.role === 'super_admin') return false
       try {
-        const settings = await req.payload.findGlobal({ slug: 'pengaturan-fitur' })
+        const settings = await req.payload.findGlobal({ slug: 'pengaturan-fitur' as any })
         return settings?.enablePolicyReviews === false
       } catch (e) {
         return false
@@ -64,7 +64,7 @@ export const PolicyReviews: CollectionConfig = {
     // access to drafts so editorial work can happen safely in the admin.
     read: async ({ req }) => {
       try {
-        const settings = await req.payload.findGlobal({ slug: 'pengaturan-fitur' })
+        const settings = await req.payload.findGlobal({ slug: 'pengaturan-fitur' as any })
         if (settings?.enablePolicyReviews === false && req.user?.role !== 'super_admin') {
           return false
         }

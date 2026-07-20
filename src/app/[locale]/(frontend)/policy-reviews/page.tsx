@@ -21,7 +21,7 @@ export default async function PolicyReviewsPage(props: { params: Promise<{ local
 
   let featureSettings: any = null;
   try {
-    featureSettings = await payload.findGlobal({ slug: 'pengaturan-fitur' });
+    featureSettings = await payload.findGlobal({ slug: 'pengaturan-fitur' as any });
   } catch (e) {
     // fallback
   }
