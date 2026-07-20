@@ -384,7 +384,7 @@ export default function Navbar() {
               </div>
 
               <Link
-                href={`/${locale}/login`}
+                href="/admin"
                 className="btn btn-sm"
                 style={{
                   background: "transparent",
@@ -465,8 +465,8 @@ export default function Navbar() {
                 </div>
               ))}
               <div style={{ display: "flex", gap: "0.75rem", marginTop: "1.25rem" }}>
-                <Link href="/login" className="btn btn-secondary" style={{ flex: 1, justifyContent: "center" }}>
-                  Masuk
+                <Link href="/admin" className="btn btn-secondary" style={{ flex: 1, justifyContent: "center" }}>
+                  {locale === "en" ? "Login" : "Masuk"}
                 </Link>
               </div>
             </div>
