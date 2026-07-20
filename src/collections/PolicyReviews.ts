@@ -48,15 +48,9 @@ export const PolicyReviews: CollectionConfig = {
   admin: {
     group: { id: 'Manajemen Konten', en: 'Content Management' },
     useAsTitle: 'title',
-    hidden: async ({ req }) => {
-      if (!req?.user) return true
-      if (req.user.role === 'super_admin') return false
-      try {
-        const settings = await req.payload.findGlobal({ slug: 'pengaturan-fitur' as any })
-        return settings?.enablePolicyReviews === false
-      } catch (e) {
-        return false
-      }
+    hidden: ({ user }) => {
+      if (!user) return true
+      return false
     },
   },
   access: {
