@@ -178,15 +178,13 @@ export default async function JournalDetailPage({ params }: { params: Promise<Ro
                     alignItems: "center",
                   }}
                 >
-                  <span>
-                    <Calendar size={16} style={{ verticalAlign: "-3px", marginRight: 6, color: "#2563eb" }} />
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                    <Calendar size={16} style={{ color: "#2563eb", flexShrink: 0 }} />
                     {new Date(journal.publishedAt || journal.createdAt).toLocaleDateString(dateLocale, {
-                      year: "numeric",
                       month: "long",
-                      day: "numeric",
+                      year: "numeric",
                     })}
                   </span>
-                  {journal.publicationYear && <span>Tahun {journal.publicationYear}</span>}
                   {journal.doi && (
                     <a
                       href={`https://doi.org/${journal.doi}`}

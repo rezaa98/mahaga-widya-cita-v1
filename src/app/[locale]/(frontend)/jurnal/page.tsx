@@ -248,12 +248,20 @@ export default async function JournalListPage({
                       <p style={{ color: "#64748b", fontSize: 14, margin: 0 }}>
                         {authors.map((author: any) => author.name).join(", ") || "Mahaga Widya Cita"}
                       </p>
-                      <p style={{ color: "#64748b", fontSize: 13, marginTop: "auto" }}>
-                        <Calendar size={14} style={{ verticalAlign: "text-bottom", marginRight: 5 }} />
+                      <p
+                        style={{
+                          color: "#64748b",
+                          fontSize: 13,
+                          marginTop: "auto",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                        }}
+                      >
+                        <Calendar size={14} style={{ color: "#2563eb", flexShrink: 0 }} />
                         {new Date(journal.publishedAt || journal.createdAt).toLocaleDateString(dateLocale, {
+                          month: "long",
                           year: "numeric",
-                          month: "short",
-                          day: "numeric",
                         })}
                       </p>
                       <Link className="btn btn-outline" href={journalHref(locale, journal.slug || journal.id)}>
