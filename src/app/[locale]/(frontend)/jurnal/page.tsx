@@ -208,12 +208,26 @@ export default async function JournalListPage({
                     key={journal.id}
                     style={{ display: "flex", flexDirection: "column", overflow: "hidden" }}
                   >
-                    <div style={{ aspectRatio: "16 / 10", background: "#e8eef7", position: "relative" }}>
+                    <div
+                      style={{
+                        height: "190px",
+                        width: "100%",
+                        background: "#f1f5f9",
+                        position: "relative",
+                        overflow: "hidden",
+                      }}
+                    >
                       {cover ? (
                         <img
                           alt={mediaAlt(journal.coverImage, journal.title)}
                           src={cover}
-                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            objectPosition: "center top",
+                            display: "block",
+                          }}
                         />
                       ) : (
                         <FileText
