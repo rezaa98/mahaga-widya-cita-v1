@@ -215,7 +215,10 @@ export default async function JournalDetailPage({ params }: { params: Promise<Ro
                 >
                   <img
                     alt={mediaAlt(journal.coverImage, journal.title)}
-                    src={cover}
+                    src={cover || "/media/wiga-journal-cover.png"}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "/media/wiga-journal-cover.png";
+                    }}
                     style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                   />
                 </div>
