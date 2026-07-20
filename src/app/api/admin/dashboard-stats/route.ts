@@ -17,6 +17,24 @@ export async function GET(req: Request) {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     const thirtyDaysAgoISO = thirtyDaysAgo.toISOString();
 
+    const safeCount = async (args: any) => {
+      try {
+        return await payload.count(args);
+      } catch (err) {
+        console.error("[dashboard-stats] count error:", args.collection, err);
+        return { totalDocs: 0 };
+      }
+    };
+
+    const safeFind = async (args: any) => {
+      try {
+        return await payload.find(args);
+      } catch (err) {
+        console.error("[dashboard-stats] find error:", args.collection, err);
+        return { docs: [] };
+      }
+    };
+
     const [
       articlesTotal,
       articlesPublished,
@@ -31,21 +49,21 @@ export async function GET(req: Request) {
       contactsRecent,
       subscribersRecent,
     ] = await Promise.all([
-      payload.count({ collection: "articles" }),
-      payload.count({ collection: "articles", where: { status: { equals: "published" } } }),
-      payload.count({ collection: "articles", where: { status: { equals: "draft" } } }),
-      payload.count({ collection: "journals" }),
-      payload.count({ collection: "journals", where: { status: { equals: "published" } } }),
-      payload.count({ collection: "journals", where: { status: { equals: "draft" } } }),
-      payload.count({ collection: "users" }),
-      payload.count({ collection: "subscribers" }),
-      payload.count({ collection: "media" }),
-      payload.count({ collection: "contact-submissions" }),
-      payload.count({
+      safeCount({ collection: "articles" }),
+      safeCount({ collection: "articles", where: { status: { equals: "published" } } }),
+      safeCount({ collection: "articles", where: { status: { equals: "draft" } } }),
+      safeCount({ collection: "journals" }),
+      safeCount({ collection: "journals", where: { status: { equals: "published" } } }),
+      safeCount({ collection: "journals", where: { status: { equals: "draft" } } }),
+      safeCount({ collection: "users" }),
+      safeCount({ collection: "subscribers" }),
+      safeCount({ collection: "media" }),
+      safeCount({ collection: "contact-submissions" }),
+      safeCount({
         collection: "contact-submissions",
         where: { createdAt: { greater_than: thirtyDaysAgoISO } },
       }),
-      payload.count({
+      safeCount({
         collection: "subscribers",
         where: { createdAt: { greater_than: thirtyDaysAgoISO } },
       }),
@@ -53,31 +71,31 @@ export async function GET(req: Request) {
 
     // --- Recent Activity (merge from multiple collections) ---
     const [recentArticles, recentJournals, recentContacts, recentSubscribers, recentMedia] = await Promise.all([
-      payload.find({
+      safeFind({
         collection: "articles",
         limit: 5,
         sort: "-updatedAt",
         depth: 0,
       }),
-      payload.find({
+      safeFind({
         collection: "journals",
         limit: 5,
         sort: "-updatedAt",
         depth: 0,
       }),
-      payload.find({
+      safeFind({
         collection: "contact-submissions",
         limit: 5,
         sort: "-createdAt",
         depth: 0,
       }),
-      payload.find({
+      safeFind({
         collection: "subscribers",
         limit: 5,
         sort: "-createdAt",
         depth: 0,
       }),
-      payload.find({
+      safeFind({
         collection: "media",
         limit: 5,
         sort: "-createdAt",
@@ -160,23 +178,23 @@ export async function GET(req: Request) {
       weekEnd.setDate(weekEnd.getDate() - i * 7);
 
       const [cArticles, cJournals, cContacts, cSubscribers, cMedia] = await Promise.all([
-        payload.count({
+        safeCount({
           collection: "articles",
           where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
         }),
-        payload.count({
+        safeCount({
           collection: "journals",
           where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
         }),
-        payload.count({
+        safeCount({
           collection: "contact-submissions",
           where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
         }),
-        payload.count({
+        safeCount({
           collection: "subscribers",
           where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
         }),
-        payload.count({
+        safeCount({
           collection: "media",
           where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
         }),

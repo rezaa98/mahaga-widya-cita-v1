@@ -356,6 +356,10 @@ export interface Journal {
   pages?: string | null;
   doi?: string | null;
   issn?: string | null;
+  /**
+   * URL asli artikel dari OJS untuk tombol unduh/tautan eksternal
+   */
+  externalUrl?: string | null;
   authors: {
     name: string;
     affiliation?: string | null;
@@ -762,6 +766,7 @@ export interface JournalsSelect<T extends boolean = true> {
   pages?: T;
   doi?: T;
   issn?: T;
+  externalUrl?: T;
   authors?:
     | T
     | {

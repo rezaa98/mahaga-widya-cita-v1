@@ -33,7 +33,9 @@ export async function requireAdminAuth(req: Request): Promise<NextResponse | nul
   // successful login alone is not enough for operational admin endpoints.
   try {
     const payload = await getPayload({ config: configPromise });
-    const result = await (payload as any).auth({ headers: req.headers });
+    const { headers: getNextHeaders } = await import("next/headers");
+    const nextHeaders = await getNextHeaders();
+    const result = await payload.auth({ headers: nextHeaders });
     if (isAdminApiUser(result?.user)) {
       return null; // Authorized — user is logged in
     }
@@ -41,8 +43,8 @@ export async function requireAdminAuth(req: Request): Promise<NextResponse | nul
     if (result?.user) {
       return NextResponse.json({ error: "Forbidden. Administrator role required." }, { status: 403 });
     }
-  } catch {
-    // Ignore auth check errors — fall through to unauthorized
+  } catch (err) {
+    console.error("[requireAdminAuth] Error:", err);
   }
 
   return NextResponse.json({ error: "Unauthorized. Admin access required." }, { status: 401 });
