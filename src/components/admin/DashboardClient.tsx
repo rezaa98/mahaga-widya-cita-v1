@@ -213,7 +213,11 @@ export const DashboardClient: React.FC = () => {
         <nav className="mwc-actions" aria-label="Aksi cepat">
           {actionItems.map((item) => (
             <a className={item.primary ? 'mwc-action mwc-action--primary' : 'mwc-action'} href={item.href} key={item.href}>
-              <Icon>{item.icon}</Icon>{item.label}</a>)}</nav>
+              <Icon>{item.icon}</Icon>
+              {item.label}
+            </a>
+          ))}
+        </nav>
         {error && (
           <section className="mwc-dashboard__error" role="alert">
             <span><Icon>error</Icon>{error}</span>
