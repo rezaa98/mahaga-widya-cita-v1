@@ -63,10 +63,23 @@ export default async function Footer({ locale = 'id' }: { locale?: string }) {
   const companyDesc = footerData?.companyDescription || "Platform terdepan untuk edukasi profesional dan penguatan tata kelola bagi ASN dan profesional Indonesia.";
   const copyrightText = footerData?.copyrightText || "PT Mahaga Widya Cita. Hak Cipta Dilindungi.";
   
-  const displayCompanyLinks = footerData?.linksCompany?.length > 0 ? footerData.linksCompany : defaultFooterLinks.company;
-  const displayServicesLinks = dynamicServicesLinks.length > 0 
+  let featureSettings: any = null;
+  try {
+    featureSettings = await payload.findGlobal({ slug: "pengaturan-fitur" });
+  } catch (e) {
+    // default true
+  }
+  const isPolicyReviewsEnabled = featureSettings?.enablePolicyReviews !== false;
+
+  let displayCompanyLinks = footerData?.linksCompany?.length > 0 ? footerData.linksCompany : defaultFooterLinks.company;
+  let displayServicesLinks = dynamicServicesLinks.length > 0 
     ? dynamicServicesLinks 
     : (footerData?.linksServices?.length > 0 ? footerData.linksServices : defaultFooterLinks.services);
+
+  if (!isPolicyReviewsEnabled) {
+    displayCompanyLinks = displayCompanyLinks.filter((l: any) => !l.url?.includes('/policy-reviews') && l.label?.toLowerCase() !== 'policy review');
+    displayServicesLinks = displayServicesLinks.filter((l: any) => !l.url?.includes('/policy-reviews') && l.label?.toLowerCase() !== 'policy review');
+  }
   
   const displaySocials = footerData?.socialMedia?.length > 0 ? footerData.socialMedia : [
     { platform: "instagram", url: "#" },

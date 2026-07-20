@@ -60,11 +60,12 @@ export default function Navbar() {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
     
-    // Fetch dynamic navbar links and services from CMS with locale
+    // Fetch dynamic navbar links, services, and feature settings from CMS with locale
     Promise.all([
       fetch(`/api/globals/navbar?locale=${locale}`).then(res => res.json()).catch(() => null),
-      fetch(`/api/services?locale=${locale}&limit=10`).then(res => res.json()).catch(() => null)
-    ]).then(([navbarData, servicesData]) => {
+      fetch(`/api/services?locale=${locale}&limit=10`).then(res => res.json()).catch(() => null),
+      fetch(`/api/globals/pengaturan-fitur`).then(res => res.json()).catch(() => null),
+    ]).then(([navbarData, servicesData, featureData]) => {
       let currentLinks = [...defaultNavLinks];
       
       if (navbarData?.links && Array.isArray(navbarData.links) && navbarData.links.length > 0) {
@@ -93,6 +94,21 @@ export default function Navbar() {
             children: dynamicServiceChildren
           });
         }
+      }
+
+      const isPolicyReviewsEnabled = featureData?.enablePolicyReviews !== false;
+      if (!isPolicyReviewsEnabled) {
+        currentLinks = currentLinks.map((link: any) => {
+          if (link.children && Array.isArray(link.children)) {
+            return {
+              ...link,
+              children: link.children.filter((child: any) => 
+                !child.href?.includes('/policy-reviews') && child.label?.toLowerCase() !== 'policy review'
+              ),
+            }
+          }
+          return link;
+        }).filter((link: any) => !link.href?.includes('/policy-reviews'));
       }
       
       setLinks(currentLinks);

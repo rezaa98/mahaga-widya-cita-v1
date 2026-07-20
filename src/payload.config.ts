@@ -20,6 +20,7 @@ import { TentangKami } from './globals/TentangKami'
 import { Kontak } from './globals/Kontak'
 import { Footer } from './globals/Footer'
 import { Navbar } from './globals/Navbar'
+import { PengaturanFitur } from './globals/PengaturanFitur'
 
 import { id } from '@payloadcms/translations/languages/id'
 import { en } from '@payloadcms/translations/languages/en'
@@ -59,6 +60,7 @@ export default buildConfig({
     Kontak,
     Footer,
     Navbar,
+    PengaturanFitur,
   ],
   collections: [
     Users,

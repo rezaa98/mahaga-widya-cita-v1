@@ -48,11 +48,30 @@ export const PolicyReviews: CollectionConfig = {
   admin: {
     group: { id: 'Manajemen Konten', en: 'Content Management' },
     useAsTitle: 'title',
+    hidden: async ({ req }) => {
+      if (!req?.user) return true
+      if (req.user.role === 'super_admin') return false
+      try {
+        const settings = await req.payload.findGlobal({ slug: 'pengaturan-fitur' })
+        return settings?.enablePolicyReviews === false
+      } catch (e) {
+        return false
+      }
+    },
   },
   access: {
     // Public visitors can only retrieve published reviews. CMS users retain
     // access to drafts so editorial work can happen safely in the admin.
-    read: ({ req }) => {
+    read: async ({ req }) => {
+      try {
+        const settings = await req.payload.findGlobal({ slug: 'pengaturan-fitur' })
+        if (settings?.enablePolicyReviews === false && req.user?.role !== 'super_admin') {
+          return false
+        }
+      } catch (e) {
+        // Fallback
+      }
+
       if (req.user) return true
 
       // Records created before this workflow had no status and were already

@@ -11,7 +11,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Base routes
   const locales = ['id', 'en'];
   
-  const staticRoutes = [
+  let featureSettings: any = null;
+  try {
+    featureSettings = await payload.findGlobal({ slug: 'pengaturan-fitur' });
+  } catch (err) {
+    // fallback
+  }
+  const isPolicyReviewsEnabled = featureSettings?.enablePolicyReviews !== false;
+
+  const rawStaticRoutes = [
     "",
     "/tentang-kami",
     "/tim",
@@ -20,8 +28,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/kontak",
     "/artikel",
     "/jurnal",
-    "/policy-reviews"
-  ].flatMap((route) => locales.map((locale) => ({
+    ...(isPolicyReviewsEnabled ? ["/policy-reviews"] : []),
+  ];
+
+  const staticRoutes = rawStaticRoutes.flatMap((route) => locales.map((locale) => ({
     url: `${baseUrl}/${locale}${route}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
@@ -66,20 +76,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Dynamic policy reviews
   let policyRoutes: MetadataRoute.Sitemap = [];
-  try {
-    const { docs: policyReviews } = await payload.find({
-      collection: 'policy-reviews',
-      where: { status: { equals: 'published' } },
-      limit: 1000,
-    });
-    policyRoutes = policyReviews.flatMap((review) => locales.map((locale) => ({
-      url: `${baseUrl}/${locale}/policy-reviews/${review.slug}`,
-      lastModified: new Date(review.updatedAt || review.createdAt),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    })));
-  } catch (err) {
-    console.error('[sitemap] Failed to load policy reviews:', err);
+  if (isPolicyReviewsEnabled) {
+    try {
+      const { docs: policyReviews } = await payload.find({
+        collection: 'policy-reviews',
+        where: { status: { equals: 'published' } },
+        limit: 1000,
+      });
+      policyRoutes = policyReviews.flatMap((review) => locales.map((locale) => ({
+        url: `${baseUrl}/${locale}/policy-reviews/${review.slug}`,
+        lastModified: new Date(review.updatedAt || review.createdAt),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      })));
+    } catch (err) {
+      console.error('[sitemap] Failed to load policy reviews:', err);
+    }
   }
 
   // Dynamic services

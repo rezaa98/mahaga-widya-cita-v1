@@ -119,6 +119,10 @@ export const canBootstrapOrManageUsers: Access = async ({ req }): Promise<boolea
   return totalDocs === 0
 }
 
+export function isSuperAdminUser({ req }: { req: RequestWithUser }): boolean {
+  return getUserRole(req.user) === 'super_admin'
+}
+
 export function canManageSiteContent({ req }: { req: RequestWithUser }): boolean {
   return hasCapability(req.user, 'manageSiteContent')
 }
