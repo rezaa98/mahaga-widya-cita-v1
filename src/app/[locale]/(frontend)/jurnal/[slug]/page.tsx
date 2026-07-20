@@ -91,7 +91,10 @@ export default async function JournalDetailPage({ params }: { params: Promise<Ro
   }
 
   const cover = mediaURL(journal.coverImage) || (typeof journal.coverImage === "string" ? journal.coverImage : null);
-  const document = mediaURL(journal.document) || (typeof journal.document === "string" ? journal.document : null);
+  const document =
+    mediaURL(journal.document) ||
+    journal.externalUrl ||
+    (typeof journal.document === "string" ? journal.document : null);
   const authors = journalAuthors(journal);
   const isEn = resolved.locale === "en";
   const dateLocale = isEn ? "en-US" : "id-ID";
@@ -334,6 +337,8 @@ export default async function JournalDetailPage({ params }: { params: Promise<Ro
                   className="btn btn-primary"
                   download
                   href={document}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   style={{
                     padding: "12px 24px",
                     borderRadius: 10,

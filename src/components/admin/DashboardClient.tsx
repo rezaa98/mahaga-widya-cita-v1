@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { ImportJournalModal } from "./ImportJournalModal";
 
 type Stats = {
   articles: { total: number; published: number; draft: number };
@@ -298,6 +299,8 @@ export const DashboardClient: React.FC = () => {
           ? "Summary of your website content and activities."
           : "Ringkasan konten dan aktivitas website Anda.";
 
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+
   return (
     <main className="mwc-dashboard">
       <div className="mwc-dashboard__canvas">
@@ -324,7 +327,17 @@ export const DashboardClient: React.FC = () => {
               {item.label}
             </a>
           ))}
+          <button
+            type="button"
+            className="mwc-action mwc-action--primary"
+            onClick={() => setIsImportModalOpen(true)}
+            style={{ background: "#7e22ce", borderColor: "#7e22ce", cursor: "pointer" }}
+          >
+            <Icon>link</Icon>
+            {isEn ? "Import Journal (OJS Link)" : "Impor Jurnal (Link OJS)"}
+          </button>
         </nav>
+        <ImportJournalModal isOpen={isImportModalOpen} onClose={() => setIsImportModalOpen(false)} isEn={isEn} />
         {error && (
           <section className="mwc-dashboard__error" role="alert">
             <span>

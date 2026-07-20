@@ -32,7 +32,7 @@ function guardJournalStatusTransition({ data, originalDoc, operation, req }: any
 
   const nextStatus = data.status || originalDoc?.status || "draft";
 
-  if (canPublishContent({ req })) {
+  if (!req.user || canPublishContent({ req })) {
     if (nextStatus === "published" && originalDoc?.status !== "published" && !data.publishedAt) {
       data.publishedAt = new Date().toISOString();
     }
@@ -236,14 +236,21 @@ export const Journals: CollectionConfig = {
                   name: "doi",
                   type: "text",
                   label: "DOI",
-                  admin: { width: "50%" },
+                  admin: { width: "33%" },
                   access: { update: canManageContent },
                 },
                 {
                   name: "issn",
                   type: "text",
                   label: "ISSN",
-                  admin: { width: "50%" },
+                  admin: { width: "33%" },
+                  access: { update: canManageContent },
+                },
+                {
+                  name: "externalUrl",
+                  type: "text",
+                  label: "Link URL OJS / Jurnal Asli (Opsional)",
+                  admin: { width: "34%", description: "URL asli artikel dari OJS untuk tombol unduh/tautan eksternal" },
                   access: { update: canManageContent },
                 },
               ],
