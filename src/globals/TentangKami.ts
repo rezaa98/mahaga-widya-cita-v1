@@ -1,6 +1,6 @@
 import { GlobalConfig } from "payload";
 import { universalGlobalAutoTranslate } from "../hooks/universalAutoTranslate";
-import { canManageSiteContent } from '../utils/access';
+import { canManageSiteContent } from "../utils/access";
 
 export const TentangKami: GlobalConfig = {
   slug: "tentang-kami",

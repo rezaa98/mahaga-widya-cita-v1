@@ -1,16 +1,16 @@
-import type { CollectionConfig } from 'payload'
-import { canManageAudience, canViewAudience } from '../utils/access'
+import type { CollectionConfig } from "payload";
+import { canManageAudience, canViewAudience } from "../utils/access";
 
 export const Subscribers: CollectionConfig = {
-  slug: 'subscribers',
+  slug: "subscribers",
   labels: {
-    singular: { id: 'Pelanggan Newsletter', en: 'Subscriber' },
-    plural: { id: 'Subscribers', en: 'Subscribers' },
+    singular: { id: "Pelanggan Newsletter", en: "Subscriber" },
+    plural: { id: "Subscribers", en: "Subscribers" },
   },
   admin: {
-    group: { id: 'Data Audiens', en: 'Audience Data' },
-    useAsTitle: 'email',
-    defaultColumns: ['email', 'createdAt'],
+    group: { id: "Data Audiens", en: "Audience Data" },
+    useAsTitle: "email",
+    defaultColumns: ["email", "createdAt"],
   },
   access: {
     read: canViewAudience,
@@ -20,11 +20,11 @@ export const Subscribers: CollectionConfig = {
   },
   fields: [
     {
-      name: 'email',
-      type: 'email',
+      name: "email",
+      type: "email",
       required: true,
       unique: true,
-      label: 'Alamat Email',
+      label: "Alamat Email",
     },
   ],
-}
+};

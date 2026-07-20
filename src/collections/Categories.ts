@@ -1,16 +1,16 @@
-import type { CollectionConfig } from 'payload'
-import { universalCollectionAutoTranslate } from '../hooks/universalAutoTranslate'
-import { canManageContent } from '../utils/access'
+import type { CollectionConfig } from "payload";
+import { universalCollectionAutoTranslate } from "../hooks/universalAutoTranslate";
+import { canManageContent } from "../utils/access";
 
 export const Categories: CollectionConfig = {
-  slug: 'categories',
+  slug: "categories",
   labels: {
-    singular: { id: 'Kategori', en: 'Category' },
-    plural: { id: 'Kategori', en: 'Categories' },
+    singular: { id: "Kategori", en: "Category" },
+    plural: { id: "Kategori", en: "Categories" },
   },
   admin: {
-    group: { id: 'Manajemen Konten', en: 'Content Management' },
-    useAsTitle: 'name',
+    group: { id: "Manajemen Konten", en: "Content Management" },
+    useAsTitle: "name",
   },
   access: {
     read: () => true,
@@ -23,28 +23,36 @@ export const Categories: CollectionConfig = {
   },
   fields: [
     {
-      name: 'name',
-      type: 'text',
+      name: "name",
+      type: "text",
       required: true,
       localized: true,
     },
     {
-      name: 'slug',
-      type: 'text',
+      name: "slug",
+      type: "text",
       required: true,
       unique: true,
       admin: {
-        position: 'sidebar',
+        position: "sidebar",
       },
       hooks: {
         beforeValidate: [
           ({ value, data }) => {
-            if (value) return value.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
-            if (data?.name) return data.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
-            return value
+            if (value)
+              return value
+                .toLowerCase()
+                .replace(/ /g, "-")
+                .replace(/[^\w-]+/g, "");
+            if (data?.name)
+              return data.name
+                .toLowerCase()
+                .replace(/ /g, "-")
+                .replace(/[^\w-]+/g, "");
+            return value;
           },
         ],
       },
     },
   ],
-}
+};

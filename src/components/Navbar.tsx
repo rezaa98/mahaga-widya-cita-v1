@@ -48,93 +48,104 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [langDropdown, setLangDropdown] = useState(false);
-  
+
   const pathname = usePathname();
   const params = useParams();
-  const locale = (params?.locale as string) || 'id';
-  
-  const isDarkHero = pathname === `/${locale}` || pathname === `/${locale}/tentang-kami` || pathname === '/' || pathname === '/tentang-kami';
+  const locale = (params?.locale as string) || "id";
+
+  const isDarkHero =
+    pathname === `/${locale}` ||
+    pathname === `/${locale}/tentang-kami` ||
+    pathname === "/" ||
+    pathname === "/tentang-kami";
   const shouldBeSolid = scrolled || !isDarkHero;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
-    
+
     // Fetch dynamic navbar links, services, and feature settings from CMS with locale
     Promise.all([
-      fetch(`/api/globals/navbar?locale=${locale}`).then(res => res.json()).catch(() => null),
-      fetch(`/api/services?locale=${locale}&limit=10`).then(res => res.json()).catch(() => null),
-      fetch(`/api/globals/pengaturan-fitur`).then(res => res.json()).catch(() => null),
+      fetch(`/api/globals/navbar?locale=${locale}`)
+        .then((res) => res.json())
+        .catch(() => null),
+      fetch(`/api/services?locale=${locale}&limit=10`)
+        .then((res) => res.json())
+        .catch(() => null),
+      fetch(`/api/globals/pengaturan-fitur`)
+        .then((res) => res.json())
+        .catch(() => null),
     ]).then(([navbarData, servicesData, featureData]) => {
       let currentLinks = [...defaultNavLinks];
-      
+
       if (navbarData?.links && Array.isArray(navbarData.links) && navbarData.links.length > 0) {
         currentLinks = navbarData.links;
       }
-      
+
       // Inject live services into the "Layanan" / "Services" dropdown
       if (servicesData?.docs && Array.isArray(servicesData.docs)) {
         const dynamicServiceChildren = servicesData.docs.map((s: any) => ({
           label: s.title,
           href: `/layanan/${s.slug}`,
         }));
-        
+
         // Find the Services link (either 'Layanan' or 'Services')
-        const servicesLinkIndex = currentLinks.findIndex((l: any) => 
-          l.label.toLowerCase() === 'layanan' || l.label.toLowerCase() === 'services' || l.href?.includes('/layanan')
+        const servicesLinkIndex = currentLinks.findIndex(
+          (l: any) =>
+            l.label.toLowerCase() === "layanan" || l.label.toLowerCase() === "services" || l.href?.includes("/layanan"),
         );
-        
+
         if (servicesLinkIndex !== -1) {
           currentLinks[servicesLinkIndex].children = dynamicServiceChildren;
         } else {
           // If not found, add it
           currentLinks.splice(1, 0, {
-            label: locale === 'en' ? 'Services' : 'Layanan',
+            label: locale === "en" ? "Services" : "Layanan",
             href: `/layanan`,
-            children: dynamicServiceChildren
+            children: dynamicServiceChildren,
           });
         }
       }
 
       const isPolicyReviewsEnabled = featureData?.enablePolicyReviews !== false;
       if (!isPolicyReviewsEnabled) {
-        currentLinks = currentLinks.map((link: any) => {
-          if (link.children && Array.isArray(link.children)) {
-            return {
-              ...link,
-              children: link.children.filter((child: any) => 
-                !child.href?.includes('/policy-reviews') && child.label?.toLowerCase() !== 'policy review'
-              ),
+        currentLinks = currentLinks
+          .map((link: any) => {
+            if (link.children && Array.isArray(link.children)) {
+              return {
+                ...link,
+                children: link.children.filter(
+                  (child: any) =>
+                    !child.href?.includes("/policy-reviews") && child.label?.toLowerCase() !== "policy review",
+                ),
+              };
             }
-          }
-          return link;
-        }).filter((link: any) => !link.href?.includes('/policy-reviews'));
+            return link;
+          })
+          .filter((link: any) => !link.href?.includes("/policy-reviews"));
       }
-      
+
       setLinks(currentLinks);
     });
-      
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, [locale]);
 
   const switchLanguage = (newLocale: string) => {
     if (newLocale === locale) return;
-    const currentPath = pathname || '/';
+    const currentPath = pathname || "/";
     // Remove the current locale prefix from the path if it exists
-    const pathWithoutLocale = currentPath.startsWith(`/${locale}`) 
-      ? currentPath.replace(`/${locale}`, '') 
+    const pathWithoutLocale = currentPath.startsWith(`/${locale}`)
+      ? currentPath.replace(`/${locale}`, "")
       : currentPath;
-    
-    const newPath = `/${newLocale}${pathWithoutLocale.startsWith('/') ? pathWithoutLocale : '/' + pathWithoutLocale}`;
+
+    const newPath = `/${newLocale}${pathWithoutLocale.startsWith("/") ? pathWithoutLocale : "/" + pathWithoutLocale}`;
     window.location.href = newPath;
   };
 
   return (
     <>
-      <nav
-        className={`navbar ${shouldBeSolid ? "scrolled" : "transparent"}`}
-        style={{ padding: "0" }}
-      >
+      <nav className={`navbar ${shouldBeSolid ? "scrolled" : "transparent"}`} style={{ padding: "0" }}>
         <div className="container">
           <div
             style={{
@@ -147,12 +158,12 @@ export default function Navbar() {
           >
             {/* Logo */}
             <Link href="/" style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexShrink: 0 }}>
-              <Image 
-                src="/logo-transparent.png" 
-                alt="Logo PT Mahaga Widya Cita" 
-                width={48} 
-                height={48} 
-                style={{ objectFit: 'contain' }}
+              <Image
+                src="/logo-transparent.png"
+                alt="Logo PT Mahaga Widya Cita"
+                width={48}
+                height={48}
+                style={{ objectFit: "contain" }}
               />
               <span
                 className="logo-text"
@@ -189,7 +200,7 @@ export default function Navbar() {
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
                   <Link
-                    href={link.href && link.href.startsWith('/') ? `/${locale}${link.href}` : (link.href || '#')}
+                    href={link.href && link.href.startsWith("/") ? `/${locale}${link.href}` : link.href || "#"}
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -245,31 +256,33 @@ export default function Navbar() {
                           animation: "fadeInUp 0.2s ease",
                         }}
                       >
-                      {link.children.map((child: any) => (
-                        <Link
-                          key={child.label}
-                          href={(child.href && child.href.startsWith('/')) ? `/${locale}${child.href}` : (child.href || '#')}
-                          style={{
-                            display: "block",
-                            padding: "0.625rem 0.875rem",
-                            fontSize: "0.875rem",
-                            fontWeight: "500",
-                            color: "var(--color-neutral-700)",
-                            borderRadius: "8px",
-                            transition: "all 0.15s ease",
-                          }}
-                          onMouseOver={(e) => {
-                            (e.currentTarget as HTMLElement).style.background = "var(--color-primary-50)";
-                            (e.currentTarget as HTMLElement).style.color = "var(--color-primary-600)";
-                          }}
-                          onMouseOut={(e) => {
-                            (e.currentTarget as HTMLElement).style.background = "transparent";
-                            (e.currentTarget as HTMLElement).style.color = "var(--color-neutral-700)";
-                          }}
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
+                        {link.children.map((child: any) => (
+                          <Link
+                            key={child.label}
+                            href={
+                              child.href && child.href.startsWith("/") ? `/${locale}${child.href}` : child.href || "#"
+                            }
+                            style={{
+                              display: "block",
+                              padding: "0.625rem 0.875rem",
+                              fontSize: "0.875rem",
+                              fontWeight: "500",
+                              color: "var(--color-neutral-700)",
+                              borderRadius: "8px",
+                              transition: "all 0.15s ease",
+                            }}
+                            onMouseOver={(e) => {
+                              (e.currentTarget as HTMLElement).style.background = "var(--color-primary-50)";
+                              (e.currentTarget as HTMLElement).style.color = "var(--color-primary-600)";
+                            }}
+                            onMouseOut={(e) => {
+                              (e.currentTarget as HTMLElement).style.background = "transparent";
+                              (e.currentTarget as HTMLElement).style.color = "var(--color-neutral-700)";
+                            }}
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
                       </div>
                     </div>
                   )}
@@ -278,10 +291,11 @@ export default function Navbar() {
             </div>
 
             {/* Language Switcher & CTA Buttons */}
-            <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexShrink: 0 }}
+            <div
+              style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexShrink: 0 }}
               className="desktop-nav"
             >
-              <div 
+              <div
                 style={{ position: "relative" }}
                 onMouseEnter={() => setLangDropdown(true)}
                 onMouseLeave={() => setLangDropdown(false)}
@@ -325,15 +339,15 @@ export default function Navbar() {
                       }}
                     >
                       <button
-                        onClick={() => switchLanguage('id')}
+                        onClick={() => switchLanguage("id")}
                         style={{
                           display: "block",
                           width: "100%",
                           textAlign: "left",
                           padding: "0.5rem 0.75rem",
                           fontSize: "0.875rem",
-                          color: locale === 'id' ? "var(--color-primary-600)" : "var(--color-neutral-700)",
-                          fontWeight: locale === 'id' ? "700" : "500",
+                          color: locale === "id" ? "var(--color-primary-600)" : "var(--color-neutral-700)",
+                          fontWeight: locale === "id" ? "700" : "500",
                           background: "transparent",
                           border: "none",
                           cursor: "pointer",
@@ -345,15 +359,15 @@ export default function Navbar() {
                         ID - Indonesia
                       </button>
                       <button
-                        onClick={() => switchLanguage('en')}
+                        onClick={() => switchLanguage("en")}
                         style={{
                           display: "block",
                           width: "100%",
                           textAlign: "left",
                           padding: "0.5rem 0.75rem",
                           fontSize: "0.875rem",
-                          color: locale === 'en' ? "var(--color-primary-600)" : "var(--color-neutral-700)",
-                          fontWeight: locale === 'en' ? "700" : "500",
+                          color: locale === "en" ? "var(--color-primary-600)" : "var(--color-neutral-700)",
+                          fontWeight: locale === "en" ? "700" : "500",
                           background: "transparent",
                           border: "none",
                           cursor: "pointer",
@@ -380,7 +394,7 @@ export default function Navbar() {
                   transition: "all 0.25s ease",
                 }}
               >
-                {locale === 'en' ? 'Login' : 'Masuk'}
+                {locale === "en" ? "Login" : "Masuk"}
               </Link>
             </div>
 
@@ -418,7 +432,7 @@ export default function Navbar() {
               {links.map((link) => (
                 <div key={link.label}>
                   <Link
-                    href={link.href && link.href.startsWith('/') ? `/${locale}${link.href}` : (link.href || '#')}
+                    href={link.href && link.href.startsWith("/") ? `/${locale}${link.href}` : link.href || "#"}
                     onClick={() => setMobileOpen(false)}
                     style={{
                       display: "block",
@@ -435,7 +449,7 @@ export default function Navbar() {
                   {link.children?.map((child: any) => (
                     <Link
                       key={child.label}
-                      href={(child.href && child.href.startsWith('/')) ? `/${locale}${child.href}` : (child.href || '#')}
+                      href={child.href && child.href.startsWith("/") ? `/${locale}${child.href}` : child.href || "#"}
                       onClick={() => setMobileOpen(false)}
                       style={{
                         display: "block",

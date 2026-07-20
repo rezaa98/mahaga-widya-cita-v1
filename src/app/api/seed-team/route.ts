@@ -1,36 +1,120 @@
-import { getPayload } from 'payload'
-import configPromise from '@payload-config'
-import { NextResponse } from 'next/server'
-import path from 'path'
-import fs from 'fs'
-import { requireAdminAuth } from '@/utils/adminAuth'
+import { getPayload } from "payload";
+import configPromise from "@payload-config";
+import { NextResponse } from "next/server";
+import path from "path";
+import fs from "fs";
+import { requireAdminAuth } from "@/utils/adminAuth";
 
-const BRAIN_DIR = path.join(process.cwd(), 'public/media');
+const BRAIN_DIR = path.join(process.cwd(), "public/media");
 
 const management = [
-  { initials: "EL", name: "Prof. Dr. Hj. Endang Larasati, M.S.", category: "management" as const, role: "Direktur Utama", expertise: "Administrasi Publik & Kebijakan Pemerintahan", bio: "Guru Besar Administrasi Publik dengan pengalaman 30+ tahun di bidang reformasi birokrasi dan penguatan tata kelola pemerintahan. Aktif sebagai konsultan di berbagai kementerian dan lembaga nasional.", color: "linear-gradient(135deg, #1E6FD9, #0B2D6B)", order: 1, imageFile: "prof_endang_1783667447330.png" },
-  { initials: "OR", name: "Dr. Oscar Radyan Danar, M.A.", category: "management" as const, role: "Direktur Program", expertise: "Kebijakan Publik & Reformasi Birokrasi", bio: "Doktor kebijakan publik dengan spesialisasi reformasi birokrasi dan inovasi pelayanan publik. Penulis lebih dari 20 jurnal ilmiah dan pembicara di 100+ forum nasional dan internasional.", color: "linear-gradient(135deg, #C9970A, #A07508)", order: 2, imageFile: "dr_oscar_1783667480247.png" },
-  { initials: "RF", name: "Rizki Firmansyah, M.Sc.", category: "management" as const, role: "Direktur Teknologi", expertise: "Transformasi Digital & IT Governance", bio: "Spesialis transformasi digital sektor publik dengan pengalaman memimpin proyek SPBE di 15+ instansi pemerintah. Bersertifikasi CISA dan COBIT 2019.", color: "linear-gradient(135deg, #7C3AED, #5B21B6)", order: 3, imageFile: "rizki_firmansyah_1783667489175.png" },
+  {
+    initials: "EL",
+    name: "Prof. Dr. Hj. Endang Larasati, M.S.",
+    category: "management" as const,
+    role: "Direktur Utama",
+    expertise: "Administrasi Publik & Kebijakan Pemerintahan",
+    bio: "Guru Besar Administrasi Publik dengan pengalaman 30+ tahun di bidang reformasi birokrasi dan penguatan tata kelola pemerintahan. Aktif sebagai konsultan di berbagai kementerian dan lembaga nasional.",
+    color: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
+    order: 1,
+    imageFile: "prof_endang_1783667447330.png",
+  },
+  {
+    initials: "OR",
+    name: "Dr. Oscar Radyan Danar, M.A.",
+    category: "management" as const,
+    role: "Direktur Program",
+    expertise: "Kebijakan Publik & Reformasi Birokrasi",
+    bio: "Doktor kebijakan publik dengan spesialisasi reformasi birokrasi dan inovasi pelayanan publik. Penulis lebih dari 20 jurnal ilmiah dan pembicara di 100+ forum nasional dan internasional.",
+    color: "linear-gradient(135deg, #C9970A, #A07508)",
+    order: 2,
+    imageFile: "dr_oscar_1783667480247.png",
+  },
+  {
+    initials: "RF",
+    name: "Rizki Firmansyah, M.Sc.",
+    category: "management" as const,
+    role: "Direktur Teknologi",
+    expertise: "Transformasi Digital & IT Governance",
+    bio: "Spesialis transformasi digital sektor publik dengan pengalaman memimpin proyek SPBE di 15+ instansi pemerintah. Bersertifikasi CISA dan COBIT 2019.",
+    color: "linear-gradient(135deg, #7C3AED, #5B21B6)",
+    order: 3,
+    imageFile: "rizki_firmansyah_1783667489175.png",
+  },
 ];
 
 const experts = [
-  { initials: "AB", name: "Prof. Dr. Ahmad Basori, M.M.", category: "expert" as const, expertise: "Manajemen Keuangan Daerah & APBD", institution: "Universitas Indonesia", color: "linear-gradient(135deg, #059669, #047857)", order: 4, imageFile: "prof_ahmad_1783667505471.png" },
-  { initials: "SD", name: "Sari Dewi Purnama, S.Psi., M.Si.", category: "expert" as const, expertise: "Psikologi Organisasi & Manajemen SDM", institution: "Universitas Gadjah Mada", color: "linear-gradient(135deg, #DC2626, #B91C1C)", order: 5, imageFile: "sari_dewi_1783667556008.png" },
-  { initials: "BW", name: "Dr. Bambang Wiyono, S.H., M.H.", category: "expert" as const, expertise: "Hukum Administrasi & Regulasi Publik", institution: "Universitas Diponegoro", color: "linear-gradient(135deg, #0891B2, #0E7490)", order: 6, imageFile: "dr_bambang_1783667514730.png" },
-  { initials: "RA", name: "Rudi Ardiansyah, M.Kom.", category: "expert" as const, expertise: "Sistem Informasi & Keamanan Siber", institution: "Institut Teknologi Bandung", color: "linear-gradient(135deg, #D97706, #B45309)", order: 7, imageFile: "rudi_ardiansyah_1783667564948.png" },
-  { initials: "NA", name: "Nurul Aini, M.Pd.", category: "expert" as const, expertise: "Pendidikan Profesional & Kurikulum", institution: "Universitas Pendidikan Indonesia", color: "linear-gradient(135deg, #7C3AED, #6D28D9)", order: 8, imageFile: "nurul_aini_1783667603562.png" },
-  { initials: "HS", name: "Dr. Hendra Saputra, M.Sos.", category: "expert" as const, expertise: "Sosiologi Pemerintahan & Otonomi Daerah", institution: "Universitas Airlangga", color: "linear-gradient(135deg, #0B2D6B, #1247A8)", order: 9, imageFile: "dr_hendra_1783667613293.png" },
+  {
+    initials: "AB",
+    name: "Prof. Dr. Ahmad Basori, M.M.",
+    category: "expert" as const,
+    expertise: "Manajemen Keuangan Daerah & APBD",
+    institution: "Universitas Indonesia",
+    color: "linear-gradient(135deg, #059669, #047857)",
+    order: 4,
+    imageFile: "prof_ahmad_1783667505471.png",
+  },
+  {
+    initials: "SD",
+    name: "Sari Dewi Purnama, S.Psi., M.Si.",
+    category: "expert" as const,
+    expertise: "Psikologi Organisasi & Manajemen SDM",
+    institution: "Universitas Gadjah Mada",
+    color: "linear-gradient(135deg, #DC2626, #B91C1C)",
+    order: 5,
+    imageFile: "sari_dewi_1783667556008.png",
+  },
+  {
+    initials: "BW",
+    name: "Dr. Bambang Wiyono, S.H., M.H.",
+    category: "expert" as const,
+    expertise: "Hukum Administrasi & Regulasi Publik",
+    institution: "Universitas Diponegoro",
+    color: "linear-gradient(135deg, #0891B2, #0E7490)",
+    order: 6,
+    imageFile: "dr_bambang_1783667514730.png",
+  },
+  {
+    initials: "RA",
+    name: "Rudi Ardiansyah, M.Kom.",
+    category: "expert" as const,
+    expertise: "Sistem Informasi & Keamanan Siber",
+    institution: "Institut Teknologi Bandung",
+    color: "linear-gradient(135deg, #D97706, #B45309)",
+    order: 7,
+    imageFile: "rudi_ardiansyah_1783667564948.png",
+  },
+  {
+    initials: "NA",
+    name: "Nurul Aini, M.Pd.",
+    category: "expert" as const,
+    expertise: "Pendidikan Profesional & Kurikulum",
+    institution: "Universitas Pendidikan Indonesia",
+    color: "linear-gradient(135deg, #7C3AED, #6D28D9)",
+    order: 8,
+    imageFile: "nurul_aini_1783667603562.png",
+  },
+  {
+    initials: "HS",
+    name: "Dr. Hendra Saputra, M.Sos.",
+    category: "expert" as const,
+    expertise: "Sosiologi Pemerintahan & Otonomi Daerah",
+    institution: "Universitas Airlangga",
+    color: "linear-gradient(135deg, #0B2D6B, #1247A8)",
+    order: 9,
+    imageFile: "dr_hendra_1783667613293.png",
+  },
 ];
 
 export async function GET(req: Request) {
   const authError = await requireAdminAuth(req);
   if (authError) return authError;
   try {
-    const payload = await getPayload({ config: configPromise })
+    const payload = await getPayload({ config: configPromise });
 
     // Clear existing team members to avoid duplicates
     await payload.delete({
-      collection: 'team-members',
+      collection: "team-members",
       where: {
         id: {
           exists: true,
@@ -40,13 +124,13 @@ export async function GET(req: Request) {
 
     for (const data of [...management, ...experts]) {
       let mediaId = null;
-      
+
       // Upload media if file exists
       const filePath = path.join(BRAIN_DIR, data.imageFile);
       if (fs.existsSync(filePath)) {
         try {
           const media = await payload.create({
-            collection: 'media',
+            collection: "media",
             data: { alt: `Photo of ${data.name}` },
             filePath,
           });
@@ -57,9 +141,9 @@ export async function GET(req: Request) {
       }
 
       const { imageFile, ...payloadData } = data;
-      
+
       await payload.create({
-        collection: 'team-members',
+        collection: "team-members",
         data: {
           ...payloadData,
           photo: mediaId,
@@ -67,9 +151,9 @@ export async function GET(req: Request) {
       });
     }
 
-    return NextResponse.json({ message: 'Team successfully seeded with generated photos!' })
+    return NextResponse.json({ message: "Team successfully seeded with generated photos!" });
   } catch (error) {
-    console.error(error)
-    return NextResponse.json({ error: 'Failed to seed team' }, { status: 500 })
+    console.error(error);
+    return NextResponse.json({ error: "Failed to seed team" }, { status: 500 });
   }
 }

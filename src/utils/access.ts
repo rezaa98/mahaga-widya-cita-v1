@@ -1,4 +1,4 @@
-import type { Access, AccessResult } from 'payload'
+import type { Access, AccessResult } from "payload";
 
 /**
  * Roles are deliberately kept independent from generated Payload types so they
@@ -8,77 +8,75 @@ import type { Access, AccessResult } from 'payload'
  * `member` is retained only for existing accounts created before Sprint 1. It
  * has read-only access to the CMS and should be migrated to a named role.
  */
-export const USER_ROLES = ['super_admin', 'admin', 'editor', 'reviewer', 'member'] as const
+export const USER_ROLES = ["super_admin", "admin", "editor", "reviewer", "member"] as const;
 
-export type UserRole = (typeof USER_ROLES)[number]
+export type UserRole = (typeof USER_ROLES)[number];
 
 export type Capability =
-  | 'accessAdmin'
-  | 'manageUsers'
-  | 'manageSiteContent'
-  | 'manageContent'
-  | 'reviewContent'
-  | 'publishContent'
-  | 'manageMedia'
-  | 'viewAudience'
-  | 'manageAudience'
+  | "accessAdmin"
+  | "manageUsers"
+  | "manageSiteContent"
+  | "manageContent"
+  | "reviewContent"
+  | "publishContent"
+  | "manageMedia"
+  | "viewAudience"
+  | "manageAudience";
 
-type UserLike = { id?: number | string; role?: unknown } | null | undefined
-type RequestWithUser = { user?: UserLike }
+type UserLike = { id?: number | string; role?: unknown } | null | undefined;
+type RequestWithUser = { user?: UserLike };
 
 const capabilityMatrix: Record<UserRole, readonly Capability[]> = {
   super_admin: [
-    'accessAdmin',
-    'manageUsers',
-    'manageSiteContent',
-    'manageContent',
-    'reviewContent',
-    'publishContent',
-    'manageMedia',
-    'viewAudience',
-    'manageAudience',
+    "accessAdmin",
+    "manageUsers",
+    "manageSiteContent",
+    "manageContent",
+    "reviewContent",
+    "publishContent",
+    "manageMedia",
+    "viewAudience",
+    "manageAudience",
   ],
   admin: [
-    'accessAdmin',
-    'manageUsers',
-    'manageSiteContent',
-    'manageContent',
-    'reviewContent',
-    'publishContent',
-    'manageMedia',
-    'viewAudience',
-    'manageAudience',
+    "accessAdmin",
+    "manageUsers",
+    "manageSiteContent",
+    "manageContent",
+    "reviewContent",
+    "publishContent",
+    "manageMedia",
+    "viewAudience",
+    "manageAudience",
   ],
-  editor: ['accessAdmin', 'manageContent', 'manageMedia'],
-  reviewer: ['accessAdmin', 'reviewContent'],
-  member: ['accessAdmin'],
-}
+  editor: ["accessAdmin", "manageContent", "manageMedia"],
+  reviewer: ["accessAdmin", "reviewContent"],
+  member: ["accessAdmin"],
+};
 
 export function getUserRole(user: UserLike): UserRole | null {
-  if (!user || typeof user.role !== 'string') return null
+  if (!user || typeof user.role !== "string") return null;
 
-  return (USER_ROLES as readonly string[]).includes(user.role)
-    ? (user.role as UserRole)
-    : null
+  return (USER_ROLES as readonly string[]).includes(user.role) ? (user.role as UserRole) : null;
 }
 
 export function hasCapability(user: UserLike, capability: Capability): boolean {
-  const role = getUserRole(user)
-  return role ? capabilityMatrix[role].includes(capability) : false
+  const role = getUserRole(user);
+  return role ? capabilityMatrix[role].includes(capability) : false;
 }
 
 export function isAdminUser(user: UserLike): boolean {
-  return hasCapability(user, 'accessAdmin')
+  return hasCapability(user, "accessAdmin");
 }
 
 /** Server-side utility routes are reserved for operational administrators. */
 export function isAdminApiUser(user: UserLike): boolean {
-  const role = getUserRole(user)
-  return role === 'super_admin' || role === 'admin'
+  const role = getUserRole(user);
+  return role === "super_admin" || role === "admin";
 }
 
 export function canManageUsers({ req }: { req: RequestWithUser }): boolean {
-  return hasCapability(req.user, 'manageUsers')
+  return hasCapability(req.user, "manageUsers");
 }
 
 /**
@@ -86,22 +84,22 @@ export function canManageUsers({ req }: { req: RequestWithUser }): boolean {
  * can read all accounts.
  */
 export const canReadUser: Access = ({ req, id }): AccessResult => {
-  if (canManageUsers({ req })) return true
-  if (req.user && id && String(req.user.id) === String(id)) return true
-  if (req.user) return { id: { equals: req.user.id } }
-  return false
-}
+  if (canManageUsers({ req })) return true;
+  if (req.user && id && String(req.user.id) === String(id)) return true;
+  if (req.user) return { id: { equals: req.user.id } };
+  return false;
+};
 
 /**
  * Users can update their own account profile (password, email, name).
  * Super admins and admins can update all accounts.
  */
 export const canUpdateUser: Access = ({ req, id }): AccessResult => {
-  if (canManageUsers({ req })) return true
-  if (req.user && id && String(req.user.id) === String(id)) return true
-  if (req.user) return { id: { equals: req.user.id } }
-  return false
-}
+  if (canManageUsers({ req })) return true;
+  if (req.user && id && String(req.user.id) === String(id)) return true;
+  if (req.user) return { id: { equals: req.user.id } };
+  return false;
+};
 
 /**
  * Allows the very first CMS account to be created without a session. The Users
@@ -109,46 +107,46 @@ export const canUpdateUser: Access = ({ req, id }): AccessResult => {
  * restricted to an existing super administrator.
  */
 export const canBootstrapOrManageUsers: Access = async ({ req }): Promise<boolean> => {
-  if (canManageUsers({ req })) return true
+  if (canManageUsers({ req })) return true;
 
   const { totalDocs } = await req.payload.count({
-    collection: 'users',
+    collection: "users",
     overrideAccess: true,
-  })
+  });
 
-  return totalDocs === 0
-}
+  return totalDocs === 0;
+};
 
 export function isSuperAdminUser({ req }: { req: RequestWithUser }): boolean {
-  return getUserRole(req.user) === 'super_admin'
+  return getUserRole(req.user) === "super_admin";
 }
 
 export function canManageSiteContent({ req }: { req: RequestWithUser }): boolean {
-  return hasCapability(req.user, 'manageSiteContent')
+  return hasCapability(req.user, "manageSiteContent");
 }
 
 export function canManageContent({ req }: { req: RequestWithUser }): boolean {
-  return hasCapability(req.user, 'manageContent')
+  return hasCapability(req.user, "manageContent");
 }
 
 export function canReviewContent({ req }: { req: RequestWithUser }): boolean {
-  return hasCapability(req.user, 'reviewContent')
+  return hasCapability(req.user, "reviewContent");
 }
 
 export function canPublishContent({ req }: { req: RequestWithUser }): boolean {
-  return hasCapability(req.user, 'publishContent')
+  return hasCapability(req.user, "publishContent");
 }
 
 export function canManageMedia({ req }: { req: RequestWithUser }): boolean {
-  return hasCapability(req.user, 'manageMedia')
+  return hasCapability(req.user, "manageMedia");
 }
 
 export function canViewAudience({ req }: { req: RequestWithUser }): boolean {
-  return hasCapability(req.user, 'viewAudience')
+  return hasCapability(req.user, "viewAudience");
 }
 
 export function canManageAudience({ req }: { req: RequestWithUser }): boolean {
-  return hasCapability(req.user, 'manageAudience')
+  return hasCapability(req.user, "manageAudience");
 }
 
 /**
@@ -156,9 +154,9 @@ export function canManageAudience({ req }: { req: RequestWithUser }): boolean {
  * CMS user can see all states required for their editorial work.
  */
 export const canReadPublishedOrAuthenticated: Access = ({ req }): AccessResult => {
-  if (req.user) return true
-  return { status: { equals: 'published' } }
-}
+  if (req.user) return true;
+  return { status: { equals: "published" } };
+};
 
 /**
  * Editors can update their own content; reviewers can update a document only
@@ -166,24 +164,24 @@ export const canReadPublishedOrAuthenticated: Access = ({ req }): AccessResult =
  */
 export const canManageOwnContent: Access = ({ req }): AccessResult => {
   if (canPublishContent({ req })) {
-    return true
+    return true;
   }
 
   if (canManageContent({ req }) && req.user?.id) {
-    return { author: { equals: req.user.id } }
+    return { author: { equals: req.user.id } };
   }
 
-  return false
-}
+  return false;
+};
 
 export const canManageOwnContentOrReview: Access = ({ req }): AccessResult => {
   if (canPublishContent({ req }) || canReviewContent({ req })) {
-    return true
+    return true;
   }
 
   if (canManageContent({ req }) && req.user?.id) {
-    return { author: { equals: req.user.id } }
+    return { author: { equals: req.user.id } };
   }
 
-  return false
-}
+  return false;
+};

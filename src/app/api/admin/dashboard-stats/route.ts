@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
-import { getPayload } from 'payload';
-import configPromise from '@payload-config';
-import { requireAdminAuth } from '@/utils/adminAuth';
+import { NextResponse } from "next/server";
+import { getPayload } from "payload";
+import configPromise from "@payload-config";
+import { requireAdminAuth } from "@/utils/adminAuth";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   const authError = await requireAdminAuth(req);
@@ -31,22 +31,22 @@ export async function GET(req: Request) {
       contactsRecent,
       subscribersRecent,
     ] = await Promise.all([
-      payload.count({ collection: 'articles' }),
-      payload.count({ collection: 'articles', where: { status: { equals: 'published' } } }),
-      payload.count({ collection: 'articles', where: { status: { equals: 'draft' } } }),
-      payload.count({ collection: 'journals' }),
-      payload.count({ collection: 'journals', where: { status: { equals: 'published' } } }),
-      payload.count({ collection: 'journals', where: { status: { equals: 'draft' } } }),
-      payload.count({ collection: 'users' }),
-      payload.count({ collection: 'subscribers' }),
-      payload.count({ collection: 'media' }),
-      payload.count({ collection: 'contact-submissions' }),
+      payload.count({ collection: "articles" }),
+      payload.count({ collection: "articles", where: { status: { equals: "published" } } }),
+      payload.count({ collection: "articles", where: { status: { equals: "draft" } } }),
+      payload.count({ collection: "journals" }),
+      payload.count({ collection: "journals", where: { status: { equals: "published" } } }),
+      payload.count({ collection: "journals", where: { status: { equals: "draft" } } }),
+      payload.count({ collection: "users" }),
+      payload.count({ collection: "subscribers" }),
+      payload.count({ collection: "media" }),
+      payload.count({ collection: "contact-submissions" }),
       payload.count({
-        collection: 'contact-submissions',
+        collection: "contact-submissions",
         where: { createdAt: { greater_than: thirtyDaysAgoISO } },
       }),
       payload.count({
-        collection: 'subscribers',
+        collection: "subscribers",
         where: { createdAt: { greater_than: thirtyDaysAgoISO } },
       }),
     ]);
@@ -54,33 +54,33 @@ export async function GET(req: Request) {
     // --- Recent Activity (merge from multiple collections) ---
     const [recentArticles, recentJournals, recentContacts, recentSubscribers, recentMedia] = await Promise.all([
       payload.find({
-        collection: 'articles',
+        collection: "articles",
         limit: 5,
-        sort: '-updatedAt',
+        sort: "-updatedAt",
         depth: 0,
       }),
       payload.find({
-        collection: 'journals',
+        collection: "journals",
         limit: 5,
-        sort: '-updatedAt',
+        sort: "-updatedAt",
         depth: 0,
       }),
       payload.find({
-        collection: 'contact-submissions',
+        collection: "contact-submissions",
         limit: 5,
-        sort: '-createdAt',
+        sort: "-createdAt",
         depth: 0,
       }),
       payload.find({
-        collection: 'subscribers',
+        collection: "subscribers",
         limit: 5,
-        sort: '-createdAt',
+        sort: "-createdAt",
         depth: 0,
       }),
       payload.find({
-        collection: 'media',
+        collection: "media",
         limit: 5,
-        sort: '-createdAt',
+        sort: "-createdAt",
         depth: 0,
       }),
     ]);
@@ -97,9 +97,9 @@ export async function GET(req: Request) {
 
     recentArticles.docs.forEach((doc: any) => {
       activities.push({
-        type: 'article',
+        type: "article",
         label: `Artikel "${doc.title}"`,
-        detail: doc.status === 'published' ? 'dipublikasikan' : 'diperbarui (draft)',
+        detail: doc.status === "published" ? "dipublikasikan" : "diperbarui (draft)",
         time: doc.updatedAt,
         link: `/admin/collections/articles/${doc.id}`,
       });
@@ -107,9 +107,9 @@ export async function GET(req: Request) {
 
     recentJournals.docs.forEach((doc: any) => {
       activities.push({
-        type: 'journal',
+        type: "journal",
         label: `Jurnal "${doc.title}"`,
-        detail: doc.status === 'published' ? 'dipublikasikan' : 'diperbarui',
+        detail: doc.status === "published" ? "dipublikasikan" : "diperbarui",
         time: doc.updatedAt,
         link: `/admin/collections/journals/${doc.id}`,
       });
@@ -117,9 +117,9 @@ export async function GET(req: Request) {
 
     recentContacts.docs.forEach((doc: any) => {
       activities.push({
-        type: 'contact',
-        label: `Pesan dari ${doc.name || 'Anonim'}`,
-        detail: doc.subject || 'Pesan baru masuk',
+        type: "contact",
+        label: `Pesan dari ${doc.name || "Anonim"}`,
+        detail: doc.subject || "Pesan baru masuk",
         time: doc.createdAt,
         link: `/admin/collections/contact-submissions/${doc.id}`,
       });
@@ -127,7 +127,7 @@ export async function GET(req: Request) {
 
     recentSubscribers.docs.forEach((doc: any) => {
       activities.push({
-        type: 'subscriber',
+        type: "subscriber",
         label: `Subscriber baru`,
         detail: doc.email,
         time: doc.createdAt,
@@ -137,9 +137,9 @@ export async function GET(req: Request) {
 
     recentMedia.docs.forEach((doc: any) => {
       activities.push({
-        type: 'media',
+        type: "media",
         label: `Media diupload`,
-        detail: (doc.filename as string) || 'File baru',
+        detail: (doc.filename as string) || "File baru",
         time: doc.createdAt,
         link: `/admin/collections/media/${doc.id}`,
       });
@@ -150,9 +150,9 @@ export async function GET(req: Request) {
     const recentActivity = activities.slice(0, 8);
 
     // --- Weekly chart data (last 4 weeks for all metrics) ---
-    const weekLabels = ['3 Mgg Lalu', '2 Mgg Lalu', '1 Mgg Lalu', 'Minggu Ini'];
+    const weekLabels = ["3 Mgg Lalu", "2 Mgg Lalu", "1 Mgg Lalu", "Minggu Ini"];
     const weeklyChartData = [];
-    
+
     for (let i = 3; i >= 0; i--) {
       const weekStart = new Date(now);
       weekStart.setDate(weekStart.getDate() - (i + 1) * 7);
@@ -161,25 +161,25 @@ export async function GET(req: Request) {
 
       const [cArticles, cJournals, cContacts, cSubscribers, cMedia] = await Promise.all([
         payload.count({
-          collection: 'articles',
+          collection: "articles",
           where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
         }),
         payload.count({
-          collection: 'journals',
+          collection: "journals",
           where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
         }),
         payload.count({
-          collection: 'contact-submissions',
+          collection: "contact-submissions",
           where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
         }),
         payload.count({
-          collection: 'subscribers',
+          collection: "subscribers",
           where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
         }),
         payload.count({
-          collection: 'media',
+          collection: "media",
           where: { createdAt: { greater_than: weekStart.toISOString(), less_than: weekEnd.toISOString() } },
-        })
+        }),
       ]);
 
       weeklyChartData.push({
@@ -223,7 +223,7 @@ export async function GET(req: Request) {
       weeklyChartData,
     });
   } catch (error) {
-    console.error('[dashboard-stats] Error:', error);
-    return NextResponse.json({ error: 'Failed to fetch dashboard stats' }, { status: 500 });
+    console.error("[dashboard-stats] Error:", error);
+    return NextResponse.json({ error: "Failed to fetch dashboard stats" }, { status: 500 });
   }
 }

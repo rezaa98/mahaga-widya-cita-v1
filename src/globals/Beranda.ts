@@ -1,6 +1,6 @@
 import { GlobalConfig } from "payload";
 import { universalGlobalAutoTranslate } from "../hooks/universalAutoTranslate";
-import { canManageSiteContent } from '../utils/access';
+import { canManageSiteContent } from "../utils/access";
 
 export const Beranda: GlobalConfig = {
   slug: "beranda",
@@ -17,17 +17,55 @@ export const Beranda: GlobalConfig = {
   },
   fields: [
     {
-      name: 'visibility',
-      type: 'group',
-      label: { id: 'Pengaturan Visibilitas Bagian (Hide/Show Sections)', en: 'Section Visibility Settings (Hide/Show)' },
+      name: "visibility",
+      type: "group",
+      label: {
+        id: "Pengaturan Visibilitas Bagian (Hide/Show Sections)",
+        en: "Section Visibility Settings (Hide/Show)",
+      },
       fields: [
-        { name: 'showHero', type: 'checkbox', defaultValue: true, label: { id: 'Tampilkan Hero Section', en: 'Show Hero Section' } },
-        { name: 'showStats', type: 'checkbox', defaultValue: true, label: { id: 'Tampilkan Statistik', en: 'Show Statistics' } },
-        { name: 'showPartners', type: 'checkbox', defaultValue: true, label: { id: 'Tampilkan Mitra', en: 'Show Partners' } },
-        { name: 'showServices', type: 'checkbox', defaultValue: true, label: { id: 'Tampilkan Area Layanan', en: 'Show Services Area' } },
-        { name: 'showArticles', type: 'checkbox', defaultValue: true, label: { id: 'Tampilkan Artikel Terbaru', en: 'Show Latest Articles' } },
-        { name: 'showTeam', type: 'checkbox', defaultValue: true, label: { id: 'Tampilkan Tim Ahli', en: 'Show Expert Team' } },
-        { name: 'showCTA', type: 'checkbox', defaultValue: true, label: { id: 'Tampilkan Call to Action (CTA)', en: 'Show Call to Action (CTA)' } },
+        {
+          name: "showHero",
+          type: "checkbox",
+          defaultValue: true,
+          label: { id: "Tampilkan Hero Section", en: "Show Hero Section" },
+        },
+        {
+          name: "showStats",
+          type: "checkbox",
+          defaultValue: true,
+          label: { id: "Tampilkan Statistik", en: "Show Statistics" },
+        },
+        {
+          name: "showPartners",
+          type: "checkbox",
+          defaultValue: true,
+          label: { id: "Tampilkan Mitra", en: "Show Partners" },
+        },
+        {
+          name: "showServices",
+          type: "checkbox",
+          defaultValue: true,
+          label: { id: "Tampilkan Area Layanan", en: "Show Services Area" },
+        },
+        {
+          name: "showArticles",
+          type: "checkbox",
+          defaultValue: true,
+          label: { id: "Tampilkan Artikel Terbaru", en: "Show Latest Articles" },
+        },
+        {
+          name: "showTeam",
+          type: "checkbox",
+          defaultValue: true,
+          label: { id: "Tampilkan Tim Ahli", en: "Show Expert Team" },
+        },
+        {
+          name: "showCTA",
+          type: "checkbox",
+          defaultValue: true,
+          label: { id: "Tampilkan Call to Action (CTA)", en: "Show Call to Action (CTA)" },
+        },
       ],
     },
     {

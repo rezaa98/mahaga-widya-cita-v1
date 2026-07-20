@@ -61,9 +61,7 @@ export default async function RootLayout({
   const { locale } = await params;
   return (
     <html lang={locale}>
-      <body id="frontend-app">
-        {children}
-      </body>
+      <body id="frontend-app">{children}</body>
     </html>
   );
 }

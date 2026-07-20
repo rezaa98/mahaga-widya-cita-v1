@@ -1,12 +1,12 @@
-import type { CollectionConfig } from 'payload'
-import { canManageMedia } from '@/utils/access'
+import type { CollectionConfig } from "payload";
+import { canManageMedia } from "@/utils/access";
 
 export const Media: CollectionConfig = {
-  slug: 'media',
+  slug: "media",
   admin: {
-    useAsTitle: 'alt',
-    defaultColumns: ['filename', 'alt', 'mimeType', 'updatedAt'],
-    listSearchableFields: ['alt', 'filename'],
+    useAsTitle: "alt",
+    defaultColumns: ["filename", "alt", "mimeType", "updatedAt"],
+    listSearchableFields: ["alt", "filename"],
   },
   access: {
     read: () => true,
@@ -15,55 +15,55 @@ export const Media: CollectionConfig = {
     delete: canManageMedia,
   },
   upload: {
-    staticDir: 'public/media',
+    staticDir: "public/media",
     focalPoint: true,
     imageSizes: [
       {
-        name: 'thumbnail',
+        name: "thumbnail",
         width: 400,
         height: 300,
-        position: 'centre',
+        position: "centre",
       },
       {
-        name: 'card',
+        name: "card",
         width: 768,
         height: 1024,
-        position: 'centre',
+        position: "centre",
       },
       {
-        name: 'tablet',
+        name: "tablet",
         width: 1024,
         height: undefined,
-        position: 'centre',
+        position: "centre",
       },
     ],
-    adminThumbnail: 'thumbnail',
-    mimeTypes: ['image/*', 'application/pdf'],
+    adminThumbnail: "thumbnail",
+    mimeTypes: ["image/*", "application/pdf"],
   },
   fields: [
     {
-      name: 'alt',
-      type: 'text',
+      name: "alt",
+      type: "text",
       required: true,
       localized: true,
-      label: 'Alt Text',
+      label: "Alt Text",
       admin: {
-        description: 'Deskripsikan gambar secara ringkas untuk aksesibilitas. Wajib untuk setiap media.',
+        description: "Deskripsikan gambar secara ringkas untuk aksesibilitas. Wajib untuk setiap media.",
       },
     },
     {
-      name: 'caption',
-      type: 'text',
+      name: "caption",
+      type: "text",
       localized: true,
-      label: 'Caption',
+      label: "Caption",
     },
     {
-      name: 'credit',
-      type: 'text',
-      label: 'Kredit / Sumber',
+      name: "credit",
+      type: "text",
+      label: "Kredit / Sumber",
       admin: {
-        description: 'Cantumkan fotografer, organisasi, atau lisensi bila diperlukan.',
+        description: "Cantumkan fotografer, organisasi, atau lisensi bila diperlukan.",
       },
     },
   ],
-}
+};

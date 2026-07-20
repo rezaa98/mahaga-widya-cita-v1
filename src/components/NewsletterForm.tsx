@@ -14,9 +14,9 @@ export default function NewsletterForm() {
     setStatus("idle");
 
     try {
-      const res = await fetch('/api/subscribers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/subscribers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
 
@@ -52,8 +52,8 @@ export default function NewsletterForm() {
         }}
         id="newsletter-email"
       />
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         className="btn btn-primary btn-sm"
         disabled={loading || status === "success"}
         style={{

@@ -109,6 +109,7 @@ export interface Config {
     kontak: Kontak;
     footer: Footer;
     navbar: Navbar;
+    'pengaturan-fitur': PengaturanFitur;
   };
   globalsSelect: {
     beranda: BerandaSelect<false> | BerandaSelect<true>;
@@ -116,6 +117,7 @@ export interface Config {
     kontak: KontakSelect<false> | KontakSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     navbar: NavbarSelect<false> | NavbarSelect<true>;
+    'pengaturan-fitur': PengaturanFiturSelect<false> | PengaturanFiturSelect<true>;
   };
   locale: 'id' | 'en';
   widgets: {
@@ -361,13 +363,6 @@ export interface Journal {
     publicProfile?: string | null;
     id?: string | null;
   }[];
-  metaTitle?: string | null;
-  metaDescription?: string | null;
-  /**
-   * Kosongkan untuk menggunakan URL jurnal pada website ini.
-   */
-  canonicalUrl?: string | null;
-  ogImage?: (number | null) | Media;
   slug: string;
   author?: (number | null) | User;
   category?: (number | null) | Category;
@@ -776,10 +771,6 @@ export interface JournalsSelect<T extends boolean = true> {
         publicProfile?: T;
         id?: T;
       };
-  metaTitle?: T;
-  metaDescription?: T;
-  canonicalUrl?: T;
-  ogImage?: T;
   slug?: T;
   author?: T;
   category?: T;
@@ -1186,6 +1177,19 @@ export interface Navbar {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pengaturan-fitur".
+ */
+export interface PengaturanFitur {
+  id: number;
+  /**
+   * If disabled, all Policy Review pages and links on the website and Admin UI will be hidden/disabled.
+   */
+  enablePolicyReviews?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "beranda_select".
  */
 export interface BerandaSelect<T extends boolean = true> {
@@ -1404,6 +1408,16 @@ export interface NavbarSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pengaturan-fitur_select".
+ */
+export interface PengaturanFiturSelect<T extends boolean = true> {
+  enablePolicyReviews?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

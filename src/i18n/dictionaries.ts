@@ -34,7 +34,7 @@ export const dictionaries = {
       send: "Kirim Pesan",
       success: "Pesan Anda berhasil terkirim!",
       error: "Terjadi kesalahan. Silakan coba lagi.",
-    }
+    },
   },
   en: {
     nav: {
@@ -71,12 +71,12 @@ export const dictionaries = {
       send: "Send Message",
       success: "Your message has been sent successfully!",
       error: "An error occurred. Please try again.",
-    }
-  }
+    },
+  },
 };
 
 export type Locale = keyof typeof dictionaries;
 
 export const getDictionary = (locale: Locale) => {
-  return dictionaries[locale] || dictionaries['id'];
+  return dictionaries[locale] || dictionaries["id"];
 };

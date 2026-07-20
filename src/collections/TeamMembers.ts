@@ -1,17 +1,17 @@
-import type { CollectionConfig } from 'payload'
-import { universalCollectionAutoTranslate } from '../hooks/universalAutoTranslate'
-import { canManageSiteContent } from '../utils/access'
+import type { CollectionConfig } from "payload";
+import { universalCollectionAutoTranslate } from "../hooks/universalAutoTranslate";
+import { canManageSiteContent } from "../utils/access";
 
 export const TeamMembers: CollectionConfig = {
-  slug: 'team-members',
+  slug: "team-members",
   labels: {
-    singular: { id: 'Anggota Tim', en: 'Team Member' },
-    plural: { id: 'Tim Ahli', en: 'Team Members' },
+    singular: { id: "Anggota Tim", en: "Team Member" },
+    plural: { id: "Tim Ahli", en: "Team Members" },
   },
   admin: {
-    group: { id: 'Manajemen Konten', en: 'Content Management' },
-    useAsTitle: 'name',
-    defaultColumns: ['name', 'category', 'expertise', 'updatedAt'],
+    group: { id: "Manajemen Konten", en: "Content Management" },
+    useAsTitle: "name",
+    defaultColumns: ["name", "category", "expertise", "updatedAt"],
   },
   access: {
     read: () => true,
@@ -24,102 +24,102 @@ export const TeamMembers: CollectionConfig = {
   },
   fields: [
     {
-      type: 'tabs',
+      type: "tabs",
       tabs: [
         {
-          label: 'Data Profil',
+          label: "Data Profil",
           fields: [
             {
-              name: 'photo',
-              type: 'upload',
-              relationTo: 'media',
-              label: 'Foto Profil',
+              name: "photo",
+              type: "upload",
+              relationTo: "media",
+              label: "Foto Profil",
             },
             {
-              name: 'name',
-              type: 'text',
+              name: "name",
+              type: "text",
               required: true,
               localized: true,
-              label: 'Nama Lengkap',
+              label: "Nama Lengkap",
             },
             {
-              name: 'initials',
-              type: 'text',
+              name: "initials",
+              type: "text",
               required: true,
-              label: 'Inisial (Maks 3 huruf)',
+              label: "Inisial (Maks 3 huruf)",
               maxLength: 3,
             },
             {
-              name: 'bio',
-              type: 'textarea',
+              name: "bio",
+              type: "textarea",
               localized: true,
-              label: 'Profil Singkat',
+              label: "Profil Singkat",
             },
-          ]
+          ],
         },
         {
-          label: 'Jabatan & Afiliasi',
+          label: "Jabatan & Afiliasi",
           fields: [
             {
-              name: 'category',
-              type: 'select',
+              name: "category",
+              type: "select",
               required: true,
-              label: 'Kategori Tim',
+              label: "Kategori Tim",
               options: [
-                { label: 'Manajemen Perusahaan', value: 'management' },
-                { label: 'Tenaga Ahli', value: 'expert' },
+                { label: "Manajemen Perusahaan", value: "management" },
+                { label: "Tenaga Ahli", value: "expert" },
               ],
-              defaultValue: 'expert',
+              defaultValue: "expert",
             },
             {
-              name: 'role',
-              type: 'text',
+              name: "role",
+              type: "text",
               localized: true,
-              label: 'Jabatan (Khusus Manajemen)',
+              label: "Jabatan (Khusus Manajemen)",
               admin: {
-                condition: (data) => data.category === 'management',
+                condition: (data) => data.category === "management",
               },
             },
             {
-              name: 'expertise',
-              type: 'text',
+              name: "expertise",
+              type: "text",
               required: true,
               localized: true,
-              label: 'Bidang Keahlian',
+              label: "Bidang Keahlian",
             },
             {
-              name: 'institution',
-              type: 'text',
+              name: "institution",
+              type: "text",
               localized: true,
-              label: 'Instansi Asal (Khusus Tenaga Ahli)',
+              label: "Instansi Asal (Khusus Tenaga Ahli)",
               admin: {
-                condition: (data) => data.category === 'expert',
+                condition: (data) => data.category === "expert",
               },
             },
-          ]
+          ],
         },
         {
-          label: 'Tampilan (Advanced)',
+          label: "Tampilan (Advanced)",
           fields: [
             {
-              name: 'color',
-              type: 'text',
+              name: "color",
+              type: "text",
               required: true,
-              defaultValue: 'linear-gradient(135deg, #1E6FD9, #0B2D6B)',
-              label: 'Gradien Warna (CSS)',
+              defaultValue: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
+              label: "Gradien Warna (CSS)",
             },
             {
-              name: 'order',
-              type: 'number',
-              label: 'Urutan Tampil',
+              name: "order",
+              type: "number",
+              label: "Urutan Tampil",
               defaultValue: 0,
               admin: {
-                description: 'Semakin kecil angkanya, semakin atas tampilannya',
-              }
-            }
-          ]
-        }
-      ]
-    }
+                description: "Semakin kecil angkanya, semakin atas tampilannya",
+              },
+            },
+          ],
+        },
+      ],
+    },
   ],
-}
+};

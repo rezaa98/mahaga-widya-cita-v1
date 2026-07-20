@@ -1,20 +1,20 @@
-import { getPayload } from 'payload';
-import configPromise from '@payload-config';
-import { translateDocumentJSON } from '@/utils/translate';
-import { requireAdminAuth } from '@/utils/adminAuth';
+import { getPayload } from "payload";
+import configPromise from "@payload-config";
+import { translateDocumentJSON } from "@/utils/translate";
+import { requireAdminAuth } from "@/utils/adminAuth";
 
-const COLLECTIONS = ['articles', 'categories', 'services', 'team-members'] as const;
-const GLOBALS = ['beranda', 'footer', 'kontak', 'navbar', 'tentang-kami'] as const;
+const COLLECTIONS = ["articles", "categories", "services", "team-members"] as const;
+const GLOBALS = ["beranda", "footer", "kontak", "navbar", "tentang-kami"] as const;
 
 export const maxDuration = 300; // Allow up to 5 minutes on Vercel
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   const authError = await requireAdminAuth(req);
   if (authError) return authError;
   try {
     const payload = await getPayload({ config: configPromise });
-    
+
     let logs: string[] = [];
     const log = (msg: string) => {
       console.log(msg);
@@ -29,8 +29,8 @@ export async function GET(req: Request) {
         log(`\nFetching global [${slug}]...`);
         const doc = await payload.findGlobal({
           slug,
-          locale: 'id',
-          fallbackLocale: 'none',
+          locale: "id",
+          fallbackLocale: "none",
           depth: 0,
         });
 
@@ -38,10 +38,10 @@ export async function GET(req: Request) {
           log(`Translating global [${slug}]...`);
           const { id, createdAt, updatedAt, ...docToTranslate } = doc;
           const translatedData = await translateDocumentJSON(docToTranslate);
-          
+
           await payload.updateGlobal({
             slug,
-            locale: 'en',
+            locale: "en",
             data: translatedData,
             context: { skipAutoTranslate: true },
           });
@@ -58,8 +58,8 @@ export async function GET(req: Request) {
         log(`\nFetching collection [${collection}]...`);
         const result = await payload.find({
           collection,
-          locale: 'id',
-          fallbackLocale: 'none',
+          locale: "id",
+          fallbackLocale: "none",
           depth: 0,
           limit: 100,
         });
@@ -68,13 +68,27 @@ export async function GET(req: Request) {
 
         for (const doc of result.docs) {
           log(`Translating [${collection}] ID: ${doc.id}...`);
-          const { id, createdAt, updatedAt, sizes, url, filename, mimeType, filesize, width, height, focalX, focalY, ...docToTranslate } = doc as any;
+          const {
+            id,
+            createdAt,
+            updatedAt,
+            sizes,
+            url,
+            filename,
+            mimeType,
+            filesize,
+            width,
+            height,
+            focalX,
+            focalY,
+            ...docToTranslate
+          } = doc as any;
           const translatedData = await translateDocumentJSON(docToTranslate);
-          
+
           await payload.update({
             collection,
             id: doc.id,
-            locale: 'en',
+            locale: "en",
             data: translatedData,
             context: { skipAutoTranslate: true },
           });

@@ -1,4 +1,4 @@
-import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
+import { MigrateUpArgs, MigrateDownArgs, sql } from "@payloadcms/db-postgres";
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
@@ -1089,7 +1089,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE UNIQUE INDEX "navbar_links_children_locales_locale_parent_id_unique" ON "navbar_links_children_locales" USING btree ("_locale","_parent_id");
   CREATE INDEX "navbar_links_order_idx" ON "navbar_links" USING btree ("_order");
   CREATE INDEX "navbar_links_parent_id_idx" ON "navbar_links" USING btree ("_parent_id");
-  CREATE UNIQUE INDEX "navbar_links_locales_locale_parent_id_unique" ON "navbar_links_locales" USING btree ("_locale","_parent_id");`)
+  CREATE UNIQUE INDEX "navbar_links_locales_locale_parent_id_unique" ON "navbar_links_locales" USING btree ("_locale","_parent_id");`);
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
@@ -1186,5 +1186,5 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum_team_members_category";
   DROP TYPE "public"."enum_beranda_stats_icon";
   DROP TYPE "public"."enum_tentang_kami_stats_icon";
-  DROP TYPE "public"."enum_footer_social_media_platform";`)
+  DROP TYPE "public"."enum_footer_social_media_platform";`);
 }

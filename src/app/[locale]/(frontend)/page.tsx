@@ -23,21 +23,24 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   try {
     const selectedPublishedArticles = Array.isArray(berandaData?.featuredData?.articles)
       ? berandaData.featuredData.articles.filter(
-          (article: any) => typeof article === 'object' && article?.status === 'published',
+          (article: any) => typeof article === "object" && article?.status === "published",
         )
       : [];
 
-    articles = selectedPublishedArticles.length > 0
-      ? selectedPublishedArticles
-      : (await payload.find({
-          collection: "articles",
-          where: {
-            status: { equals: "published" },
-          },
-          sort: "-publishedAt",
-          limit: 3,
-          locale: locale as any,
-        })).docs;
+    articles =
+      selectedPublishedArticles.length > 0
+        ? selectedPublishedArticles
+        : (
+            await payload.find({
+              collection: "articles",
+              where: {
+                status: { equals: "published" },
+              },
+              sort: "-publishedAt",
+              limit: 3,
+              locale: locale as any,
+            })
+          ).docs;
   } catch (err) {
     console.error("[Home] Failed to load articles:", err);
   }
@@ -45,27 +48,33 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   // Use CMS selected team, otherwise fallback to top 100
   let teamMembers: any[] = [];
   try {
-    teamMembers = berandaData?.featuredData?.team?.length > 0
-      ? berandaData.featuredData.team
-      : (await payload.find({
-          collection: "team-members",
-          limit: 100,
-          sort: "order",
-          locale: locale as any,
-        })).docs;
+    teamMembers =
+      berandaData?.featuredData?.team?.length > 0
+        ? berandaData.featuredData.team
+        : (
+            await payload.find({
+              collection: "team-members",
+              limit: 100,
+              sort: "order",
+              locale: locale as any,
+            })
+          ).docs;
   } catch (err) {
     console.error("[Home] Failed to load team members:", err);
   }
 
   let services: any[] = [];
   try {
-    services = berandaData?.featuredData?.services?.length > 0
-      ? berandaData.featuredData.services
-      : (await payload.find({
-          collection: "services",
-          limit: 10,
-          locale: locale as any,
-        })).docs;
+    services =
+      berandaData?.featuredData?.services?.length > 0
+        ? berandaData.featuredData.services
+        : (
+            await payload.find({
+              collection: "services",
+              limit: 10,
+              locale: locale as any,
+            })
+          ).docs;
   } catch (err) {
     console.error("[Home] Failed to load services:", err);
   }
@@ -73,7 +82,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   return (
     <>
       <Navbar />
-      <HomePage articles={articles} teamMembers={teamMembers} services={services} berandaData={berandaData} locale={locale} />
+      <HomePage
+        articles={articles}
+        teamMembers={teamMembers}
+        services={services}
+        berandaData={berandaData}
+        locale={locale}
+      />
       <Footer locale={locale} />
       <WhatsAppFloat />
     </>

@@ -11,12 +11,12 @@
  *   if (authError) return authError
  */
 
-import { NextResponse } from 'next/server';
-import { getPayload } from 'payload';
-import configPromise from '@payload-config';
-import { isAdminApiUser } from './access';
+import { NextResponse } from "next/server";
+import { getPayload } from "payload";
+import configPromise from "@payload-config";
+import { isAdminApiUser } from "./access";
 
-const ADMIN_SECRET = process.env.ADMIN_API_SECRET || '';
+const ADMIN_SECRET = process.env.ADMIN_API_SECRET || "";
 
 /**
  * Returns a NextResponse error if the request is not authorized.
@@ -24,7 +24,7 @@ const ADMIN_SECRET = process.env.ADMIN_API_SECRET || '';
  */
 export async function requireAdminAuth(req: Request): Promise<NextResponse | null> {
   // Method 1: Check for ADMIN_API_SECRET header (for server-to-server or manual ops)
-  const secretHeader = req.headers.get('x-admin-secret');
+  const secretHeader = req.headers.get("x-admin-secret");
   if (ADMIN_SECRET && secretHeader === ADMIN_SECRET) {
     return null; // Authorized
   }
@@ -39,17 +39,11 @@ export async function requireAdminAuth(req: Request): Promise<NextResponse | nul
     }
 
     if (result?.user) {
-      return NextResponse.json(
-        { error: 'Forbidden. Administrator role required.' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Forbidden. Administrator role required." }, { status: 403 });
     }
   } catch {
     // Ignore auth check errors — fall through to unauthorized
   }
 
-  return NextResponse.json(
-    { error: 'Unauthorized. Admin access required.' },
-    { status: 401 }
-  );
+  return NextResponse.json({ error: "Unauthorized. Admin access required." }, { status: 401 });
 }

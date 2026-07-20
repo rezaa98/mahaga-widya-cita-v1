@@ -1,10 +1,10 @@
-import type { CollectionConfig } from 'payload'
-import { canBootstrapOrManageUsers, canManageUsers, canReadUser, canUpdateUser } from '../utils/access'
+import type { CollectionConfig } from "payload";
+import { canBootstrapOrManageUsers, canManageUsers, canReadUser, canUpdateUser } from "../utils/access";
 
 export const Users: CollectionConfig = {
-  slug: 'users',
+  slug: "users",
   admin: {
-    useAsTitle: 'email',
+    useAsTitle: "email",
   },
   auth: true,
   access: {
@@ -18,29 +18,29 @@ export const Users: CollectionConfig = {
   hooks: {
     beforeChange: [
       async ({ data, operation, req }) => {
-        if (operation !== 'create') return data
+        if (operation !== "create") return data;
 
         const { totalDocs } = await req.payload.count({
-          collection: 'users',
+          collection: "users",
           overrideAccess: true,
-        })
+        });
 
-        return totalDocs === 0 ? { ...data, role: 'super_admin' } : data
+        return totalDocs === 0 ? { ...data, role: "super_admin" } : data;
       },
     ],
   },
   fields: [
     {
-      name: 'role',
-      type: 'select',
+      name: "role",
+      type: "select",
       options: [
-        { label: 'Super Admin', value: 'super_admin' },
-        { label: 'Admin', value: 'admin' },
-        { label: 'Editor', value: 'editor' },
-        { label: 'Reviewer', value: 'reviewer' },
-        { label: 'Member (Legacy / Read-only)', value: 'member' },
+        { label: "Super Admin", value: "super_admin" },
+        { label: "Admin", value: "admin" },
+        { label: "Editor", value: "editor" },
+        { label: "Reviewer", value: "reviewer" },
+        { label: "Member (Legacy / Read-only)", value: "member" },
       ],
-      defaultValue: 'editor',
+      defaultValue: "editor",
       required: true,
       saveToJWT: true,
       access: {
@@ -48,8 +48,9 @@ export const Users: CollectionConfig = {
         update: canManageUsers,
       },
       admin: {
-        description: 'Member dipertahankan untuk akun lama dan hanya memiliki akses baca. Gunakan Editor, Reviewer, Admin, atau Super Admin untuk akun baru.',
+        description:
+          "Member dipertahankan untuk akun lama dan hanya memiliki akses baca. Gunakan Editor, Reviewer, Admin, atau Super Admin untuk akun baru.",
       },
     },
   ],
-}
+};

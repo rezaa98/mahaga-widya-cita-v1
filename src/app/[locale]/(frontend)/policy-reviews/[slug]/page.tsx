@@ -11,17 +11,13 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 export const dynamic = "force-dynamic";
 
-
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const resolvedParams = await params;
   const payload = await getPayload({ config: configPromise });
   const { docs } = await payload.find({
     collection: "policy-reviews",
     where: {
-      and: [
-        { slug: { equals: resolvedParams.slug } },
-        { status: { equals: "published" } },
-      ],
+      and: [{ slug: { equals: resolvedParams.slug } }, { status: { equals: "published" } }],
     },
     locale: resolvedParams.locale as any,
   });
@@ -32,8 +28,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
   const review: any = docs[0];
   const title = review.meta?.title || review.title;
-  const description = review.meta?.description || review.excerpt || `Baca analisis kebijakan publik "${review.title}" di Mahaga Widya Cita.`;
-  const imageUrl = review.meta?.image ? (typeof review.meta.image === 'object' ? review.meta.image.url : null) : null;
+  const description =
+    review.meta?.description ||
+    review.excerpt ||
+    `Baca analisis kebijakan publik "${review.title}" di Mahaga Widya Cita.`;
+  const imageUrl = review.meta?.image ? (typeof review.meta.image === "object" ? review.meta.image.url : null) : null;
 
   return {
     title,
@@ -42,27 +41,31 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       title,
       description,
       url: `https://mahagawidyacita.co.id/${resolvedParams.locale}/policy-reviews/${review.slug}`,
-      type: 'article',
+      type: "article",
       publishedTime: review.publishedAt || review.createdAt,
       images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : [],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title,
       description,
       images: imageUrl ? [imageUrl] : [],
-    }
+    },
   };
 }
 
-export default async function PolicyReviewDetailPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+export default async function PolicyReviewDetailPage({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
   const resolvedParams = await params;
   const payload = await getPayload({ config: configPromise });
-  const isEn = resolvedParams.locale === 'en';
+  const isEn = resolvedParams.locale === "en";
 
   let featureSettings: any = null;
   try {
-    featureSettings = await payload.findGlobal({ slug: 'pengaturan-fitur' as any });
+    featureSettings = await payload.findGlobal({ slug: "pengaturan-fitur" as any });
   } catch (e) {
     // fallback
   }
@@ -71,27 +74,43 @@ export default async function PolicyReviewDetailPage({ params }: { params: Promi
     return (
       <>
         <Navbar />
-        <main style={{ paddingTop: "140px", minHeight: "75vh", backgroundColor: "#f8fafc", paddingBottom: "80px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <main
+          style={{
+            paddingTop: "140px",
+            minHeight: "75vh",
+            backgroundColor: "#f8fafc",
+            paddingBottom: "80px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <div className="container" style={{ maxWidth: "600px", textAlign: "center" }}>
-            <div style={{
-              backgroundColor: "#ffffff",
-              borderRadius: "24px",
-              padding: "48px 32px",
-              boxShadow: "0 20px 40px -15px rgba(0,0,0,0.07)",
-              border: "1px solid #e2e8f0"
-            }}>
-              <div style={{
-                width: "72px",
-                height: "72px",
-                borderRadius: "50%",
-                backgroundColor: "#fef2f2",
-                color: "#ef4444",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                margin: "0 auto 24px auto"
-              }}>
-                <span className="material-symbols-outlined" style={{ fontSize: "36px" }}>lock</span>
+            <div
+              style={{
+                backgroundColor: "#ffffff",
+                borderRadius: "24px",
+                padding: "48px 32px",
+                boxShadow: "0 20px 40px -15px rgba(0,0,0,0.07)",
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              <div
+                style={{
+                  width: "72px",
+                  height: "72px",
+                  borderRadius: "50%",
+                  backgroundColor: "#fef2f2",
+                  color: "#ef4444",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 24px auto",
+                }}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: "36px" }}>
+                  lock
+                </span>
               </div>
 
               <h2 style={{ color: "#0f172a", fontSize: "1.75rem", fontWeight: 700, marginBottom: "12px" }}>
@@ -99,12 +118,16 @@ export default async function PolicyReviewDetailPage({ params }: { params: Promi
               </h2>
 
               <p style={{ color: "#64748b", fontSize: "1rem", lineHeight: 1.6, marginBottom: "28px" }}>
-                {isEn 
+                {isEn
                   ? "The Policy Review feature is currently deactivated by the Administrator. Please contact the site administrator or return to the homepage."
                   : "Fitur Policy Review saat ini sedang dinonaktifkan oleh Administrator. Silakan hubungi Administrator Sistem atau kembali ke halaman utama."}
               </p>
 
-              <Link href={`/${resolvedParams.locale}`} className="btn btn-primary" style={{ padding: "12px 28px", borderRadius: "12px", textDecoration: "none", fontWeight: 600 }}>
+              <Link
+                href={`/${resolvedParams.locale}`}
+                className="btn btn-primary"
+                style={{ padding: "12px 28px", borderRadius: "12px", textDecoration: "none", fontWeight: 600 }}
+              >
                 {isEn ? "Back to Homepage" : "Kembali ke Beranda"}
               </Link>
             </div>
@@ -118,10 +141,7 @@ export default async function PolicyReviewDetailPage({ params }: { params: Promi
   const { docs } = await payload.find({
     collection: "policy-reviews",
     where: {
-      and: [
-        { slug: { equals: resolvedParams.slug } },
-        { status: { equals: "published" } },
-      ],
+      and: [{ slug: { equals: resolvedParams.slug } }, { status: { equals: "published" } }],
     },
     locale: resolvedParams.locale as any,
   });
@@ -131,57 +151,88 @@ export default async function PolicyReviewDetailPage({ params }: { params: Promi
   }
 
   const review: any = docs[0];
-  const documentUrl = typeof review.document === 'object' && review.document ? review.document.url : null;
+  const documentUrl = typeof review.document === "object" && review.document ? review.document.url : null;
 
   return (
     <>
       <Navbar />
       <main style={{ paddingTop: "120px", minHeight: "100vh", backgroundColor: "#f8f9fa", paddingBottom: "60px" }}>
         <div className="container" style={{ maxWidth: "800px" }}>
-          <Breadcrumbs items={[
-            { label: isEn ? 'Policy Reviews' : 'Daftar Review', href: `/${resolvedParams.locale}/policy-reviews` },
-            { label: review.title }
-          ]} />
-          
-          <div style={{ backgroundColor: "#fff", padding: "40px", borderRadius: "16px", boxShadow: "0 10px 30px rgba(0,0,0,0.05)" }}>
-            <span style={{ 
-              fontSize: "0.85rem", 
-              fontWeight: 600, 
-              color: "var(--color-primary-600)", 
-              backgroundColor: "var(--color-primary-100)", 
-              padding: "0.3rem 0.85rem", 
-              borderRadius: "100px",
-              display: "inline-block",
-              marginBottom: "1.5rem"
-            }}>
+          <Breadcrumbs
+            items={[
+              { label: isEn ? "Policy Reviews" : "Daftar Review", href: `/${resolvedParams.locale}/policy-reviews` },
+              { label: review.title },
+            ]}
+          />
+
+          <div
+            style={{
+              backgroundColor: "#fff",
+              padding: "40px",
+              borderRadius: "16px",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "0.85rem",
+                fontWeight: 600,
+                color: "var(--color-primary-600)",
+                backgroundColor: "var(--color-primary-100)",
+                padding: "0.3rem 0.85rem",
+                borderRadius: "100px",
+                display: "inline-block",
+                marginBottom: "1.5rem",
+              }}
+            >
               Policy Review
             </span>
-            
+
             <h1 style={{ color: "#1a2b4c", marginBottom: "1.5rem", fontSize: "2.5rem", lineHeight: 1.2 }}>
               {review.title}
             </h1>
-            
-            <div style={{ display: "flex", gap: "2rem", marginBottom: "2rem", color: "#64748b", fontSize: "0.95rem", borderBottom: "1px solid #f1f5f9", paddingBottom: "1.5rem" }}>
+
+            <div
+              style={{
+                display: "flex",
+                gap: "2rem",
+                marginBottom: "2rem",
+                color: "#64748b",
+                fontSize: "0.95rem",
+                borderBottom: "1px solid #f1f5f9",
+                paddingBottom: "1.5rem",
+              }}
+            >
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <User size={16} />
-                <span>{typeof review.author === 'object' && review.author ? review.author.name || 'Admin' : 'Admin'}</span>
+                <span>
+                  {typeof review.author === "object" && review.author ? review.author.name || "Admin" : "Admin"}
+                </span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <Calendar size={16} />
-                <span>{new Date(review.createdAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                <span>
+                  {new Date(review.createdAt).toLocaleDateString("id-ID", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </span>
               </div>
             </div>
 
             {documentUrl && (
-              <div style={{ 
-                backgroundColor: "#f1f5f9", 
-                padding: "1.5rem", 
-                borderRadius: "12px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: "2rem"
-              }}>
+              <div
+                style={{
+                  backgroundColor: "#f1f5f9",
+                  padding: "1.5rem",
+                  borderRadius: "12px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: "2rem",
+                }}
+              >
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                   <FileText size={32} color="var(--color-primary-500)" />
                   <div>
@@ -189,9 +240,9 @@ export default async function PolicyReviewDetailPage({ params }: { params: Promi
                     <span style={{ fontSize: "0.85rem", color: "#64748b" }}>PDF Download</span>
                   </div>
                 </div>
-                <a 
-                  href={documentUrl} 
-                  target="_blank" 
+                <a
+                  href={documentUrl}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-primary"
                   style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}

@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
-import { getPayload } from 'payload';
-import configPromise from '@payload-config';
-import { translateDocumentJSON } from '@/utils/translate';
-import { requireAdminAuth } from '@/utils/adminAuth';
+import { NextResponse } from "next/server";
+import { getPayload } from "payload";
+import configPromise from "@payload-config";
+import { translateDocumentJSON } from "@/utils/translate";
+import { requireAdminAuth } from "@/utils/adminAuth";
 
 export async function GET(request: Request) {
   const authError = await requireAdminAuth(request);
@@ -10,19 +10,19 @@ export async function GET(request: Request) {
   try {
     const payload = await getPayload({ config: configPromise });
     const url = new URL(request.url);
-    const slug = url.searchParams.get('slug') as any;
+    const slug = url.searchParams.get("slug") as any;
 
-    if (!slug) return NextResponse.json({ error: 'No slug' });
+    if (!slug) return NextResponse.json({ error: "No slug" });
 
     console.log(`Force translating ${slug}...`);
-    const doc = await payload.findGlobal({ slug, locale: 'id', depth: 0 });
+    const doc = await payload.findGlobal({ slug, locale: "id", depth: 0 });
     const { id, createdAt, updatedAt, ...docToTranslate } = doc as any;
 
-    const translatedData = await translateDocumentJSON(docToTranslate, 'English');
+    const translatedData = await translateDocumentJSON(docToTranslate, "English");
 
     await payload.updateGlobal({
       slug,
-      locale: 'en',
+      locale: "en",
       data: translatedData,
       context: { skipAutoTranslate: true },
     });
