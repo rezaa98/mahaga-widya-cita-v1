@@ -177,9 +177,9 @@ export const CustomLogin = () => {
                   }}
                 >
                   <img
-                    alt="Nexus Admin Logo"
+                    alt="Mahaga Widya Cita Logo"
                     style={{ width: "100%", height: "100%", objectFit: "contain" }}
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmICE4OFCf2QdKsUYasy2vctHsQjkgNCSbXBwZDuyxhEZX3b23HDeMiuSMrr6SjQ_dI5n-6YkDiP5-rzuOGb5yEYLYKwX9nMaAwKfTYk8jM3cmxhVaSYNVRlaLaziuNzWYchWWB78pLHwQCHA5UCGCVnnktKeY-JUcnFAZoYDXWZMT5hSmFP1fIa1n4zMhOuztVDkfgqvPqG4N_lKfZG0XnettcxauoLyO83l1BLLV7BQOukJUFh8E4jNl926Eq28cJA"
+                    src="/logo-transparent.png"
                   />
                 </div>
                 <h1 style={{ fontSize: "1.25rem", fontWeight: 600, color: "#191b23", margin: 0 }}>Welcome back</h1>
