@@ -61,10 +61,12 @@ export default async function LayananPage({ params }: { params: Promise<{ locale
             <div
               className="badge"
               style={{
-                background: "rgba(255,255,255,0.2)",
-                color: "white",
+                background: "rgba(255,255,255,0.25)",
+                color: "#ffffff",
+                fontWeight: "600",
                 marginBottom: "1.25rem",
                 display: "inline-block",
+                backdropFilter: "blur(4px)",
               }}
             >
               {isEn ? "Our Expertise" : "Keahlian Kami"}
@@ -72,7 +74,7 @@ export default async function LayananPage({ params }: { params: Promise<{ locale
             <h1 className="text-display" style={{ color: "white", marginBottom: "1rem" }}>
               {isEn ? "Comprehensive Services for Your Success" : "Layanan Komprehensif untuk Kesuksesan Anda"}
             </h1>
-            <p style={{ color: "rgba(255,255,255,0.85)", fontSize: "1.125rem", lineHeight: "1.7", marginBottom: "0" }}>
+            <p style={{ color: "rgba(255,255,255,0.95)", fontSize: "1.125rem", lineHeight: "1.7", marginBottom: "0" }}>
               {isEn
                 ? "We provide end-to-end solutions combining academic rigor with practical industry experience to transform governments, businesses, and communities."
                 : "Kami menyediakan solusi ujung-ke-ujung yang menggabungkan ketelitian akademis dengan pengalaman industri praktis untuk mentransformasi pemerintahan, bisnis, dan masyarakat."}

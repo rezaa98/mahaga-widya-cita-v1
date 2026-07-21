@@ -70,7 +70,13 @@ export default async function KontakPage(props: { params: Promise<{ locale: stri
         <div className="container" style={{ position: "relative" }}>
           <span
             className="badge"
-            style={{ background: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.9)", marginBottom: "1rem" }}
+            style={{
+              background: "rgba(255, 255, 255, 0.25)",
+              color: "#ffffff",
+              fontWeight: "600",
+              marginBottom: "1rem",
+              backdropFilter: "blur(4px)",
+            }}
           >
             Hubungi Kami
           </span>
@@ -81,7 +87,7 @@ export default async function KontakPage(props: { params: Promise<{ locale: stri
             {heroTitle}
           </h1>
           <p
-            style={{ color: "rgba(255,255,255,0.75)", fontSize: "1.125rem", maxWidth: "480px", whiteSpace: "pre-line" }}
+            style={{ color: "rgba(255,255,255,0.95)", fontSize: "1.125rem", maxWidth: "480px", whiteSpace: "pre-line" }}
           >
             {heroSubtitle}
           </p>

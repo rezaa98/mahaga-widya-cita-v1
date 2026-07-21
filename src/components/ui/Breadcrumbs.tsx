@@ -9,12 +9,22 @@ export interface BreadcrumbsProps {
     label: string;
     href?: string;
   }[];
+  isDarkBg?: boolean;
 }
 
-export function Breadcrumbs({ items }: BreadcrumbsProps) {
+export function Breadcrumbs({ items, isDarkBg = false }: BreadcrumbsProps) {
   return (
-    <nav className="scrollbar-hide mb-6 flex items-center space-x-1 overflow-x-auto pb-2 text-sm whitespace-nowrap text-gray-500 sm:mb-8 sm:space-x-2">
-      <Link href="/" className="hover:text-primary-600 flex shrink-0 items-center transition-colors">
+    <nav
+      className={`scrollbar-hide mb-6 flex items-center space-x-1 overflow-x-auto pb-2 text-sm whitespace-nowrap sm:mb-8 sm:space-x-2 ${
+        isDarkBg ? "text-white/80" : "text-gray-600"
+      }`}
+    >
+      <Link
+        href="/"
+        className={`flex shrink-0 items-center transition-colors ${
+          isDarkBg ? "text-white/80 hover:text-white" : "text-gray-600 hover:text-primary-600"
+        }`}
+      >
         <Home className="h-4 w-4" />
       </Link>
 
@@ -23,11 +33,22 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
 
         return (
           <React.Fragment key={index}>
-            <ChevronRight className="h-4 w-4 shrink-0 text-gray-400" />
+            <ChevronRight className={`h-4 w-4 shrink-0 ${isDarkBg ? "text-white/60" : "text-gray-400"}`} />
             {isLast || !item.href ? (
-              <span className="max-w-[200px] truncate font-medium text-gray-900 sm:max-w-none">{item.label}</span>
+              <span
+                className={`max-w-[200px] truncate sm:max-w-none ${
+                  isDarkBg ? "font-semibold text-white" : "font-semibold text-gray-900"
+                }`}
+              >
+                {item.label}
+              </span>
             ) : (
-              <Link href={item.href} className="hover:text-primary-600 shrink-0 transition-colors">
+              <Link
+                href={item.href}
+                className={`shrink-0 transition-colors ${
+                  isDarkBg ? "text-white/80 hover:text-white" : "text-gray-600 hover:text-primary-600"
+                }`}
+              >
                 {item.label}
               </Link>
             )}

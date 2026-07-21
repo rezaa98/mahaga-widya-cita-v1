@@ -112,40 +112,52 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
         />
         <div className="container" style={{ position: "relative" }}>
           <Breadcrumbs
+            isDarkBg={true}
             items={[{ label: isEn ? "Services" : "Layanan", href: `/${locale}/layanan` }, { label: service.title }]}
           />
 
           <div style={{ maxWidth: "800px" }}>
             <div
               className="badge"
-              style={{ background: "rgba(255,255,255,0.2)", color: "white", marginBottom: "1.25rem" }}
+              style={{
+                background: "rgba(255, 255, 255, 0.25)",
+                color: "#ffffff",
+                fontWeight: "600",
+                marginBottom: "1.25rem",
+                backdropFilter: "blur(4px)",
+              }}
             >
               {isEn ? "Core Service" : "Layanan Utama"}
             </div>
-            <h1 className="text-display" style={{ color: "white", marginBottom: "1rem" }}>
+            <h1 className="text-display" style={{ color: "#ffffff", fontWeight: "800", marginBottom: "1.25rem" }}>
               {service.title}
             </h1>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.85)",
-                fontSize: "1.25rem",
-                fontWeight: "500",
-                marginBottom: "1.5rem",
-              }}
-            >
-              {service.tagline}
-            </p>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.7)",
-                fontSize: "1.0625rem",
-                lineHeight: "1.7",
-                maxWidth: "680px",
-                marginBottom: "2rem",
-              }}
-            >
-              {service.description}
-            </p>
+            {service.tagline && (
+              <p
+                style={{
+                  color: "#ffffff",
+                  fontSize: "1.25rem",
+                  fontWeight: "600",
+                  lineHeight: "1.6",
+                  marginBottom: service.description && service.description !== service.tagline ? "1rem" : "2rem",
+                }}
+              >
+                {service.tagline}
+              </p>
+            )}
+            {service.description && service.description !== service.tagline && (
+              <p
+                style={{
+                  color: "rgba(255, 255, 255, 0.95)",
+                  fontSize: "1.0625rem",
+                  lineHeight: "1.7",
+                  maxWidth: "680px",
+                  marginBottom: "2rem",
+                }}
+              >
+                {service.description}
+              </p>
+            )}
             <div style={{ display: "flex", gap: "1rem" }}>
               <Link
                 href={`/${locale}/kontak`}

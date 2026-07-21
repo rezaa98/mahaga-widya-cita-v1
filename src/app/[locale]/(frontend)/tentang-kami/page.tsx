@@ -299,7 +299,13 @@ export default async function TentangKamiPage(props: { params: Promise<{ locale:
           <div style={{ maxWidth: "640px" }}>
             <span
               className="badge badge-primary"
-              style={{ background: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.9)", marginBottom: "1rem" }}
+              style={{
+                background: "rgba(255,255,255,0.25)",
+                color: "#ffffff",
+                fontWeight: "600",
+                marginBottom: "1rem",
+                backdropFilter: "blur(4px)",
+              }}
             >
               {heroData.badge}
             </span>
@@ -308,7 +314,7 @@ export default async function TentangKamiPage(props: { params: Promise<{ locale:
               <br />
               <span style={{ color: "var(--color-gold-300)" }}>{heroData.titleHighlight}</span>
             </h1>
-            <p style={{ fontSize: "1.125rem", color: "rgba(255,255,255,0.75)", lineHeight: "1.7" }}>
+            <p style={{ fontSize: "1.125rem", color: "rgba(255,255,255,0.95)", lineHeight: "1.7" }}>
               {heroData.description}
             </p>
           </div>
