@@ -21,7 +21,7 @@ import {
   Lightbulb,
   Handshake,
 } from "lucide-react";
-import { WaveDivider } from "@/components/ui/WaveDivider";
+import { PageHero } from "@/components/ui/PageHero";
 import TeamMemberCard from "@/components/ui/TeamMemberCard";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
@@ -274,53 +274,15 @@ export default async function TentangKamiPage(props: { params: Promise<{ locale:
   return (
     <>
       <Navbar />
-
-      {/* PAGE HERO */}
-      <section
-        style={{
-          background: heroData.backgroundImage?.url
-            ? `linear-gradient(135deg, rgba(11, 45, 107, 0.9) 0%, rgba(18, 71, 168, 0.8) 100%), url(${heroData.backgroundImage.url}) center/cover no-repeat`
-            : "linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-700) 100%)",
-          paddingTop: "calc(72px + 4rem)",
-          paddingBottom: "4rem",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: "radial-gradient(ellipse at 80% 50%, rgba(30,111,217,0.35) 0%, transparent 65%)",
-            pointerEvents: "none",
-          }}
-        />
-        <div className="container" style={{ position: "relative" }}>
-          <div style={{ maxWidth: "640px" }}>
-            <span
-              className="badge badge-primary"
-              style={{
-                background: "rgba(255,255,255,0.25)",
-                color: "#ffffff",
-                fontWeight: "600",
-                marginBottom: "1rem",
-                backdropFilter: "blur(4px)",
-              }}
-            >
-              {heroData.badge}
-            </span>
-            <h1 className="text-display" style={{ color: "white", marginBottom: "1.25rem" }}>
-              {heroData.title}
-              <br />
-              <span style={{ color: "var(--color-gold-300)" }}>{heroData.titleHighlight}</span>
-            </h1>
-            <p style={{ fontSize: "1.125rem", color: "rgba(255,255,255,0.95)", lineHeight: "1.7" }}>
-              {heroData.description}
-            </p>
-          </div>
-        </div>
-        <WaveDivider fill="white" />
-      </section>
+      <PageHero
+        badge={heroData.badge}
+        title={heroData.title}
+        titleHighlight={heroData.titleHighlight}
+        description={heroData.description}
+        backgroundImageUrl={heroData.backgroundImage?.url}
+        align="left"
+        waveFill="white"
+      />
 
       {/* STATS BAR */}
       <section style={{ padding: "3rem 0" }}>

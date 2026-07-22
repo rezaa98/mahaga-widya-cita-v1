@@ -4,7 +4,7 @@ import WhatsAppFloat from "@/components/WhatsAppFloat";
 import ContactForm from "@/components/ContactForm";
 import { Phone, Mail, MapPin, Clock, MessageSquare } from "lucide-react";
 import type { Metadata } from "next";
-import { WaveDivider } from "@/components/ui/WaveDivider";
+import { PageHero } from "@/components/ui/PageHero";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 
@@ -49,51 +49,12 @@ export default async function KontakPage(props: { params: Promise<{ locale: stri
     <>
       <Navbar />
 
-      {/* HERO */}
-      <section
-        style={{
-          background: "linear-gradient(135deg, var(--color-primary-900), var(--color-primary-700))",
-          paddingTop: "calc(72px + 4rem)",
-          paddingBottom: "4rem",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: "radial-gradient(ellipse at 70% 50%, rgba(30,111,217,0.3) 0%, transparent 65%)",
-            pointerEvents: "none",
-          }}
-        />
-        <div className="container" style={{ position: "relative" }}>
-          <span
-            className="badge"
-            style={{
-              background: "rgba(255, 255, 255, 0.25)",
-              color: "#ffffff",
-              fontWeight: "600",
-              marginBottom: "1rem",
-              backdropFilter: "blur(4px)",
-            }}
-          >
-            Hubungi Kami
-          </span>
-          <h1
-            className="text-display"
-            style={{ color: "white", marginBottom: "1rem", maxWidth: "560px", whiteSpace: "pre-line" }}
-          >
-            {heroTitle}
-          </h1>
-          <p
-            style={{ color: "rgba(255,255,255,0.95)", fontSize: "1.125rem", maxWidth: "480px", whiteSpace: "pre-line" }}
-          >
-            {heroSubtitle}
-          </p>
-        </div>
-        <WaveDivider fill="white" />
-      </section>
+      <PageHero
+        badge="Hubungi Kami"
+        title={heroTitle}
+        description={heroSubtitle}
+        waveFill="white"
+      />
 
       {/* MAIN CONTENT */}
       <section className="section">

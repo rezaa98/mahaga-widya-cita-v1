@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
-import { WaveDivider } from "@/components/ui/WaveDivider";
+import { PageHero } from "@/components/ui/PageHero";
 
 export const dynamic = "force-dynamic";
 
@@ -38,53 +38,15 @@ export default async function LayananPage({ params }: { params: Promise<{ locale
     <>
       <Navbar />
 
-      {/* HERO SECTION */}
-      <section
-        style={{
-          background: "linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-700) 100%)",
-          paddingTop: "calc(72px + 4rem)",
-          paddingBottom: "4rem",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: "radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)",
-            pointerEvents: "none",
-          }}
-        />
-        <div className="container" style={{ position: "relative" }}>
-          <div style={{ maxWidth: "800px", margin: "0 auto", textAlign: "center" }}>
-            <div
-              className="badge"
-              style={{
-                background: "rgba(255,255,255,0.25)",
-                color: "#ffffff",
-                fontWeight: "600",
-                marginBottom: "1.25rem",
-                display: "inline-block",
-                backdropFilter: "blur(4px)",
-              }}
-            >
-              {isEn ? "Our Expertise" : "Keahlian Kami"}
-            </div>
-            <h1 className="text-display" style={{ color: "white", marginBottom: "1rem" }}>
-              {isEn ? "Comprehensive Services for Your Success" : "Layanan Komprehensif untuk Kesuksesan Anda"}
-            </h1>
-            <p style={{ color: "rgba(255,255,255,0.95)", fontSize: "1.125rem", lineHeight: "1.7", marginBottom: "0" }}>
-              {isEn
-                ? "We provide end-to-end solutions combining academic rigor with practical industry experience to transform governments, businesses, and communities."
-                : "Kami menyediakan solusi ujung-ke-ujung yang menggabungkan ketelitian akademis dengan pengalaman industri praktis untuk mentransformasi pemerintahan, bisnis, dan masyarakat."}
-            </p>
-          </div>
-        </div>
-
-        {/* Wave Divider */}
-        <WaveDivider fill="var(--color-neutral-50)" />
-      </section>
+      <PageHero
+        badge={isEn ? "Our Expertise" : "Keahlian Kami"}
+        title={isEn ? "Comprehensive Services for Your Success" : "Layanan Komprehensif untuk Kesuksesan Anda"}
+        description={
+          isEn
+            ? "We provide end-to-end solutions combining academic rigor with practical industry experience to transform governments, businesses, and communities."
+            : "Kami menyediakan solusi ujung-ke-ujung yang menggabungkan ketelitian akademis dengan pengalaman industri praktis untuk mentransformasi pemerintahan, bisnis, dan masyarakat."
+        }
+      />
 
       {/* SERVICES GRID SECTION */}
       <section className="section" style={{ background: "var(--color-neutral-50)" }}>

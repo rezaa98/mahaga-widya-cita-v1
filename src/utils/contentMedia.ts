@@ -51,3 +51,35 @@ export function getLocalizedArticleHref(locale: string, slugOrID: string | numbe
 export function getLocalizedArticlesHref(locale: string, search = ""): string {
   return `/${locale}/artikel${search}`;
 }
+
+export function createLexicalContent(paragraphs: string[]) {
+  const children = paragraphs.map((p) => ({
+    type: "paragraph",
+    format: "",
+    indent: 0,
+    version: 1,
+    children: [
+      {
+        mode: "normal",
+        text: p,
+        type: "text",
+        style: "",
+        detail: 0,
+        format: 0,
+        version: 1,
+      },
+    ],
+  }));
+
+  return {
+    root: {
+      type: "root",
+      direction: null,
+      format: "" as const,
+      indent: 0,
+      version: 1,
+      children,
+    },
+  };
+}
+

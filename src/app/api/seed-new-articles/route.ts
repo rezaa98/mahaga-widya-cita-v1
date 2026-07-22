@@ -5,6 +5,7 @@ import { dataIndividu } from "../seed-articles/data_individu";
 import { dataBisnis } from "../seed-articles/data_bisnis";
 import { dataPemerintah } from "../seed-articles/data_pemerintah";
 import { requireAdminAuth } from "@/utils/adminAuth";
+import { createLexicalContent } from "@/utils/contentMedia";
 
 export async function GET(req: Request) {
   const authError = await requireAdminAuth(req);
@@ -50,36 +51,6 @@ export async function GET(req: Request) {
       // Random date between now and 6 months ago
       const randomDate = new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toISOString();
 
-      // Build Lexical JSON format from paragraphs
-      const children = art.paragraphs.map((p) => ({
-        type: "paragraph",
-        format: "",
-        indent: 0,
-        version: 1,
-        children: [
-          {
-            mode: "normal",
-            text: p,
-            type: "text",
-            style: "",
-            detail: 0,
-            format: 0,
-            version: 1,
-          },
-        ],
-      }));
-
-      const contentObj = {
-        root: {
-          type: "root",
-          direction: null,
-          format: "" as const,
-          indent: 0,
-          version: 1,
-          children: children,
-        },
-      };
-
       await payload.create({
         collection: "articles",
         data: {
@@ -89,7 +60,7 @@ export async function GET(req: Request) {
           category: categoryId,
           status: "published",
           publishedAt: randomDate,
-          content: contentObj,
+          content: createLexicalContent(art.paragraphs),
         },
       });
 
