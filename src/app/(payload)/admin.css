@@ -576,101 +576,141 @@ html[data-theme="dark"] {
   }
 }
 
-/* --- Persistent content locale context --- */
-.mwc-locale-shell {
-  align-items: center;
-  background: #eff6ff;
-  border-bottom: 1px solid #bfdbfe;
-  color: #1e3a5f;
-  display: flex;
-  gap: 18px;
-  min-height: 52px;
-  padding: 8px clamp(16px, 3vw, 36px);
-  position: sticky;
-  top: 0;
-  z-index: 60;
-}
-.mwc-locale-shell--en { background: #f5f3ff; border-bottom-color: #ddd6fe; color: #4c1d95; }
-.mwc-locale-shell__context { align-items: center; display: inline-flex; gap: 9px; }
-.mwc-locale-shell__context > span:last-child { display: grid; }
-.mwc-locale-shell small { font-size: 10px; font-weight: 600; opacity: .72; }
-.mwc-locale-shell strong { font-size: 13px; }
-.mwc-locale-shell__meta, .mwc-locale-shell__hint { color: #64748b; font-size: 11px; }
-.mwc-locale-shell__hint { margin-left: auto; }
-.mwc-locale-shell button {
-  background: #fff;
-  border: 1px solid currentColor;
-  border-radius: 7px;
-  color: inherit;
-  cursor: pointer;
-  font: inherit;
-  font-size: 11px;
-  font-weight: 700;
-  margin-left: auto;
-  padding: 7px 10px;
-}
-.mwc-locale-shell button:focus-visible { outline: none; box-shadow: var(--admin-focus-ring); }
-
+/* --- Compact document locale context --- */
 .mwc-document-locale {
   align-items: center;
-  background: #f8fbff;
-  border: 1px solid #bfdbfe;
-  border-radius: 10px;
-  display: flex;
+  background: transparent;
+  border: 0;
+  display: inline-flex;
   flex-wrap: wrap;
-  gap: 10px 14px;
-  margin: 0 0 12px;
-  padding: 10px 12px;
-  width: 100%;
+  gap: 7px;
+  margin: 0 8px 0 0;
+  padding: 0;
+  width: auto;
 }
-.mwc-document-locale--en { background: #faf8ff; border-color: #ddd6fe; }
-.mwc-document-locale > div { align-items: center; display: flex; gap: 9px; }
-.mwc-document-locale > div > span:last-child { display: grid; }
-.mwc-document-locale small { color: #64748b; font-size: 10px; }
-.mwc-document-locale strong { color: #1e293b; font-size: 12px; }
+.mwc-document-locale strong {
+  color: #334155;
+  font-size: 11px;
+  white-space: nowrap;
+}
 .mwc-document-locale__badge {
   align-items: center;
   background: #1d4ed8;
   border-radius: 6px;
   color: #fff;
   display: inline-flex;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
-  height: 28px;
+  height: 24px;
   justify-content: center;
-  width: 34px;
+  width: 30px;
 }
-.mwc-document-locale--en .mwc-document-locale__badge { background: #7c3aed; }
-.mwc-document-locale__status, .mwc-document-locale__dirty { font-size: 11px; font-weight: 650; }
-.mwc-document-locale__status { color: #166534; }
-.mwc-document-locale__status--missing, .mwc-document-locale__status--error { color: #b45309; }
-.mwc-document-locale__status--checking { color: #64748b; }
-.mwc-document-locale__dirty { color: #b91c1c; }
-.mwc-document-locale button {
-  background: #fff;
-  border: 1px solid #cbd5e1;
-  border-radius: 7px;
-  color: #334155;
-  cursor: pointer;
-  font: inherit;
+.mwc-document-locale--en .mwc-document-locale__badge {
+  background: #7c3aed;
+}
+.mwc-document-locale__status,
+.mwc-document-locale__dirty {
   font-size: 11px;
-  font-weight: 700;
-  margin-left: auto;
-  padding: 7px 10px;
+  font-weight: 650;
 }
-.mwc-document-locale button:focus-visible { outline: none; box-shadow: var(--admin-focus-ring); }
-.mwc-editor-action-bar__status small { color: #b91c1c; font-size: 10px; font-weight: 700; }
-.mwc-editor-action-bar__preview[aria-disabled="true"] { cursor: not-allowed; opacity: .55; pointer-events: none; }
-.mwc-editor-action-bar__btn:disabled { cursor: wait; opacity: .65; transform: none; }
+.mwc-document-locale__status,
+.mwc-document-locale__dirty {
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+.mwc-document-locale__status {
+  background: #ecfdf5;
+  color: #166534;
+}
+.mwc-document-locale__status--missing,
+.mwc-document-locale__status--error {
+  background: #fffbeb;
+  color: #b45309;
+}
+.mwc-document-locale__status--checking {
+  background: #f1f5f9;
+  color: #64748b;
+}
+.mwc-document-locale__dirty {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+/* --- Corporate content workspace --- */
+.tabs-field__tabs-wrap {
+  border-bottom-color: #dbe4ee;
+  margin-bottom: 24px;
+}
+.tabs-field__tab-button {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 650;
+  min-height: 42px;
+  padding-inline: 14px;
+}
+.tabs-field__tab-button--active {
+  color: #1d4ed8;
+}
+.tabs-field__description {
+  color: #64748b;
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+.mwc-global-settings {
+  background: #f8fafc;
+  border: 1px solid #dbe4ee;
+  border-radius: 10px;
+  padding: 18px;
+}
+.mwc-global-settings .group-field__title::after {
+  background: #e2e8f0;
+  border-radius: 999px;
+  color: #475569;
+  content: "GLOBAL";
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-left: 8px;
+  padding: 3px 6px;
+  vertical-align: middle;
+}
+.mwc-visibility-settings .checkbox-input {
+  margin-bottom: 10px;
+}
+.mwc-editor-action-bar__status small {
+  color: #b91c1c;
+  font-size: 10px;
+  font-weight: 700;
+}
+.mwc-editor-action-bar__preview[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.mwc-editor-action-bar__btn:disabled {
+  cursor: wait;
+  opacity: 0.65;
+  transform: none;
+}
 
 @media (max-width: 700px) {
-  .mwc-locale-shell { align-items: flex-start; flex-wrap: wrap; gap: 6px 12px; padding: 8px 12px; }
-  .mwc-locale-shell__meta { width: calc(100% - 110px); }
-  .mwc-locale-shell__hint { margin-left: 0; width: 100%; }
-  .mwc-locale-shell button { margin-left: 0; }
-  .mwc-document-locale { align-items: flex-start; }
-  .mwc-document-locale__status { width: 100%; }
-  .mwc-document-locale button { margin-left: 0; }
+  .mwc-document-locale {
+    align-items: center;
+    margin-bottom: 8px;
+    width: 100%;
+  }
+  .mwc-document-locale__status {
+    width: 100%;
+  }
+  .mwc-global-settings {
+    padding: 14px;
+  }
+  .tabs-field__tabs {
+    overflow-x: auto;
+  }
+  .tabs-field__tab-button {
+    white-space: nowrap;
+  }
 }
 
 /* --- Sidebar Nav Visual Polish --- */

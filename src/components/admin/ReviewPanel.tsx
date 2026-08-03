@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useFormFields } from "@payloadcms/ui";
+import { useAdminLanguage } from "./adminLocale";
 
 /**
  * Compact review notes display shown in the article/journal sidebar when the
@@ -9,6 +10,7 @@ import { useFormFields } from "@payloadcms/ui";
  * visually connected to the editorial workflow.
  */
 export const ReviewPanel: React.FC = () => {
+  const isEn = useAdminLanguage() === "en";
   const statusField = useFormFields(([fields]) => fields.status);
   const reviewNotesField = useFormFields(([fields]) => fields.reviewNotes);
 
@@ -20,9 +22,13 @@ export const ReviewPanel: React.FC = () => {
   if (!showPanel) return null;
 
   const statusConfig: Record<string, { label: string; icon: string; borderColor: string }> = {
-    in_review: { label: "Dalam Review", icon: "rate_review", borderColor: "#f59e0b" },
-    revision_requested: { label: "Revisi Diperlukan", icon: "feedback", borderColor: "#ef4444" },
-    approved: { label: "Disetujui", icon: "check_circle", borderColor: "#10b981" },
+    in_review: { label: isEn ? "In Review" : "Dalam Review", icon: "rate_review", borderColor: "#f59e0b" },
+    revision_requested: {
+      label: isEn ? "Revision Required" : "Revisi Diperlukan",
+      icon: "feedback",
+      borderColor: "#ef4444",
+    },
+    approved: { label: isEn ? "Approved" : "Disetujui", icon: "check_circle", borderColor: "#10b981" },
   };
 
   const config = statusConfig[currentStatus] || statusConfig.in_review;
@@ -72,7 +78,9 @@ export const ReviewPanel: React.FC = () => {
       )}
       {!reviewNotes && currentStatus === "in_review" && (
         <p style={{ fontSize: 12, color: "#94a3b8", margin: 0 }}>
-          Belum ada catatan review. Reviewer dapat menambahkan catatan di field "Catatan Review" di bawah.
+          {isEn
+            ? 'No review notes yet. A reviewer can add notes in the "Review Notes" field below.'
+            : 'Belum ada catatan review. Reviewer dapat menambahkan catatan di field "Catatan Review" di bawah.'}
         </p>
       )}
     </div>

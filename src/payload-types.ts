@@ -945,6 +945,9 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Beranda {
   id: number;
+  /**
+   * Global settings — these apply to both Indonesian and English pages.
+   */
   visibility?: {
     showHero?: boolean | null;
     showStats?: boolean | null;
@@ -982,11 +985,11 @@ export interface Beranda {
       | {
           name: string;
           /**
-           * Logo perusahaan/instansi. Sebaiknya menggunakan latar transparan (PNG).
+           * Company/institution logo. A transparent background (PNG) is recommended.
            */
           logo?: (number | null) | Media;
           /**
-           * Isi dengan URL gambar jika tidak mengunggah logo di atas.
+           * Enter an image URL only when no logo is uploaded above.
            */
           logoUrl?: string | null;
           id?: string | null;
@@ -996,33 +999,36 @@ export interface Beranda {
   servicesIntro: {
     badge: string;
     /**
-     * Gunakan HTML <br /> untuk membuat baris baru. Contoh: Solusi Lengkap untuk<br />Penguatan Kapasitas Instansi
+     * Use HTML <br /> to create a new line.
      */
     title: string;
     description: string;
   };
+  /**
+   * Global selection — the same items are used on Indonesian and English pages.
+   */
   featuredData?: {
     /**
-     * Pilih layanan yang ingin ditampilkan di halaman Beranda (maksimal 6 disarankan).
+     * Select services to display on Home (up to 6 recommended).
      */
     services?: (number | Service)[] | null;
     /**
-     * Pilih artikel yang ingin ditampilkan di halaman Beranda (maksimal 3 disarankan).
+     * Select articles to display on Home (up to 3 recommended).
      */
     articles?: (number | Article)[] | null;
     /**
-     * Pilih anggota tim yang ingin ditampilkan di halaman Beranda (maksimal 4 disarankan).
+     * Select team members to display on Home (up to 4 recommended).
      */
     team?: (number | TeamMember)[] | null;
   };
   cta: {
     /**
-     * Gunakan Enter/Baris Baru untuk memisahkan baris teks.
+     * Use Enter/new lines to split the text into lines.
      */
     title: string;
     description: string;
     /**
-     * Gunakan format internasional tanpa awalan + (contoh: 62812...)
+     * Use international format without the + prefix (example: 62812...).
      */
     waNumber: string;
     waMessage: string;

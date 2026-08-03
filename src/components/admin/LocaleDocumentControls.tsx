@@ -1,50 +1,63 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { toast, useDocumentInfo, useFormModified } from "@payloadcms/ui";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { CONTENT_LOCALES, localeHref, useAdminLanguage, useContentLocale } from "./adminLocale";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDocumentInfo, useFormModified } from "@payloadcms/ui";
+import { CONTENT_LOCALES, useContentLocale } from "./adminLocale";
 
 type Availability = "checking" | "available" | "missing" | "new" | "error";
 
-const meaningfulKeys: Record<string, string[]> = {
+const localizedPaths: Record<string, string[]> = {
   articles: ["title", "content", "excerpt"],
   journals: ["title", "abstract", "content", "keywords"],
   "policy-reviews": ["title", "summary", "content", "excerpt"],
   services: ["name", "title", "description", "content"],
   "team-members": ["name", "position", "bio"],
   categories: ["name", "title"],
-  beranda: ["hero", "featuredData", "about", "services", "cta"],
-  "tentang-kami": ["hero", "title", "description", "vision", "mission"],
-  kontak: ["title", "description", "address"],
-  footer: ["description", "copyright", "links"],
-  navbar: ["links", "ctaLabel"],
+  beranda: [
+    "hero.badge", "hero.title", "hero.titleHighlight", "hero.titleSuffix", "hero.description", "hero.features[].text",
+    "stats[].suffix", "stats[].label", "partners.title", "partners.list[].name", "servicesIntro.badge",
+    "servicesIntro.title", "servicesIntro.description", "cta.title", "cta.description", "cta.waMessage", "cta.features[].text",
+  ],
+  "tentang-kami": ["hero.badge", "hero.title", "hero.titleHighlight", "hero.description"],
+  kontak: ["heroTitle", "heroSubtitle", "phone", "address", "workingHours"],
+  footer: ["companyDescription", "socialMedia[].url", "linksCompany[].label", "linksCompany[].url"],
+  navbar: ["links[].label", "links[].href", "links[].children[].label", "links[].children[].href"],
 };
 
-function hasContent(data: Record<string, unknown>, slug: string) {
-  const keys = meaningfulKeys[slug] || ["title", "name", "description", "content"];
-  const meaningful = (value: unknown): boolean => {
+function valuesAtPath(value: unknown, segments: string[]): unknown[] {
+  if (!segments.length) return [value];
+  const [segment, ...rest] = segments;
+  const isArray = segment.endsWith("[]");
+  const key = isArray ? segment.slice(0, -2) : segment;
+  const next = value && typeof value === "object" ? (value as Record<string, unknown>)[key] : undefined;
+  if (isArray) {
+    if (!Array.isArray(next) || next.length === 0) return [undefined];
+    return next.flatMap((entry) => valuesAtPath(entry, rest));
+  }
+  return valuesAtPath(next, rest);
+}
+
+function contentProgress(data: Record<string, unknown>, slug: string) {
+  const paths = localizedPaths[slug] || ["title", "name", "description", "content"];
+  const meaningful = (value: unknown) => {
     if (typeof value === "string") return value.trim().length > 0;
     if (Array.isArray(value)) return value.some(meaningful);
-    if (value && typeof value === "object") return Object.values(value).some(meaningful);
+    if (value && typeof value === "object") return Object.keys(value).length > 0;
     return false;
   };
-  return keys.some((key) => meaningful(data?.[key]));
+  const values = paths.flatMap((path) => valuesAtPath(data, path.split(".")));
+  return { filled: values.filter(meaningful).length, total: values.length };
 }
 
 export const LocaleDocumentControls: React.FC = () => {
   const locale = useContentLocale();
-  const adminLanguage = useAdminLanguage();
-  const copy = adminLanguage === "en";
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  const copy = locale === "en";
   const modified = useFormModified();
   const { collectionSlug, globalSlug, id } = useDocumentInfo();
   const slug = collectionSlug || globalSlug || "";
-  const other = locale === "id" ? CONTENT_LOCALES.en : CONTENT_LOCALES.id;
   const current = CONTENT_LOCALES[locale];
   const [availability, setAvailability] = useState<Availability>(id || globalSlug ? "checking" : "new");
+  const [progress, setProgress] = useState({ filled: 0, total: 0 });
 
   useEffect(() => {
     if (!modified) return;
@@ -71,7 +84,11 @@ export const LocaleDocumentControls: React.FC = () => {
         if (!response.ok) throw new Error(String(response.status));
         return response.json();
       })
-      .then((json) => setAvailability(hasContent((json?.doc || json) as Record<string, unknown>, slug) ? "available" : "missing"))
+      .then((json) => {
+        const nextProgress = contentProgress((json?.doc || json) as Record<string, unknown>, slug);
+        setProgress(nextProgress);
+        setAvailability(nextProgress.filled > 0 ? "available" : "missing");
+      })
       .catch(() => {
         if (!controller.signal.aborted) setAvailability("error");
       });
@@ -80,37 +97,20 @@ export const LocaleDocumentControls: React.FC = () => {
 
   const statusText = useMemo(() => {
     if (availability === "checking") return copy ? "Checking translation…" : "Memeriksa terjemahan…";
-    if (availability === "available") return copy ? `${current.shortLabel} content is available` : `Konten ${current.shortLabel} tersedia`;
+    if (availability === "available") return copy
+      ? `${progress.filled}/${progress.total} translated fields`
+      : `${progress.filled}/${progress.total} field terisi`;
     if (availability === "missing") return copy ? `${current.shortLabel} is empty — fallback is not counted` : `${current.shortLabel} masih kosong — fallback tidak dihitung`;
     if (availability === "new") return copy ? `New ${current.shortLabel} content` : `Konten ${current.shortLabel} baru`;
     return copy ? "Translation status unavailable" : "Status terjemahan tidak tersedia";
-  }, [availability, copy, current.shortLabel]);
-
-  const switchLocale = useCallback(() => {
-    if (modified) {
-      const proceed = window.confirm(
-        copy
-          ? `Unsaved changes in ${current.shortLabel} will be lost. Switch to ${other.shortLabel}?`
-          : `Perubahan ${current.shortLabel} belum tersimpan dan akan hilang. Tetap pindah ke ${other.shortLabel}?`,
-      );
-      if (!proceed) return;
-    }
-    toast.info(copy ? `Opening ${other.label} content` : `Membuka konten ${other.label}`);
-    router.replace(localeHref(pathname, searchParams.toString(), other.code), { scroll: false });
-  }, [copy, current.shortLabel, modified, other, pathname, router, searchParams]);
+  }, [availability, copy, current.shortLabel, progress.filled, progress.total]);
 
   return (
     <section className={`mwc-document-locale mwc-document-locale--${locale}`} aria-label={copy ? "Document content language" : "Bahasa konten dokumen"}>
-      <div>
-        <span className="mwc-document-locale__badge">{current.shortLabel}</span>
-        <span>
-          <small>{copy ? "Editing content version" : "Sedang mengedit versi konten"}</small>
-          <strong>{current.label}</strong>
-        </span>
-      </div>
+      <span className="mwc-document-locale__badge">{current.shortLabel}</span>
+      <strong>{copy ? `Editing ${current.label} content` : `Mengedit konten ${current.label}`}</strong>
       <span className={`mwc-document-locale__status mwc-document-locale__status--${availability}`}>{statusText}</span>
       {modified && <span className="mwc-document-locale__dirty">{copy ? "Unsaved changes" : "Perubahan belum tersimpan"}</span>}
-      <button type="button" onClick={switchLocale}>{copy ? `Switch to ${other.shortLabel}` : `Pindah ke ${other.shortLabel}`}</button>
     </section>
   );
 };

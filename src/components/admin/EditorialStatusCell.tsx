@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useAdminLanguage } from "./adminLocale";
 
 const STATUS_CONFIG: Record<string, { label: string; bg: string; color: string; icon: string; tip: string }> = {
   draft: {
@@ -63,13 +64,24 @@ const DEFAULT_STATUS = {
 };
 
 export const EditorialStatusCell: React.FC<any> = ({ cellData }) => {
+  const isEn = useAdminLanguage() === "en";
   const status = typeof cellData === "string" ? cellData : "";
   const config = STATUS_CONFIG[status] || DEFAULT_STATUS;
+  const englishCopy: Record<string, { label: string; tip: string }> = {
+    draft: { label: "Draft", tip: "Content is being written and has not been submitted for review." },
+    in_review: { label: "In Review", tip: "Content is currently being reviewed." },
+    revision_requested: { label: "Revision Required", tip: "A reviewer requested changes before approval." },
+    approved: { label: "Approved", tip: "Content is approved and ready for an administrator to publish." },
+    scheduled: { label: "Scheduled", tip: "Content is scheduled for automatic publication." },
+    published: { label: "Published", tip: "Content is published and publicly accessible." },
+    archived: { label: "Archived", tip: "Content is archived and hidden from the website." },
+  };
+  const localizedConfig = isEn && englishCopy[status] ? { ...config, ...englishCopy[status] } : config;
 
   return (
     <span
       className="mwc-status-badge"
-      title={config.tip}
+      title={localizedConfig.tip}
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -79,16 +91,16 @@ export const EditorialStatusCell: React.FC<any> = ({ cellData }) => {
         fontSize: 12,
         fontWeight: 600,
         lineHeight: 1,
-        background: config.bg,
-        color: config.color,
+        background: localizedConfig.bg,
+        color: localizedConfig.color,
         whiteSpace: "nowrap",
-        cursor: config.tip ? "help" : "default",
+        cursor: localizedConfig.tip ? "help" : "default",
       }}
     >
       <span aria-hidden className="material-symbols-outlined" style={{ fontSize: 15, lineHeight: 1 }}>
-        {config.icon}
+        {localizedConfig.icon}
       </span>
-      {config.label}
+      {localizedConfig.label}
     </span>
   );
 };
