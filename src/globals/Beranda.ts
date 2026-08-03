@@ -7,6 +7,7 @@ export const Beranda: GlobalConfig = {
   label: { id: "Beranda (Landing Page)", en: "Home (Landing Page)" },
   admin: {
     group: { id: "Website", en: "Website" },
+    components: { elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
   },
   access: {
     read: () => true,

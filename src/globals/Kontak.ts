@@ -7,6 +7,7 @@ export const Kontak: GlobalConfig = {
   label: { id: "Informasi Kontak", en: "Contact Information" },
   admin: {
     group: { id: "Website", en: "Website" },
+    components: { elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
   },
   access: {
     read: () => true,

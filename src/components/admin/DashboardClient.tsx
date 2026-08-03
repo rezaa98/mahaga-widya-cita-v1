@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { ImportJournalModal } from "./ImportJournalModal";
+import { useAdminLanguage, useContentLocale, withLocale } from "./adminLocale";
 
 type Stats = {
   articles: { total: number; published: number; draft: number };
@@ -38,34 +38,6 @@ const icons: Record<ActivityItem["type"], string> = {
   subscriber: "person_add",
   media: "image",
 };
-
-function useAdminLocale() {
-  const searchParams = useSearchParams();
-  const [locale, setLocale] = useState("id");
-
-  useEffect(() => {
-    const updateLocale = () => {
-      const urlLocale = searchParams?.get("locale") || new URLSearchParams(window.location.search).get("locale");
-      if (urlLocale && (urlLocale === "en" || urlLocale === "id")) {
-        setLocale(urlLocale);
-        return;
-      }
-      const cookieMatch =
-        document.cookie.match(/payload-locale=([^;]+)/) || document.cookie.match(/payload-lng=([^;]+)/);
-      if (cookieMatch && (cookieMatch[1] === "en" || cookieMatch[1] === "id")) {
-        setLocale(cookieMatch[1]);
-        return;
-      }
-      setLocale("id");
-    };
-
-    updateLocale();
-    const interval = setInterval(updateLocale, 400);
-    return () => clearInterval(interval);
-  }, [searchParams]);
-
-  return locale;
-}
 
 function timeAgo(value: string, isEn: boolean) {
   const minutes = Math.max(0, Math.floor((Date.now() - new Date(value).getTime()) / 60000));
@@ -117,7 +89,7 @@ function MetricCard({
   );
 }
 
-function AttentionPanel({ data, isEn }: { data: DashboardData; isEn: boolean }) {
+function AttentionPanel({ data, isEn, locale }: { data: DashboardData; isEn: boolean; locale: "id" | "en" }) {
   const items = [
     {
       count: data.stats.articles.draft,
@@ -151,7 +123,7 @@ function AttentionPanel({ data, isEn }: { data: DashboardData; isEn: boolean }) 
       {items.length ? (
         <div className="mwc-attention__list">
           {items.map((item) => (
-            <a href={item.href} key={item.label}>
+            <a href={withLocale(item.href, locale)} key={item.label}>
               <span className="mwc-attention__count">{item.count}</span>
               <span>
                 <Icon>{item.icon}</Icon>
@@ -170,7 +142,7 @@ function AttentionPanel({ data, isEn }: { data: DashboardData; isEn: boolean }) 
   );
 }
 
-function ActivityList({ data, loading, isEn }: { data: DashboardData | null; loading: boolean; isEn: boolean }) {
+function ActivityList({ data, loading, isEn, locale }: { data: DashboardData | null; loading: boolean; isEn: boolean; locale: "id" | "en" }) {
   return (
     <section className="mwc-panel mwc-activity" aria-labelledby="activity-title">
       <div className="mwc-panel__heading">
@@ -178,7 +150,7 @@ function ActivityList({ data, loading, isEn }: { data: DashboardData | null; loa
           <p className="mwc-eyebrow">Timeline</p>
           <h2 id="activity-title">{isEn ? "Recent Activity" : "Aktivitas terbaru"}</h2>
         </div>
-        <a href="/admin/collections/articles">{isEn ? "View content" : "Lihat konten"}</a>
+        <a href={withLocale("/admin/collections/articles", locale)}>{isEn ? "View content" : "Lihat konten"}</a>
       </div>
       {loading ? (
         <div className="mwc-activity__list">
@@ -197,7 +169,7 @@ function ActivityList({ data, loading, isEn }: { data: DashboardData | null; loa
       ) : (
         <div className="mwc-activity__list">
           {data.recentActivity.map((item, index) => (
-            <a href={item.link} key={`${item.time}-${index}`}>
+            <a href={withLocale(item.link, locale)} key={`${item.time}-${index}`}>
               <span className={`mwc-activity__type mwc-activity__type--${item.type}`}>
                 <Icon>{icons[item.type]}</Icon>
               </span>
@@ -215,8 +187,8 @@ function ActivityList({ data, loading, isEn }: { data: DashboardData | null; loa
 }
 
 export const DashboardClient: React.FC = () => {
-  const locale = useAdminLocale();
-  const isEn = locale === "en";
+  const locale = useContentLocale();
+  const isEn = useAdminLanguage() === "en";
 
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -234,21 +206,21 @@ export const DashboardClient: React.FC = () => {
   const actionItems = useMemo(
     () => [
       {
-        href: "/admin/collections/articles/create",
+        href: withLocale("/admin/collections/articles/create", locale),
         icon: "post_add",
         label: isEn ? "New Article" : "Artikel Baru",
         primary: true,
       },
       {
-        href: "/admin/collections/journals/create",
+        href: withLocale("/admin/collections/journals/create", locale),
         icon: "note_add",
         label: isEn ? "New Journal" : "Jurnal Baru",
         primary: true,
       },
-      { href: "/admin/collections/media/create", icon: "upload_file", label: isEn ? "Upload Media" : "Upload Media" },
-      { href: "/admin/collections/contact-submissions", icon: "mail", label: isEn ? "Inbox Messages" : "Pesan Masuk" },
+      { href: withLocale("/admin/collections/media/create", locale), icon: "upload_file", label: "Upload Media" },
+      { href: withLocale("/admin/collections/contact-submissions", locale), icon: "mail", label: isEn ? "Inbox Messages" : "Pesan Masuk" },
     ],
-    [isEn],
+    [isEn, locale],
   );
 
   useEffect(() => {
@@ -360,7 +332,7 @@ export const DashboardClient: React.FC = () => {
                   ? "Loading status…"
                   : "Memuat status…"
             }
-            href="/admin/collections/articles"
+            href={withLocale("/admin/collections/articles", locale)}
             icon="article"
             label={isEn ? "Articles" : "Artikel"}
             loading={loading}
@@ -374,7 +346,7 @@ export const DashboardClient: React.FC = () => {
                   ? "Loading status…"
                   : "Memuat status…"
             }
-            href="/admin/collections/journals"
+            href={withLocale("/admin/collections/journals", locale)}
             icon="menu_book"
             label={isEn ? "Journals" : "Jurnal"}
             loading={loading}
@@ -389,7 +361,7 @@ export const DashboardClient: React.FC = () => {
                   ? "Loading status…"
                   : "Memuat status…"
             }
-            href="/admin/collections/contact-submissions"
+            href={withLocale("/admin/collections/contact-submissions", locale)}
             icon="mail"
             label={isEn ? "Contact Messages" : "Pesan kontak"}
             loading={loading}
@@ -404,7 +376,7 @@ export const DashboardClient: React.FC = () => {
                   ? "Loading status…"
                   : "Memuat status…"
             }
-            href="/admin/collections/media"
+            href={withLocale("/admin/collections/media", locale)}
             icon="perm_media"
             label={isEn ? "Media" : "Media"}
             loading={loading}
@@ -473,9 +445,9 @@ export const DashboardClient: React.FC = () => {
                   </p>
                 )}
               </section>
-              <ActivityList data={data} isEn={isEn} loading={loading} />
+              <ActivityList data={data} isEn={isEn} loading={loading} locale={locale} />
             </div>
-            <AttentionPanel data={data} isEn={isEn} />
+            <AttentionPanel data={data} isEn={isEn} locale={locale} />
           </section>
         )}
       </div>

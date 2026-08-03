@@ -38,7 +38,10 @@ export default buildConfig({
       titleSuffix: "- Mahaga Widya Cita CMS",
     },
     components: {
-      providers: ["@/components/admin/ThemeForceProvider#ThemeForceProvider"],
+      providers: [
+        "@/components/admin/ThemeForceProvider#ThemeForceProvider",
+        "@/components/admin/AdminLocaleShell#AdminLocaleShell",
+      ],
       afterNavLinks: ["@/components/admin/CustomNavLinks#CustomNavLinks"],
       views: {
         dashboard: {

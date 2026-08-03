@@ -12,6 +12,7 @@ export const Services: CollectionConfig = {
     group: { id: "Manajemen Konten", en: "Content Management" },
     useAsTitle: "title",
     defaultColumns: ["title", "slug", "updatedAt"],
+    components: { edit: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
   },
   access: {
     read: () => true,

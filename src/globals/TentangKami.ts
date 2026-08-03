@@ -7,6 +7,7 @@ export const TentangKami: GlobalConfig = {
   label: { id: "Halaman Tentang Kami", en: "About Us Page" },
   admin: {
     group: { id: "Website", en: "Website" },
+    components: { elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
   },
   access: {
     read: () => true,

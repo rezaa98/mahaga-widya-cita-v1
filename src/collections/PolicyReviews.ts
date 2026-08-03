@@ -43,6 +43,7 @@ export const PolicyReviews: CollectionConfig = {
   admin: {
     group: { id: "Manajemen Konten", en: "Content Management" },
     useAsTitle: "title",
+    components: { edit: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
     hidden: ({ user }) => {
       if (!user) return true;
       return false;

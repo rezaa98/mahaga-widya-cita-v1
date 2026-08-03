@@ -86,6 +86,14 @@ export const Journals: CollectionConfig = {
       const slug = typeof doc.slug === "string" ? doc.slug : null;
       return slug ? `/${locale || "id"}/jurnal/${slug}` : null;
     },
+    components: {
+      edit: {
+        beforeDocumentControls: [
+          "@/components/admin/LocaleDocumentControls#LocaleDocumentControls",
+          "@/components/admin/EditorActionBar#EditorActionBar",
+        ],
+      },
+    },
   },
   access: {
     read: canReadPublishedOrAuthenticated,
@@ -373,6 +381,14 @@ export const Journals: CollectionConfig = {
         condition: (_, siblingData) => ["in_review", "revision_requested", "approved"].includes(siblingData?.status),
       },
       access: { update: canReviewContent },
+    },
+    {
+      name: "reviewSummary",
+      type: "ui",
+      admin: {
+        position: "sidebar",
+        components: { Field: "@/components/admin/ReviewPanel#ReviewPanel" },
+      },
     },
     {
       name: "publishedAt",

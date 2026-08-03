@@ -7,6 +7,7 @@ export const Navbar: GlobalConfig = {
   label: { id: "Navbar (Menu Atas)", en: "Navbar (Top Menu)" },
   admin: {
     group: { id: "Website", en: "Website" },
+    components: { elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
   },
   access: {
     read: () => true,

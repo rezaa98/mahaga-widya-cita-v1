@@ -7,6 +7,7 @@ export const Footer: GlobalConfig = {
   label: { id: "Footer", en: "Footer" },
   admin: {
     group: { id: "Website", en: "Website" },
+    components: { elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
   },
   access: {
     read: () => true,

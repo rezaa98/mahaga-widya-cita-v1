@@ -11,6 +11,7 @@ export const Categories: CollectionConfig = {
   admin: {
     group: { id: "Manajemen Konten", en: "Content Management" },
     useAsTitle: "name",
+    components: { edit: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
   },
   access: {
     read: () => true,

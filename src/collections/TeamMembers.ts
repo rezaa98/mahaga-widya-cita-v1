@@ -12,6 +12,7 @@ export const TeamMembers: CollectionConfig = {
     group: { id: "Manajemen Konten", en: "Content Management" },
     useAsTitle: "name",
     defaultColumns: ["name", "category", "expertise", "updatedAt"],
+    components: { edit: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
   },
   access: {
     read: () => true,

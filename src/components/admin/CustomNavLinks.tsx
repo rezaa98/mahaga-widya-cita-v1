@@ -1,41 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { HelpCenterModal } from "./HelpCenterModal";
-
-function useAdminLocale() {
-  const searchParams = useSearchParams();
-  const [locale, setLocale] = useState("id");
-
-  useEffect(() => {
-    const updateLocale = () => {
-      const urlLocale = searchParams?.get("locale") || new URLSearchParams(window.location.search).get("locale");
-      if (urlLocale && (urlLocale === "en" || urlLocale === "id")) {
-        setLocale(urlLocale);
-        return;
-      }
-      const cookieMatch =
-        document.cookie.match(/payload-locale=([^;]+)/) || document.cookie.match(/payload-lng=([^;]+)/);
-      if (cookieMatch && (cookieMatch[1] === "en" || cookieMatch[1] === "id")) {
-        setLocale(cookieMatch[1]);
-        return;
-      }
-      setLocale("id");
-    };
-
-    updateLocale();
-    const interval = setInterval(updateLocale, 400);
-    return () => clearInterval(interval);
-  }, [searchParams]);
-
-  return locale;
-}
+import { useAdminLanguage, useContentLocale } from "./adminLocale";
 
 export const CustomNavLinks: React.FC = () => {
-  const locale = useAdminLocale();
-  const isEn = locale === "en";
+  const locale = useContentLocale();
+  const isEn = useAdminLanguage() === "en";
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
   return (

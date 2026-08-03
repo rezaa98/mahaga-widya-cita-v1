@@ -77,6 +77,14 @@ export const Articles: CollectionConfig = {
       const slug = typeof doc.slug === "string" ? doc.slug : null;
       return slug ? `/${locale || "id"}/artikel/${slug}` : null;
     },
+    components: {
+      edit: {
+        beforeDocumentControls: [
+          "@/components/admin/LocaleDocumentControls#LocaleDocumentControls",
+          "@/components/admin/EditorActionBar#EditorActionBar",
+        ],
+      },
+    },
   },
   access: {
     // Visitors only see published articles; authenticated CMS users retain
@@ -284,6 +292,14 @@ export const Articles: CollectionConfig = {
       },
       access: {
         update: canReviewContent,
+      },
+    },
+    {
+      name: "reviewSummary",
+      type: "ui",
+      admin: {
+        position: "sidebar",
+        components: { Field: "@/components/admin/ReviewPanel#ReviewPanel" },
       },
     },
     {

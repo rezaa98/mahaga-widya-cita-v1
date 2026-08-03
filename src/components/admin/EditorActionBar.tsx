@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
-import { useFormFields, useAuth, useDocumentInfo } from "@payloadcms/ui";
+import React, { useState } from "react";
+import { toast, useForm, useFormFields, useAuth, useDocumentInfo, useFormModified } from "@payloadcms/ui";
 import { hasCapability } from "@/utils/access";
+import { useAdminLanguage, useContentLocale } from "./adminLocale";
 
 type AuthUser = { role?: unknown } | null | undefined;
 
@@ -22,6 +23,18 @@ const STATUS_ACTIONS: Record<string, { label: string; icon: string; nextStatuses
   archived: [{ label: "Aktifkan Ulang", icon: "unarchive", nextStatuses: ["draft"] }],
 };
 
+const EN_ACTION_LABELS: Record<string, string> = {
+  "Kirim Review": "Send for Review",
+  Setujui: "Approve",
+  "Minta Revisi": "Request Revision",
+  "Kirim Ulang": "Resubmit",
+  Publish: "Publish",
+  Jadwalkan: "Schedule",
+  "Publish Sekarang": "Publish Now",
+  Arsipkan: "Archive",
+  "Aktifkan Ulang": "Reactivate",
+};
+
 /**
  * Sticky editorial action bar shown below the Payload editor toolbar. Displays
  * the current document status and available status transitions based on the
@@ -32,6 +45,11 @@ export const EditorActionBar: React.FC = () => {
   const authUser = user as unknown as AuthUser;
   const docInfo = useDocumentInfo();
   const statusField = useFormFields(([fields]) => fields.status);
+  const { submit } = useForm();
+  const modified = useFormModified();
+  const locale = useContentLocale();
+  const isEn = useAdminLanguage() === "en";
+  const [processingStatus, setProcessingStatus] = useState<string | null>(null);
 
   const currentStatus = (statusField?.value as string) || "draft";
   const actions = STATUS_ACTIONS[currentStatus] || [];
@@ -50,18 +68,10 @@ export const EditorActionBar: React.FC = () => {
     return false;
   });
 
-  if (availableActions.length === 0) return null;
-
-  const statusLabel =
-    {
-      draft: "Draft",
-      in_review: "Menunggu Review",
-      revision_requested: "Perlu Revisi",
-      approved: "Disetujui",
-      scheduled: "Terjadwal",
-      published: "Published",
-      archived: "Diarsipkan",
-    }[currentStatus] || currentStatus;
+  const statusLabel = (isEn
+    ? { draft: "Draft", in_review: "In Review", revision_requested: "Revision Required", approved: "Approved", scheduled: "Scheduled", published: "Published", archived: "Archived" }
+    : { draft: "Draft", in_review: "Menunggu Review", revision_requested: "Perlu Revisi", approved: "Disetujui", scheduled: "Terjadwal", published: "Published", archived: "Diarsipkan" }
+  )[currentStatus] || currentStatus;
 
   return (
     <div className="mwc-editor-action-bar">
@@ -70,32 +80,40 @@ export const EditorActionBar: React.FC = () => {
           {currentStatus === "published" ? "public" : currentStatus === "draft" ? "edit_note" : "pending"}
         </span>
         <span>
-          Status: <strong>{statusLabel}</strong>
+          {isEn ? "Status" : "Status"}: <strong>{statusLabel}</strong>
         </span>
+        {modified && <small>{isEn ? "Save required" : "Perlu disimpan"}</small>}
       </div>
       <div className="mwc-editor-action-bar__actions">
         <a
           className="mwc-editor-action-bar__preview"
-          href={
-            docInfo?.id
-              ? `/${currentStatus === "published" ? "id" : "id"}/artikel/${(docInfo as any)?.data?.slug || docInfo.id}`
-              : "#"
-          }
+          aria-disabled={!docInfo?.id || currentStatus !== "published"}
+          href={docInfo?.id && currentStatus === "published"
+            ? `/${locale}/${docInfo.collectionSlug === "journals" ? "jurnal" : "artikel"}/${String(docInfo.data?.slug || docInfo.id)}`
+            : undefined}
           rel="noreferrer"
           target="_blank"
         >
           <span className="material-symbols-outlined" aria-hidden style={{ fontSize: 16 }}>
             visibility
           </span>
-          Preview
+          {currentStatus === "published" ? `${isEn ? "Preview" : "Preview"} ${locale.toUpperCase()}` : isEn ? "Preview after publishing" : "Preview setelah terbit"}
         </a>
         {availableActions.map((action) => (
           <button
             className="mwc-editor-action-bar__btn"
             key={action.label}
-            onClick={() => {
-              if (statusField && "setValue" in statusField) {
-                (statusField as any).setValue(action.nextStatuses[0]);
+            disabled={Boolean(processingStatus)}
+            onClick={async () => {
+              const nextStatus = action.nextStatuses[0];
+              setProcessingStatus(nextStatus);
+              try {
+                await submit({ overrides: { status: nextStatus } });
+                toast.success(isEn ? "Editorial status saved" : "Status editorial berhasil disimpan");
+              } catch {
+                toast.error(isEn ? "Failed to save editorial status" : "Gagal menyimpan status editorial");
+              } finally {
+                setProcessingStatus(null);
               }
             }}
             type="button"
@@ -103,7 +121,9 @@ export const EditorActionBar: React.FC = () => {
             <span className="material-symbols-outlined" aria-hidden style={{ fontSize: 16 }}>
               {action.icon}
             </span>
-            {action.label}
+            {processingStatus === action.nextStatuses[0]
+              ? (isEn ? "Saving…" : "Menyimpan…")
+              : isEn ? EN_ACTION_LABELS[action.label] || action.label : action.label}
           </button>
         ))}
       </div>
