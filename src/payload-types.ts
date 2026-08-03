@@ -77,7 +77,9 @@ export interface Config {
     subscribers: Subscriber;
     services: Service;
     'team-members': TeamMember;
+    'translation-records': TranslationRecord;
     'payload-kv': PayloadKv;
+    'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -94,7 +96,9 @@ export interface Config {
     subscribers: SubscribersSelect<false> | SubscribersSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
+    'translation-records': TranslationRecordsSelect<false> | TranslationRecordsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
+    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -125,7 +129,13 @@ export interface Config {
   };
   user: User;
   jobs: {
-    tasks: unknown;
+    tasks: {
+      'translate-resource': TaskTranslateResource;
+      inline: {
+        input: unknown;
+        output: unknown;
+      };
+    };
     workflows: unknown;
   };
 }
@@ -523,6 +533,65 @@ export interface TeamMember {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "translation-records".
+ */
+export interface TranslationRecord {
+  id: number;
+  resourceKey: string;
+  resourceType: 'collection' | 'global';
+  identifier: string;
+  resourceId?: string | null;
+  targetLocale: 'en';
+  status: 'not_generated' | 'queued' | 'translating' | 'needs_update' | 'needs_review' | 'approved' | 'failed';
+  sourceHash?: string | null;
+  sourceUpdatedAt?: string | null;
+  candidateData?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  generatedFields?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  manualLocks?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  translatedAt?: string | null;
+  provider?: string | null;
+  model?: string | null;
+  metrics?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  lastError?: string | null;
+  approvedAt?: string | null;
+  approvedBy?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -537,6 +606,102 @@ export interface PayloadKv {
     | number
     | boolean
     | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs".
+ */
+export interface PayloadJob {
+  id: number;
+  /**
+   * Input data provided to the job
+   */
+  input?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  taskStatus?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  completedAt?: string | null;
+  totalTried?: number | null;
+  /**
+   * If hasError is true this job will not be retried
+   */
+  hasError?: boolean | null;
+  /**
+   * If hasError is true, this is the error that caused it
+   */
+  error?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Task execution log
+   */
+  log?:
+    | {
+        executedAt: string;
+        completedAt: string;
+        taskSlug: 'inline' | 'translate-resource';
+        taskID: string;
+        input?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        output?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        state: 'failed' | 'succeeded';
+        error?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  taskSlug?: ('inline' | 'translate-resource') | null;
+  queue?: string | null;
+  waitUntil?: string | null;
+  processing?: boolean | null;
+  /**
+   * Used for concurrency control. Jobs with the same key are subject to exclusive/supersedes rules.
+   */
+  concurrencyKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -584,6 +749,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'team-members';
         value: number | TeamMember;
+      } | null)
+    | ({
+        relationTo: 'translation-records';
+        value: number | TranslationRecord;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -901,11 +1070,69 @@ export interface TeamMembersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "translation-records_select".
+ */
+export interface TranslationRecordsSelect<T extends boolean = true> {
+  resourceKey?: T;
+  resourceType?: T;
+  identifier?: T;
+  resourceId?: T;
+  targetLocale?: T;
+  status?: T;
+  sourceHash?: T;
+  sourceUpdatedAt?: T;
+  candidateData?: T;
+  generatedFields?: T;
+  manualLocks?: T;
+  translatedAt?: T;
+  provider?: T;
+  model?: T;
+  metrics?: T;
+  lastError?: T;
+  approvedAt?: T;
+  approvedBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
   key?: T;
   data?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs_select".
+ */
+export interface PayloadJobsSelect<T extends boolean = true> {
+  input?: T;
+  taskStatus?: T;
+  completedAt?: T;
+  totalTried?: T;
+  hasError?: T;
+  error?: T;
+  log?:
+    | T
+    | {
+        executedAt?: T;
+        completedAt?: T;
+        taskSlug?: T;
+        taskID?: T;
+        input?: T;
+        output?: T;
+        state?: T;
+        error?: T;
+        id?: T;
+      };
+  taskSlug?: T;
+  queue?: T;
+  waitUntil?: T;
+  processing?: T;
+  concurrencyKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1442,6 +1669,23 @@ export interface CollectionsWidget {
     [k: string]: unknown;
   };
   width: 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskTranslate-resource".
+ */
+export interface TaskTranslateResource {
+  input: {
+    resourceType: 'collection' | 'global';
+    identifier: string;
+    resourceId?: string | null;
+    sourceHash: string;
+  };
+  output: {
+    generatedFields: number;
+    sourceHash: string;
+    stale?: boolean | null;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

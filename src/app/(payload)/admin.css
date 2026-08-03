@@ -578,15 +578,22 @@ html[data-theme="dark"] {
 
 /* --- Compact document locale context --- */
 .mwc-document-locale {
+  align-items: stretch;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 0 0 12px;
+  padding: 9px 10px;
+  width: 100%;
+}
+.mwc-document-locale__content {
   align-items: center;
-  background: transparent;
-  border: 0;
-  display: inline-flex;
+  display: flex;
   flex-wrap: wrap;
   gap: 7px;
-  margin: 0 8px 0 0;
-  padding: 0;
-  width: auto;
 }
 .mwc-document-locale strong {
   color: #334155;
@@ -634,6 +641,140 @@ html[data-theme="dark"] {
 .mwc-document-locale__dirty {
   background: #fef2f2;
   color: #b91c1c;
+}
+
+/* --- Translation workflow --- */
+.mwc-translation-workflow {
+  align-items: center;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding-top: 9px;
+}
+.mwc-translation-workflow__state {
+  align-items: center;
+  background: #f8fafc;
+  border-radius: 999px;
+  color: #475569;
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 700;
+  gap: 6px;
+  padding: 5px 8px;
+}
+.mwc-translation-workflow__dot {
+  background: currentcolor;
+  border-radius: 50%;
+  height: 6px;
+  width: 6px;
+}
+.mwc-translation-workflow__state--queued,
+.mwc-translation-workflow__state--translating {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+.mwc-translation-workflow__state--needs_update,
+.mwc-translation-workflow__state--needs_review {
+  background: #fffbeb;
+  color: #b45309;
+}
+.mwc-translation-workflow__state--approved {
+  background: #ecfdf5;
+  color: #166534;
+}
+.mwc-translation-workflow__state--failed {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+.mwc-translation-workflow__meta {
+  color: #64748b;
+  font-size: 10px;
+  line-height: 1.3;
+}
+.mwc-translation-workflow__error {
+  color: #b91c1c;
+  font-size: 10px;
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mwc-translation-workflow__action {
+  align-items: center;
+  background: #1d4ed8;
+  border: 0;
+  border-radius: 7px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 700;
+  gap: 5px;
+  margin-left: auto;
+  min-height: 30px;
+  padding: 5px 10px;
+}
+.mwc-translation-workflow__action .material-symbols-outlined {
+  font-size: 15px;
+}
+.mwc-translation-workflow__action:hover {
+  background: #1e40af;
+}
+.mwc-translation-workflow__action:focus-visible {
+  outline: none;
+  box-shadow: var(--admin-focus-ring);
+}
+.mwc-translation-workflow__action:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+.mwc-translation-preview {
+  background: #f8fafc;
+  border: 1px solid #dbe4ee;
+  border-radius: 8px;
+  flex-basis: 100%;
+  margin-top: 2px;
+  padding: 8px 10px;
+}
+.mwc-translation-preview summary {
+  color: #1e3a8a;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 750;
+}
+.mwc-translation-preview__grid {
+  display: grid;
+  gap: 8px;
+  margin-top: 9px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+.mwc-translation-preview__item {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  display: grid;
+  gap: 6px;
+  grid-template-columns: minmax(100px, 0.35fr) repeat(2, minmax(180px, 1fr));
+  padding: 8px;
+}
+.mwc-translation-preview__item strong,
+.mwc-translation-preview__item small {
+  color: #64748b;
+  font-size: 10px;
+}
+.mwc-translation-preview__item p {
+  color: #1e293b;
+  font-size: 11px;
+  line-height: 1.45;
+  margin: 2px 0 0;
+  white-space: pre-wrap;
+}
+.mwc-translation-preview__notice {
+  color: #92400e;
+  font-size: 10px;
+  margin: 0;
 }
 
 /* --- Corporate content workspace --- */
@@ -695,12 +836,19 @@ html[data-theme="dark"] {
 
 @media (max-width: 700px) {
   .mwc-document-locale {
-    align-items: center;
     margin-bottom: 8px;
     width: 100%;
   }
-  .mwc-document-locale__status {
+  .mwc-translation-workflow {
+    align-items: flex-start;
+  }
+  .mwc-translation-workflow__action {
+    justify-content: center;
+    margin-left: 0;
     width: 100%;
+  }
+  .mwc-translation-preview__item {
+    grid-template-columns: 1fr;
   }
   .mwc-global-settings {
     padding: 14px;

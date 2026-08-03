@@ -15,6 +15,9 @@ import { ContactSubmissions } from "./collections/ContactSubmissions";
 import { Subscribers } from "./collections/Subscribers";
 import { Services } from "./collections/Services";
 import { TeamMembers } from "./collections/TeamMembers";
+import { TranslationRecords } from "./translation/TranslationRecords";
+import { translateResourceTask } from "./translation/task";
+import { isAdminUser } from "./utils/access";
 import { Beranda } from "./globals/Beranda";
 import { TentangKami } from "./globals/TentangKami";
 import { Kontak } from "./globals/Kontak";
@@ -69,7 +72,24 @@ export default buildConfig({
     Subscribers,
     Services,
     TeamMembers,
+    TranslationRecords,
   ],
+  jobs: {
+    enableConcurrencyControl: true,
+    deleteJobOnComplete: false,
+    processingOrder: { queues: { translations: "createdAt" } },
+    access: {
+      queue: ({ req }) => isAdminUser(req.user),
+      cancel: ({ req }) => isAdminUser(req.user),
+      run: ({ req }) => {
+        if (isAdminUser(req.user)) return true;
+        const expected = process.env.CRON_SECRET;
+        const authorization = req.headers.get("authorization");
+        return Boolean(expected && authorization === `Bearer ${expected}`);
+      },
+    },
+    tasks: [translateResourceTask],
+  },
   localization: {
     locales: ["id", "en"],
     defaultLocale: "id",

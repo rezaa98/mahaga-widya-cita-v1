@@ -1,107 +1,118 @@
+import { NextResponse } from "next/server";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
-import { translateDocumentJSON } from "@/utils/translate";
-import { requireAdminAuth } from "@/utils/adminAuth";
+import { authorizeTranslationRequest } from "@/translation/auth";
+import { queueTranslation } from "@/translation/service";
+import { TRANSLATABLE_COLLECTIONS, TRANSLATABLE_GLOBALS } from "@/translation/types";
 
-const COLLECTIONS = ["articles", "categories", "services", "team-members"] as const;
-const GLOBALS = ["beranda", "footer", "kontak", "navbar", "tentang-kami"] as const;
-
-export const maxDuration = 300; // Allow up to 5 minutes on Vercel
 export const dynamic = "force-dynamic";
+export const maxDuration = 300;
 
-export async function GET(req: Request) {
-  const authError = await requireAdminAuth(req);
-  if (authError) return authError;
+type BulkRequest = {
+  collection?: string;
+  dryRun?: boolean;
+  includeGlobals?: boolean;
+  limit?: number;
+  page?: number;
+  runNow?: boolean;
+};
+
+export async function GET() {
+  return NextResponse.json(
+    { error: "Use POST. Bulk translation changes server state and cannot be triggered by a link." },
+    { headers: { Allow: "POST" }, status: 405 },
+  );
+}
+
+export async function POST(req: Request) {
+  const payload = await getPayload({ config: configPromise });
+  const auth = await authorizeTranslationRequest(payload, req, ["manageSiteContent"]);
+  if (auth.error) return auth.error;
+
+  let body: BulkRequest;
   try {
-    const payload = await getPayload({ config: configPromise });
+    body = (await req.json()) as BulkRequest;
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
 
-    let logs: string[] = [];
-    const log = (msg: string) => {
-      console.log(msg);
-      logs.push(msg);
-    };
+  const page = Math.max(1, Math.floor(Number(body.page) || 1));
+  const limit = Math.min(50, Math.max(1, Math.floor(Number(body.limit) || 20)));
+  const selectedCollections = body.collection
+    ? TRANSLATABLE_COLLECTIONS.filter((slug) => slug === body.collection)
+    : TRANSLATABLE_COLLECTIONS;
 
-    log("=== STARTING BULK TRANSLATION ===");
+  if (body.collection && selectedCollections.length === 0) {
+    return NextResponse.json({ error: "Unsupported collection." }, { status: 400 });
+  }
 
-    // Translate Globals
-    for (const slug of GLOBALS) {
+  const resources: Array<{ identifier: string; resourceId?: string; resourceType: "collection" | "global" }> = [];
+  let hasNextPage = false;
+
+  try {
+    for (const identifier of selectedCollections) {
+      const result = await payload.find({
+        collection: identifier,
+        depth: 0,
+        draft: true,
+        fallbackLocale: "none" as any,
+        limit,
+        locale: "id",
+        overrideAccess: true,
+        page,
+      });
+      hasNextPage ||= result.hasNextPage;
+      resources.push(
+        ...result.docs.map((doc) => ({ identifier, resourceId: String(doc.id), resourceType: "collection" as const })),
+      );
+    }
+
+    if (body.includeGlobals && page === 1) {
+      resources.push(...TRANSLATABLE_GLOBALS.map((identifier) => ({ identifier, resourceType: "global" as const })));
+    }
+
+    if (body.dryRun) {
+      return NextResponse.json({ dryRun: true, hasNextPage, nextPage: hasNextPage ? page + 1 : null, resources });
+    }
+
+    const queued: typeof resources = [];
+    const unchanged: typeof resources = [];
+    const failed: Array<(typeof resources)[number] & { error: string }> = [];
+    for (const resource of resources) {
       try {
-        log(`\nFetching global [${slug}]...`);
-        const doc = await payload.findGlobal({
-          slug,
-          locale: "id",
-          fallbackLocale: "none",
-          depth: 0,
+        const result = await queueTranslation(payload, resource);
+        if (result.skipped) unchanged.push(resource);
+        else queued.push(resource);
+      } catch (error) {
+        failed.push({
+          ...resource,
+          error: error instanceof Error ? error.message : "Unable to queue translation.",
         });
-
-        if (doc) {
-          log(`Translating global [${slug}]...`);
-          const { id, createdAt, updatedAt, ...docToTranslate } = doc;
-          const translatedData = await translateDocumentJSON(docToTranslate);
-
-          await payload.updateGlobal({
-            slug,
-            locale: "en",
-            data: translatedData,
-            context: { skipAutoTranslate: true },
-          });
-          log(`✅ Global [${slug}] translated successfully.`);
-        }
-      } catch (e: any) {
-        log(`❌ Error global [${slug}]: ${e.message}`);
       }
     }
 
-    // Translate Collections
-    for (const collection of COLLECTIONS) {
-      try {
-        log(`\nFetching collection [${collection}]...`);
-        const result = await payload.find({
-          collection,
-          locale: "id",
-          fallbackLocale: "none",
-          depth: 0,
-          limit: 100,
-        });
-
-        log(`Found ${result.docs.length} items in [${collection}]`);
-
-        for (const doc of result.docs) {
-          log(`Translating [${collection}] ID: ${doc.id}...`);
-          const {
-            id,
-            createdAt,
-            updatedAt,
-            sizes,
-            url,
-            filename,
-            mimeType,
-            filesize,
-            width,
-            height,
-            focalX,
-            focalY,
-            ...docToTranslate
-          } = doc as any;
-          const translatedData = await translateDocumentJSON(docToTranslate);
-
-          await payload.update({
-            collection,
-            id: doc.id,
-            locale: "en",
-            data: translatedData,
-            context: { skipAutoTranslate: true },
-          });
-          log(`✅ [${collection}] ID: ${doc.id} translated successfully.`);
-        }
-      } catch (e: any) {
-        log(`❌ Error collection [${collection}]: ${e.message}`);
-      }
+    let runResult: unknown;
+    if (body.runNow && queued.length) {
+      runResult = await payload.jobs.run({
+        limit: Math.min(10, queued.length),
+        overrideAccess: true,
+        queue: "translations",
+      });
     }
 
-    log("\n=== BULK TRANSLATION COMPLETED ===");
-    return Response.json({ success: true, logs });
-  } catch (error: any) {
-    return Response.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json({
+      failed,
+      hasNextPage,
+      nextPage: hasNextPage ? page + 1 : null,
+      queued,
+      runResult,
+      success: failed.length === 0,
+      unchanged,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Bulk translation failed." },
+      { status: 500 },
+    );
   }
 }

@@ -1,11 +1,14 @@
 import type { CollectionConfig } from "payload";
 import { APIError } from "payload";
+import { universalCollectionAutoTranslate } from "../hooks/universalAutoTranslate";
 import { canManageContent, canManageOwnContentOrReview, canPublishContent, canReviewContent } from "../utils/access";
 
 const EDITOR_STATUSES = ["draft", "in_review", "revision_requested"];
 const REVIEWER_STATUSES = ["in_review", "revision_requested", "approved"];
 
 function guardPolicyReviewStatusTransition({ data, originalDoc, operation, req }: any) {
+  if (req.context?.skipAutoTranslate) return data;
+
   if (operation === "create" && req.user?.id && !canPublishContent({ req })) {
     data.author = req.user.id;
   }
@@ -43,7 +46,9 @@ export const PolicyReviews: CollectionConfig = {
   admin: {
     group: { id: "Manajemen Konten", en: "Content Management" },
     useAsTitle: "title",
-    components: { edit: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
+    components: {
+      edit: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] },
+    },
     hidden: ({ user }) => {
       if (!user) return true;
       return false;
@@ -76,6 +81,7 @@ export const PolicyReviews: CollectionConfig = {
   },
   hooks: {
     beforeChange: [guardPolicyReviewStatusTransition],
+    afterChange: [universalCollectionAutoTranslate],
   },
   fields: [
     {
@@ -88,6 +94,7 @@ export const PolicyReviews: CollectionConfig = {
               name: "title",
               type: "text",
               required: true,
+              localized: true,
               label: "Judul Policy Review",
               access: {
                 update: canManageContent,
@@ -96,6 +103,7 @@ export const PolicyReviews: CollectionConfig = {
             {
               name: "summary",
               type: "richText",
+              localized: true,
               label: "Ringkasan (Summary)",
               access: {
                 update: canManageContent,
@@ -104,6 +112,7 @@ export const PolicyReviews: CollectionConfig = {
             {
               name: "excerpt",
               type: "textarea",
+              localized: true,
               maxLength: 320,
               label: "Deskripsi Singkat",
               admin: {

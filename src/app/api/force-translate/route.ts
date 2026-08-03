@@ -1,36 +1,37 @@
 import { NextResponse } from "next/server";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
-import { translateDocumentJSON } from "@/utils/translate";
-import { requireAdminAuth } from "@/utils/adminAuth";
+import { authorizeTranslationRequest } from "@/translation/auth";
+import { getTranslationRecord } from "@/translation/records";
+import { parseTranslationResource } from "@/translation/request";
+import { queueTranslation } from "@/translation/service";
 
-export async function GET(request: Request) {
-  const authError = await requireAdminAuth(request);
-  if (authError) return authError;
+export const dynamic = "force-dynamic";
+export const maxDuration = 60;
+
+export async function GET() {
+  return NextResponse.json(
+    { error: "Use POST. Translation cannot be triggered by a link." },
+    { headers: { Allow: "POST" }, status: 405 },
+  );
+}
+
+export async function POST(req: Request) {
+  const payload = await getPayload({ config: configPromise });
+  const auth = await authorizeTranslationRequest(payload, req, ["manageContent", "manageSiteContent"]);
+  if (auth.error) return auth.error;
+
   try {
-    const payload = await getPayload({ config: configPromise });
-    const url = new URL(request.url);
-    const slug = url.searchParams.get("slug") as any;
-
-    if (!slug) return NextResponse.json({ error: "No slug" });
-
-    console.log(`Force translating ${slug}...`);
-    const doc = await payload.findGlobal({ slug, locale: "id", depth: 0 });
-    const { id, createdAt, updatedAt, ...docToTranslate } = doc as any;
-
-    const translatedData = await translateDocumentJSON(docToTranslate, "English");
-
-    await payload.updateGlobal({
-      slug,
-      locale: "en",
-      data: translatedData,
-      context: { skipAutoTranslate: true },
-    });
-
-    console.log(`✅ Successfully translated ${slug}`);
-    return NextResponse.json({ success: true, slug });
-  } catch (error: any) {
-    console.error(error);
-    return NextResponse.json({ error: error.message });
+    const body = await req.json();
+    const resource = parseTranslationResource(body);
+    const { job } = await queueTranslation(payload, resource, undefined, { force: true });
+    if (job) await payload.jobs.runByID({ id: job.id, overrideAccess: true });
+    const record = await getTranslationRecord(payload, resource);
+    return NextResponse.json({ data: record, success: true });
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Translation failed." },
+      { status: 400 },
+    );
   }
 }

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
-import { translateDocumentJSON } from "@/utils/translate";
+import { queueTranslation } from "@/translation/service";
 import { TentangKami } from "@/globals/TentangKami";
 import { requireAdminAuth } from "@/utils/adminAuth";
 
@@ -21,7 +21,14 @@ function extractDefaults(fields: any[]): any {
   return result;
 }
 
-export async function GET(request: Request) {
+export async function GET() {
+  return NextResponse.json(
+    { error: "Use POST. Restoring defaults changes server state." },
+    { headers: { Allow: "POST" }, status: 405 },
+  );
+}
+
+export async function POST(request: Request) {
   try {
     const payload = await getPayload({ config: configPromise });
 
@@ -137,20 +144,13 @@ export async function GET(request: Request) {
       context: { skipAutoTranslate: true },
     });
 
-    // Translate to EN
-    console.log(`Translating tentang-kami to EN...`);
-    const translatedData = await translateDocumentJSON(defaultData, "English");
-
-    // Restore EN
-    await payload.updateGlobal({
-      slug: "tentang-kami",
-      locale: "en",
-      data: translatedData,
-      context: { skipAutoTranslate: true },
+    await queueTranslation(payload, {
+      identifier: "tentang-kami",
+      resourceType: "global",
     });
 
-    console.log(`✅ tentang-kami fully restored and translated!`);
-    return NextResponse.json({ success: true });
+    console.log(`✅ tentang-kami restored and queued for English review.`);
+    return NextResponse.json({ queued: true, success: true });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ error: error.message });

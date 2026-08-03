@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mahaga Widya Cita
 
-## Getting Started
+Corporate website and bilingual Payload CMS built with Next.js.
 
-First, run the development server:
+## Development
+
+Copy `.env.example` to `.env`, fill the required values, install dependencies, then run:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Translation workflow
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Indonesian (`id`) is the source of truth. Saving localized Indonesian content queues an ID-to-EN translation job. AI output is stored as a review candidate and never overwrites live English content until an authorized reviewer approves it in the English editor.
 
-## Learn More
+Required server variables:
 
-To learn more about Next.js, take a look at the following resources:
+- `GEMINI_API_KEY`
+- `GEMINI_TRANSLATION_MODEL` (defaults to `gemini-3.6-flash`)
+- `CRON_SECRET` for the Vercel recovery runner
+- `TRANSLATION_GLOSSARY_JSON` for optional corporate terminology
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Before deploying the translation workflow to an existing production database, run the checked-in migration once against that database:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npx payload migrate
+```
+
+The migration preserves existing Policy Review content as Indonesian localized data and creates the translation/job tables. `vercel.json` runs a daily recovery pass; explicit editor actions process their job immediately.
+
+Useful verification commands:
+
+```bash
+npm run generate:types
+npx tsc --noEmit
+node --import tsx --test src/translation/schema.test.ts src/utils/translate.test.ts
+npm run build
+```
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Set the variables from `.env.example` for Production and Preview. Database migrations are intentionally separate from the serverless build; apply them before promoting the deployment.

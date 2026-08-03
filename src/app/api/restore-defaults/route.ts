@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
-import { translateDocumentJSON } from "@/utils/translate";
+import { queueTranslation } from "@/translation/service";
 import { Navbar } from "@/globals/Navbar";
 import { Footer } from "@/globals/Footer";
 import { Beranda } from "@/globals/Beranda";
@@ -25,7 +25,14 @@ function extractDefaults(fields: any[]): any {
   return result;
 }
 
-export async function GET(request: Request) {
+export async function GET() {
+  return NextResponse.json(
+    { error: "Use POST. Restoring defaults changes server state." },
+    { headers: { Allow: "POST" }, status: 405 },
+  );
+}
+
+export async function POST(request: Request) {
   const authError = await requireAdminAuth(request);
   if (authError) return authError;
   try {
@@ -51,18 +58,13 @@ export async function GET(request: Request) {
         context: { skipAutoTranslate: true },
       });
 
-      // Translate to EN
-      console.log(`Translating ${g.slug} to EN...`);
-      const translatedData = await translateDocumentJSON(defaultData, "English");
-
-      // Restore EN
-      await payload.updateGlobal({
-        slug: g.slug as any,
-        locale: "en",
-        data: translatedData,
-        context: { skipAutoTranslate: true },
+      // English remains unchanged until an editor reviews and approves the
+      // candidate produced by the shared translation workflow.
+      await queueTranslation(payload, {
+        identifier: g.slug,
+        resourceType: "global",
       });
-      console.log(`✅ ${g.slug} fully restored and translated!`);
+      console.log(`✅ ${g.slug} restored and queued for English review.`);
     }
 
     return NextResponse.json({ success: true });
