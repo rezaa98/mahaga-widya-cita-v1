@@ -28,11 +28,16 @@ import configPromise from "@payload-config";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Tentang Kami",
-  description:
-    "Mengenal PT Mahaga Widya Cita — perusahaan konsultasi dan edukasi terdepan yang melayani ASN dan profesional Indonesia sejak 2015.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const isEn = locale === "en";
+  return {
+    title: isEn ? "About Us" : "Tentang Kami",
+    description: isEn
+      ? "Learn about PT Mahaga Widya Cita — a leading consulting and education company serving Indonesian institutions and professionals."
+      : "Mengenal PT Mahaga Widya Cita — perusahaan konsultasi dan edukasi terdepan yang melayani ASN dan profesional Indonesia sejak 2015.",
+  };
+}
 
 const defaultValues = [
   {
@@ -331,10 +336,10 @@ export default async function TentangKamiPage(props: { params: Promise<{ locale:
           >
             <div>
               <span className="badge badge-primary" style={{ marginBottom: "1rem" }}>
-                Profil Perusahaan
+                {isEn ? "Company Profile" : "Profil Perusahaan"}
               </span>
               <h2 className="text-heading-xl" style={{ marginBottom: "1.25rem" }}>
-                Siapa PT Mahaga Widya Cita?
+                {isEn ? "Who is PT Mahaga Widya Cita?" : "Siapa PT Mahaga Widya Cita?"}
               </h2>
               <div className="gold-divider" style={{ margin: "0 0 1.5rem" }} />
               <p
@@ -381,7 +386,7 @@ export default async function TentangKamiPage(props: { params: Promise<{ locale:
                   }}
                 />
                 <h3 style={{ fontSize: "1.25rem", marginBottom: "0.625rem", color: "var(--color-neutral-900)" }}>
-                  Visi
+                  {isEn ? "Vision" : "Visi"}
                 </h3>
                 <p style={{ fontSize: "0.875rem", color: "var(--color-neutral-500)", lineHeight: "1.6" }}>{visiData}</p>
               </div>
@@ -396,7 +401,9 @@ export default async function TentangKamiPage(props: { params: Promise<{ locale:
                     marginBottom: "0.875rem",
                   }}
                 />
-                <h3 style={{ fontSize: "1.25rem", marginBottom: "1rem", color: "var(--color-neutral-900)" }}>Misi</h3>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "1rem", color: "var(--color-neutral-900)" }}>
+                  {isEn ? "Mission" : "Misi"}
+                </h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                   {misiData.map((misi: any, i: number) => (
                     <div key={i} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
