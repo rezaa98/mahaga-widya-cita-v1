@@ -195,7 +195,7 @@ export default async function LayananPage({ params }: { params: Promise<{ locale
       </section>
 
       <Footer locale={locale} />
-      <WhatsAppFloat />
+      <WhatsAppFloat locale={locale} />
     </>
   );
 }

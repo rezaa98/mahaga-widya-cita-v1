@@ -4,19 +4,80 @@ import { Send, CheckCircle2 } from "lucide-react";
 
 interface ContactFormProps {
   subjects?: string[];
+  locale?: string;
 }
 
-export default function ContactForm({
-  subjects = [
-    "Konsultasi Tata Kelola",
-    "Smart Executive Education",
-    "Smart Software Service",
-    "Smart Online Course",
-    "Pendaftaran Webinar",
-    "Kemitraan & Kolaborasi",
-    "Lainnya",
-  ],
-}: ContactFormProps) {
+const defaultSubjectsId = [
+  "Konsultasi Tata Kelola",
+  "Smart Executive Education",
+  "Smart Software Service",
+  "Smart Online Course",
+  "Pendaftaran Webinar",
+  "Kemitraan & Kolaborasi",
+  "Lainnya",
+];
+
+const defaultSubjectsEn = [
+  "Governance Consulting",
+  "Smart Executive Education",
+  "Smart Software Service",
+  "Smart Online Course",
+  "Webinar Registration",
+  "Partnership & Collaboration",
+  "Other",
+];
+
+export default function ContactForm({ subjects, locale = "id" }: ContactFormProps) {
+  const isEn = locale === "en";
+  const subjectOptions = subjects?.length ? subjects : isEn ? defaultSubjectsEn : defaultSubjectsId;
+  const copy = isEn
+    ? {
+        title: "Send a Message",
+        intro: "Fill out the form below and our team will get back to you shortly.",
+        name: "Full Name *",
+        namePh: "John Smith",
+        email: "Email *",
+        emailPh: "john@company.com",
+        phone: "Phone / WhatsApp",
+        phonePh: "+62 812xxxxxxxx",
+        institution: "Organization / Company",
+        institutionPh: "Ministry / Agency / Company ...",
+        subject: "Subject / Purpose *",
+        subjectPh: "— Select your purpose —",
+        message: "Message *",
+        messagePh: "Tell us about your needs or questions...",
+        sending: "Sending...",
+        submit: "Send Message",
+        successTitle: "Message Sent!",
+        successBody: "Thank you for contacting us. Our team will get back to you within 1×24 working hours.",
+        sendAnother: "Send Another Message",
+        errorSend: "Something went wrong while sending your message. Please try again.",
+        errorNetwork: "A connection error occurred. Please try again.",
+      }
+    : {
+        title: "Kirim Pesan",
+        intro: "Isi formulir di bawah ini dan tim kami akan menghubungi Anda secepatnya.",
+        name: "Nama Lengkap *",
+        namePh: "Budi Santoso",
+        email: "Email *",
+        emailPh: "budi@instansi.go.id",
+        phone: "No. HP / WhatsApp",
+        phonePh: "0812xxxxxxxx",
+        institution: "Instansi / Perusahaan",
+        institutionPh: "Kementerian / Dinas / PT ...",
+        subject: "Subjek / Keperluan *",
+        subjectPh: "— Pilih keperluan Anda —",
+        message: "Pesan *",
+        messagePh: "Ceritakan kebutuhan atau pertanyaan Anda...",
+        sending: "Mengirim...",
+        submit: "Kirim Pesan",
+        successTitle: "Pesan Terkirim!",
+        successBody: "Terima kasih telah menghubungi kami. Tim kami akan segera menghubungi Anda dalam 1×24 jam kerja.",
+        sendAnother: "Kirim Pesan Baru",
+        errorSend: "Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.",
+        errorNetwork: "Terjadi kesalahan koneksi. Silakan coba lagi.",
+      };
+
   const [form, setForm] = useState({ name: "", email: "", phone: "", institution: "", subject: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -42,11 +103,11 @@ export default function ContactForm({
         setSubmitted(true);
         setForm({ name: "", email: "", phone: "", institution: "", subject: "", message: "" });
       } else {
-        alert("Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.");
+        alert(copy.errorSend);
       }
     } catch (error) {
       console.error("Error submitting form", error);
-      alert("Terjadi kesalahan koneksi. Silakan coba lagi.");
+      alert(copy.errorNetwork);
     } finally {
       setLoading(false);
     }
@@ -69,10 +130,8 @@ export default function ContactForm({
         >
           <CheckCircle2 size={36} color="var(--color-success)" />
         </div>
-        <h2 style={{ fontSize: "1.5rem", marginBottom: "0.75rem" }}>Pesan Terkirim!</h2>
-        <p style={{ color: "var(--color-neutral-500)", fontSize: "1rem", marginBottom: "2rem" }}>
-          Terima kasih telah menghubungi kami. Tim kami akan segera menghubungi Anda dalam 1×24 jam kerja.
-        </p>
+        <h2 style={{ fontSize: "1.5rem", marginBottom: "0.75rem" }}>{copy.successTitle}</h2>
+        <p style={{ color: "var(--color-neutral-500)", fontSize: "1rem", marginBottom: "2rem" }}>{copy.successBody}</p>
         <button
           className="btn btn-primary"
           onClick={() => {
@@ -80,7 +139,7 @@ export default function ContactForm({
             setForm({ name: "", email: "", phone: "", institution: "", subject: "", message: "" });
           }}
         >
-          Kirim Pesan Baru
+          {copy.sendAnother}
         </button>
       </div>
     );
@@ -88,65 +147,63 @@ export default function ContactForm({
 
   return (
     <>
-      <h2 style={{ fontSize: "1.5rem", marginBottom: "0.375rem" }}>Kirim Pesan</h2>
-      <p style={{ color: "var(--color-neutral-500)", marginBottom: "2rem", fontSize: "0.9375rem" }}>
-        Isi formulir di bawah ini dan tim kami akan menghubungi Anda secepatnya.
-      </p>
+      <h2 style={{ fontSize: "1.5rem", marginBottom: "0.375rem" }}>{copy.title}</h2>
+      <p style={{ color: "var(--color-neutral-500)", marginBottom: "2rem", fontSize: "0.9375rem" }}>{copy.intro}</p>
       <form onSubmit={handleSubmit}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem", marginBottom: "1.25rem" }}>
           <div>
-            <label htmlFor="contact-name">Nama Lengkap *</label>
+            <label htmlFor="contact-name">{copy.name}</label>
             <input
               id="contact-name"
               name="name"
               type="text"
               className="input"
-              placeholder="Budi Santoso"
+              placeholder={copy.namePh}
               value={form.name}
               onChange={handleChange}
               required
             />
           </div>
           <div>
-            <label htmlFor="contact-email">Email *</label>
+            <label htmlFor="contact-email">{copy.email}</label>
             <input
               id="contact-email"
               name="email"
               type="email"
               className="input"
-              placeholder="budi@instansi.go.id"
+              placeholder={copy.emailPh}
               value={form.email}
               onChange={handleChange}
               required
             />
           </div>
           <div>
-            <label htmlFor="contact-phone">No. HP / WhatsApp</label>
+            <label htmlFor="contact-phone">{copy.phone}</label>
             <input
               id="contact-phone"
               name="phone"
               type="tel"
               className="input"
-              placeholder="0812xxxxxxxx"
+              placeholder={copy.phonePh}
               value={form.phone}
               onChange={handleChange}
             />
           </div>
           <div>
-            <label htmlFor="contact-institution">Instansi / Perusahaan</label>
+            <label htmlFor="contact-institution">{copy.institution}</label>
             <input
               id="contact-institution"
               name="institution"
               type="text"
               className="input"
-              placeholder="Kementerian / Dinas / PT ..."
+              placeholder={copy.institutionPh}
               value={form.institution}
               onChange={handleChange}
             />
           </div>
         </div>
         <div style={{ marginBottom: "1.25rem" }}>
-          <label htmlFor="contact-subject">Subjek / Keperluan *</label>
+          <label htmlFor="contact-subject">{copy.subject}</label>
           <select
             id="contact-subject"
             name="subject"
@@ -156,8 +213,8 @@ export default function ContactForm({
             required
             style={{ cursor: "pointer" }}
           >
-            <option value="">— Pilih keperluan Anda —</option>
-            {subjects.map((s) => (
+            <option value="">{copy.subjectPh}</option>
+            {subjectOptions.map((s) => (
               <option key={s} value={s}>
                 {s}
               </option>
@@ -165,12 +222,12 @@ export default function ContactForm({
           </select>
         </div>
         <div style={{ marginBottom: "2rem" }}>
-          <label htmlFor="contact-message">Pesan *</label>
+          <label htmlFor="contact-message">{copy.message}</label>
           <textarea
             id="contact-message"
             name="message"
             className="input"
-            placeholder="Ceritakan kebutuhan atau pertanyaan Anda..."
+            placeholder={copy.messagePh}
             rows={5}
             value={form.message}
             onChange={handleChange}
@@ -186,10 +243,10 @@ export default function ContactForm({
           id="submit-contact-form"
         >
           {loading ? (
-            "Mengirim..."
+            copy.sending
           ) : (
             <>
-              <Send size={16} /> Kirim Pesan
+              <Send size={16} /> {copy.submit}
             </>
           )}
         </button>

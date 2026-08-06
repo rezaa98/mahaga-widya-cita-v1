@@ -142,7 +142,7 @@ export default async function TimPage({ params }: { params: Promise<{ locale: st
       </section>
 
       <Footer locale={locale} />
-      <WhatsAppFloat />
+      <WhatsAppFloat locale={locale} />
     </>
   );
 }

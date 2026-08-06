@@ -10,46 +10,83 @@ import configPromise from "@payload-config";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Kontak",
-  description: "Hubungi PT Mahaga Widya Cita untuk konsultasi, kerjasama, dan informasi layanan lebih lanjut.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const isEn = locale === "en";
+  return {
+    title: isEn ? "Contact" : "Kontak",
+    description: isEn
+      ? "Contact PT Mahaga Widya Cita for consulting, partnerships, and service information."
+      : "Hubungi PT Mahaga Widya Cita untuk konsultasi, kerjasama, dan informasi layanan lebih lanjut.",
+  };
+}
 
 export default async function KontakPage(props: { params: Promise<{ locale: string }> }) {
   const params = await props.params;
+  const isEn = params.locale === "en";
   const payload = await getPayload({ config: configPromise });
   const kontakData: any = await payload.findGlobal({ slug: "kontak", locale: params.locale as any });
 
   const phone = kontakData?.phone || "+62 21 1234 5678";
   const email = kontakData?.email || "info@mahagawidyacita.co.id";
-  const address = kontakData?.address || "Jl. Raya Gatot Subroto No. 42, Jakarta Selatan, DKI Jakarta 12930";
-  const workingHours = kontakData?.workingHours || "Senin – Jumat, 08.00 – 17.00 WIB";
-  const locationTag = kontakData?.locationTag || "Jakarta Selatan, DKI Jakarta";
-  const heroTitle = kontakData?.heroTitle || "Mari Berkolaborasi Bersama Kami";
+  const address =
+    kontakData?.address ||
+    (isEn
+      ? "Jl. Raya Gatot Subroto No. 42, South Jakarta, DKI Jakarta 12930"
+      : "Jl. Raya Gatot Subroto No. 42, Jakarta Selatan, DKI Jakarta 12930");
+  const workingHours =
+    kontakData?.workingHours || (isEn ? "Monday – Friday, 08.00 – 17.00 WIB" : "Senin – Jumat, 08.00 – 17.00 WIB");
+  const locationTag = kontakData?.locationTag || (isEn ? "South Jakarta, DKI Jakarta" : "Jakarta Selatan, DKI Jakarta");
+  const heroTitle = kontakData?.heroTitle || (isEn ? "Let's Collaborate With Us" : "Mari Berkolaborasi Bersama Kami");
   const heroSubtitle =
     kontakData?.heroSubtitle ||
-    "Tim kami siap membantu kebutuhan edukasi dan konsultasi instansi Anda. Respons dalam 1×24 jam kerja.";
+    (isEn
+      ? "Our team is ready to assist with your institution's education and consultation needs. Response within 1×24 working hours."
+      : "Tim kami siap membantu kebutuhan edukasi dan konsultasi instansi Anda. Respons dalam 1×24 jam kerja.");
 
   const whatsappCta = kontakData?.whatsappCta || {
-    title: "Chat via WhatsApp",
-    subtitle: "Respons lebih cepat, langsung ke tim kami",
-    defaultMessage: "Halo, saya ingin berkonsultasi dengan tim PT Mahaga Widya Cita.",
+    title: isEn ? "Chat via WhatsApp" : "Chat via WhatsApp",
+    subtitle: isEn ? "Faster response, directly to our team" : "Respons lebih cepat, langsung ke tim kami",
+    defaultMessage: isEn
+      ? "Hello, I would like to consult with the PT Mahaga Widya Cita team."
+      : "Halo, saya ingin berkonsultasi dengan tim PT Mahaga Widya Cita.",
   };
 
   const contactInfo = [
-    { icon: Phone, label: "Telepon", value: phone, href: `tel:${phone.replace(/\D/g, "")}` },
+    {
+      icon: Phone,
+      label: isEn ? "Phone" : "Telepon",
+      value: phone,
+      href: `tel:${phone.replace(/\D/g, "")}`,
+    },
     { icon: Mail, label: "Email", value: email, href: `mailto:${email}` },
-    { icon: MapPin, label: "Alamat", value: address, href: "#" },
-    { icon: Clock, label: "Jam Kerja", value: workingHours, href: "#" },
+    {
+      icon: MapPin,
+      label: isEn ? "Address" : "Alamat",
+      value: address,
+      href: "#",
+    },
+    {
+      icon: Clock,
+      label: isEn ? "Working Hours" : "Jam Kerja",
+      value: workingHours,
+      href: "#",
+    },
   ];
 
   const waNumber = phone.replace(/\D/g, "").replace(/^0/, "62");
+  const formSubjects = kontakData?.formSubjects?.map((s: any) => s.subject).filter(Boolean) || undefined;
 
   return (
     <>
       <Navbar />
 
-      <PageHero badge="Hubungi Kami" title={heroTitle} description={heroSubtitle} waveFill="white" />
+      <PageHero
+        badge={isEn ? "Contact Us" : "Hubungi Kami"}
+        title={heroTitle}
+        description={heroSubtitle}
+        waveFill="white"
+      />
 
       {/* MAIN CONTENT */}
       <section className="section">
@@ -57,14 +94,16 @@ export default async function KontakPage(props: { params: Promise<{ locale: stri
           <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "3.5rem", alignItems: "start" }}>
             {/* FORM */}
             <div className="card" style={{ padding: "2.5rem" }}>
-              <ContactForm subjects={kontakData?.formSubjects?.map((s: any) => s.subject) || undefined} />
+              <ContactForm locale={params.locale} subjects={formSubjects} />
             </div>
 
             {/* SIDEBAR INFO */}
             <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
               {/* Contact info */}
               <div className="card" style={{ padding: "2rem" }}>
-                <h3 style={{ fontSize: "1.125rem", marginBottom: "1.5rem" }}>Informasi Kontak</h3>
+                <h3 style={{ fontSize: "1.125rem", marginBottom: "1.5rem" }}>
+                  {isEn ? "Contact Information" : "Informasi Kontak"}
+                </h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
                   {contactInfo.map(({ icon: Icon, label, value, href }) => (
                     <a key={label} href={href} style={{ display: "flex", gap: "1rem", textDecoration: "none" }}>
@@ -179,7 +218,7 @@ export default async function KontakPage(props: { params: Promise<{ locale: stri
       </section>
 
       <Footer locale={params.locale} />
-      <WhatsAppFloat />
+      <WhatsAppFloat locale={params.locale} />
     </>
   );
 }

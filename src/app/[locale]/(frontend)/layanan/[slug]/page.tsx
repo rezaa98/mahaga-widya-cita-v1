@@ -318,7 +318,7 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
       </section>
 
       <Footer locale={locale} />
-      <WhatsAppFloat />
+      <WhatsAppFloat locale={locale} />
     </>
   );
 }

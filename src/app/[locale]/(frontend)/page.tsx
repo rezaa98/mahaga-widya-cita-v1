@@ -105,7 +105,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         locale={locale}
       />
       <Footer locale={locale} />
-      <WhatsAppFloat />
+      <WhatsAppFloat locale={locale} />
     </>
   );
 }

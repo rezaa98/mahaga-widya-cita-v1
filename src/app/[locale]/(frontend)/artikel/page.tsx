@@ -408,7 +408,7 @@ export default async function ArtikelPage(props: {
         </div>
       </main>
       <Footer locale={params.locale} />
-      <WhatsAppFloat />
+      <WhatsAppFloat locale={params.locale} />
     </>
   );
 }

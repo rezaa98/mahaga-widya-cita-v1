@@ -134,7 +134,7 @@ export default async function PolicyReviewDetailPage({
           </div>
         </main>
         <Footer locale={resolvedParams.locale} />
-        <WhatsAppFloat />
+        <WhatsAppFloat locale={resolvedParams.locale} />
       </>
     );
   }
@@ -260,7 +260,7 @@ export default async function PolicyReviewDetailPage({
         </div>
       </main>
       <Footer locale={resolvedParams.locale} />
-      <WhatsAppFloat />
+      <WhatsAppFloat locale={resolvedParams.locale} />
     </>
   );
 }

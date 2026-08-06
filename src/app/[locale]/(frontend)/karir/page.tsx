@@ -306,7 +306,7 @@ export default async function KarirPage(props: { params: Promise<{ locale: strin
       </section>
 
       <Footer locale={params.locale} />
-      <WhatsAppFloat />
+      <WhatsAppFloat locale={params.locale} />
     </>
   );
 }

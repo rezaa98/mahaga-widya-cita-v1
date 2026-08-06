@@ -450,7 +450,7 @@ export default async function JournalDetailPage({ params }: { params: Promise<Ro
         type="application/ld+json"
       />
       <Footer locale={resolved.locale} />
-      <WhatsAppFloat />
+      <WhatsAppFloat locale={resolved.locale} />
     </>
   );
 }

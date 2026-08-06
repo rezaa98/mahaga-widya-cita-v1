@@ -89,7 +89,7 @@ export default async function PolicyReviewsPage(props: { params: Promise<{ local
           </div>
         </main>
         <Footer locale={params.locale} />
-        <WhatsAppFloat />
+        <WhatsAppFloat locale={params.locale} />
       </>
     );
   }
@@ -198,7 +198,7 @@ export default async function PolicyReviewsPage(props: { params: Promise<{ local
         </div>
       </main>
       <Footer locale={params.locale} />
-      <WhatsAppFloat />
+      <WhatsAppFloat locale={params.locale} />
     </>
   );
 }

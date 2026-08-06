@@ -455,7 +455,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
         </div>
       </main>
       <Footer locale={resolvedParams.locale} />
-      <WhatsAppFloat />
+      <WhatsAppFloat locale={resolvedParams.locale} />
     </>
   );
 }
