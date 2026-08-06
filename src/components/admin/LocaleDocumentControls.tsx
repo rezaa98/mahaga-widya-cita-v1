@@ -476,6 +476,14 @@ export const LocaleDocumentControls: React.FC = () => {
               {isEn ? "Review English draft" : "Tinjau draf Inggris"}
             </a>
           )}
+          {locale === "en" && translation.status === "needs_update" && (
+            <a className="mwc-translation-workflow__action" href="?locale=id">
+              <span className="material-symbols-outlined" aria-hidden>
+                arrow_back
+              </span>
+              {isEn ? "Open Indonesian source" : "Buka sumber Indonesia"}
+            </a>
+          )}
           {locale === "en" && translation.status === "needs_review" && Boolean(translation.preview?.length) && (
             <details
               className="mwc-translation-preview"
