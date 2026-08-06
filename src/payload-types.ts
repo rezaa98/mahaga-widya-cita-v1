@@ -1309,9 +1309,18 @@ export interface Beranda {
  */
 export interface TentangKami {
   id: number;
+  /**
+   * Global settings — these apply to both Indonesian and English pages.
+   */
+  visibility?: {
+    /**
+     * When enabled, the stats row (500+ clients, etc.) appears below the hero.
+     */
+    showStats?: boolean | null;
+  };
   hero: {
     /**
-     * Unggah gambar untuk mengganti background warna gradient di hero section.
+     * Optional. When empty, the hero uses the same solar visual as the homepage. Upload an image only if you want to replace that visual.
      */
     backgroundImage?: (number | null) | Media;
     badge: string;
@@ -1319,6 +1328,9 @@ export interface TentangKami {
     titleHighlight: string;
     description: string;
   };
+  /**
+   * Shown on the frontend only when 'Show Statistics' is enabled.
+   */
   stats?:
     | {
         value: string;
@@ -1556,6 +1568,11 @@ export interface BerandaSelect<T extends boolean = true> {
  * via the `definition` "tentang-kami_select".
  */
 export interface TentangKamiSelect<T extends boolean = true> {
+  visibility?:
+    | T
+    | {
+        showStats?: T;
+      };
   hero?:
     | T
     | {

@@ -20,6 +20,32 @@ export const TentangKami: GlobalConfig = {
   },
   fields: [
     {
+      name: "visibility",
+      type: "group",
+      label: { id: "Visibilitas Bagian", en: "Section Visibility" },
+      admin: {
+        className: "mwc-global-settings mwc-visibility-settings",
+        description: {
+          id: "Pengaturan global — berlaku untuk halaman Indonesia dan Inggris.",
+          en: "Global settings — these apply to both Indonesian and English pages.",
+        },
+      },
+      fields: [
+        {
+          name: "showStats",
+          type: "checkbox",
+          defaultValue: false,
+          label: { id: "Tampilkan Statistik", en: "Show Statistics" },
+          admin: {
+            description: {
+              id: "Jika aktif, baris angka (500+ klien, dll.) tampil di bawah hero.",
+              en: "When enabled, the stats row (500+ clients, etc.) appears below the hero.",
+            },
+          },
+        },
+      ],
+    },
+    {
       name: "hero",
       label: "Bagian Hero (Atas)",
       type: "group",
@@ -31,7 +57,10 @@ export const TentangKami: GlobalConfig = {
           label: "Gambar Latar Belakang (Opsional)",
           required: false,
           admin: {
-            description: "Unggah gambar untuk mengganti background warna gradient di hero section.",
+            description: {
+              id: "Opsional. Jika kosong, hero memakai visual solar yang sama dengan beranda. Unggah gambar hanya jika ingin mengganti visual tersebut.",
+              en: "Optional. When empty, the hero uses the same solar visual as the homepage. Upload an image only if you want to replace that visual.",
+            },
           },
         },
         { name: "badge", type: "text", defaultValue: "TENTANG KAMI", required: true, localized: true },
@@ -56,6 +85,12 @@ export const TentangKami: GlobalConfig = {
       name: "stats",
       label: "Statistik Singkat (Angka)",
       type: "array",
+      admin: {
+        description: {
+          id: "Ditampilkan di frontend hanya jika 'Tampilkan Statistik' aktif.",
+          en: "Shown on the frontend only when 'Show Statistics' is enabled.",
+        },
+      },
       fields: [
         { name: "value", type: "text", required: true, label: "Angka (misal: 7+)" },
         { name: "label", type: "text", required: true, label: "Label (misal: Area Layanan)", localized: true },

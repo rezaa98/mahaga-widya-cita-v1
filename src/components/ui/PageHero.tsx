@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { WaveDivider } from "@/components/ui/WaveDivider";
 
 interface PageHeroProps {
@@ -7,6 +8,8 @@ interface PageHeroProps {
   titleHighlight?: React.ReactNode;
   description?: React.ReactNode;
   backgroundImageUrl?: string;
+  /** Match homepage solar visual on the right side when no custom background is set. */
+  useSolarBackdrop?: boolean;
   align?: "center" | "left";
   children?: React.ReactNode;
   waveFill?: string;
@@ -19,16 +22,18 @@ export function PageHero({
   titleHighlight,
   description,
   backgroundImageUrl,
+  useSolarBackdrop = false,
   align = "center",
   children,
   waveFill = "var(--color-neutral-50)",
   className,
 }: PageHeroProps) {
   const isLeft = align === "left";
+  const showSolar = useSolarBackdrop && !backgroundImageUrl;
 
   return (
     <section
-      className={className}
+      className={`hero-gradient ${showSolar ? "hero-section" : ""} ${className || ""}`.trim()}
       style={{
         background: backgroundImageUrl
           ? `linear-gradient(135deg, rgba(11, 45, 107, 0.9) 0%, rgba(18, 71, 168, 0.8) 100%), url(${backgroundImageUrl}) center/cover no-repeat`
@@ -39,15 +44,29 @@ export function PageHero({
         overflow: "hidden",
       }}
     >
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage: "radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)",
-          pointerEvents: "none",
-        }}
-      />
-      <div className="container" style={{ position: "relative" }}>
+      {showSolar ? (
+        <div className="hero-solar-backdrop" aria-hidden>
+          <Image
+            alt=""
+            className="hero-solar-backdrop__image"
+            fill
+            priority
+            sizes="(max-width: 768px) 0px, 68vw"
+            src="/media/hero-solar-business.webp"
+          />
+          <div className="hero-solar-backdrop__tone" />
+        </div>
+      ) : (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: "radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)",
+            pointerEvents: "none",
+          }}
+        />
+      )}
+      <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <div
           style={{
             maxWidth: isLeft ? "640px" : "800px",

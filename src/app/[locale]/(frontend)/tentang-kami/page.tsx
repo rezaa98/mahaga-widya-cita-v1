@@ -268,6 +268,7 @@ export default async function TentangKamiPage(props: { params: Promise<{ locale:
       ];
 
   const ceoQuote = tentangKami?.ceoMessage?.quote || (isEn ? CEO_QUOTE_EN : CEO_QUOTE_ID);
+  const showStats = tentangKami?.visibility?.showStats === true;
 
   // Icon mapping
   const IconMap: Record<string, any> = {
@@ -290,42 +291,45 @@ export default async function TentangKamiPage(props: { params: Promise<{ locale:
         titleHighlight={heroData.titleHighlight}
         description={heroData.description}
         backgroundImageUrl={heroData.backgroundImage?.url}
+        useSolarBackdrop
         align="left"
         waveFill="white"
       />
 
-      {/* STATS BAR */}
-      <section style={{ padding: "3rem 0" }}>
-        <div className="container">
-          <div
-            className="about-stats-grid"
-            style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "1rem" }}
-          >
-            {statsData.map(({ value, label, icon: iconName }: any) => {
-              const Icon = IconMap[iconName] || Target;
-              return (
-                <div key={label} className="card" style={{ padding: "1.75rem", textAlign: "center" }}>
-                  <Icon size={26} color="var(--color-primary-500)" style={{ margin: "0 auto 0.75rem" }} />
-                  <div
-                    style={{
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      fontWeight: "800",
-                      fontSize: "1.75rem",
-                      color: "var(--color-primary-700)",
-                      lineHeight: 1,
-                    }}
-                  >
-                    {value}
+      {/* STATS BAR — toggled via CMS visibility.showStats */}
+      {showStats && (
+        <section style={{ padding: "3rem 0" }}>
+          <div className="container">
+            <div
+              className="about-stats-grid"
+              style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "1rem" }}
+            >
+              {statsData.map(({ value, label, icon: iconName }: any) => {
+                const Icon = IconMap[iconName] || Target;
+                return (
+                  <div key={label} className="card" style={{ padding: "1.75rem", textAlign: "center" }}>
+                    <Icon size={26} color="var(--color-primary-500)" style={{ margin: "0 auto 0.75rem" }} />
+                    <div
+                      style={{
+                        fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        fontWeight: "800",
+                        fontSize: "1.75rem",
+                        color: "var(--color-primary-700)",
+                        lineHeight: 1,
+                      }}
+                    >
+                      {value}
+                    </div>
+                    <div style={{ fontSize: "0.875rem", color: "var(--color-neutral-500)", marginTop: "0.375rem" }}>
+                      {label}
+                    </div>
                   </div>
-                  <div style={{ fontSize: "0.875rem", color: "var(--color-neutral-500)", marginTop: "0.375rem" }}>
-                    {label}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* PROFIL */}
       <section className="section section-alt">
