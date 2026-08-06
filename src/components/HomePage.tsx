@@ -432,6 +432,17 @@ export default function HomePage({
           className="hero-gradient hero-section"
           style={{ paddingTop: "72px", minHeight: "100vh", display: "flex", alignItems: "center" }}
         >
+          <div className="hero-solar-backdrop" aria-hidden>
+            <Image
+              alt=""
+              className="hero-solar-backdrop__image"
+              fill
+              priority
+              sizes="(max-width: 768px) 0px, 68vw"
+              src="/media/hero-solar-business.webp"
+            />
+            <div className="hero-solar-backdrop__tone" />
+          </div>
           <div className="container" style={{ position: "relative", zIndex: 1, paddingBlock: "5rem" }}>
             <div
               className="hero-grid"
@@ -504,35 +515,9 @@ export default function HomePage({
                 </div>
               </div>
 
-              {/* Right: Corporate renewable-energy visual */}
-              <div className="animate-fade-in hero-floating-cards hero-corporate-visual delay-300">
-                <div className="hero-corporate-visual__frame">
-                  <Image
-                    alt={
-                      isEn
-                        ? "Commercial rooftop solar panels at a modern business campus"
-                        : "Panel surya komersial di kawasan bisnis modern"
-                    }
-                    className="hero-corporate-visual__image"
-                    fill
-                    priority
-                    sizes="(max-width: 1024px) 44vw, 560px"
-                    src="/media/hero-solar-business.webp"
-                  />
-                  <div className="hero-corporate-visual__overlay" aria-hidden />
-                  <div className="hero-corporate-visual__caption">
-                    <span className="hero-corporate-visual__caption-icon">
-                      <TrendingUp size={19} />
-                    </span>
-                    <span>
-                      <small>{isEn ? "Sustainable Business" : "Bisnis Berkelanjutan"}</small>
-                      <strong>
-                        {isEn ? "Energy for long-term growth" : "Energi untuk pertumbuhan jangka panjang"}
-                      </strong>
-                    </span>
-                  </div>
-                </div>
-              </div>
+              {/* Keeps the editorial text width while the solar visual blends
+                  into the background layer on the right. */}
+              <div className="hero-floating-cards" aria-hidden />
             </div>
           </div>
 

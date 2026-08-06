@@ -709,93 +709,29 @@ label {
 /* ============================================
    CORPORATE HERO VISUAL
    ============================================ */
-.hero-corporate-visual {
-  align-items: center;
-  display: flex;
-  justify-content: flex-end;
-  min-width: 0;
-}
-
-.hero-corporate-visual__frame {
-  aspect-ratio: 0.88;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 32px;
-  box-shadow:
-    0 32px 80px rgba(3, 20, 55, 0.38),
-    0 0 0 10px rgba(255, 255, 255, 0.035);
-  isolation: isolate;
-  max-height: 650px;
-  max-width: 560px;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-}
-
-.hero-corporate-visual__image {
-  object-fit: cover;
-  object-position: 67% center;
-  transition: transform 700ms ease;
-}
-
-.hero-corporate-visual__frame:hover .hero-corporate-visual__image {
-  transform: scale(1.025);
-}
-
-.hero-corporate-visual__overlay {
-  background:
-    linear-gradient(180deg, transparent 45%, rgba(3, 22, 57, 0.82) 100%),
-    linear-gradient(90deg, rgba(8, 48, 122, 0.3), transparent 42%);
-  inset: 0;
+.hero-solar-backdrop {
+  bottom: 0;
   pointer-events: none;
   position: absolute;
-  z-index: 1;
+  right: 0;
+  top: 0;
+  width: 71%;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.18) 18%, #000 43%);
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.18) 18%, #000 43%);
 }
 
-.hero-corporate-visual__caption {
-  align-items: center;
-  backdrop-filter: blur(14px);
-  background: rgba(7, 33, 82, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 18px;
-  bottom: 24px;
-  color: white;
-  display: flex;
-  gap: 12px;
-  left: 24px;
-  padding: 13px 16px;
+.hero-solar-backdrop__image {
+  object-fit: cover;
+  object-position: 65% center;
+}
+
+.hero-solar-backdrop__tone {
+  background:
+    linear-gradient(90deg, rgba(12, 65, 162, 0.88) 0%, rgba(13, 75, 185, 0.52) 27%, rgba(5, 30, 78, 0.06) 72%),
+    linear-gradient(180deg, rgba(12, 66, 164, 0.28) 0%, transparent 38%, rgba(4, 29, 76, 0.4) 100%);
+  inset: 0;
   position: absolute;
-  right: 24px;
-  z-index: 2;
-}
-
-.hero-corporate-visual__caption > span:last-child {
-  display: grid;
-  gap: 3px;
-}
-
-.hero-corporate-visual__caption small {
-  color: var(--color-gold-300);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.hero-corporate-visual__caption strong {
-  font-size: 0.875rem;
-  line-height: 1.35;
-}
-
-.hero-corporate-visual__caption-icon {
-  align-items: center;
-  background: rgba(255, 213, 105, 0.16);
-  border: 1px solid rgba(255, 213, 105, 0.34);
-  border-radius: 12px;
-  color: var(--color-gold-300);
-  display: flex;
-  flex: 0 0 42px;
-  height: 42px;
-  justify-content: center;
 }
 
 /* ============================================
@@ -840,8 +776,8 @@ label {
     padding-block: 4rem;
   }
 
-  .hero-corporate-visual__frame {
-    max-height: 540px;
+  .hero-solar-backdrop {
+    width: 66%;
   }
 }
 
@@ -868,6 +804,10 @@ label {
 
   .hero-floating-cards {
     display: none !important;
+  }
+
+  .hero-solar-backdrop {
+    display: none;
   }
 
   .hero-section {
