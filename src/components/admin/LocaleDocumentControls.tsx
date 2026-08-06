@@ -1,5 +1,8 @@
 "use client";
 
+/* Pre-existing sync-from-URL / status-load effects; keep until refactored. */
+/* eslint-disable react-hooks/set-state-in-effect */
+
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { toast, useDocumentInfo, useFormModified } from "@payloadcms/ui";
 import { CONTENT_LOCALES, useAdminLanguage, useContentLocale } from "./adminLocale";
@@ -52,6 +55,8 @@ const localizedPaths: Record<string, string[]> = {
     "servicesIntro.badge",
     "servicesIntro.title",
     "servicesIntro.description",
+    "teamIntro.title",
+    "teamIntro.description",
     "cta.title",
     "cta.description",
     "cta.waMessage",
