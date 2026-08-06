@@ -1,6 +1,7 @@
 import type { Payload, PayloadRequest } from "payload";
 import { extractTranslationUnits, fieldsForResource, sourceHash } from "./schema";
-import { getTranslationRecord, upsertTranslationRecord } from "./records";
+import { appendAuditEvent, appendCandidateRevision, getTranslationRecord, upsertTranslationRecord } from "./records";
+import type { TranslationCandidate } from "./types";
 import { fetchTranslationDocument } from "./task";
 import { SOURCE_LOCALE, type TranslationJobInput, type TranslationResourceType } from "./types";
 
@@ -35,11 +36,27 @@ export async function queueTranslation(
     approvedAt: null,
     approvedBy: null,
     candidateData: null,
+    candidateHistory:
+      existing?.candidateData && typeof existing.candidateData === "object"
+        ? appendCandidateRevision(existing, {
+            candidate: existing.candidateData as TranslationCandidate,
+            createdAt: existing.translatedAt || new Date().toISOString(),
+            model: existing.model,
+            sourceHash: existing.sourceHash,
+          })
+        : existing?.candidateHistory,
     generatedFields: [],
     lastError: null,
+    reviewedFields: [],
     sourceHash: hash,
     sourceUpdatedAt: typeof source?.updatedAt === "string" ? source.updatedAt : new Date().toISOString(),
     status: "queued",
+    auditLog: appendAuditEvent(existing, {
+      action: "queued",
+      actorId: req?.user?.id || null,
+      at: new Date().toISOString(),
+      details: { forced: options.force === true, sourceHash: hash },
+    }),
   });
   try {
     const job = await (payload.jobs.queue as any)({
@@ -52,6 +69,11 @@ export async function queueTranslation(
     return { hash, job, record, skipped: false };
   } catch (error) {
     await upsertTranslationRecord(payload, resource, {
+      auditLog: appendAuditEvent(await getTranslationRecord(payload, resource), {
+        action: "generation_failed",
+        actorId: req?.user?.id || null,
+        at: new Date().toISOString(),
+      }),
       lastError: error instanceof Error ? error.message : "Unable to queue translation.",
       status: "failed",
     });

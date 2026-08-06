@@ -1,6 +1,6 @@
 import type { CollectionAfterChangeHook, Field, GlobalAfterChangeHook, PayloadRequest } from "payload";
 import { changedLocalizedFields, extractTranslationUnits } from "@/translation/schema";
-import { getTranslationRecord, upsertTranslationRecord } from "@/translation/records";
+import { appendAuditEvent, getTranslationRecord, upsertTranslationRecord } from "@/translation/records";
 import { queueTranslation } from "@/translation/service";
 import type { TranslationCandidate } from "@/translation/types";
 
@@ -48,9 +48,16 @@ async function recordManualEnglishChanges({
     ? { patches: candidate.patches.filter((patch) => !changed.includes(patch.fieldPath)) }
     : record?.candidateData;
   await upsertTranslationRecord(req.payload, resource, {
+    auditLog: appendAuditEvent(record, {
+      action: "candidate_edited",
+      actorId: req.user?.id || null,
+      at: new Date().toISOString(),
+      details: { fields: changed, mode: "editor" },
+    }),
     candidateData,
     generatedFields: (record?.generatedFields || []).filter((field) => !changed.includes(field)),
     manualLocks: [...new Set([...(record?.manualLocks || []), ...changed])],
+    reviewedFields: [...new Set([...(record?.reviewedFields || []), ...changed])],
   });
 }
 

@@ -1,7 +1,7 @@
 import type { Payload, TaskConfig } from "payload";
 import { translateStrings } from "@/utils/translate";
 import { createCandidate, extractTranslationUnits, fieldsForResource, sourceHash } from "./schema";
-import { getTranslationRecord, updateRecordIfCurrentHash } from "./records";
+import { appendAuditEvent, appendCandidateRevision, getTranslationRecord, updateRecordIfCurrentHash } from "./records";
 import { isAllowedResource, SOURCE_LOCALE, type TranslationJobInput, type TranslationResourceType } from "./types";
 
 type TranslationTaskIO = {
@@ -93,7 +93,15 @@ export const translateResourceTask: TaskConfig<TranslationTaskIO> = {
     const allUnits = extractTranslationUnits(fields, source);
     const currentHash = sourceHash(allUnits);
     if (currentHash !== input.sourceHash) {
-      await updateRecordIfCurrentHash(payload, input, { status: "needs_update" });
+      const currentRecord = await getTranslationRecord(payload, input);
+      await updateRecordIfCurrentHash(payload, input, {
+        auditLog: appendAuditEvent(currentRecord, {
+          action: "source_changed",
+          at: new Date().toISOString(),
+          details: { stage: "before_generation" },
+        }),
+        status: "needs_update",
+      });
       return { output: { generatedFields: 0, sourceHash: currentHash, stale: true } };
     }
 
@@ -119,7 +127,15 @@ export const translateResourceTask: TaskConfig<TranslationTaskIO> = {
     );
     const latestHash = sourceHash(extractTranslationUnits(fields, latestSource));
     if (latestHash !== input.sourceHash) {
-      await updateRecordIfCurrentHash(payload, input, { status: "needs_update" });
+      const currentRecord = await getTranslationRecord(payload, input);
+      await updateRecordIfCurrentHash(payload, input, {
+        auditLog: appendAuditEvent(currentRecord, {
+          action: "source_changed",
+          at: new Date().toISOString(),
+          details: { stage: "after_generation" },
+        }),
+        status: "needs_update",
+      });
       return { output: { generatedFields: 0, sourceHash: latestHash, stale: true } };
     }
 
@@ -130,12 +146,26 @@ export const translateResourceTask: TaskConfig<TranslationTaskIO> = {
     const candidateData = createCandidate(source, unlockedUnits, unlockedTranslations);
     const generatedFields = [...new Set(unlockedUnits.map((unit) => unit.fieldPath))];
     await updateRecordIfCurrentHash(payload, input, {
+      auditLog: appendAuditEvent(latestRecord, {
+        action: "generated",
+        at: new Date().toISOString(),
+        details: { fields: generatedFields.length, model: result.model },
+      }),
       candidateData,
+      candidateHistory: latestRecord?.candidateData
+        ? appendCandidateRevision(latestRecord, {
+            candidate: latestRecord.candidateData as any,
+            createdAt: latestRecord.translatedAt || new Date().toISOString(),
+            model: latestRecord.model,
+            sourceHash: latestRecord.sourceHash,
+          })
+        : latestRecord?.candidateHistory,
       generatedFields,
       lastError: null,
       metrics: result.metrics,
       model: result.model,
       provider: result.provider,
+      reviewedFields: [],
       status: "needs_review",
       translatedAt: new Date().toISOString(),
     });

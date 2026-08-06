@@ -48,6 +48,10 @@ export async function GET(req: Request) {
       contactsTotal,
       contactsRecent,
       subscribersRecent,
+      translationsReview,
+      translationsUpdate,
+      translationsFailed,
+      translationsProcessing,
     ] = await Promise.all([
       safeCount({ collection: "articles" }),
       safeCount({ collection: "articles", where: { status: { equals: "published" } } }),
@@ -67,7 +71,30 @@ export async function GET(req: Request) {
         collection: "subscribers",
         where: { createdAt: { greater_than: thirtyDaysAgoISO } },
       }),
+      safeCount({ collection: "translation-records", where: { status: { equals: "needs_review" } } }),
+      safeCount({ collection: "translation-records", where: { status: { equals: "needs_update" } } }),
+      safeCount({ collection: "translation-records", where: { status: { equals: "failed" } } }),
+      safeCount({
+        collection: "translation-records",
+        where: { or: [{ status: { equals: "queued" } }, { status: { equals: "translating" } }] },
+      }),
     ]);
+
+    const translationQueue = await safeFind({
+      collection: "translation-records",
+      limit: 8,
+      sort: "-updatedAt",
+      depth: 0,
+      where: {
+        or: [
+          { status: { equals: "needs_review" } },
+          { status: { equals: "needs_update" } },
+          { status: { equals: "failed" } },
+          { status: { equals: "queued" } },
+          { status: { equals: "translating" } },
+        ],
+      },
+    });
 
     // --- Recent Activity (merge from multiple collections) ---
     const [recentArticles, recentJournals, recentContacts, recentSubscribers, recentMedia] = await Promise.all([
@@ -236,7 +263,23 @@ export async function GET(req: Request) {
           total: contactsTotal.totalDocs,
           recentCount: contactsRecent.totalDocs,
         },
+        translations: {
+          failed: translationsFailed.totalDocs,
+          needsReview: translationsReview.totalDocs,
+          needsUpdate: translationsUpdate.totalDocs,
+          processing: translationsProcessing.totalDocs,
+        },
       },
+      translationQueue: translationQueue.docs.map((record: any) => ({
+        href:
+          record.resourceType === "global"
+            ? `/admin/globals/${record.identifier}?locale=en&reviewTranslation=1`
+            : `/admin/collections/${record.identifier}/${record.resourceId}?locale=en&reviewTranslation=1`,
+        identifier: record.identifier,
+        resourceId: record.resourceId || null,
+        status: record.status,
+        updatedAt: record.updatedAt,
+      })),
       recentActivity,
       weeklyChartData,
     });

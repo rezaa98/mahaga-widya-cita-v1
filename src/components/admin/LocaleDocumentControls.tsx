@@ -15,9 +15,20 @@ type TranslationStatus = {
   model?: string;
   error?: string;
   canApprove?: boolean;
+  canReview?: boolean;
   progress?: { completed: number; total: number };
-  preview?: Array<{ field: string; source: string; translated: string }>;
+  preview?: Array<{
+    editable: boolean;
+    field: string;
+    issues: string[];
+    source: string;
+    translated: string;
+  }>;
   previewTotal?: number;
+  review?: { completed: number; fields: string[]; total: number };
+  reviewExpiresAt?: string;
+  publicationStatus?: "draft" | "live_on_save" | "published";
+  auditLog?: Array<{ action: string; actorId?: number | string | null; at: string; details?: Record<string, unknown> }>;
 };
 
 const localizedPaths: Record<string, string[]> = {
@@ -100,14 +111,17 @@ function parseTranslationStatus(payload: unknown): TranslationStatus {
   const completed = Number(rawProgress?.completed ?? rawProgress?.current);
   const total = Number(rawProgress?.total);
   const preview = Array.isArray(data.preview)
-    ? data.preview.filter((item): item is { field: string; source: string; translated: string } =>
-        Boolean(
-          item &&
-          typeof item === "object" &&
-          typeof item.field === "string" &&
-          typeof item.source === "string" &&
-          typeof item.translated === "string",
-        ),
+    ? data.preview.filter(
+        (item): item is { editable: boolean; field: string; issues: string[]; source: string; translated: string } =>
+          Boolean(
+            item &&
+            typeof item === "object" &&
+            typeof item.field === "string" &&
+            typeof item.source === "string" &&
+            typeof item.translated === "string" &&
+            typeof item.editable === "boolean" &&
+            Array.isArray(item.issues),
+          ),
       )
     : [];
 
@@ -123,9 +137,26 @@ function parseTranslationStatus(payload: unknown): TranslationStatus {
         : undefined,
     error: typeof (data.error ?? data.lastError) === "string" ? String(data.error ?? data.lastError) : undefined,
     canApprove: data.canApprove === true,
+    canReview: data.canReview === true,
     progress: Number.isFinite(completed) && Number.isFinite(total) && total > 0 ? { completed, total } : undefined,
     preview,
     previewTotal: Number.isFinite(Number(data.previewTotal)) ? Number(data.previewTotal) : preview.length,
+    review:
+      data.review && typeof data.review === "object"
+        ? {
+            completed: Number((data.review as any).completed || 0),
+            fields: Array.isArray((data.review as any).fields) ? (data.review as any).fields : [],
+            total: Number((data.review as any).total || 0),
+          }
+        : undefined,
+    reviewExpiresAt: typeof data.reviewExpiresAt === "string" ? data.reviewExpiresAt : undefined,
+    publicationStatus:
+      data.publicationStatus === "draft" ||
+      data.publicationStatus === "published" ||
+      data.publicationStatus === "live_on_save"
+        ? data.publicationStatus
+        : undefined,
+    auditLog: Array.isArray(data.auditLog) ? (data.auditLog as TranslationStatus["auditLog"]) : [],
   };
 }
 
@@ -143,6 +174,14 @@ export const LocaleDocumentControls: React.FC = () => {
   const [translation, setTranslation] = useState<TranslationStatus>({ status: "unavailable" });
   const [translationChecking, setTranslationChecking] = useState(false);
   const [processingAction, setProcessingAction] = useState<TranslationAction | null>(null);
+  const [processingField, setProcessingField] = useState<string | null>(null);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [draftEdits, setDraftEdits] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("reviewTranslation") === "1") setReviewOpen(true);
+  }, []);
 
   useEffect(() => {
     if (!modified) return;
@@ -250,7 +289,12 @@ export const LocaleDocumentControls: React.FC = () => {
 
   const action = useMemo<TranslationAction | null>(() => {
     if (translationChecking || processingAction || modified || (!id && !globalSlug)) return null;
-    if (locale === "en") return translation.status === "needs_review" && translation.canApprove ? "approve" : null;
+    if (locale === "en")
+      return translation.status === "needs_review" &&
+        translation.canApprove &&
+        translation.review?.completed === translation.review?.total
+        ? "approve"
+        : null;
     if (translation.status === "queued") return "retry";
     if (translation.status === "failed") return "retry";
     if (translation.status === "needs_update") return "update";
@@ -263,6 +307,8 @@ export const LocaleDocumentControls: React.FC = () => {
     modified,
     processingAction,
     translation.canApprove,
+    translation.review?.completed,
+    translation.review?.total,
     translation.status,
     translationChecking,
   ]);
@@ -286,8 +332,29 @@ export const LocaleDocumentControls: React.FC = () => {
         body: JSON.stringify({ action: nextAction, identifier, id: id ?? null, isGlobal }),
       });
       if (!response.ok) {
-        const body = (await response.json().catch(() => null)) as { error?: string; message?: string } | null;
-        throw new Error(body?.error || body?.message || String(response.status));
+        const body = (await response.json().catch(() => null)) as {
+          code?: string;
+          error?: string;
+          message?: string;
+        } | null;
+        const localized: Record<string, string> = {
+          CANDIDATE_CHANGED: isEn
+            ? "The candidate changed. The latest status has been loaded."
+            : "Kandidat berubah. Status terbaru sudah dimuat.",
+          CANDIDATE_EXPIRED: isEn
+            ? "This draft expired. Generate a fresh translation."
+            : "Draf kedaluwarsa. Buat ulang terjemahan.",
+          CANDIDATE_MISSING: isEn
+            ? "The candidate is no longer available. The latest status has been loaded."
+            : "Kandidat tidak lagi tersedia. Status terbaru sudah dimuat.",
+          REVIEW_INCOMPLETE: isEn ? "Review every field before approval." : "Periksa setiap field sebelum menyetujui.",
+          SOURCE_CHANGED: isEn
+            ? "The Indonesian source changed. Update the English draft."
+            : "Sumber Indonesia berubah. Perbarui draf Inggris.",
+        };
+        throw new Error(
+          (body?.code && localized[body.code]) || body?.error || body?.message || String(response.status),
+        );
       }
       toast.success(
         nextAction === "approve"
@@ -304,8 +371,38 @@ export const LocaleDocumentControls: React.FC = () => {
       toast.error(`${isEn ? "Translation action failed" : "Aksi terjemahan gagal"}: ${detail}`);
     } finally {
       setProcessingAction(null);
+      await loadTranslationStatus();
     }
   };
+
+  const reviewField = async (field: string, translated?: string) => {
+    setProcessingField(field);
+    try {
+      const response = await fetch("/api/translation-actions", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "review", field, identifier, id: id ?? null, isGlobal, translated }),
+      });
+      const body = (await response.json().catch(() => null)) as { error?: string } | null;
+      if (!response.ok) throw new Error(body?.error || String(response.status));
+      toast.success(isEn ? `${field} reviewed` : `${field} selesai diperiksa`);
+      await loadTranslationStatus();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : isEn ? "Review failed" : "Review gagal");
+    } finally {
+      setProcessingField(null);
+      await loadTranslationStatus();
+    }
+  };
+
+  const issueCopy = (issue: string) =>
+    ({
+      candidate_empty: isEn ? "Candidate is empty" : "Kandidat kosong",
+      candidate_too_short: isEn ? "Candidate may be too short" : "Kandidat mungkin terlalu pendek",
+      source_may_be_english: isEn ? "Indonesian source may be English" : "Sumber Indonesia mungkin berbahasa Inggris",
+      unchanged_from_source: isEn ? "Candidate is unchanged" : "Kandidat tidak berubah",
+    })[issue] || issue;
 
   const translatedDateValue = translation.translatedAt ? new Date(translation.translatedAt) : null;
   const translatedDate =
@@ -354,25 +451,100 @@ export const LocaleDocumentControls: React.FC = () => {
             </span>
           )}
           {translation.model && <span className="mwc-translation-workflow__meta">{translation.model}</span>}
+          {translation.publicationStatus && (
+            <span className="mwc-translation-workflow__meta">
+              {isEn ? "Publication:" : "Publikasi:"}{" "}
+              {translation.publicationStatus === "draft"
+                ? "Draft"
+                : translation.publicationStatus === "published"
+                  ? "Published"
+                  : isEn
+                    ? "Live when saved"
+                    : "Tayang saat disimpan"}
+            </span>
+          )}
           {translation.error && (
             <span className="mwc-translation-workflow__error" title={translation.error}>
               {translation.error}
             </span>
           )}
+          {locale === "id" && translation.status === "needs_review" && (
+            <a className="mwc-translation-workflow__action" href="?locale=en&reviewTranslation=1">
+              <span className="material-symbols-outlined" aria-hidden>
+                rate_review
+              </span>
+              {isEn ? "Review English draft" : "Tinjau draf Inggris"}
+            </a>
+          )}
           {locale === "en" && translation.status === "needs_review" && Boolean(translation.preview?.length) && (
-            <details className="mwc-translation-preview">
+            <details
+              className="mwc-translation-preview"
+              open={reviewOpen}
+              onToggle={(event) => setReviewOpen(event.currentTarget.open)}
+            >
               <summary>{isEn ? "Review AI draft" : "Tinjau draf AI"}</summary>
+              {translation.review && (
+                <p className="mwc-translation-preview__progress">
+                  {isEn ? "Reviewed" : "Diperiksa"}: {translation.review.completed}/{translation.review.total}
+                </p>
+              )}
               <div className="mwc-translation-preview__grid">
                 {translation.preview?.map((item) => (
-                  <article className="mwc-translation-preview__item" key={item.field}>
-                    <strong>{item.field}</strong>
+                  <article
+                    className={`mwc-translation-preview__item ${translation.review?.fields.includes(item.field) ? "is-reviewed" : ""}`}
+                    key={item.field}
+                  >
+                    <div className="mwc-translation-preview__field">
+                      <strong>{item.field}</strong>
+                      {translation.review?.fields.includes(item.field) && (
+                        <span>{isEn ? "Reviewed" : "Sudah diperiksa"}</span>
+                      )}
+                      {item.issues.map((issue) => (
+                        <em key={issue}>{issueCopy(issue)}</em>
+                      ))}
+                    </div>
                     <div>
                       <small>{isEn ? "Indonesian source" : "Sumber Indonesia"}</small>
                       <p>{item.source}</p>
                     </div>
                     <div>
                       <small>{isEn ? "English candidate" : "Kandidat Inggris"}</small>
-                      <p>{item.translated}</p>
+                      {item.editable && translation.canReview ? (
+                        <textarea
+                          aria-label={`${item.field} English candidate`}
+                          onChange={(event) =>
+                            setDraftEdits((value) => ({ ...value, [item.field]: event.target.value }))
+                          }
+                          value={draftEdits[item.field] ?? item.translated}
+                        />
+                      ) : (
+                        <p>{item.translated}</p>
+                      )}
+                      {translation.canReview && (
+                        <button
+                          className="mwc-translation-preview__review"
+                          disabled={processingField === item.field}
+                          onClick={() =>
+                            void reviewField(
+                              item.field,
+                              item.editable ? (draftEdits[item.field] ?? item.translated) : undefined,
+                            )
+                          }
+                          type="button"
+                        >
+                          {processingField === item.field
+                            ? isEn
+                              ? "Saving…"
+                              : "Menyimpan…"
+                            : translation.review?.fields.includes(item.field)
+                              ? isEn
+                                ? "Save review"
+                                : "Simpan review"
+                              : isEn
+                                ? "Mark reviewed"
+                                : "Tandai diperiksa"}
+                        </button>
+                      )}
                     </div>
                   </article>
                 ))}
@@ -391,6 +563,15 @@ export const LocaleDocumentControls: React.FC = () => {
               {isEn ? "Publisher approval required" : "Memerlukan persetujuan publisher"}
             </span>
           )}
+          {locale === "en" &&
+            translation.status === "needs_review" &&
+            translation.canApprove &&
+            translation.review &&
+            translation.review.completed < translation.review.total && (
+              <span className="mwc-translation-workflow__meta">
+                {isEn ? "Review every field to enable approval" : "Periksa semua field untuk mengaktifkan persetujuan"}
+              </span>
+            )}
           {action && (
             <button className="mwc-translation-workflow__action" type="button" onClick={() => void runAction(action)}>
               <span className="material-symbols-outlined" aria-hidden>
@@ -403,6 +584,24 @@ export const LocaleDocumentControls: React.FC = () => {
             <button className="mwc-translation-workflow__action" type="button" disabled>
               {isEn ? "Processing…" : "Memproses…"}
             </button>
+          )}
+          {Boolean(translation.auditLog?.length) && (
+            <details className="mwc-translation-audit">
+              <summary>{isEn ? "Translation history" : "Riwayat terjemahan"}</summary>
+              <ol>
+                {translation.auditLog?.map((event, index) => (
+                  <li key={`${event.at}-${index}`}>
+                    <strong>{event.action.replaceAll("_", " ")}</strong>
+                    <time dateTime={event.at}>
+                      {new Intl.DateTimeFormat(isEn ? "en-US" : "id-ID", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      }).format(new Date(event.at))}
+                    </time>
+                  </li>
+                ))}
+              </ol>
+            </details>
           )}
         </div>
       )}

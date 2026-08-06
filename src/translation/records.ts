@@ -1,11 +1,18 @@
 import type { Payload } from "payload";
-import type { TranslationJobInput, TranslationStatus } from "./types";
+import type {
+  TranslationAuditEvent,
+  TranslationCandidateRevision,
+  TranslationJobInput,
+  TranslationStatus,
+} from "./types";
 import { translationResourceKey } from "./types";
 
 export type TranslationRecordData = {
   approvedAt?: null | string;
   approvedBy?: null | number | string;
+  auditLog?: TranslationAuditEvent[];
   candidateData?: unknown;
+  candidateHistory?: TranslationCandidateRevision[];
   generatedFields?: string[];
   id?: number | string;
   identifier: string;
@@ -17,6 +24,7 @@ export type TranslationRecordData = {
   resourceId?: null | string;
   resourceKey: string;
   resourceType: "collection" | "global";
+  reviewedFields?: string[];
   sourceHash?: null | string;
   sourceUpdatedAt?: null | string;
   status: TranslationStatus;
@@ -37,6 +45,23 @@ export async function getTranslationRecord(
     where: { resourceKey: { equals: translationResourceKey(resource) } },
   });
   return (result.docs[0] as unknown as TranslationRecordData | undefined) || null;
+}
+
+const HISTORY_LIMIT = 10;
+const AUDIT_LIMIT = 100;
+
+export function appendAuditEvent(
+  record: TranslationRecordData | null,
+  event: TranslationAuditEvent,
+): TranslationAuditEvent[] {
+  return [...(Array.isArray(record?.auditLog) ? record.auditLog : []), event].slice(-AUDIT_LIMIT);
+}
+
+export function appendCandidateRevision(
+  record: TranslationRecordData | null,
+  revision: TranslationCandidateRevision,
+): TranslationCandidateRevision[] {
+  return [...(Array.isArray(record?.candidateHistory) ? record.candidateHistory : []), revision].slice(-HISTORY_LIMIT);
 }
 
 export async function upsertTranslationRecord(
@@ -60,7 +85,10 @@ export async function upsertTranslationRecord(
       collection: recordsCollection,
       data: {
         identifier: resource.identifier,
+        auditLog: [],
+        candidateHistory: [],
         manualLocks: [],
+        reviewedFields: [],
         resourceId: resource.resourceId,
         resourceKey,
         resourceType: resource.resourceType,

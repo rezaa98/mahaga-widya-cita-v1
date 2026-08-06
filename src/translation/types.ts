@@ -33,6 +33,27 @@ export type TranslationCandidate = {
   patches: TranslationPatch[];
 };
 
+export type TranslationAuditEvent = {
+  action:
+    | "approved"
+    | "candidate_edited"
+    | "field_reviewed"
+    | "generated"
+    | "generation_failed"
+    | "queued"
+    | "source_changed";
+  actorId?: number | string | null;
+  at: string;
+  details?: Record<string, unknown>;
+};
+
+export type TranslationCandidateRevision = {
+  candidate: TranslationCandidate;
+  createdAt: string;
+  model?: null | string;
+  sourceHash?: null | string;
+};
+
 export function isAllowedResource(resourceType: TranslationResourceType, identifier: string): boolean {
   const allowed = resourceType === "global" ? TRANSLATABLE_GLOBALS : TRANSLATABLE_COLLECTIONS;
   return (allowed as readonly string[]).includes(identifier);

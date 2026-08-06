@@ -12,6 +12,7 @@ type Stats = {
   subscribers: { total: number; recentCount: number };
   media: { total: number };
   contacts: { total: number; recentCount: number };
+  translations: { failed: number; needsReview: number; needsUpdate: number; processing: number };
 };
 
 type ActivityItem = {
@@ -29,7 +30,19 @@ type WeeklyChartData = {
   subscribers: number;
   media: number;
 };
-type DashboardData = { stats: Stats; recentActivity: ActivityItem[]; weeklyChartData: WeeklyChartData[] };
+type TranslationQueueItem = {
+  href: string;
+  identifier: string;
+  resourceId: null | string;
+  status: "failed" | "needs_review" | "needs_update" | "queued" | "translating";
+  updatedAt: string;
+};
+type DashboardData = {
+  stats: Stats;
+  recentActivity: ActivityItem[];
+  translationQueue: TranslationQueueItem[];
+  weeklyChartData: WeeklyChartData[];
+};
 
 const icons: Record<ActivityItem["type"], string> = {
   article: "article",
@@ -109,6 +122,18 @@ function AttentionPanel({ data, isEn, locale }: { data: DashboardData; isEn: boo
       href: "/admin/collections/contact-submissions",
       icon: "mail",
     },
+    {
+      count: data.stats.translations.needsReview,
+      label: isEn ? "translations awaiting review" : "terjemahan menunggu review",
+      href: "/admin?translationStatus=needs_review",
+      icon: "rate_review",
+    },
+    {
+      count: data.stats.translations.needsUpdate + data.stats.translations.failed,
+      label: isEn ? "translations need recovery" : "terjemahan perlu diperbaiki",
+      href: "/admin?translationStatus=attention",
+      icon: "translate",
+    },
   ].filter((item) => item.count > 0);
 
   return (
@@ -142,7 +167,74 @@ function AttentionPanel({ data, isEn, locale }: { data: DashboardData; isEn: boo
   );
 }
 
-function ActivityList({ data, loading, isEn, locale }: { data: DashboardData | null; loading: boolean; isEn: boolean; locale: "id" | "en" }) {
+function TranslationPanel({ data, isEn }: { data: DashboardData; isEn: boolean }) {
+  const labels = {
+    failed: isEn ? "Failed" : "Gagal",
+    needs_review: isEn ? "Needs review" : "Perlu review",
+    needs_update: isEn ? "Source changed" : "Sumber berubah",
+    queued: isEn ? "Queued" : "Dalam antrean",
+    translating: isEn ? "Translating" : "Diterjemahkan",
+  };
+  return (
+    <section className="mwc-panel mwc-translation-queue" aria-labelledby="translation-queue-title">
+      <div className="mwc-panel__heading">
+        <div>
+          <p className="mwc-eyebrow">AI Translation</p>
+          <h2 id="translation-queue-title">{isEn ? "Translation Queue" : "Antrean terjemahan"}</h2>
+        </div>
+        <span>
+          {data.stats.translations.needsReview + data.stats.translations.needsUpdate + data.stats.translations.failed}
+        </span>
+      </div>
+      <div className="mwc-translation-queue__summary">
+        <span>
+          <strong>{data.stats.translations.needsReview}</strong>
+          {isEn ? "Review" : "Review"}
+        </span>
+        <span>
+          <strong>{data.stats.translations.needsUpdate}</strong>
+          {isEn ? "Update" : "Perbarui"}
+        </span>
+        <span>
+          <strong>{data.stats.translations.failed}</strong>
+          {isEn ? "Failed" : "Gagal"}
+        </span>
+        <span>
+          <strong>{data.stats.translations.processing}</strong>
+          {isEn ? "Processing" : "Diproses"}
+        </span>
+      </div>
+      {data.translationQueue.length ? (
+        <div className="mwc-translation-queue__list">
+          {data.translationQueue.map((item) => (
+            <a href={item.href} key={`${item.identifier}-${item.resourceId || "global"}`}>
+              <span>
+                <strong>{item.identifier}</strong>
+                <small>{item.resourceId ? `#${item.resourceId}` : "Global"}</small>
+              </span>
+              <em className={`is-${item.status}`}>{labels[item.status]}</em>
+              <Icon>chevron_right</Icon>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p className="mwc-empty">{isEn ? "Translation queue is clear." : "Tidak ada antrean terjemahan."}</p>
+      )}
+    </section>
+  );
+}
+
+function ActivityList({
+  data,
+  loading,
+  isEn,
+  locale,
+}: {
+  data: DashboardData | null;
+  loading: boolean;
+  isEn: boolean;
+  locale: "id" | "en";
+}) {
   return (
     <section className="mwc-panel mwc-activity" aria-labelledby="activity-title">
       <div className="mwc-panel__heading">
@@ -218,7 +310,11 @@ export const DashboardClient: React.FC = () => {
         primary: true,
       },
       { href: withLocale("/admin/collections/media/create", locale), icon: "upload_file", label: "Upload Media" },
-      { href: withLocale("/admin/collections/contact-submissions", locale), icon: "mail", label: isEn ? "Inbox Messages" : "Pesan Masuk" },
+      {
+        href: withLocale("/admin/collections/contact-submissions", locale),
+        icon: "mail",
+        label: isEn ? "Inbox Messages" : "Pesan Masuk",
+      },
     ],
     [isEn, locale],
   );
@@ -388,6 +484,7 @@ export const DashboardClient: React.FC = () => {
         {data && !error && (
           <section className="mwc-dashboard__content">
             <div className="mwc-dashboard__primary">
+              <TranslationPanel data={data} isEn={isEn} />
               <section className="mwc-panel mwc-chart">
                 <div className="mwc-panel__heading">
                   <div>

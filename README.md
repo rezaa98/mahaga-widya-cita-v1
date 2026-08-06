@@ -23,6 +23,7 @@ Required server variables:
 - `GEMINI_TRANSLATION_MODEL` (defaults to `gemini-3.6-flash`)
 - `CRON_SECRET` for the Vercel recovery runner
 - `TRANSLATION_GLOSSARY_JSON` for optional corporate terminology
+- `TRANSLATION_REVIEW_TTL_HOURS` (defaults to `72`) before an unapproved AI draft expires
 
 Before deploying the translation workflow to an existing production database, run the checked-in migration once against that database:
 
@@ -30,7 +31,7 @@ Before deploying the translation workflow to an existing production database, ru
 npx payload migrate
 ```
 
-The migration preserves existing Policy Review content as Indonesian localized data and creates the translation/job tables. `vercel.json` runs a daily recovery pass; explicit editor actions process their job immediately.
+The migrations preserve existing content, create the translation/job tables, and add review history, per-field review state, and an audit trail. `vercel.json` runs a daily recovery pass; explicit editor actions process their job immediately.
 
 Useful verification commands:
 
