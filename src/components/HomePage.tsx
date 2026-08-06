@@ -504,96 +504,33 @@ export default function HomePage({
                 </div>
               </div>
 
-              {/* Right: Floating Stats Cards */}
-              <div
-                className="animate-fade-in hero-floating-cards delay-300"
-                style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}
-              >
-                <div style={{ position: "relative", width: "100%", maxWidth: "420px", height: "380px" }}>
-                  {/* Central element */}
-                  <div
-                    className="animate-float"
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      width: "120px",
-                      height: "120px",
-                      background: "linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.08))",
-                      backdropFilter: "blur(16px)",
-                      borderRadius: "24px",
-                      border: "1px solid rgba(255,255,255,0.3)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: "0 16px 48px rgba(0,0,0,0.2)",
-                    }}
-                  >
-                    <div style={{ textAlign: "center" }}>
-                      <TrendingUp size={36} color="var(--color-gold-300)" />
-                      <div
-                        style={{
-                          fontSize: "0.6875rem",
-                          color: "rgba(255,255,255,0.7)",
-                          marginTop: "0.375rem",
-                          fontWeight: "600",
-                        }}
-                      >
-                        GROWING
-                      </div>
-                    </div>
+              {/* Right: Corporate renewable-energy visual */}
+              <div className="animate-fade-in hero-floating-cards hero-corporate-visual delay-300">
+                <div className="hero-corporate-visual__frame">
+                  <Image
+                    alt={
+                      isEn
+                        ? "Commercial rooftop solar panels at a modern business campus"
+                        : "Panel surya komersial di kawasan bisnis modern"
+                    }
+                    className="hero-corporate-visual__image"
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 44vw, 560px"
+                    src="/media/hero-solar-business.webp"
+                  />
+                  <div className="hero-corporate-visual__overlay" aria-hidden />
+                  <div className="hero-corporate-visual__caption">
+                    <span className="hero-corporate-visual__caption-icon">
+                      <TrendingUp size={19} />
+                    </span>
+                    <span>
+                      <small>{isEn ? "Sustainable Business" : "Bisnis Berkelanjutan"}</small>
+                      <strong>
+                        {isEn ? "Energy for long-term growth" : "Energi untuk pertumbuhan jangka panjang"}
+                      </strong>
+                    </span>
                   </div>
-
-                  {/* Floating stat cards */}
-                  {displayStats.map(({ label, value, suffix, icon: Icon }: any, idx: number) => {
-                    const positions = [
-                      { top: "5%", left: "0%", delay: "0s" },
-                      { top: "5%", right: "0%", delay: "0.5s" },
-                      { bottom: "5%", left: "5%", delay: "1s" },
-                      { bottom: "5%", right: "5%", delay: "1.5s" },
-                    ];
-                    const { top, left, right, bottom, delay } = positions[idx % positions.length];
-
-                    return (
-                      <div
-                        key={label}
-                        style={{
-                          position: "absolute",
-                          top,
-                          left,
-                          right,
-                          bottom,
-                          background: "rgba(255,255,255,0.12)",
-                          backdropFilter: "blur(16px)",
-                          border: "1px solid rgba(255,255,255,0.2)",
-                          borderRadius: "16px",
-                          padding: "1rem 1.25rem",
-                          minWidth: "110px",
-                          boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
-                          animation: `float 4s ease-in-out infinite`,
-                          animationDelay: delay,
-                        }}
-                      >
-                        <Icon size={18} color="var(--color-gold-300)" style={{ marginBottom: "0.375rem" }} />
-                        <div
-                          style={{
-                            fontFamily: "'Plus Jakarta Sans', sans-serif",
-                            fontWeight: "800",
-                            fontSize: "1.375rem",
-                            color: "white",
-                            lineHeight: "1",
-                          }}
-                        >
-                          {value}
-                          {suffix}
-                        </div>
-                        <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.65)", marginTop: "0.25rem" }}>
-                          {label}
-                        </div>
-                      </div>
-                    );
-                  })}
                 </div>
               </div>
             </div>
