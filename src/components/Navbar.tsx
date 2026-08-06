@@ -6,7 +6,7 @@ import Image from "next/image";
 import { usePathname, useParams } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 
-const defaultNavLinks = [
+const defaultNavLinksId = [
   {
     label: "Tentang Kami",
     href: "/tentang-kami",
@@ -42,16 +42,52 @@ const defaultNavLinks = [
   { label: "Kontak", href: "/kontak" },
 ];
 
+const defaultNavLinksEn = [
+  {
+    label: "About Us",
+    href: "/tentang-kami",
+    children: [
+      { label: "Company Profile", href: "/tentang-kami" },
+      { label: "Management", href: "/tim#manajemen" },
+      { label: "Experts", href: "/tim#ahli" },
+      { label: "Our DNA", href: "/tentang-kami#our-dna" },
+    ],
+  },
+  {
+    label: "Services",
+    href: "/layanan",
+    children: [
+      { label: "Talent Management", href: "/layanan/workforce-solutions" },
+      { label: "Digital Transformation", href: "/layanan/technology-digital-solutions" },
+      { label: "Human Resource Development", href: "/layanan/human-capital-development" },
+      { label: "Strategic Studies", href: "/layanan/research-strategic-studies" },
+      { label: "Financial & Tax Advisory", href: "/layanan/tax-financial-advisory" },
+      { label: "Business & Investment Advisory", href: "/layanan/business-investment-advisory" },
+    ],
+  },
+  {
+    label: "Articles",
+    href: "/artikel",
+    children: [
+      { label: "For Individuals", href: "/artikel?kategori=individu" },
+      { label: "For Business", href: "/artikel?kategori=bisnis" },
+      { label: "For Government", href: "/artikel?kategori=pemerintah" },
+      { label: "Policy Review", href: "/policy-reviews" },
+    ],
+  },
+  { label: "Contact", href: "/kontak" },
+];
+
 export default function Navbar() {
-  const [links, setLinks] = useState<any[]>(defaultNavLinks);
+  const params = useParams();
+  const locale = (params?.locale as string) || "id";
+  const [links, setLinks] = useState<any[]>(locale === "en" ? defaultNavLinksEn : defaultNavLinksId);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [langDropdown, setLangDropdown] = useState(false);
 
   const pathname = usePathname();
-  const params = useParams();
-  const locale = (params?.locale as string) || "id";
 
   const isDarkHero =
     pathname === `/${locale}` ||
@@ -76,7 +112,7 @@ export default function Navbar() {
         .then((res) => res.json())
         .catch(() => null),
     ]).then(([navbarData, servicesData, featureData]) => {
-      let currentLinks = [...defaultNavLinks];
+      let currentLinks = [...(locale === "en" ? defaultNavLinksEn : defaultNavLinksId)];
 
       if (navbarData?.links && Array.isArray(navbarData.links) && navbarData.links.length > 0) {
         currentLinks = navbarData.links;
