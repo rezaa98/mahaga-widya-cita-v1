@@ -1,11 +1,12 @@
 import { MetadataRoute } from "next";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
+import { isLikelyEnglishDocument } from "@/utils/contentLanguage";
 
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://mahagawidyacita.co.id";
+  const baseUrl = "https://www.mahagawidyacita.com";
   const payload = await getPayload({ config: configPromise });
 
   // Base routes
@@ -43,19 +44,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic articles
   let articleRoutes: MetadataRoute.Sitemap = [];
   try {
-    const { docs: articles } = await payload.find({
-      collection: "articles",
-      where: { status: { equals: "published" } },
-      limit: 1000,
-    });
-    articleRoutes = articles.flatMap((article) =>
-      locales.map((locale) => ({
-        url: `${baseUrl}/${locale}/artikel/${article.slug}`,
-        lastModified: new Date(article.updatedAt || article.createdAt),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      })),
+    const perLocaleRoutes = await Promise.all(
+      locales.map(async (locale) => {
+        const { docs: articles } = await payload.find({
+          collection: "articles",
+          where: { status: { equals: "published" } },
+          limit: 1000,
+          locale: locale as any,
+          fallbackLocale: "none" as any,
+        });
+        return articles
+          .filter((article) => locale !== "en" || isLikelyEnglishDocument(article))
+          .map((article) => ({
+            url: `${baseUrl}/${locale}/artikel/${article.slug}`,
+            lastModified: new Date(article.updatedAt || article.createdAt),
+            changeFrequency: "monthly" as const,
+            priority: 0.7,
+          }));
+      }),
     );
+    articleRoutes = perLocaleRoutes.flat();
   } catch (err) {
     console.error("[sitemap] Failed to load articles:", err);
   }

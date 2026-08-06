@@ -4,6 +4,8 @@ import WhatsAppFloat from "@/components/WhatsAppFloat";
 import HomePage from "@/components/HomePage";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
+import { isLikelyEnglishDocument } from "@/utils/contentLanguage";
+import { selectCorporateServices } from "@/data/serviceCatalog";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +15,12 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
   let berandaData: any = null;
   try {
-    berandaData = await payload.findGlobal({ slug: "beranda", depth: 2, locale: locale as any });
+    berandaData = await payload.findGlobal({
+      slug: "beranda",
+      depth: 2,
+      locale: locale as any,
+      fallbackLocale: "none" as any,
+    });
   } catch (err) {
     console.error("[Home] Failed to load beranda global:", err);
   }
@@ -23,7 +30,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   try {
     const selectedPublishedArticles = Array.isArray(berandaData?.featuredData?.articles)
       ? berandaData.featuredData.articles.filter(
-          (article: any) => typeof article === "object" && article?.status === "published",
+          (article: any) =>
+            typeof article === "object" &&
+            article?.status === "published" &&
+            (locale !== "en" || isLikelyEnglishDocument(article)),
         )
       : [];
 
@@ -37,10 +47,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 status: { equals: "published" },
               },
               sort: "-publishedAt",
-              limit: 3,
+              limit: locale === "en" ? 30 : 3,
               locale: locale as any,
+              fallbackLocale: "none" as any,
             })
-          ).docs;
+          ).docs
+            .filter((article) => locale !== "en" || isLikelyEnglishDocument(article))
+            .slice(0, 3);
   } catch (err) {
     console.error("[Home] Failed to load articles:", err);
   }
@@ -65,7 +78,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
   let services: any[] = [];
   try {
-    services =
+    const serviceCandidates =
       berandaData?.featuredData?.services?.length > 0
         ? berandaData.featuredData.services
         : (
@@ -73,8 +86,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               collection: "services",
               limit: 10,
               locale: locale as any,
+              fallbackLocale: "none" as any,
             })
           ).docs;
+    services = selectCorporateServices(serviceCandidates);
   } catch (err) {
     console.error("[Home] Failed to load services:", err);
   }

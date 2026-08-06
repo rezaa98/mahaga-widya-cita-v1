@@ -16,11 +16,13 @@ import {
   getLocalizedArticleHref,
   getLocalizedArticlesHref,
 } from "@/utils/contentMedia";
+import { isLikelyEnglishDocument } from "@/utils/contentLanguage";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const resolvedParams = await params;
+  const isEn = resolvedParams.locale === "en";
   const payload = await getPayload({ config: configPromise });
   const { docs } = await payload.find({
     collection: "articles",
@@ -28,10 +30,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       and: [{ slug: { equals: resolvedParams.slug } }, { status: { equals: "published" } }],
     },
     locale: resolvedParams.locale as any,
+    fallbackLocale: "none" as any,
   });
 
-  if (!docs || docs.length === 0) {
-    return { title: "Artikel Tidak Ditemukan" };
+  if (!docs || docs.length === 0 || (isEn && !isLikelyEnglishDocument(docs[0]))) {
+    return { title: isEn ? "Article Not Found" : "Artikel Tidak Ditemukan" };
   }
 
   const article: any = docs[0];
@@ -42,7 +45,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     : getContentImage(article);
   const title = article.meta?.title || article.title;
   const description =
-    article.meta?.description || article.excerpt || `Baca selengkapnya mengenai ${article.title} di Mahaga Widya Cita.`;
+    article.meta?.description ||
+    article.excerpt ||
+    (isEn
+      ? `Read more about ${article.title} at Mahaga Widya Cita.`
+      : `Baca selengkapnya mengenai ${article.title} di Mahaga Widya Cita.`);
 
   return {
     title,
@@ -50,7 +57,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     openGraph: {
       title,
       description,
-      url: `https://mahagawidyacita.co.id/${resolvedParams.locale}/artikel/${article.slug}`,
+      url: `https://www.mahagawidyacita.com/${resolvedParams.locale}/artikel/${article.slug}`,
       type: "article",
       publishedTime: article.publishedAt || article.createdAt,
       images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : [],
@@ -66,6 +73,16 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function ArticleDetailPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const resolvedParams = await params;
+  const isEn = resolvedParams.locale === "en";
+  const copy = isEn
+    ? {
+        article: "Articles",
+        general: "GENERAL",
+        related: "You May Also Like",
+        share: "Share Article:",
+        viewAll: "View All",
+      }
+    : { article: "Artikel", general: "UMUM", related: "Baca Juga", share: "Bagikan Artikel:", viewAll: "Lihat Semua" };
   const payload = await getPayload({ config: configPromise });
   const { docs } = await payload.find({
     collection: "articles",
@@ -73,6 +90,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
       and: [{ slug: { equals: resolvedParams.slug } }, { status: { equals: "published" } }],
     },
     locale: resolvedParams.locale as any,
+    fallbackLocale: "none" as any,
   });
 
   if (!docs || docs.length === 0) {
@@ -80,6 +98,9 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
   }
 
   const article: any = docs[0];
+  if (isEn && !isLikelyEnglishDocument(article)) {
+    notFound();
+  }
 
   // Fetch related articles
   const categoryId = typeof article.category === "object" && article.category ? article.category.id : article.category;
@@ -94,10 +115,11 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
         status: { equals: "published" },
       },
       sort: "-publishedAt",
-      limit: 3,
+      limit: 20,
       locale: resolvedParams.locale as any,
+      fallbackLocale: "none" as any,
     });
-    relatedDocs = rel;
+    relatedDocs = (isEn ? rel.filter(isLikelyEnglishDocument) : rel).slice(0, 3);
   }
 
   if (relatedDocs.length < 3) {
@@ -108,17 +130,22 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
         status: { equals: "published" },
       },
       sort: "-publishedAt",
-      limit: 3 - relatedDocs.length,
+      limit: 30,
       locale: resolvedParams.locale as any,
+      fallbackLocale: "none" as any,
     });
-    relatedDocs = [...relatedDocs, ...relFallback];
+    const existingIds = new Set(relatedDocs.map((document) => document.id));
+    const eligibleFallback = (isEn ? relFallback.filter(isLikelyEnglishDocument) : relFallback).filter(
+      (document) => !existingIds.has(document.id),
+    );
+    relatedDocs = [...relatedDocs, ...eligibleFallback].slice(0, 3);
   }
 
   const articleImage = getContentImage(article);
   const articleImageAlt = getContentImageAlt(article, article.title);
-  const shareUrl = `https://mahagawidyacita.co.id${getLocalizedArticleHref(resolvedParams.locale, article.slug)}`;
+  const shareUrl = `https://www.mahagawidyacita.com${getLocalizedArticleHref(resolvedParams.locale, article.slug)}`;
 
-  const categoryName = typeof article.category === "object" && article.category ? article.category.name : "UMUM";
+  const categoryName = typeof article.category === "object" && article.category ? article.category.name : copy.general;
 
   return (
     <>
@@ -127,7 +154,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
         <div className="container" style={{ maxWidth: "800px" }}>
           <Breadcrumbs
             items={[
-              { label: "Artikel", href: getLocalizedArticlesHref(resolvedParams.locale) },
+              { label: copy.article, href: getLocalizedArticlesHref(resolvedParams.locale) },
               {
                 label: categoryName,
                 href: `${getLocalizedArticlesHref(resolvedParams.locale)}?category=${categoryId}`,
@@ -183,7 +210,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <Calendar size={16} />
                 <span>
-                  {new Date(article.publishedAt || article.createdAt).toLocaleDateString("id-ID", {
+                  {new Date(article.publishedAt || article.createdAt).toLocaleDateString(isEn ? "en-US" : "id-ID", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -233,7 +260,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", fontWeight: 600, color: "#1a2b4c" }}>
                 <Share2 size={20} color="var(--color-primary-600)" />
-                Bagikan Artikel:
+                {copy.share}
               </div>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <a
@@ -331,7 +358,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
               <div
                 style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem" }}
               >
-                <h3 style={{ fontSize: "1.5rem", color: "#1a2b4c", fontWeight: 700, margin: 0 }}>Baca Juga</h3>
+                <h3 style={{ fontSize: "1.5rem", color: "#1a2b4c", fontWeight: 700, margin: 0 }}>{copy.related}</h3>
                 <Link
                   href={getLocalizedArticlesHref(resolvedParams.locale)}
                   style={{
@@ -344,7 +371,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
                     textDecoration: "none",
                   }}
                 >
-                  Lihat Semua <ArrowRight size={16} />
+                  {copy.viewAll} <ArrowRight size={16} />
                 </Link>
               </div>
 
@@ -412,7 +439,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
                         <div
                           style={{ fontSize: "0.75rem", color: "#94a3b8", marginTop: "auto", paddingTop: "0.75rem" }}
                         >
-                          {new Date(rel.publishedAt || rel.createdAt).toLocaleDateString("id-ID", {
+                          {new Date(rel.publishedAt || rel.createdAt).toLocaleDateString(isEn ? "en-US" : "id-ID", {
                             year: "numeric",
                             month: "long",
                             day: "numeric",

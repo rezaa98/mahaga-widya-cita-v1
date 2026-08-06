@@ -12,19 +12,70 @@ import {
   getLocalizedArticleHref,
   getLocalizedArticlesHref,
 } from "@/utils/contentMedia";
+import { isLikelyEnglishDocument } from "@/utils/contentLanguage";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "Artikel & Wawasan | Mahaga Widya Cita",
-  description: "Kumpulan artikel, insight, dan berita terbaru dari PT Mahaga Widya Cita.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return locale === "en"
+    ? {
+        title: "Articles & Insights | Mahaga Widya Cita",
+        description: "Latest articles, insights, and news from PT Mahaga Widya Cita.",
+      }
+    : {
+        title: "Artikel & Wawasan | Mahaga Widya Cita",
+        description: "Kumpulan artikel, insight, dan berita terbaru dari PT Mahaga Widya Cita.",
+      };
+}
 
 export default async function ArtikelPage(props: {
   params: Promise<{ locale: string }>;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const params = await props.params;
+  const isEn = params.locale === "en";
+  const copy = isEn
+    ? {
+        all: "All",
+        badge: "ARTICLES & INSIGHTS",
+        description:
+          "Discover the latest information, in-depth analysis, and news on technology, business, and government.",
+        empty: "No articles yet",
+        emptyDescription: "No English articles are available in this category.",
+        general: "GENERAL",
+        latest: "Latest Insights",
+        next: "Next",
+        page: "Page",
+        previous: "Previous",
+        read: "Read",
+        readMore: "Click to read more...",
+        of: "of",
+      }
+    : {
+        all: "Semua",
+        badge: "ARTIKEL & INSIGHT",
+        description:
+          "Temukan informasi terkini, analisis mendalam, dan berita terbaru seputar teknologi, bisnis, dan pemerintahan.",
+        empty: "Belum ada artikel",
+        emptyDescription: "Tidak ditemukan artikel untuk kategori ini.",
+        general: "UMUM",
+        latest: "Wawasan Terbaru",
+        next: "Selanjutnya",
+        page: "Halaman",
+        previous: "Sebelumnya",
+        read: "Baca",
+        readMore: "Klik untuk membaca selengkapnya...",
+        of: "dari",
+      };
+  const englishCategoryNames: Record<string, string> = {
+    bisnis: "Business",
+    individu: "Individual",
+    pemerintah: "Government",
+    "smart-city": "Smart City",
+    teknologi: "Technology",
+    "tata-kelola": "Governance",
+  };
   const searchParams = props.searchParams ? await props.searchParams : {};
   const page = typeof searchParams.page === "string" ? parseInt(searchParams.page, 10) : 1;
   const selectedKategori = typeof searchParams.kategori === "string" ? searchParams.kategori : "";
@@ -35,6 +86,7 @@ export default async function ArtikelPage(props: {
     collection: "categories",
     limit: 100,
     locale: params.locale as any,
+    fallbackLocale: "none" as any,
   });
 
   let categoryFilter = {};
@@ -45,14 +97,7 @@ export default async function ArtikelPage(props: {
     }
   }
 
-  const {
-    docs: articles,
-    totalPages,
-    hasPrevPage,
-    hasNextPage,
-    prevPage,
-    nextPage,
-  } = await payload.find({
+  const { docs: articleCandidates } = await payload.find({
     collection: "articles",
     where: {
       status: {
@@ -61,10 +106,19 @@ export default async function ArtikelPage(props: {
       ...categoryFilter,
     },
     sort: "-publishedAt",
-    limit: 9,
-    page: page,
+    limit: 100,
     locale: params.locale as any,
+    fallbackLocale: "none" as any,
   });
+  const localizedArticles = isEn ? articleCandidates.filter(isLikelyEnglishDocument) : articleCandidates;
+  const pageSize = 9;
+  const totalPages = Math.max(1, Math.ceil(localizedArticles.length / pageSize));
+  const currentPage = Math.min(Math.max(page, 1), totalPages);
+  const articles = localizedArticles.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const hasPrevPage = currentPage > 1;
+  const hasNextPage = currentPage < totalPages;
+  const prevPage = currentPage - 1;
+  const nextPage = currentPage + 1;
 
   const getPaginationUrl = (targetPage: number) => {
     return getLocalizedArticlesHref(
@@ -80,13 +134,10 @@ export default async function ArtikelPage(props: {
         <div className="container">
           <div style={{ textAlign: "center", marginBottom: "30px" }}>
             <span className="badge badge-primary" style={{ marginBottom: "1rem" }}>
-              Artikel & Insight
+              {copy.badge}
             </span>
-            <h1 style={{ color: "#1a2b4c", marginBottom: "1rem" }}>Wawasan Terbaru</h1>
-            <p style={{ color: "#666", maxWidth: "600px", margin: "0 auto" }}>
-              Temukan informasi terkini, analisis mendalam, dan berita terbaru seputar teknologi, bisnis, dan
-              pemerintahan.
-            </p>
+            <h1 style={{ color: "#1a2b4c", marginBottom: "1rem" }}>{copy.latest}</h1>
+            <p style={{ color: "#666", maxWidth: "680px", margin: "0 auto" }}>{copy.description}</p>
           </div>
 
           <div
@@ -113,7 +164,7 @@ export default async function ArtikelPage(props: {
                 transition: "all 0.2s ease",
               }}
             >
-              Semua
+              {copy.all}
             </Link>
             {categories.map((cat: any) => (
               <Link
@@ -131,7 +182,7 @@ export default async function ArtikelPage(props: {
                   transition: "all 0.2s ease",
                 }}
               >
-                {cat.name}
+                {isEn ? englishCategoryNames[cat.slug] || cat.name : cat.name}
               </Link>
             ))}
           </div>
@@ -147,8 +198,8 @@ export default async function ArtikelPage(props: {
               }}
             >
               <BookOpen size={48} color="#ccc" style={{ marginBottom: "16px" }} />
-              <h3>Belum ada artikel</h3>
-              <p style={{ color: "#666" }}>Tidak ditemukan artikel untuk kategori ini.</p>
+              <h3>{copy.empty}</h3>
+              <p style={{ color: "#666" }}>{copy.emptyDescription}</p>
             </div>
           ) : (
             <>
@@ -206,7 +257,11 @@ export default async function ArtikelPage(props: {
                               borderRadius: "100px",
                             }}
                           >
-                            {typeof article.category === "object" && article.category ? article.category.name : "UMUM"}
+                            {typeof article.category === "object" && article.category
+                              ? isEn
+                                ? englishCategoryNames[article.category.slug] || article.category.name
+                                : article.category.name
+                              : copy.general}
                           </span>
                         </div>
                         <h3 style={{ fontSize: "1.25rem", color: "#1a2b4c", marginBottom: "0.75rem" }}>
@@ -223,7 +278,7 @@ export default async function ArtikelPage(props: {
                             overflow: "hidden",
                           }}
                         >
-                          Klik untuk membaca selengkapnya...
+                          {copy.readMore}
                         </p>
                         <div
                           style={{
@@ -242,11 +297,14 @@ export default async function ArtikelPage(props: {
                                 : "Admin"}
                             </div>
                             <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>
-                              {new Date(article.publishedAt || article.createdAt).toLocaleDateString("id-ID", {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              })}
+                              {new Date(article.publishedAt || article.createdAt).toLocaleDateString(
+                                isEn ? "en-US" : "id-ID",
+                                {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                },
+                              )}
                             </div>
                           </div>
                           <span
@@ -259,7 +317,7 @@ export default async function ArtikelPage(props: {
                               fontWeight: 600,
                             }}
                           >
-                            Baca <ArrowRight size={14} />
+                            {copy.read} <ArrowRight size={14} />
                           </span>
                         </div>
                       </div>
@@ -291,7 +349,7 @@ export default async function ArtikelPage(props: {
                         fontWeight: 500,
                       }}
                     >
-                      Sebelumnya
+                      {copy.previous}
                     </Link>
                   ) : (
                     <span
@@ -305,12 +363,12 @@ export default async function ArtikelPage(props: {
                         fontWeight: 500,
                       }}
                     >
-                      Sebelumnya
+                      {copy.previous}
                     </span>
                   )}
 
                   <span style={{ fontWeight: 600, color: "#475569" }}>
-                    Halaman {page} dari {totalPages}
+                    {copy.page} {currentPage} {copy.of} {totalPages}
                   </span>
 
                   {hasNextPage ? (
@@ -326,7 +384,7 @@ export default async function ArtikelPage(props: {
                         fontWeight: 500,
                       }}
                     >
-                      Selanjutnya
+                      {copy.next}
                     </Link>
                   ) : (
                     <span
@@ -340,7 +398,7 @@ export default async function ArtikelPage(props: {
                         fontWeight: 500,
                       }}
                     >
-                      Selanjutnya
+                      {copy.next}
                     </span>
                   )}
                 </div>

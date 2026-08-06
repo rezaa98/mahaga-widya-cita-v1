@@ -5,148 +5,132 @@ import { requireAdminAuth } from "@/utils/adminAuth";
 
 export const dynamic = "force-dynamic";
 
-const newServices = [
+const services = [
   {
-    title: "GOVERNMENT CONSULTING",
-    slug: "government-consulting",
-    tagline:
-      "Mendukung instansi pemerintah dalam perumusan kebijakan, perencanaan pembangunan, penguatan kelembagaan, dan tata kelola.",
-    description:
-      "Mendukung instansi pemerintah dalam perumusan kebijakan, perencanaan pembangunan, penguatan kelembagaan, dan tata kelola.",
-    features: [
-      { feature: "Public Policy" },
-      { feature: "Regional Planning" },
-      { feature: "Institutional Development" },
-      { feature: "RPJMD & Renstra" },
-      { feature: "AMDAL & Environmental Studies" },
-      { feature: "Socio-economic Assessment" },
-    ],
-  },
-  {
-    title: "BUSINESS & INVESTMENT ADVISORY",
-    slug: "business-investment-advisory",
-    tagline:
-      "Membantu bisnis mengidentifikasi peluang, mengevaluasi investasi dan mengembangkan strategi pertumbuhan berkelanjutan.",
-    description:
-      "Membantu bisnis mengidentifikasi peluang, mengevaluasi investasi dan mengembangkan strategi pertumbuhan berkelanjutan.",
-    features: [
-      { feature: "Feasibility Study" },
-      { feature: "Investment Analysis" },
-      { feature: "Business Planning" },
-      { feature: "Market Research" },
-      { feature: "Financial Feasibility" },
-      { feature: "Project Development" },
-    ],
-  },
-  {
-    title: "TAX & FINANCIAL ADVISORY",
-    slug: "tax-financial-advisory",
-    tagline: "Memberikan solusi keuangan dan perpajakan praktis untuk meningkatkan kepatuhan dan kinerja bisnis.",
-    description: "Memberikan solusi keuangan dan perpajakan praktis untuk meningkatkan kepatuhan dan kinerja bisnis.",
-    features: [
-      { feature: "Tax Compliance" },
-      { feature: "Tax Planning" },
-      { feature: "Financial Analysis" },
-      { feature: "Budget Planning" },
-      { feature: "Cost Analysis" },
-      { feature: "Financial Advisory" },
-    ],
-  },
-  {
-    title: "RESEARCH & STRATEGIC STUDIES",
-    slug: "research-strategic-studies",
-    tagline: "Menyediakan riset dan kajian strategis yang andal sebagai dasar pengambilan keputusan yang tepat.",
-    description: "Menyediakan riset dan kajian strategis yang andal sebagai dasar pengambilan keputusan yang tepat.",
-    features: [
-      { feature: "Policy Research" },
-      { feature: "Social Research" },
-      { feature: "Economic Studies" },
-      { feature: "Environmental Research" },
-      { feature: "Survey & Data Collection" },
-      { feature: "Impact Assessment" },
-    ],
-  },
-  {
-    title: "HUMAN CAPITAL DEVELOPMENT",
-    slug: "human-capital-development",
-    tagline:
-      "Mengembangkan kompetensi SDM melalui pelatihan, sertifikasi, pengembangan organisasi, dan pembangunan kapasitas.",
-    description:
-      "Mengembangkan kompetensi SDM melalui pelatihan, sertifikasi, pengembangan organisasi, dan pembangunan kapasitas.",
-    features: [
-      { feature: "Professional Training" },
-      { feature: "Certification Programs" },
-      { feature: "Leadership Development" },
-      { feature: "Capacity Building" },
-      { feature: "Organizational Development" },
-      { feature: "Competency Assessment" },
-    ],
-  },
-  {
-    title: "TECHNOLOGY & DIGITAL SOLUTIONS",
-    slug: "technology-digital-solutions",
-    tagline: "Mendorong transformasi organisasi melalui teknologi dan solusi digital berbasis data.",
-    description: "Mendorong transformasi organisasi melalui teknologi dan solusi digital berbasis data.",
-    features: [
-      { feature: "GIS & Remote Sensing" },
-      { feature: "Information Systems" },
-      { feature: "Business Digitalization" },
-      { feature: "Data Analytics" },
-      { feature: "AI Solutions" },
-      { feature: "Dashboard Development" },
-    ],
-  },
-  {
-    title: "WORKFORCE SOLUTIONS",
     slug: "workforce-solutions",
-    tagline: "Menyediakan tenaga profesional berkualitas untuk mendukung operasional instansi dan perusahaan.",
-    description: "Menyediakan tenaga profesional berkualitas untuk mendukung operasional instansi dan perusahaan.",
-    features: [
-      { feature: "Professional Staffing" },
-      { feature: "Project-Based Personnel" },
-      { feature: "Technical Expert Supply" },
-      { feature: "Recruitment Services" },
-      { feature: "Outsourcing Solutions" },
-      { feature: "Workforce Management" },
-    ],
+    id: {
+      title: "Manajemen Talenta",
+      description:
+        "Solusi strategis untuk pengelolaan talenta, pengembangan kompetensi, dan peningkatan kinerja organisasi.",
+    },
+    en: {
+      title: "Talent Management",
+      description:
+        "Strategic solutions for talent management, competency development, and organizational performance improvement.",
+    },
   },
-];
+  {
+    slug: "technology-digital-solutions",
+    id: {
+      title: "Transformasi Digital",
+      description:
+        "Mendorong inovasi melalui digitalisasi proses bisnis dan implementasi solusi teknologi yang terintegrasi.",
+    },
+    en: {
+      title: "Digital Transformation",
+      description:
+        "Driving innovation through business process digitalization and the implementation of integrated technology solutions.",
+    },
+  },
+  {
+    slug: "human-capital-development",
+    id: {
+      title: "Pengembangan SDM",
+      description:
+        "Membangun sumber daya manusia yang unggul melalui pelatihan, pendampingan, dan pengembangan kompetensi.",
+    },
+    en: {
+      title: "Human Resource Development",
+      description: "Building high-performing human resources through training, mentoring, and competency development.",
+    },
+  },
+  {
+    slug: "research-strategic-studies",
+    id: {
+      title: "Kajian Strategis",
+      description: "Kajian berbasis data untuk mendukung kebijakan, perencanaan, dan keputusan strategis.",
+    },
+    en: {
+      title: "Strategic Studies",
+      description: "Data-driven studies to support policy formulation, planning, and strategic decision-making.",
+    },
+  },
+  {
+    slug: "tax-financial-advisory",
+    id: {
+      title: "Konsultasi Keuangan & Pajak",
+      description: "Solusi keuangan dan perpajakan yang berorientasi pada kepatuhan, efisiensi, dan keberlanjutan.",
+    },
+    en: {
+      title: "Financial & Tax Advisory",
+      description: "Financial and tax solutions focused on compliance, efficiency, and sustainability.",
+    },
+  },
+  {
+    slug: "business-investment-advisory",
+    id: {
+      title: "Konsultasi Bisnis & Investasi",
+      description: "Pendampingan profesional dalam perencanaan bisnis, investasi, dan pengembangan usaha.",
+    },
+    en: {
+      title: "Business & Investment Advisory",
+      description: "Professional guidance in business planning, investment, and business development.",
+    },
+  },
+] as const;
 
 export async function GET(req: Request) {
   const authError = await requireAdminAuth(req);
   if (authError) return authError;
+
   const payload = await getPayload({ config: configPromise });
 
   try {
-    const existingServices = await payload.find({
-      collection: "services",
-      limit: 100,
-    });
+    const existing = await payload.find({ collection: "services", limit: 100, locale: "id" });
+    const bySlug = new Map(existing.docs.map((service) => [service.slug, service]));
+    const updated: string[] = [];
 
-    // Delete existing
-    for (const service of existingServices.docs) {
-      await payload.delete({
-        collection: "services",
-        id: service.id,
-      });
-    }
+    for (const service of services) {
+      const current = bySlug.get(service.slug);
+      const idData = { title: service.id.title, tagline: service.id.description, description: service.id.description };
 
-    // Insert new
-    for (const service of newServices) {
-      await payload.create({
+      const saved = current
+        ? await payload.update({
+            collection: "services",
+            id: current.id,
+            locale: "id",
+            data: idData,
+            context: { skipAutoTranslate: true },
+          })
+        : await payload.create({
+            collection: "services",
+            locale: "id",
+            data: {
+              slug: service.slug,
+              ...idData,
+              color: "var(--color-primary-600)",
+              gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
+            },
+            context: { skipAutoTranslate: true },
+          });
+
+      await payload.update({
         collection: "services",
+        id: saved.id,
+        locale: "en",
         data: {
-          ...service,
-          color: "var(--color-primary-600)",
-          gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
+          title: service.en.title,
+          tagline: service.en.description,
+          description: service.en.description,
         },
-        draft: false,
-        context: { skipAutoTranslate: false }, // trigger translation in webhook!
+        context: { skipAutoTranslate: true },
       });
+      updated.push(service.slug);
     }
 
-    return NextResponse.json({ success: true, message: "Services updated successfully" });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ success: true, updated });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

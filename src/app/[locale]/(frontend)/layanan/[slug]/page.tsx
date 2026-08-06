@@ -28,6 +28,7 @@ export async function generateMetadata({
       },
     },
     locale: locale as any,
+    fallbackLocale: "none" as any,
     limit: 1,
   });
 
@@ -51,7 +52,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      url: `https://mahagawidyacita.co.id/${locale}/layanan/${service.slug}`,
+      url: `https://www.mahagawidyacita.com/${locale}/layanan/${service.slug}`,
       type: "website",
       images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : [],
     },
@@ -76,6 +77,7 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
       },
     },
     locale: locale as any,
+    fallbackLocale: "none" as any,
     limit: 1,
   });
 

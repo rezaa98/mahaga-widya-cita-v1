@@ -7,6 +7,7 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { PageHero } from "@/components/ui/PageHero";
+import { selectCorporateServices } from "@/data/serviceCatalog";
 
 export const dynamic = "force-dynamic";
 
@@ -29,10 +30,11 @@ export default async function LayananPage({ params }: { params: Promise<{ locale
   const result = await payload.find({
     collection: "services",
     locale: locale as any,
+    fallbackLocale: "none" as any,
     limit: 20,
   });
 
-  const services = result.docs;
+  const services = selectCorporateServices(result.docs);
 
   return (
     <>

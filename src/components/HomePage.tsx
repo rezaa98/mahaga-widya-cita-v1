@@ -46,57 +46,69 @@ import {
 
 const defaultServices = [
   {
-    icon: Lightbulb,
-    title: "Smart Consulting",
+    icon: UserPlus,
+    title: "Manajemen Talenta",
+    titleEn: "Talent Management",
     description:
-      "Layanan konsultasi strategis untuk penguatan tata kelola, reformasi birokrasi, dan peningkatan kinerja instansi pemerintah.",
-    href: "/layanan/konsultasi",
+      "Solusi strategis untuk pengelolaan talenta, pengembangan kompetensi, dan peningkatan kinerja organisasi.",
+    descriptionEn:
+      "Strategic solutions for talent management, competency development, and organizational performance improvement.",
+    slug: "workforce-solutions",
     gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
-    tag: "Konsultasi",
+    tag: "Talenta",
   },
   {
-    icon: GraduationCap,
-    title: "Smart Executive Education",
+    icon: MonitorSmartphone,
+    title: "Transformasi Digital",
+    titleEn: "Digital Transformation",
     description:
-      "Program pelatihan eksklusif untuk pimpinan dan eksekutif instansi dengan metode pembelajaran terkini.",
-    href: "/layanan/edukasi",
-    gradient: "linear-gradient(135deg, #C9970A, #A07508)",
-    tag: "Edukasi",
+      "Mendorong inovasi melalui digitalisasi proses bisnis dan implementasi solusi teknologi yang terintegrasi.",
+    descriptionEn:
+      "Driving innovation through business process digitalization and the implementation of integrated technology solutions.",
+    slug: "technology-digital-solutions",
+    gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
+    tag: "Digital",
   },
   {
-    icon: Cpu,
-    title: "Smart Software Service",
-    description: "Pengembangan aplikasi dan sistem informasi manajemen yang adaptif untuk kebutuhan instansi Anda.",
-    href: "/layanan/software",
-    gradient: "linear-gradient(135deg, #7C3AED, #5B21B6)",
-    tag: "Teknologi",
-  },
-  {
-    icon: Shield,
-    title: "Smart Governance Review",
+    icon: Users,
+    title: "Pengembangan SDM",
+    titleEn: "Human Resource Development",
     description:
-      "Review mendalam atas sistem tata kelola, kepatuhan regulasi, dan rekomendasi perbaikan berbasis best practice.",
-    href: "/layanan/governance-review",
-    gradient: "linear-gradient(135deg, #059669, #047857)",
-    tag: "Governance",
+      "Membangun sumber daya manusia yang unggul melalui pelatihan, pendampingan, dan pengembangan kompetensi.",
+    descriptionEn: "Building high-performing human resources through training, mentoring, and competency development.",
+    slug: "human-capital-development",
+    gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
+    tag: "SDM",
   },
   {
-    icon: BookOpen,
-    title: "Smart Online Course",
-    description:
-      "Platform kursus online interaktif dengan sertifikasi resmi untuk meningkatkan kompetensi ASN dan profesional.",
-    href: "/kursus",
-    gradient: "linear-gradient(135deg, #DC2626, #B91C1C)",
-    tag: "E-Learning",
+    icon: ClipboardList,
+    title: "Kajian Strategis",
+    titleEn: "Strategic Studies",
+    description: "Kajian berbasis data untuk mendukung kebijakan, perencanaan, dan keputusan strategis.",
+    descriptionEn: "Data-driven studies to support policy formulation, planning, and strategic decision-making.",
+    slug: "research-strategic-studies",
+    gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
+    tag: "Kajian",
   },
   {
-    icon: Video,
-    title: "Smart Digital Conference",
-    description:
-      "Penyelenggaraan konferensi dan forum diskusi digital berkualitas tinggi dengan teknologi streaming terkini.",
-    href: "/layanan/digital-conference",
-    gradient: "linear-gradient(135deg, #0891B2, #0E7490)",
-    tag: "Event",
+    icon: Calculator,
+    title: "Konsultasi Keuangan & Pajak",
+    titleEn: "Financial & Tax Advisory",
+    description: "Solusi keuangan dan perpajakan yang berorientasi pada kepatuhan, efisiensi, dan keberlanjutan.",
+    descriptionEn: "Financial and tax solutions focused on compliance, efficiency, and sustainability.",
+    slug: "tax-financial-advisory",
+    gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
+    tag: "Keuangan",
+  },
+  {
+    icon: TrendingUp,
+    title: "Konsultasi Bisnis & Investasi",
+    titleEn: "Business & Investment Advisory",
+    description: "Pendampingan profesional dalam perencanaan bisnis, investasi, dan pengembangan usaha.",
+    descriptionEn: "Professional guidance in business planning, investment, and business development.",
+    slug: "business-investment-advisory",
+    gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
+    tag: "Bisnis",
   },
 ];
 
@@ -284,6 +296,14 @@ export default function HomePage({
 }) {
   const isEn = locale === "en";
   const dateLocale = isEn ? "en-US" : "id-ID";
+  const englishCategoryNames: Record<string, string> = {
+    bisnis: "Business",
+    individu: "Individual",
+    pemerintah: "Government",
+    "smart-city": "Smart City",
+    teknologi: "Technology",
+    "tata-kelola": "Governance",
+  };
 
   const servicesCarouselRef = useRef<HTMLDivElement>(null);
   const teamScrollRef = useRef<HTMLDivElement>(null);
@@ -329,7 +349,14 @@ export default function HomePage({
     payloadArticles.length > 0
       ? payloadArticles.map((a) => ({
           id: a.id,
-          category: typeof a.category === "object" && a.category ? a.category.name : isEn ? "GENERAL" : "UMUM",
+          category:
+            typeof a.category === "object" && a.category
+              ? isEn
+                ? englishCategoryNames[a.category.slug] || a.category.name
+                : a.category.name
+              : isEn
+                ? "GENERAL"
+                : "UMUM",
           title: a.title,
           excerpt: isEn ? "Click to read more..." : "Klik untuk membaca lebih lanjut...",
           author: typeof a.author === "object" && a.author ? a.author.name || "Admin" : "Admin",
@@ -345,7 +372,9 @@ export default function HomePage({
           imageAlt: getContentImageAlt(a, a.title),
           slug: a.slug,
         }))
-      : articles;
+      : isEn
+        ? []
+        : articles;
 
   const displayTeamMembers = payloadTeamMembers.length > 0 ? payloadTeamMembers : teamMembers;
 
@@ -359,7 +388,11 @@ export default function HomePage({
           gradient: s.gradient || "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
           tag: s.tagline || "Layanan",
         }))
-      : defaultServices;
+      : defaultServices.map((service) => ({
+          ...service,
+          title: isEn ? service.titleEn : service.title,
+          description: isEn ? service.descriptionEn : service.description,
+        }));
 
   // HERO DATA
   const heroBadge = berandaData?.hero?.badge || "Platform Edukasi & Tata Kelola Terpercaya Sejak 2015";
@@ -753,7 +786,7 @@ export default function HomePage({
       )}
 
       {/* =================== ARTICLES =================== */}
-      {showArticles && (
+      {showArticles && displayArticles.length > 0 && (
         <section className="section">
           <div className="container">
             <div
