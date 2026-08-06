@@ -939,13 +939,14 @@ export default function HomePage({
           <div className="container">
             <div className="section-title" style={{ maxWidth: "800px", margin: "0 auto 3rem" }}>
               <h2 style={{ fontSize: "clamp(1.75rem, 3vw, 2.25rem)", lineHeight: "1.3" }}>
-                {isEn ? "Company Management" : "Manajemen Perusahaan"}
+                {berandaData?.teamIntro?.title || (isEn ? "Company Management" : "Manajemen Perusahaan")}
               </h2>
               <div className="gold-divider" style={{ margin: "1.5rem auto" }} />
               <p style={{ color: "var(--color-neutral-600)", fontSize: "1.0625rem", lineHeight: "1.6" }}>
-                {isEn
-                  ? "Professionals who prioritize strategy, governance, and innovation to deliver value for every client."
-                  : "Profesional yang mengedepankan strategi, tata kelola, dan inovasi untuk menghadirkan nilai bagi setiap klien."}
+                {berandaData?.teamIntro?.description ||
+                  (isEn
+                    ? "Professionals who prioritize strategy, governance, and innovation to deliver value for every client."
+                    : "Profesional yang mengedepankan strategi, tata kelola, dan inovasi untuk menghadirkan nilai bagi setiap klien.")}
               </p>
             </div>
 

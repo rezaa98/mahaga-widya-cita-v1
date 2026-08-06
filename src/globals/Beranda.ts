@@ -311,6 +311,30 @@ export const Beranda: GlobalConfig = {
               ],
             },
             {
+              name: "teamIntro",
+              label: { id: "Pengantar Bagian Tim", en: "Team Section Introduction" },
+              type: "group",
+              fields: [
+                {
+                  name: "title",
+                  label: { id: "Judul Bagian Tim", en: "Team Section Title" },
+                  type: "text",
+                  localized: true,
+                  required: true,
+                  defaultValue: "Manajemen Perusahaan",
+                },
+                {
+                  name: "description",
+                  label: { id: "Narasi Singkat", en: "Short Narrative" },
+                  type: "textarea",
+                  localized: true,
+                  required: true,
+                  defaultValue:
+                    "Profesional yang mengedepankan strategi, tata kelola, dan inovasi untuk menghadirkan nilai bagi setiap klien.",
+                },
+              ],
+            },
+            {
               name: "featuredData",
               label: { id: "Konten Pilihan (Opsional)", en: "Featured Content (Optional)" },
               type: "group",
