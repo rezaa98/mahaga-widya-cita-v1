@@ -165,8 +165,15 @@ const getIcon = (cv: any, index: number) => {
   return coreValuesList[index]?.icon || Eye;
 };
 
+const CEO_QUOTE_ID =
+  "Masa depan dibentuk oleh keputusan yang diambil hari ini. PT Mahaga Widya Cita tidak sekadar menghadirkan layanan konsultansi, tetapi merumuskan strategi dan memperkuat kapasitas sebagai fondasi transformasi jangka panjang. Berlandaskan integritas, profesionalisme, dan inovasi, kami berkomitmen menjadi mitra strategis yang mengakselerasi transformasi, menciptakan kemajuan yang bernilai, dan memperkuat daya saing.";
+
+const CEO_QUOTE_EN =
+  "The future is shaped by the decisions made today. PT Mahaga Widya Cita does not merely deliver consulting services, but formulates strategies and strengthens capacity as the foundation for long-term transformation. Grounded in integrity, professionalism, and innovation, we are committed to being a strategic partner that accelerates transformation, creates meaningful progress, and strengthens competitiveness.";
+
 export default async function TentangKamiPage(props: { params: Promise<{ locale: string }> }) {
   const params = await props.params;
+  const isEn = params.locale === "en";
   const payload = await getPayload({ config: configPromise });
   const tentangKami: any = await payload.findGlobal({ slug: "tentang-kami", locale: params.locale as any });
 
@@ -255,9 +262,7 @@ export default async function TentangKamiPage(props: { params: Promise<{ locale:
         },
       ];
 
-  const ceoQuote =
-    tentangKami?.ceoMessage?.quote ||
-    "Kami percaya bahwa kualitas tata kelola suatu bangsa dimulai dari kualitas manusianya. Setiap program yang kami rancang adalah investasi jangka panjang bagi kemajuan Indonesia — sebuah misi yang kami emban dengan penuh dedikasi dan kebanggaan.";
+  const ceoQuote = tentangKami?.ceoMessage?.quote || (isEn ? CEO_QUOTE_EN : CEO_QUOTE_ID);
 
   // Icon mapping
   const IconMap: Record<string, any> = {
@@ -477,7 +482,7 @@ export default async function TentangKamiPage(props: { params: Promise<{ locale:
         <div className="container">
           <div style={{ maxWidth: "800px", margin: "0 auto", textAlign: "center" }}>
             <span className="badge badge-primary" style={{ marginBottom: "1.5rem" }}>
-              Pesan CEO
+              {isEn ? "CEO Message" : "Pesan CEO"}
             </span>
             <div style={{ fontSize: "3rem", color: "var(--color-gold-400)", lineHeight: 1, marginBottom: "1.5rem" }}>
               &ldquo;

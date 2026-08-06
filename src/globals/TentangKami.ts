@@ -7,7 +7,9 @@ export const TentangKami: GlobalConfig = {
   label: { id: "Halaman Tentang Kami", en: "About Us Page" },
   admin: {
     group: { id: "Website", en: "Website" },
-    components: { elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
+    components: {
+      elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] },
+    },
   },
   access: {
     read: () => true,
@@ -156,7 +158,7 @@ export const TentangKami: GlobalConfig = {
           type: "textarea",
           required: true,
           defaultValue:
-            "Kami percaya bahwa kualitas tata kelola suatu bangsa dimulai dari kualitas manusianya. Setiap program yang kami rancang adalah investasi jangka panjang bagi kemajuan Indonesia — sebuah misi yang kami emban dengan penuh dedikasi dan kebanggaan.",
+            "Masa depan dibentuk oleh keputusan yang diambil hari ini. PT Mahaga Widya Cita tidak sekadar menghadirkan layanan konsultansi, tetapi merumuskan strategi dan memperkuat kapasitas sebagai fondasi transformasi jangka panjang. Berlandaskan integritas, profesionalisme, dan inovasi, kami berkomitmen menjadi mitra strategis yang mengakselerasi transformasi, menciptakan kemajuan yang bernilai, dan memperkuat daya saing.",
           localized: true,
         },
       ],
