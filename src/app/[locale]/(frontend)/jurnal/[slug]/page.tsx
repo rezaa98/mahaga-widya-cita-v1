@@ -449,7 +449,7 @@ export default async function JournalDetailPage({ params }: { params: Promise<Ro
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
         type="application/ld+json"
       />
-      <Footer />
+      <Footer locale={resolved.locale} />
       <WhatsAppFloat />
     </>
   );

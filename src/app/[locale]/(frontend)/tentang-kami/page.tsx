@@ -513,7 +513,7 @@ export default async function TentangKamiPage(props: { params: Promise<{ locale:
         </div>
       </section>
 
-      <Footer />
+      <Footer locale={params.locale} />
       <WhatsAppFloat />
     </>
   );

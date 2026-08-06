@@ -5,7 +5,7 @@ import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { IconInstagram, IconYoutube, IconLinkedin, IconXTwitter } from "./icons/SocialIcons";
 
-const defaultFooterLinks = {
+const defaultFooterLinksId = {
   company: [
     { label: "Profil Perusahaan", url: "/tentang-kami" },
     { label: "Manajemen", url: "/tentang-kami#manajemen" },
@@ -20,6 +20,24 @@ const defaultFooterLinks = {
     { label: "Smart Governance Review", url: "/layanan/governance-review" },
     { label: "Smart Online Course", url: "/kursus" },
     { label: "Smart Digital Conference", url: "/webinar" },
+  ],
+};
+
+const defaultFooterLinksEn = {
+  company: [
+    { label: "Company Profile", url: "/tentang-kami" },
+    { label: "Management", url: "/tentang-kami#manajemen" },
+    { label: "Experts", url: "/tentang-kami#ahli" },
+    { label: "Partners", url: "/mitra" },
+    { label: "Careers", url: "/karir" },
+  ],
+  services: [
+    { label: "Talent Management", url: "/layanan/workforce-solutions" },
+    { label: "Digital Transformation", url: "/layanan/technology-digital-solutions" },
+    { label: "Human Resource Development", url: "/layanan/human-capital-development" },
+    { label: "Strategic Studies", url: "/layanan/research-strategic-studies" },
+    { label: "Financial & Tax Advisory", url: "/layanan/tax-financial-advisory" },
+    { label: "Business & Investment Advisory", url: "/layanan/business-investment-advisory" },
   ],
 };
 
@@ -62,8 +80,12 @@ export default async function Footer({ locale = "id" }: { locale?: string }) {
 
   const companyDesc =
     footerData?.companyDescription ||
-    "Platform terdepan untuk edukasi profesional dan penguatan tata kelola bagi ASN dan profesional Indonesia.";
-  const copyrightText = footerData?.copyrightText || "PT Mahaga Widya Cita. Hak Cipta Dilindungi.";
+    (isEn
+      ? "Leading platform for professional education and governance strengthening for Indonesian institutions and professionals."
+      : "Platform terdepan untuk edukasi profesional dan penguatan tata kelola bagi ASN dan profesional Indonesia.");
+  const copyrightText =
+    footerData?.copyrightText ||
+    (isEn ? "PT Mahaga Widya Cita. All Rights Reserved." : "PT Mahaga Widya Cita. Hak Cipta Dilindungi.");
 
   let featureSettings: any = null;
   try {
@@ -73,13 +95,14 @@ export default async function Footer({ locale = "id" }: { locale?: string }) {
   }
   const isPolicyReviewsEnabled = featureSettings?.enablePolicyReviews !== false;
 
-  let displayCompanyLinks = footerData?.linksCompany?.length > 0 ? footerData.linksCompany : defaultFooterLinks.company;
+  const defaults = isEn ? defaultFooterLinksEn : defaultFooterLinksId;
+  let displayCompanyLinks = footerData?.linksCompany?.length > 0 ? footerData.linksCompany : defaults.company;
   let displayServicesLinks =
     dynamicServicesLinks.length > 0
       ? dynamicServicesLinks
       : footerData?.linksServices?.length > 0
         ? footerData.linksServices
-        : defaultFooterLinks.services;
+        : defaults.services;
 
   if (!isPolicyReviewsEnabled) {
     displayCompanyLinks = displayCompanyLinks.filter(

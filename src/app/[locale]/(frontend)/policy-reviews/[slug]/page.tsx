@@ -259,7 +259,7 @@ export default async function PolicyReviewDetailPage({
           </div>
         </div>
       </main>
-      <Footer />
+      <Footer locale={resolvedParams.locale} />
       <WhatsAppFloat />
     </>
   );

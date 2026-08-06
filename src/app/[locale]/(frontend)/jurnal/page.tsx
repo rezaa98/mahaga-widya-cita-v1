@@ -292,7 +292,7 @@ export default async function JournalListPage({
           )}
         </div>
       </main>
-      <Footer />
+      <Footer locale={locale} />
       <WhatsAppFloat />
     </>
   );

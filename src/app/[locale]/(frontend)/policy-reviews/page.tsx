@@ -197,7 +197,7 @@ export default async function PolicyReviewsPage(props: { params: Promise<{ local
           )}
         </div>
       </main>
-      <Footer />
+      <Footer locale={params.locale} />
       <WhatsAppFloat />
     </>
   );

@@ -103,7 +103,8 @@ const departmentColors: Record<string, { color: string; bg: string }> = {
   Program: { color: "var(--color-success)", bg: "var(--color-success-light)" },
 };
 
-export default function KarirPage() {
+export default async function KarirPage(props: { params: Promise<{ locale: string }> }) {
+  const params = await props.params;
   return (
     <>
       <Navbar />
@@ -304,7 +305,7 @@ export default function KarirPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer locale={params.locale} />
       <WhatsAppFloat />
     </>
   );

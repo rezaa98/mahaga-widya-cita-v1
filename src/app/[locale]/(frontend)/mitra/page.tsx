@@ -101,7 +101,8 @@ const partnerBenefits = [
   },
 ];
 
-export default function MitraPage() {
+export default async function MitraPage(props: { params: Promise<{ locale: string }> }) {
+  const params = await props.params;
   return (
     <>
       <Navbar />
@@ -254,7 +255,7 @@ export default function MitraPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer locale={params.locale} />
       <WhatsAppFloat />
     </>
   );

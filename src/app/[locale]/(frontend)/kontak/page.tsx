@@ -49,12 +49,7 @@ export default async function KontakPage(props: { params: Promise<{ locale: stri
     <>
       <Navbar />
 
-      <PageHero
-        badge="Hubungi Kami"
-        title={heroTitle}
-        description={heroSubtitle}
-        waveFill="white"
-      />
+      <PageHero badge="Hubungi Kami" title={heroTitle} description={heroSubtitle} waveFill="white" />
 
       {/* MAIN CONTENT */}
       <section className="section">
@@ -183,7 +178,7 @@ export default async function KontakPage(props: { params: Promise<{ locale: stri
         </div>
       </section>
 
-      <Footer />
+      <Footer locale={params.locale} />
       <WhatsAppFloat />
     </>
   );
