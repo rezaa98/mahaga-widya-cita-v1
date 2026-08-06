@@ -12,10 +12,9 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
         "title" = EXCLUDED."title",
         "summary" = EXCLUDED."summary",
         "excerpt" = EXCLUDED."excerpt";
-    ALTER TABLE "policy_reviews"
-      DROP COLUMN "title",
-      DROP COLUMN "summary",
-      DROP COLUMN "excerpt";
+    -- Keep the legacy columns during the rollout. The currently deployed app
+    -- still reads them, while the new Payload config reads localized rows.
+    -- A later cleanup migration may drop them after the new release is stable.
 
     ALTER TABLE "_policy_reviews_v_locales"
       ADD COLUMN "version_title" varchar,
@@ -30,10 +29,6 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
         "version_title" = EXCLUDED."version_title",
         "version_summary" = EXCLUDED."version_summary",
         "version_excerpt" = EXCLUDED."version_excerpt";
-    ALTER TABLE "_policy_reviews_v"
-      DROP COLUMN "version_title",
-      DROP COLUMN "version_summary",
-      DROP COLUMN "version_excerpt";
 
     CREATE TYPE "public"."enum_translation_records_resource_type" AS ENUM('collection', 'global');
     CREATE TYPE "public"."enum_translation_records_target_locale" AS ENUM('en');
@@ -154,10 +149,6 @@ export async function down({ db }: MigrateDownArgs): Promise<void> {
     DROP TYPE IF EXISTS "public"."enum_translation_records_target_locale";
     DROP TYPE IF EXISTS "public"."enum_translation_records_resource_type";
 
-    ALTER TABLE "policy_reviews"
-      ADD COLUMN "title" varchar,
-      ADD COLUMN "summary" jsonb,
-      ADD COLUMN "excerpt" varchar;
     UPDATE "policy_reviews" AS document SET
       "title" = localized."title",
       "summary" = localized."summary",
@@ -169,10 +160,6 @@ export async function down({ db }: MigrateDownArgs): Promise<void> {
       DROP COLUMN "summary",
       DROP COLUMN "excerpt";
 
-    ALTER TABLE "_policy_reviews_v"
-      ADD COLUMN "version_title" varchar,
-      ADD COLUMN "version_summary" jsonb,
-      ADD COLUMN "version_excerpt" varchar;
     UPDATE "_policy_reviews_v" AS version SET
       "version_title" = localized."version_title",
       "version_summary" = localized."version_summary",
