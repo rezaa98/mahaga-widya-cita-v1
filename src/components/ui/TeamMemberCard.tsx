@@ -67,28 +67,30 @@ export default function TeamMemberCard({ member }: { member: any }) {
 
       <div style={{ position: "relative" }}>
         {/* Overlapping White Pill */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            background: "white",
-            padding: "0.5rem 1rem",
-            borderRadius: "9999px",
-            fontSize: "0.65rem",
-            fontWeight: "800",
-            textAlign: "center",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-            width: "85%",
-            color: "#191b23",
-            zIndex: 10,
-            whiteSpace: "normal",
-            lineHeight: "1.3",
-          }}
-        >
-          {member.role || member.expertise}
-        </div>
+        {(member.role || member.expertise) && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              background: "white",
+              padding: "0.5rem 1rem",
+              borderRadius: "9999px",
+              fontSize: "0.65rem",
+              fontWeight: "800",
+              textAlign: "center",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              width: "85%",
+              color: "#191b23",
+              zIndex: 10,
+              whiteSpace: "normal",
+              lineHeight: "1.3",
+            }}
+          >
+            {member.role || member.expertise}
+          </div>
+        )}
 
         {/* Solid Blue Name Bar */}
         <div
@@ -210,18 +212,20 @@ export default function TeamMemberCard({ member }: { member: any }) {
               >
                 {member.name}
               </h2>
-              <p
-                style={{
-                  color: "var(--color-primary-600)",
-                  fontWeight: "800",
-                  fontSize: "1rem",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  marginBottom: "2.5rem",
-                }}
-              >
-                {member.role || member.expertise}
-              </p>
+              {(member.role || member.expertise) && (
+                <p
+                  style={{
+                    color: "var(--color-primary-600)",
+                    fontWeight: "800",
+                    fontSize: "1rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    marginBottom: "2.5rem",
+                  }}
+                >
+                  {member.role || member.expertise}
+                </p>
+              )}
 
               <div style={{ color: "#475569", lineHeight: "1.8", fontSize: "1.125rem" }}>
                 {member.expertise && (

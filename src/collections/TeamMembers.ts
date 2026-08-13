@@ -12,7 +12,9 @@ export const TeamMembers: CollectionConfig = {
     group: { id: "Manajemen Konten", en: "Content Management" },
     useAsTitle: "name",
     defaultColumns: ["name", "category", "expertise", "updatedAt"],
-    components: { edit: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
+    components: {
+      edit: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] },
+    },
   },
   access: {
     read: () => true,
@@ -84,9 +86,14 @@ export const TeamMembers: CollectionConfig = {
             {
               name: "expertise",
               type: "text",
-              required: true,
               localized: true,
-              label: "Bidang Keahlian",
+              label: { id: "Bidang Keahlian", en: "Area of Expertise" },
+              admin: {
+                description: {
+                  id: "Opsional. Kosongkan jika anggota tim tidak perlu menampilkan bidang keahlian.",
+                  en: "Optional. Leave blank when an area of expertise does not need to be displayed.",
+                },
+              },
             },
             {
               name: "institution",
