@@ -6,8 +6,15 @@ import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { isLikelyEnglishDocument } from "@/utils/contentLanguage";
 import { selectCorporateServices } from "@/data/serviceCatalog";
+import type { Metadata } from "next";
+import { localizedAlternates } from "@/utils/seo";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return { alternates: localizedAlternates(locale) };
+}
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

@@ -287,13 +287,8 @@ export const DashboardClient: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [request, setRequest] = useState(0);
 
-  const greeting = useMemo(() => {
-    const hour = new Date().getHours();
-    if (isEn) {
-      return hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
-    }
-    return hour < 12 ? "Selamat pagi" : hour < 15 ? "Selamat siang" : hour < 18 ? "Selamat sore" : "Selamat malam";
-  }, [isEn]);
+  // Keep the first server/client render deterministic across UTC and the user's timezone.
+  const greeting = isEn ? "Welcome back" : "Selamat datang";
 
   const actionItems = useMemo(
     () => [
@@ -321,8 +316,6 @@ export const DashboardClient: React.FC = () => {
 
   useEffect(() => {
     const controller = new AbortController();
-    setLoading(true);
-    setError(null);
     const load = async () => {
       try {
         const response = await fetch(`/api/admin/dashboard-stats?locale=${locale}`, { signal: controller.signal });
@@ -350,6 +343,12 @@ export const DashboardClient: React.FC = () => {
     void load();
     return () => controller.abort();
   }, [request, locale, isEn]);
+
+  const reloadDashboard = () => {
+    setLoading(true);
+    setError(null);
+    setRequest((value) => value + 1);
+  };
 
   const subtitle = error
     ? isEn
@@ -412,7 +411,7 @@ export const DashboardClient: React.FC = () => {
               <Icon>error</Icon>
               {error}
             </span>
-            <button onClick={() => setRequest((value) => value + 1)} type="button">
+            <button onClick={reloadDashboard} type="button">
               <Icon>refresh</Icon>
               {isEn ? "Retry" : "Coba lagi"}
             </button>
