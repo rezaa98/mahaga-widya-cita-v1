@@ -7,7 +7,7 @@ import { dataPemerintah } from "../seed-articles/data_pemerintah";
 import { requireAdminAuth } from "@/utils/adminAuth";
 import { createLexicalContent } from "@/utils/contentMedia";
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   const authError = await requireAdminAuth(req);
   if (authError) return authError;
 

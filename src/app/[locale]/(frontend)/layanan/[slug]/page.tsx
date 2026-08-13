@@ -9,6 +9,7 @@ import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { WaveDivider } from "@/components/ui/WaveDivider";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { localizedAlternates } from "@/utils/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -49,6 +50,7 @@ export async function generateMetadata({
   return {
     title,
     description,
+    alternates: localizedAlternates(locale, `/layanan/${service.slug}`),
     openGraph: {
       title,
       description,
@@ -114,6 +116,7 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
         />
         <div className="container" style={{ position: "relative" }}>
           <Breadcrumbs
+            locale={locale}
             isDarkBg={true}
             items={[{ label: isEn ? "Services" : "Layanan", href: `/${locale}/layanan` }, { label: service.title }]}
           />

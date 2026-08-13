@@ -5,7 +5,7 @@ import { articlesPart1 } from "./data1";
 import { articlesPart2 } from "./data2";
 import { requireAdminAuth } from "@/utils/adminAuth";
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   const authError = await requireAdminAuth(req);
   if (authError) return authError;
   try {

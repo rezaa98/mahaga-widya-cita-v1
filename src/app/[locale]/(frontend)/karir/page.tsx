@@ -272,7 +272,7 @@ export default async function KarirPage(props: { params: Promise<{ locale: strin
                       </ul>
                     </div>
                     <Link
-                      href={`/kontak?subjek=Lamaran%20Pekerjaan&posisi=${encodeURIComponent(job.title)}`}
+                      href={`/${params.locale}/kontak?subjek=Lamaran%20Pekerjaan&posisi=${encodeURIComponent(job.title)}`}
                       className="btn btn-primary"
                       style={{ flexShrink: 0 }}
                       id={`apply-job-${job.id}`}
@@ -299,7 +299,11 @@ export default async function KarirPage(props: { params: Promise<{ locale: strin
           <p style={{ color: "rgba(255,255,255,0.75)", marginBottom: "2rem", fontSize: "1.0625rem" }}>
             Kirimkan lamaran spontan Anda. Kami selalu tertarik bertemu dengan individu-individu berbakat.
           </p>
-          <Link href="/kontak?subjek=Lamaran%20Spontan" className="btn btn-gold btn-lg" id="cta-spontaneous-apply">
+          <Link
+            href={`/${params.locale}/kontak?subjek=Lamaran%20Spontan`}
+            className="btn btn-gold btn-lg"
+            id="cta-spontaneous-apply"
+          >
             Kirim Lamaran Spontan
           </Link>
         </div>

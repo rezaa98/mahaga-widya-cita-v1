@@ -85,6 +85,7 @@ export const TentangKami: GlobalConfig = {
       name: "stats",
       label: "Statistik Singkat (Angka)",
       type: "array",
+      localized: true,
       admin: {
         description: {
           id: "Ditampilkan di frontend hanya jika 'Tampilkan Statistik' aktif.",
@@ -93,7 +94,7 @@ export const TentangKami: GlobalConfig = {
       },
       fields: [
         { name: "value", type: "text", required: true, label: "Angka (misal: 7+)" },
-        { name: "label", type: "text", required: true, label: "Label (misal: Area Layanan)", localized: true },
+        { name: "label", type: "text", required: true, label: "Label (misal: Area Layanan)" },
         {
           name: "icon",
           type: "select",
@@ -156,9 +157,10 @@ export const TentangKami: GlobalConfig = {
       name: "misi",
       label: "Misi",
       type: "array",
+      localized: true,
       fields: [
-        { name: "title", type: "text", required: true, localized: true },
-        { name: "text", type: "textarea", required: true, localized: true },
+        { name: "title", type: "text", required: true },
+        { name: "text", type: "textarea", required: true },
       ],
     },
 
@@ -166,10 +168,11 @@ export const TentangKami: GlobalConfig = {
       name: "coreValues",
       label: "Core Value (FUTURISTIC)",
       type: "array",
+      localized: true,
       fields: [
-        { name: "letter", type: "text", required: true, label: "Huruf (misal: F)", localized: true },
-        { name: "name", type: "text", required: true, label: "Kata (misal: FORESIGHT)", localized: true },
-        { name: "desc", type: "textarea", required: true, label: "Deskripsi", localized: true },
+        { name: "letter", type: "text", required: true, label: "Huruf (misal: F)" },
+        { name: "name", type: "text", required: true, label: "Kata (misal: FORESIGHT)" },
+        { name: "desc", type: "textarea", required: true, label: "Deskripsi" },
       ],
     },
 

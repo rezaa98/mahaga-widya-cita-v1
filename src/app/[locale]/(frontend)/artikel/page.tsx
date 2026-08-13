@@ -13,19 +13,22 @@ import {
   getLocalizedArticlesHref,
 } from "@/utils/contentMedia";
 import { isLikelyEnglishDocument } from "@/utils/contentLanguage";
+import { localizedAlternates } from "@/utils/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   return locale === "en"
     ? {
-        title: "Articles & Insights | Mahaga Widya Cita",
+        title: "Articles & Insights",
         description: "Latest articles, insights, and news from PT Mahaga Widya Cita.",
+        alternates: localizedAlternates(locale, "/artikel"),
       }
     : {
-        title: "Artikel & Wawasan | Mahaga Widya Cita",
+        title: "Artikel & Wawasan",
         description: "Kumpulan artikel, insight, dan berita terbaru dari PT Mahaga Widya Cita.",
+        alternates: localizedAlternates(locale, "/artikel"),
       };
 }
 

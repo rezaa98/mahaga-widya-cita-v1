@@ -228,7 +228,7 @@ const servicesData = [
   },
 ];
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   const authError = await requireAdminAuth(req);
   if (authError) return authError;
   try {

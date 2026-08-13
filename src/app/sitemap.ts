@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { isLikelyEnglishDocument } from "@/utils/contentLanguage";
+import { selectCorporateServices } from "@/data/serviceCatalog";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +36,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = rawStaticRoutes.flatMap((route) =>
     locales.map((locale) => ({
       url: `${baseUrl}/${locale}${route}`,
-      lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: route === "" ? 1 : 0.8,
     })),
@@ -71,19 +71,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic journals
   let journalRoutes: MetadataRoute.Sitemap = [];
   try {
-    const { docs: journals } = await payload.find({
-      collection: "journals",
-      where: { status: { equals: "published" } },
-      limit: 1000,
-    });
-    journalRoutes = journals.flatMap((journal) =>
-      locales.map((locale) => ({
-        url: `${baseUrl}/${locale}/jurnal/${journal.slug}`,
-        lastModified: new Date(journal.updatedAt || journal.createdAt),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      })),
+    const routes = await Promise.all(
+      locales.map(async (locale) => {
+        const { docs } = await payload.find({
+          collection: "journals",
+          where: { status: { equals: "published" } },
+          locale: locale as any,
+          fallbackLocale: "none" as any,
+          limit: 1000,
+        });
+        return docs.map((journal) => ({
+          url: `${baseUrl}/${locale}/jurnal/${journal.slug}`,
+          lastModified: new Date(journal.updatedAt || journal.createdAt),
+          changeFrequency: "monthly" as const,
+          priority: 0.7,
+        }));
+      }),
     );
+    journalRoutes = routes.flat();
   } catch (err) {
     console.error("[sitemap] Failed to load journals (collection may not exist):", err);
   }
@@ -113,15 +118,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic services
   let serviceRoutes: MetadataRoute.Sitemap = [];
   try {
-    const { docs: services } = await payload.find({ collection: "services", limit: 100 });
-    serviceRoutes = services.flatMap((service) =>
-      locales.map((locale) => ({
-        url: `${baseUrl}/${locale}/layanan/${service.slug}`,
-        lastModified: new Date(service.updatedAt || service.createdAt),
-        changeFrequency: "monthly" as const,
-        priority: 0.9,
-      })),
+    const routes = await Promise.all(
+      locales.map(async (locale) => {
+        const { docs } = await payload.find({
+          collection: "services",
+          locale: locale as any,
+          fallbackLocale: "none" as any,
+          limit: 100,
+        });
+        return selectCorporateServices(docs).map((service) => ({
+          url: `${baseUrl}/${locale}/layanan/${service.slug}`,
+          lastModified: new Date(service.updatedAt || service.createdAt),
+          changeFrequency: "monthly" as const,
+          priority: 0.9,
+        }));
+      }),
     );
+    serviceRoutes = routes.flat();
   } catch (err) {
     console.error("[sitemap] Failed to load services:", err);
   }

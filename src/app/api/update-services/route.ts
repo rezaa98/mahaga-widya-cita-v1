@@ -79,7 +79,7 @@ const services = [
   },
 ] as const;
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   const authError = await requireAdminAuth(req);
   if (authError) return authError;
 

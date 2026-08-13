@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/ui/PageHero";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
+import { localizedAlternates } from "@/utils/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: isEn
       ? "Contact PT Mahaga Widya Cita for consulting, partnerships, and service information."
       : "Hubungi PT Mahaga Widya Cita untuk konsultasi, kerjasama, dan informasi layanan lebih lanjut.",
+    alternates: localizedAlternates(locale, "/kontak"),
   };
 }
 
@@ -25,7 +27,11 @@ export default async function KontakPage(props: { params: Promise<{ locale: stri
   const params = await props.params;
   const isEn = params.locale === "en";
   const payload = await getPayload({ config: configPromise });
-  const kontakData: any = await payload.findGlobal({ slug: "kontak", locale: params.locale as any });
+  const kontakData: any = await payload.findGlobal({
+    slug: "kontak",
+    locale: params.locale as any,
+    fallbackLocale: "none" as any,
+  });
 
   const phone = kontakData?.phone || "+62 21 1234 5678";
   const email = kontakData?.email || "info@mahagawidyacita.co.id";

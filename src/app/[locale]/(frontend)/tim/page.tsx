@@ -10,14 +10,24 @@ import { WaveDivider } from "@/components/ui/WaveDivider";
 import TeamMemberCard from "@/components/ui/TeamMemberCard";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
+import { localizedAlternates } from "@/utils/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: "Tim & Manajemen",
-  description:
-    "Kenali para pakar dan manajemen PT Mahaga Widya Cita yang berpengalaman di bidang administrasi publik, tata kelola, dan teknologi.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return locale === "en"
+    ? {
+        title: "Team & Management",
+        description: "Meet the experts and management team behind PT Mahaga Widya Cita.",
+        alternates: localizedAlternates(locale, "/tim"),
+      }
+    : {
+        title: "Tim & Manajemen",
+        description: "Kenali para pakar dan manajemen PT Mahaga Widya Cita.",
+        alternates: localizedAlternates(locale, "/tim"),
+      };
+}
 
 export default async function TimPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -28,6 +38,7 @@ export default async function TimPage({ params }: { params: Promise<{ locale: st
     limit: 100,
     sort: "order",
     locale: locale as any,
+    fallbackLocale: "none" as any,
   });
 
   const team = result.docs;
@@ -88,7 +99,7 @@ export default async function TimPage({ params }: { params: Promise<{ locale: st
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "2rem" }}>
             {management.map((m) => (
               <div key={m.id} style={{ width: "100%", maxWidth: "320px", flexGrow: 1 }}>
-                <TeamMemberCard member={m} />
+                <TeamMemberCard member={m} locale={locale} />
               </div>
             ))}
           </div>
@@ -112,7 +123,7 @@ export default async function TimPage({ params }: { params: Promise<{ locale: st
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "2rem" }}>
             {experts.map((expert) => (
               <div key={expert.id} style={{ width: "100%", maxWidth: "320px", flexGrow: 1 }}>
-                <TeamMemberCard member={expert} />
+                <TeamMemberCard member={expert} locale={locale} />
               </div>
             ))}
           </div>
@@ -135,7 +146,7 @@ export default async function TimPage({ params }: { params: Promise<{ locale: st
               ? "We are always open for the best academics and practitioners to collaborate."
               : "Kami selalu membuka kesempatan bagi akademisi dan praktisi terbaik untuk berkolaborasi."}
           </p>
-          <Link href="/karir" className="btn btn-gold btn-lg" id="cta-join-team">
+          <Link href={`/${locale}/karir`} className="btn btn-gold btn-lg" id="cta-join-team">
             {isEn ? "View Vacancies & Collaboration" : "Lihat Lowongan & Kolaborasi"}
           </Link>
         </div>

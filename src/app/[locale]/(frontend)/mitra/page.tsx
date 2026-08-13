@@ -249,7 +249,11 @@ export default async function MitraPage(props: { params: Promise<{ locale: strin
           >
             Jadilah bagian dari ekosistem edukasi dan tata kelola terbesar di Indonesia.
           </p>
-          <Link href="/kontak?subjek=Kemitraan" className="btn btn-gold btn-lg" id="cta-become-partner">
+          <Link
+            href={`/${params.locale}/kontak?subjek=Kemitraan`}
+            className="btn btn-gold btn-lg"
+            id="cta-become-partner"
+          >
             Ajukan Kemitraan Sekarang <ArrowRight size={18} />
           </Link>
         </div>

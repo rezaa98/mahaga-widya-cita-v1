@@ -14,13 +14,24 @@ import {
   publishedJournalWhere,
   type Journal,
 } from "./_journal";
+import { localizedAlternates } from "@/utils/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
-export const metadata = {
-  title: "Jurnal & Publikasi | Mahaga Widya Cita",
-  description: "Jurnal, kajian, dan publikasi profesional Mahaga Widya Cita.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return locale === "en"
+    ? {
+        title: "Journals & Publications",
+        description: "Professional journals, research, and publications by Mahaga Widya Cita.",
+        alternates: localizedAlternates(locale, "/jurnal"),
+      }
+    : {
+        title: "Jurnal & Publikasi",
+        description: "Jurnal, kajian, dan publikasi profesional Mahaga Widya Cita.",
+        alternates: localizedAlternates(locale, "/jurnal"),
+      };
+}
 
 type SearchParams = {
   q?: string | string[];
@@ -45,6 +56,16 @@ export default async function JournalListPage({
   const page = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
 
   const dateLocale = locale === "en" ? "en-US" : "id-ID";
+  const englishCategoryNames: Record<string, string> = {
+    bisnis: "Business",
+    individu: "Individual",
+    pemerintah: "Government",
+    teknologi: "Technology",
+    "smart-city": "Smart City",
+    "tata-kelola": "Governance",
+  };
+  const categoryLabel = (category: any) =>
+    locale === "en" ? englishCategoryNames[category?.slug] || category?.name : category?.name;
   const labels =
     locale === "en"
       ? {
@@ -80,13 +101,19 @@ export default async function JournalListPage({
 
   try {
     payload = await getPayloadClient();
-    const catResult = await payload.find({ collection: "categories", locale: locale as any, limit: 100 });
+    const catResult = await payload.find({
+      collection: "categories",
+      locale: locale as any,
+      fallbackLocale: "none" as any,
+      limit: 100,
+    });
     categories = catResult.docs || [];
 
     const yearResult: any = await payload.find({
       collection: "journals",
       where: publishedJournalWhere(),
       locale: locale as any,
+      fallbackLocale: "none" as any,
       depth: 0,
       limit: 1000,
       select: { publicationYear: true },
@@ -102,6 +129,7 @@ export default async function JournalListPage({
       collection: "journals" as any,
       where: publishedJournalWhere(filters),
       locale: locale as any,
+      fallbackLocale: "none" as any,
       depth: 1,
       sort: "-publishedAt",
       limit: 9,
@@ -169,7 +197,7 @@ export default async function JournalListPage({
               <option value="">{labels.all}</option>
               {categories.map((category: any) => (
                 <option key={category.id} value={category.slug}>
-                  {category.name}
+                  {categoryLabel(category)}
                 </option>
               ))}
             </select>
@@ -239,7 +267,9 @@ export default async function JournalListPage({
                     </div>
                     <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 12, flex: 1 }}>
                       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                        {category?.name && <span className="badge badge-primary">{category.name}</span>}
+                        {categoryLabel(category) && (
+                          <span className="badge badge-primary">{categoryLabel(category)}</span>
+                        )}
                         {journal.publicationYear && (
                           <span style={{ color: "#64748b", fontSize: 13 }}>{journal.publicationYear}</span>
                         )}

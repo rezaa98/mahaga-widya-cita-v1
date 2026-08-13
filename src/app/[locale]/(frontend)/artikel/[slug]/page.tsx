@@ -17,6 +17,7 @@ import {
   getLocalizedArticlesHref,
 } from "@/utils/contentMedia";
 import { isLikelyEnglishDocument } from "@/utils/contentLanguage";
+import { localizedAlternates } from "@/utils/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -54,6 +55,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title,
     description,
+    alternates: localizedAlternates(resolvedParams.locale, `/artikel/${article.slug}`),
     openGraph: {
       title,
       description,
@@ -153,6 +155,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
       <main style={{ paddingTop: "120px", minHeight: "100vh", backgroundColor: "#f8f9fa", paddingBottom: "60px" }}>
         <div className="container" style={{ maxWidth: "800px" }}>
           <Breadcrumbs
+            locale={resolvedParams.locale}
             items={[
               { label: copy.article, href: getLocalizedArticlesHref(resolvedParams.locale) },
               {

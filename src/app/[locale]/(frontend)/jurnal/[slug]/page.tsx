@@ -55,11 +55,17 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
       ? journal.meta.image.url
       : null
     : mediaURL(journal.ogImage) || mediaURL(journal.coverImage);
-  const url = `https://mahagawidyacita.co.id${journalHref(resolved.locale, journal.slug || journal.id)}`;
+  const path = `/jurnal/${journal.slug || journal.id}`;
+  const url = `https://www.mahagawidyacita.com${journalHref(resolved.locale, journal.slug || journal.id)}`;
   return {
     title,
     description,
-    alternates: { canonical: journal.canonicalUrl || url },
+    alternates: journal.canonicalUrl
+      ? { canonical: journal.canonicalUrl }
+      : {
+          canonical: `/${resolved.locale}${path}`,
+          languages: { "id-ID": `/id${path}`, "en-US": `/en${path}`, "x-default": `/id${path}` },
+        },
     openGraph: { title, description, type: "article", url, images: image ? [{ url: image }] : [] },
     twitter: { card: "summary_large_image", title, description, images: image ? [image] : [] },
   };
@@ -120,7 +126,7 @@ export default async function JournalDetailPage({ params }: { params: Promise<Ro
       : undefined,
     pagination: journal.pages || undefined,
     sameAs: journal.doi ? `https://doi.org/${journal.doi}` : undefined,
-    url: `https://mahagawidyacita.co.id${journalHref(resolved.locale, journal.slug || journal.id)}`,
+    url: `https://www.mahagawidyacita.com${journalHref(resolved.locale, journal.slug || journal.id)}`,
   };
 
   return (
@@ -129,6 +135,7 @@ export default async function JournalDetailPage({ params }: { params: Promise<Ro
       <main style={{ paddingTop: 120, minHeight: "100vh", background: "#f8fafc", paddingBottom: 80 }}>
         <div className="container" style={{ maxWidth: 980 }}>
           <Breadcrumbs
+            locale={resolved.locale}
             items={[
               { label: isEn ? "All journals" : "Semua jurnal", href: journalListHref(resolved.locale) },
               { label: journal.title },

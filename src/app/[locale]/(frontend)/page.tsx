@@ -70,6 +70,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               limit: 100,
               sort: "order",
               locale: locale as any,
+              fallbackLocale: "none" as any,
             })
           ).docs;
   } catch (err) {
@@ -77,6 +78,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   }
 
   let services: any[] = [];
+  let contactPhone: string | undefined;
   try {
     const serviceCandidates =
       berandaData?.featuredData?.services?.length > 0
@@ -94,6 +96,18 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     console.error("[Home] Failed to load services:", err);
   }
 
+  try {
+    const contact = await payload.findGlobal({
+      slug: "kontak",
+      locale: locale as any,
+      fallbackLocale: "none" as any,
+      depth: 0,
+    });
+    contactPhone = contact?.phone || undefined;
+  } catch (err) {
+    console.error("[Home] Failed to load contact information:", err);
+  }
+
   return (
     <>
       <Navbar />
@@ -103,6 +117,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         services={services}
         berandaData={berandaData}
         locale={locale}
+        contactPhone={contactPhone}
       />
       <Footer locale={locale} />
       <WhatsAppFloat locale={locale} />

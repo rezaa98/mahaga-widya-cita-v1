@@ -3,8 +3,95 @@
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
-export default function TeamMemberCard({ member }: { member: any }) {
+function MemberVisual({
+  member,
+  photoUrl,
+  initials,
+  visibleRole,
+}: {
+  member: any;
+  photoUrl: string | null;
+  initials: string;
+  visibleRole?: string;
+}) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <div
+        style={{
+          width: "100%",
+          aspectRatio: "1 / 1.1",
+          background:
+            member.color || "linear-gradient(180deg, var(--color-primary-50) 0%, var(--color-primary-200) 100%)",
+          borderTopLeftRadius: "999px",
+          borderTopRightRadius: "999px",
+          overflow: "hidden",
+          position: "relative",
+        }}
+      >
+        {photoUrl ? (
+          // Profile media can be hosted by the CMS on a runtime-configured domain.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={photoUrl} alt={member.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        ) : (
+          <div
+            style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
+          >
+            <span style={{ fontSize: "4rem", fontWeight: "700", color: "white" }}>{initials}</span>
+          </div>
+        )}
+      </div>
+
+      <div style={{ position: "relative" }}>
+        {visibleRole && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              background: "white",
+              padding: "0.5rem 1rem",
+              borderRadius: "9999px",
+              fontSize: "0.65rem",
+              fontWeight: "800",
+              textAlign: "center",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              width: "85%",
+              color: "#191b23",
+              zIndex: 10,
+              whiteSpace: "normal",
+              lineHeight: "1.3",
+            }}
+          >
+            {visibleRole}
+          </div>
+        )}
+        <div
+          style={{
+            background: "linear-gradient(135deg, var(--color-primary-700) 0%, var(--color-primary-900) 100%)",
+            color: "white",
+            padding: "1.25rem 0.5rem 0.75rem",
+            textAlign: "center",
+            fontSize: "0.875rem",
+            fontWeight: "700",
+            borderRadius: "0 0 6px 6px",
+            boxShadow: "0 4px 10px rgba(11, 45, 107, 0.2)",
+          }}
+        >
+          {member.name}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function TeamMemberCard({ member, locale = "id" }: { member: any; locale?: string }) {
   const [isOpen, setIsOpen] = useState(false);
+  const visibleRole = [member.role, member.expertise].find(
+    (value) => typeof value === "string" && value.trim() && value.trim() !== "-",
+  );
+  const visibleExpertise =
+    typeof member.expertise === "string" && member.expertise.trim() !== "-" ? member.expertise.trim() : "";
 
   // Prevent scrolling when modal is open
   useEffect(() => {
@@ -39,84 +126,21 @@ export default function TeamMemberCard({ member }: { member: any }) {
     }
   }
 
-  const CardImage = () => (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      {/* Arched image container */}
-      <div
-        style={{
-          width: "100%",
-          aspectRatio: "1 / 1.1",
-          background:
-            member.color || "linear-gradient(180deg, var(--color-primary-50) 0%, var(--color-primary-200) 100%)",
-          borderTopLeftRadius: "999px",
-          borderTopRightRadius: "999px",
-          overflow: "hidden",
-          position: "relative",
-        }}
-      >
-        {photoUrl ? (
-          <img src={photoUrl} alt={member.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-        ) : (
-          <div
-            style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
-          >
-            <span style={{ fontSize: "4rem", fontWeight: "700", color: "white" }}>{initials}</span>
-          </div>
-        )}
-      </div>
-
-      <div style={{ position: "relative" }}>
-        {/* Overlapping White Pill */}
-        {(member.role || member.expertise) && (
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              background: "white",
-              padding: "0.5rem 1rem",
-              borderRadius: "9999px",
-              fontSize: "0.65rem",
-              fontWeight: "800",
-              textAlign: "center",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-              width: "85%",
-              color: "#191b23",
-              zIndex: 10,
-              whiteSpace: "normal",
-              lineHeight: "1.3",
-            }}
-          >
-            {member.role || member.expertise}
-          </div>
-        )}
-
-        {/* Solid Blue Name Bar */}
-        <div
-          style={{
-            background: "linear-gradient(135deg, var(--color-primary-700) 0%, var(--color-primary-900) 100%)",
-            color: "white",
-            padding: "1.25rem 0.5rem 0.75rem",
-            textAlign: "center",
-            fontSize: "0.875rem",
-            fontWeight: "700",
-            borderRadius: "0 0 6px 6px",
-            boxShadow: "0 4px 10px rgba(11, 45, 107, 0.2)",
-          }}
-        >
-          {member.name}
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <>
       {/* GRID CARD */}
       <div
         className="card"
+        role="button"
+        tabIndex={0}
+        aria-label={`${locale === "en" ? "View profile" : "Lihat profil"}: ${member.name}`}
         onClick={() => setIsOpen(true)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setIsOpen(true);
+          }
+        }}
         style={{
           display: "flex",
           flexDirection: "column",
@@ -137,12 +161,13 @@ export default function TeamMemberCard({ member }: { member: any }) {
           e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.04)";
         }}
       >
-        <CardImage />
+        <MemberVisual member={member} photoUrl={photoUrl} initials={initials} visibleRole={visibleRole} />
       </div>
 
       {/* POPUP MODAL */}
       {isOpen && (
         <div
+          role="presentation"
           style={{
             position: "fixed",
             inset: 0,
@@ -158,6 +183,9 @@ export default function TeamMemberCard({ member }: { member: any }) {
           onClick={() => setIsOpen(false)}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`team-member-${member.id || member.initials}`}
             style={{
               background: "white",
               borderRadius: "24px",
@@ -175,6 +203,8 @@ export default function TeamMemberCard({ member }: { member: any }) {
           >
             {/* Close Button */}
             <button
+              type="button"
+              aria-label={locale === "en" ? "Close profile" : "Tutup profil"}
               onClick={() => setIsOpen(false)}
               style={{
                 position: "absolute",
@@ -201,6 +231,7 @@ export default function TeamMemberCard({ member }: { member: any }) {
             {/* Modal Content - Left side */}
             <div style={{ padding: "3.5rem 3rem", flex: 1, overflowY: "auto", maxHeight: "90vh" }}>
               <h2
+                id={`team-member-${member.id || member.initials}`}
                 style={{
                   fontSize: "2.5rem",
                   fontWeight: "900",
@@ -212,7 +243,7 @@ export default function TeamMemberCard({ member }: { member: any }) {
               >
                 {member.name}
               </h2>
-              {(member.role || member.expertise) && (
+              {visibleRole && (
                 <p
                   style={{
                     color: "var(--color-primary-600)",
@@ -223,19 +254,19 @@ export default function TeamMemberCard({ member }: { member: any }) {
                     marginBottom: "2.5rem",
                   }}
                 >
-                  {member.role || member.expertise}
+                  {visibleRole}
                 </p>
               )}
 
               <div style={{ color: "#475569", lineHeight: "1.8", fontSize: "1.125rem" }}>
-                {member.expertise && (
+                {visibleExpertise && (
                   <p style={{ marginBottom: "1rem" }}>
-                    <strong>Spesialisasi:</strong> {member.expertise}
+                    <strong>{locale === "en" ? "Expertise" : "Spesialisasi"}:</strong> {visibleExpertise}
                   </p>
                 )}
                 {member.institution && (
                   <p style={{ marginBottom: member.bio ? "1.5rem" : "1rem" }}>
-                    <strong>Instansi:</strong> {member.institution}
+                    <strong>{locale === "en" ? "Institution" : "Instansi"}:</strong> {member.institution}
                   </p>
                 )}
 
@@ -272,7 +303,7 @@ export default function TeamMemberCard({ member }: { member: any }) {
                   boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
                 }}
               >
-                <CardImage />
+                <MemberVisual member={member} photoUrl={photoUrl} initials={initials} visibleRole={visibleRole} />
               </div>
             </div>
           </div>

@@ -1,6 +1,74 @@
 import { NextResponse } from "next/server";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
+import { requireAdminAuth } from "@/utils/adminAuth";
+import { isIP } from "node:net";
+import { lookup } from "node:dns/promises";
+
+const MAX_IMPORT_BYTES = 2 * 1024 * 1024;
+const BLOCKED_HOSTS = new Set(["localhost", "metadata.google.internal"]);
+
+function isPrivateAddress(address: string) {
+  if (isIP(address) === 4) {
+    const [a, b] = address.split(".").map(Number);
+    return (
+      a === 0 ||
+      a === 10 ||
+      a === 127 ||
+      (a === 169 && b === 254) ||
+      (a === 172 && b >= 16 && b <= 31) ||
+      (a === 192 && b === 168) ||
+      a >= 224
+    );
+  }
+  const normalized = address.toLowerCase();
+  if (normalized.startsWith("::ffff:")) return isPrivateAddress(normalized.slice(7));
+  return (
+    normalized === "::1" ||
+    normalized === "::" ||
+    normalized.startsWith("fc") ||
+    normalized.startsWith("fd") ||
+    normalized.startsWith("fe80:") ||
+    normalized.startsWith("ff")
+  );
+}
+
+async function assertSafeImportUrl(value: string) {
+  const parsed = new URL(value);
+  if (parsed.protocol !== "https:" || parsed.username || parsed.password || parsed.port) {
+    throw new Error("URL jurnal harus menggunakan HTTPS tanpa kredensial atau port khusus.");
+  }
+  if (BLOCKED_HOSTS.has(parsed.hostname.toLowerCase())) throw new Error("Host URL jurnal tidak diizinkan.");
+  const addresses = await lookup(parsed.hostname, { all: true, verbatim: true });
+  if (!addresses.length || addresses.some(({ address }) => isPrivateAddress(address))) {
+    throw new Error("URL jurnal tidak boleh mengarah ke jaringan privat atau internal.");
+  }
+  return parsed;
+}
+
+async function fetchJournalPage(initialUrl: string) {
+  let current = await assertSafeImportUrl(initialUrl);
+  for (let redirect = 0; redirect <= 3; redirect += 1) {
+    const response = await fetch(current, {
+      headers: { "User-Agent": "MahagaWidyaCita-JournalImporter/1.0" },
+      redirect: "manual",
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get("location");
+      if (!location || redirect === 3) throw new Error("Redirect URL jurnal tidak valid atau terlalu banyak.");
+      current = await assertSafeImportUrl(new URL(location, current).toString());
+      continue;
+    }
+    if (!response.ok) throw new Error(`Gagal mengakses URL jurnal (Status: ${response.status}).`);
+    const declaredSize = Number(response.headers.get("content-length") || 0);
+    if (declaredSize > MAX_IMPORT_BYTES) throw new Error("Halaman jurnal melebihi batas ukuran 2 MB.");
+    const bytes = await response.arrayBuffer();
+    if (bytes.byteLength > MAX_IMPORT_BYTES) throw new Error("Halaman jurnal melebihi batas ukuran 2 MB.");
+    return new TextDecoder().decode(bytes);
+  }
+  throw new Error("URL jurnal tidak dapat diakses.");
+}
 
 function toLexical(text: string) {
   return {
@@ -44,27 +112,18 @@ function slugify(text: string) {
 }
 
 export async function POST(req: Request) {
+  const authError = await requireAdminAuth(req);
+  if (authError) return authError;
+
   try {
     const body = await req.json();
     const { url } = body;
 
-    if (!url || typeof url !== "string" || !url.startsWith("http")) {
+    if (!url || typeof url !== "string") {
       return NextResponse.json({ error: "URL tidak valid. Masukkan URL jurnal OJS resmi." }, { status: 400 });
     }
 
-    console.log("[ImportJournal] Fetching OJS URL:", url);
-    const res = await fetch(url, {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-      },
-    });
-
-    if (!res.ok) {
-      return NextResponse.json({ error: `Gagal mengakses URL jurnal (Status: ${res.status}).` }, { status: 400 });
-    }
-
-    const html = await res.text();
+    const html = await fetchJournalPage(url);
 
     // Helper to extract meta tag contents
     const getMeta = (name: string): string[] => {

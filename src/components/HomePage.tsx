@@ -287,12 +287,14 @@ export default function HomePage({
   services: payloadServices = [],
   berandaData,
   locale = "id",
+  contactPhone,
 }: {
   articles?: any[];
   teamMembers?: any[];
   services?: any[];
   berandaData?: any;
   locale?: string;
+  contactPhone?: string;
 }) {
   const isEn = locale === "en";
   const dateLocale = isEn ? "en-US" : "id-ID";
@@ -360,10 +362,11 @@ export default function HomePage({
           title: a.title,
           excerpt: isEn ? "Click to read more..." : "Klik untuk membaca lebih lanjut...",
           author: typeof a.author === "object" && a.author ? a.author.name || "Admin" : "Admin",
-          date: new Date(a.publishedAt || new Date()).toLocaleDateString(dateLocale, {
+          date: new Date(a.publishedAt || a.createdAt).toLocaleDateString(dateLocale, {
             year: "numeric",
             month: "long",
             day: "numeric",
+            timeZone: "UTC",
           }),
           readTime: isEn ? "5 min read" : "5 menit",
           categoryColor: "var(--color-primary-500)",
@@ -528,7 +531,7 @@ export default function HomePage({
                   className="animate-fade-in-up delay-300"
                   style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}
                 >
-                  <Link href="/layanan" className="btn btn-outline-white btn-lg" id="hero-cta-layanan">
+                  <Link href={`/${locale}/layanan`} className="btn btn-outline-white btn-lg" id="hero-cta-layanan">
                     {isEn ? "View Our Services" : "Lihat Layanan Kami"}
                   </Link>
                 </div>
@@ -970,7 +973,7 @@ export default function HomePage({
               `}</style>
               {displayTeamMembers.map((member: any) => (
                 <div key={member.id} style={{ flex: "0 0 auto", width: "280px" }}>
-                  <TeamMemberCard member={member} />
+                  <TeamMemberCard member={member} locale={locale} />
                 </div>
               ))}
             </div>
@@ -978,6 +981,8 @@ export default function HomePage({
             {isTeamScrollable && (
               <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginTop: "1rem" }}>
                 <button
+                  type="button"
+                  aria-label={locale === "en" ? "Previous team members" : "Anggota tim sebelumnya"}
                   onClick={() => scrollTeam("left")}
                   style={{
                     width: "44px",
@@ -998,6 +1003,8 @@ export default function HomePage({
                   <ChevronLeft size={24} />
                 </button>
                 <button
+                  type="button"
+                  aria-label={locale === "en" ? "Next team members" : "Anggota tim berikutnya"}
                   onClick={() => scrollTeam("right")}
                   style={{
                     width: "44px",
@@ -1147,17 +1154,24 @@ export default function HomePage({
               className="cta-buttons"
               style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}
             >
-              <a
-                href={`https://wa.me/${berandaData?.cta?.waNumber || "6221123456789"}?text=${encodeURIComponent(berandaData?.cta?.waMessage || "Halo, saya ingin konsultasi mengenai layanan PT Mahaga Widya Cita")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-gold btn-lg"
-                id="cta-whatsapp-consulting"
-              >
-                <MessageSquare size={18} />
-                {isEn ? "Free Consultation via WhatsApp" : "Konsultasi Gratis via WhatsApp"}
-              </a>
-              <Link href="/kontak" className="btn btn-outline-white btn-lg" id="cta-contact-form">
+              {(berandaData?.cta?.waNumber || contactPhone) && (
+                <a
+                  href={`https://wa.me/${String(berandaData?.cta?.waNumber || contactPhone)
+                    .replace(/\D/g, "")
+                    .replace(
+                      /^0/,
+                      "62",
+                    )}?text=${encodeURIComponent(berandaData?.cta?.waMessage || (isEn ? "Hello, I would like to consult about PT Mahaga Widya Cita services" : "Halo, saya ingin konsultasi mengenai layanan PT Mahaga Widya Cita"))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-gold btn-lg"
+                  id="cta-whatsapp-consulting"
+                >
+                  <MessageSquare size={18} />
+                  {isEn ? "Free Consultation via WhatsApp" : "Konsultasi Gratis via WhatsApp"}
+                </a>
+              )}
+              <Link href={`/${locale}/kontak`} className="btn btn-outline-white btn-lg" id="cta-contact-form">
                 {isEn ? "Email Us" : "Kirim Email ke Kami"}
               </Link>
             </div>

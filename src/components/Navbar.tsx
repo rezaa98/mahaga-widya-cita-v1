@@ -193,7 +193,7 @@ export default function Navbar() {
             }}
           >
             {/* Logo */}
-            <Link href="/" style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexShrink: 0 }}>
+            <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexShrink: 0 }}>
               <Image
                 src="/logo-transparent.png"
                 alt="Logo PT Mahaga Widya Cita"

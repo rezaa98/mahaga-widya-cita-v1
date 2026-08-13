@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     openGraph: {
       title,
       description,
-      url: `https://mahagawidyacita.co.id/${resolvedParams.locale}/policy-reviews/${review.slug}`,
+      url: `https://www.mahagawidyacita.com/${resolvedParams.locale}/policy-reviews/${review.slug}`,
       type: "article",
       publishedTime: review.publishedAt || review.createdAt,
       images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : [],
@@ -159,6 +159,7 @@ export default async function PolicyReviewDetailPage({
       <main style={{ paddingTop: "120px", minHeight: "100vh", backgroundColor: "#f8f9fa", paddingBottom: "60px" }}>
         <div className="container" style={{ maxWidth: "800px" }}>
           <Breadcrumbs
+            locale={resolvedParams.locale}
             items={[
               { label: isEn ? "Policy Reviews" : "Daftar Review", href: `/${resolvedParams.locale}/policy-reviews` },
               { label: review.title },

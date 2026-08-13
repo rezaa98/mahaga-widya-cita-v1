@@ -4,12 +4,13 @@ import { Phone, Mail, MapPin } from "lucide-react";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { IconInstagram, IconYoutube, IconLinkedin, IconXTwitter } from "./icons/SocialIcons";
+import { selectCorporateServices } from "@/data/serviceCatalog";
 
 const defaultFooterLinksId = {
   company: [
     { label: "Profil Perusahaan", url: "/tentang-kami" },
-    { label: "Manajemen", url: "/tentang-kami#manajemen" },
-    { label: "Tenaga Ahli", url: "/tentang-kami#ahli" },
+    { label: "Manajemen", url: "/tim#manajemen" },
+    { label: "Tenaga Ahli", url: "/tim#ahli" },
     { label: "Mitra", url: "/mitra" },
     { label: "Karir", url: "/karir" },
   ],
@@ -26,8 +27,8 @@ const defaultFooterLinksId = {
 const defaultFooterLinksEn = {
   company: [
     { label: "Company Profile", url: "/tentang-kami" },
-    { label: "Management", url: "/tentang-kami#manajemen" },
-    { label: "Experts", url: "/tentang-kami#ahli" },
+    { label: "Management", url: "/tim#manajemen" },
+    { label: "Experts", url: "/tim#ahli" },
     { label: "Partners", url: "/mitra" },
     { label: "Careers", url: "/karir" },
   ],
@@ -51,10 +52,10 @@ const socialIconsMap: Record<string, any> = {
 export default async function Footer({ locale = "id" }: { locale?: string }) {
   const isEn = locale === "en";
   const payload = await getPayload({ config: configPromise });
-  const kontakData = await payload.findGlobal({ slug: "kontak", locale: locale as any });
+  const kontakData = await payload.findGlobal({ slug: "kontak", locale: locale as any, fallbackLocale: "none" as any });
   let footerData: any = null;
   try {
-    footerData = await payload.findGlobal({ slug: "footer", locale: locale as any });
+    footerData = await payload.findGlobal({ slug: "footer", locale: locale as any, fallbackLocale: "none" as any });
   } catch (e) {
     console.error("Footer global not found, using defaults");
   }
@@ -64,9 +65,10 @@ export default async function Footer({ locale = "id" }: { locale?: string }) {
     const servicesRes = await payload.find({
       collection: "services",
       locale: locale as any,
-      limit: 7,
+      fallbackLocale: "none" as any,
+      limit: 100,
     });
-    dynamicServicesLinks = servicesRes.docs.map((s) => ({
+    dynamicServicesLinks = selectCorporateServices(servicesRes.docs).map((s) => ({
       label: s.title,
       url: `/layanan/${s.slug}`,
     }));
@@ -113,15 +115,9 @@ export default async function Footer({ locale = "id" }: { locale?: string }) {
     );
   }
 
-  const displaySocials =
-    footerData?.socialMedia?.length > 0
-      ? footerData.socialMedia
-      : [
-          { platform: "instagram", url: "#" },
-          { platform: "youtube", url: "#" },
-          { platform: "linkedin", url: "#" },
-          { platform: "twitter", url: "#" },
-        ];
+  const displaySocials = (footerData?.socialMedia?.length > 0 ? footerData.socialMedia : []).filter(
+    ({ url }: any) => url && url !== "#",
+  );
 
   return (
     <footer

@@ -25,6 +25,7 @@ import { PageHero } from "@/components/ui/PageHero";
 import TeamMemberCard from "@/components/ui/TeamMemberCard";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
+import { localizedAlternates } from "@/utils/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: isEn
       ? "Learn about PT Mahaga Widya Cita — a leading consulting and education company serving Indonesian institutions and professionals."
       : "Mengenal PT Mahaga Widya Cita — perusahaan konsultasi dan edukasi terdepan yang melayani ASN dan profesional Indonesia sejak 2015.",
+    alternates: localizedAlternates(locale, "/tentang-kami"),
   };
 }
 
@@ -180,7 +182,11 @@ export default async function TentangKamiPage(props: { params: Promise<{ locale:
   const params = await props.params;
   const isEn = params.locale === "en";
   const payload = await getPayload({ config: configPromise });
-  const tentangKami: any = await payload.findGlobal({ slug: "tentang-kami", locale: params.locale as any });
+  const tentangKami: any = await payload.findGlobal({
+    slug: "tentang-kami",
+    locale: params.locale as any,
+    fallbackLocale: "none" as any,
+  });
 
   let ceo = tentangKami?.ceoMessage?.ceo;
 
@@ -190,6 +196,7 @@ export default async function TentangKamiPage(props: { params: Promise<{ locale:
       collection: "team-members",
       id: ceo,
       locale: params.locale as any,
+      fallbackLocale: "none" as any,
     });
   }
 
@@ -511,7 +518,7 @@ export default async function TentangKamiPage(props: { params: Promise<{ locale:
             </blockquote>
 
             <div style={{ maxWidth: "320px", margin: "0 auto", textAlign: "left" }}>
-              <TeamMemberCard member={ceo} />
+              <TeamMemberCard member={ceo} locale={params.locale} />
             </div>
           </div>
         </div>

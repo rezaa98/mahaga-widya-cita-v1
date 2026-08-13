@@ -4,7 +4,7 @@ import configPromise from "@payload-config";
 import { sql } from "drizzle-orm";
 import { requireAdminAuth } from "@/utils/adminAuth";
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   const authError = await requireAdminAuth(req);
   if (authError) return authError;
   const payload = await getPayload({ config: configPromise });

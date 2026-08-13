@@ -10,9 +10,10 @@ export interface BreadcrumbsProps {
     href?: string;
   }[];
   isDarkBg?: boolean;
+  locale?: string;
 }
 
-export function Breadcrumbs({ items, isDarkBg = false }: BreadcrumbsProps) {
+export function Breadcrumbs({ items, isDarkBg = false, locale = "id" }: BreadcrumbsProps) {
   return (
     <nav
       className={`scrollbar-hide mb-6 flex items-center space-x-1 overflow-x-auto pb-2 text-sm whitespace-nowrap sm:mb-8 sm:space-x-2 ${
@@ -20,9 +21,10 @@ export function Breadcrumbs({ items, isDarkBg = false }: BreadcrumbsProps) {
       }`}
     >
       <Link
-        href="/"
+        href={`/${locale}`}
+        aria-label={locale === "en" ? "Home" : "Beranda"}
         className={`flex shrink-0 items-center transition-colors ${
-          isDarkBg ? "text-white/80 hover:text-white" : "text-gray-600 hover:text-primary-600"
+          isDarkBg ? "text-white/80 hover:text-white" : "hover:text-primary-600 text-gray-600"
         }`}
       >
         <Home className="h-4 w-4" />
@@ -46,7 +48,7 @@ export function Breadcrumbs({ items, isDarkBg = false }: BreadcrumbsProps) {
               <Link
                 href={item.href}
                 className={`shrink-0 transition-colors ${
-                  isDarkBg ? "text-white/80 hover:text-white" : "text-gray-600 hover:text-primary-600"
+                  isDarkBg ? "text-white/80 hover:text-white" : "hover:text-primary-600 text-gray-600"
                 }`}
               >
                 {item.label}

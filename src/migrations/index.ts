@@ -4,6 +4,7 @@ import * as migration_20260803_173500_translation_workflow from "./20260803_1735
 import * as migration_20260806_210000_translation_review_history from "./20260806_210000_translation_review_history";
 import * as migration_20260807_000100_beranda_team_intro from "./20260807_000100_beranda_team_intro";
 import * as migration_20260807_002300_tentang_kami_show_stats from "./20260807_002300_tentang_kami_show_stats";
+import * as migration_20260813_170000_localize_tentang_kami_arrays from "./20260813_170000_localize_tentang_kami_arrays";
 
 export const migrations = [
   {
@@ -35,5 +36,10 @@ export const migrations = [
     up: migration_20260807_002300_tentang_kami_show_stats.up,
     down: migration_20260807_002300_tentang_kami_show_stats.down,
     name: "20260807_002300_tentang_kami_show_stats",
+  },
+  {
+    up: migration_20260813_170000_localize_tentang_kami_arrays.up,
+    down: migration_20260813_170000_localize_tentang_kami_arrays.down,
+    name: "20260813_170000_localize_tentang_kami_arrays",
   },
 ];

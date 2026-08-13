@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/dashboard/", "/admin/"],
     },
-    sitemap: "https://mahagawidyacita.co.id/sitemap.xml",
+    sitemap: "https://www.mahagawidyacita.com/sitemap.xml",
   };
 }
