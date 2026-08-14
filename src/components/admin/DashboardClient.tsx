@@ -103,36 +103,43 @@ function MetricCard({
 }
 
 function AttentionPanel({ data, isEn, locale }: { data: DashboardData; isEn: boolean; locale: "id" | "en" }) {
+  const reviewTarget = data.translationQueue.find((item) => item.status === "needs_review")?.href;
+  const recoveryTarget = data.translationQueue.find((item) => ["failed", "needs_update"].includes(item.status))?.href;
   const items = [
     {
       count: data.stats.articles.draft,
       label: isEn ? "draft articles" : "artikel draft",
       href: "/admin/collections/articles?where[status][equals]=draft",
       icon: "article",
+      translationTarget: false,
     },
     {
       count: data.stats.journals.draft,
       label: isEn ? "draft journals" : "jurnal draft",
       href: "/admin/collections/journals?where[status][equals]=draft",
       icon: "menu_book",
+      translationTarget: false,
     },
     {
       count: data.stats.contacts.recentCount,
       label: isEn ? "new messages" : "pesan baru",
       href: "/admin/collections/contact-submissions",
       icon: "mail",
+      translationTarget: false,
     },
     {
       count: data.stats.translations.needsReview,
       label: isEn ? "translations awaiting review" : "terjemahan menunggu review",
-      href: "/admin?translationStatus=needs_review",
+      href: reviewTarget || "#translation-queue",
       icon: "rate_review",
+      translationTarget: Boolean(reviewTarget),
     },
     {
       count: data.stats.translations.needsUpdate + data.stats.translations.failed,
       label: isEn ? "translations need recovery" : "terjemahan perlu diperbaiki",
-      href: "/admin?translationStatus=attention",
+      href: recoveryTarget || "#translation-queue",
       icon: "translate",
+      translationTarget: Boolean(recoveryTarget),
     },
   ].filter((item) => item.count > 0);
 
@@ -148,7 +155,7 @@ function AttentionPanel({ data, isEn, locale }: { data: DashboardData; isEn: boo
       {items.length ? (
         <div className="mwc-attention__list">
           {items.map((item) => (
-            <a href={withLocale(item.href, locale)} key={item.label}>
+            <a href={item.translationTarget ? item.href : withLocale(item.href, locale)} key={item.label}>
               <span className="mwc-attention__count">{item.count}</span>
               <span>
                 <Icon>{item.icon}</Icon>
@@ -176,7 +183,11 @@ function TranslationPanel({ data, isEn }: { data: DashboardData; isEn: boolean }
     translating: isEn ? "Translating" : "Diterjemahkan",
   };
   return (
-    <section className="mwc-panel mwc-translation-queue" aria-labelledby="translation-queue-title">
+    <section
+      className="mwc-panel mwc-translation-queue"
+      id="translation-queue"
+      aria-labelledby="translation-queue-title"
+    >
       <div className="mwc-panel__heading">
         <div>
           <p className="mwc-eyebrow">AI Translation</p>
