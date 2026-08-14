@@ -356,6 +356,9 @@ export const LocaleDocumentControls: React.FC = () => {
           SOURCE_CHANGED: isEn
             ? "The Indonesian source changed. Update the English draft."
             : "Sumber Indonesia berubah. Perbarui draf Inggris.",
+          WORKER_INCOMPLETE: isEn
+            ? "The translation worker stopped before finishing. Please retry."
+            : "Worker terjemahan berhenti sebelum selesai. Silakan coba lagi.",
         };
         throw new Error(
           (body?.code && localized[body.code]) || body?.error || body?.message || String(response.status),

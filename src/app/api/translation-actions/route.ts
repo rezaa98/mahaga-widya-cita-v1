@@ -10,7 +10,7 @@ import {
 } from "@/translation/records";
 import { parseTranslationResource } from "@/translation/request";
 import { extractTranslationUnits, fieldsForResource, mergeCandidateIntoTarget, sourceHash } from "@/translation/schema";
-import { queueTranslation } from "@/translation/service";
+import { queueTranslation, releaseStaleTranslationJobs } from "@/translation/service";
 import { fetchTranslationDocument } from "@/translation/task";
 import type { TranslationCandidate } from "@/translation/types";
 
@@ -55,11 +55,33 @@ export async function POST(req: Request) {
     if (auth.error) return auth.error;
 
     if (QUEUE_ACTIONS.has(action)) {
+      // Serverless execution can be terminated while Payload still marks a job
+      // as processing. Release only old locks for this exact resource before a
+      // manual editor action queues its replacement.
+      await releaseStaleTranslationJobs(payload, resource);
       const { job } = await queueTranslation(payload, resource, undefined, { force: action === "retry" });
       // Explicit editor actions should feel immediate. The durable queued job
       // remains recoverable if the request/function is interrupted.
       if (job) await payload.jobs.runByID({ id: job.id, overrideAccess: true });
-      const record = await getTranslationRecord(payload, resource);
+      let record = await getTranslationRecord(payload, resource);
+      if (job && record && ["queued", "translating"].includes(record.status)) {
+        record = await upsertTranslationRecord(payload, resource, {
+          auditLog: appendAuditEvent(record, {
+            action: "generation_failed",
+            actorId: auth.user?.id || null,
+            at: new Date().toISOString(),
+            details: { reason: "worker_returned_without_completion" },
+          }),
+          lastError: "The translation worker did not complete. Please retry.",
+          status: "failed",
+        });
+        return actionError(
+          "WORKER_INCOMPLETE",
+          "The translation worker could not complete this request. Please retry.",
+          503,
+          record.status,
+        );
+      }
       return NextResponse.json({ data: record, status: record?.status || "queued", success: true });
     }
 

@@ -5,6 +5,50 @@ import type { TranslationCandidate } from "./types";
 import { fetchTranslationDocument } from "./task";
 import { SOURCE_LOCALE, type TranslationJobInput, type TranslationResourceType } from "./types";
 
+export function translationConcurrencyKey(resource: {
+  identifier: string;
+  resourceId?: string;
+  resourceType: TranslationResourceType;
+}) {
+  return `translation:${resource.resourceType}:${resource.identifier}:${resource.resourceType === "global" ? "global" : resource.resourceId}:en`;
+}
+
+export async function releaseStaleTranslationJobs(
+  payload: Payload,
+  resource: { identifier: string; resourceId?: string; resourceType: TranslationResourceType },
+) {
+  const staleBefore = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+  const jobs = await payload.find({
+    collection: "payload-jobs" as any,
+    depth: 0,
+    limit: 20,
+    overrideAccess: true,
+    where: {
+      and: [
+        { concurrencyKey: { equals: translationConcurrencyKey(resource) } },
+        { processing: { equals: true } },
+        { completedAt: { exists: false } },
+        { updatedAt: { less_than: staleBefore } },
+      ],
+    },
+  });
+
+  for (const job of jobs.docs) {
+    await payload.update({
+      collection: "payload-jobs" as any,
+      id: job.id,
+      data: {
+        error: { message: "Recovered an interrupted translation worker." },
+        hasError: true,
+        processing: false,
+      },
+      overrideAccess: true,
+    });
+  }
+
+  return jobs.totalDocs;
+}
+
 export async function queueTranslation(
   payload: Payload,
   resource: { identifier: string; resourceId?: string; resourceType: TranslationResourceType },
