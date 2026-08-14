@@ -740,7 +740,7 @@ label {
 .footer-link {
   color: rgba(255, 255, 255, 0.65);
   display: inline-flex;
-  min-height: 44px;
+  min-height: 28px;
   align-items: center;
   transition: color 0.2s ease;
 }
@@ -819,6 +819,11 @@ label {
   .footer-newsletter button {
     width: 100%;
     min-width: 0 !important;
+  }
+
+  /* Preserve a comfortable touch target without stretching desktop columns. */
+  .footer-link {
+    min-height: 44px;
   }
 
   /* ── Section title ── */
