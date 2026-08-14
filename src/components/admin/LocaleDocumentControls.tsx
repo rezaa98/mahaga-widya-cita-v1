@@ -281,10 +281,10 @@ export const LocaleDocumentControls: React.FC = () => {
   const stateCopy = useMemo(
     () => ({
       not_generated: isEn ? "English not generated" : "Bahasa Inggris belum dibuat",
-      queued: isEn ? "Queued" : "Menunggu antrean",
-      translating: isEn ? "Translating" : "Sedang menerjemahkan",
-      needs_update: isEn ? "Source changed — update needed" : "Sumber berubah — perlu diperbarui",
-      needs_review: isEn ? "AI draft ready for review" : "Draf AI siap direview",
+      queued: isEn ? "Waiting to process" : "Menunggu diproses",
+      translating: isEn ? "Creating English version" : "Membuat versi Inggris",
+      needs_update: isEn ? "Translation needs updating" : "Terjemahan perlu diperbarui",
+      needs_review: isEn ? "English draft ready to review" : "Versi Inggris siap diperiksa",
       approved: isEn ? "English approved" : "Bahasa Inggris disetujui",
       failed: isEn ? "Translation failed" : "Terjemahan gagal",
       unavailable: isEn ? "Workflow status unavailable" : "Status workflow tidak tersedia",
@@ -448,28 +448,32 @@ export const LocaleDocumentControls: React.FC = () => {
                 : "Memeriksa workflow…"
               : stateCopy[translation.status]}
           </span>
-          {translation.progress && (
-            <span className="mwc-translation-workflow__meta">
-              {translation.progress.completed}/{translation.progress.total}
-            </span>
-          )}
-          {translatedDate && (
-            <span className="mwc-translation-workflow__meta">
-              {isEn ? "Last:" : "Terakhir:"} {translatedDate}
-            </span>
-          )}
-          {translation.model && <span className="mwc-translation-workflow__meta">{translation.model}</span>}
-          {translation.publicationStatus && (
-            <span className="mwc-translation-workflow__meta">
-              {isEn ? "Publication:" : "Publikasi:"}{" "}
-              {translation.publicationStatus === "draft"
-                ? "Draft"
-                : translation.publicationStatus === "published"
-                  ? "Published"
-                  : isEn
-                    ? "Live when saved"
-                    : "Tayang saat disimpan"}
-            </span>
+          {(translation.progress || translatedDate || translation.model || translation.publicationStatus) && (
+            <details className="mwc-translation-technical">
+              <summary>{isEn ? "Details" : "Detail"}</summary>
+              <div>
+                {translation.progress && (
+                  <span>
+                    {isEn ? "Review" : "Pemeriksaan"}: {translation.progress.completed}/{translation.progress.total}
+                  </span>
+                )}
+                {translatedDate && (
+                  <span>
+                    {isEn ? "Last processed" : "Terakhir diproses"}: {translatedDate}
+                  </span>
+                )}
+                {translation.publicationStatus && (
+                  <span>
+                    {isEn ? "Publication" : "Publikasi"}: {translation.publicationStatus}
+                  </span>
+                )}
+                {translation.model && (
+                  <span>
+                    {isEn ? "Model" : "Model"}: {translation.model}
+                  </span>
+                )}
+              </div>
+            </details>
           )}
           {translation.error && (
             <span className="mwc-translation-workflow__error" title={translation.error}>

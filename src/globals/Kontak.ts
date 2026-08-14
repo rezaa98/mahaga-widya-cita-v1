@@ -7,7 +7,9 @@ export const Kontak: GlobalConfig = {
   label: { id: "Informasi Kontak", en: "Contact Information" },
   admin: {
     group: { id: "Website", en: "Website" },
-    components: { elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
+    components: {
+      elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] },
+    },
   },
   access: {
     read: () => true,
@@ -19,7 +21,7 @@ export const Kontak: GlobalConfig = {
   fields: [
     {
       name: "heroTitle",
-      label: "Judul Utama (Hero)",
+      label: { id: "Judul Utama (Hero)", en: "Main Hero Title" },
       type: "text",
       localized: true,
       required: true,
@@ -27,7 +29,7 @@ export const Kontak: GlobalConfig = {
     },
     {
       name: "heroSubtitle",
-      label: "Sub-judul (Hero)",
+      label: { id: "Subjudul (Hero)", en: "Hero Subtitle" },
       type: "textarea",
       localized: true,
       required: true,
@@ -36,7 +38,7 @@ export const Kontak: GlobalConfig = {
     },
     {
       name: "phone",
-      label: "Telepon / WhatsApp",
+      label: { id: "Telepon / WhatsApp", en: "Phone / WhatsApp" },
       type: "text",
       localized: true,
       required: true,
@@ -51,7 +53,7 @@ export const Kontak: GlobalConfig = {
     },
     {
       name: "address",
-      label: "Alamat",
+      label: { id: "Alamat", en: "Address" },
       type: "textarea",
       localized: true,
       required: true,
@@ -59,7 +61,7 @@ export const Kontak: GlobalConfig = {
     },
     {
       name: "workingHours",
-      label: "Jam Kerja",
+      label: { id: "Jam Kerja", en: "Business Hours" },
       type: "text",
       localized: true,
       required: true,
@@ -67,23 +69,26 @@ export const Kontak: GlobalConfig = {
     },
     {
       name: "locationTag",
-      label: "Tag Lokasi (Singkat)",
+      label: { id: "Tag Lokasi (Singkat)", en: "Short Location Tag" },
       type: "text",
       localized: true,
       required: true,
       defaultValue: "Pangkalan Bun, Kalimantan Tengah",
       admin: {
-        description: "Teks singkat untuk ikon pin peta (misal: Jakarta Selatan, DKI Jakarta)",
+        description: {
+          id: "Teks singkat untuk ikon pin peta (misal: Jakarta Selatan, DKI Jakarta).",
+          en: "Short text displayed beside the map pin (for example: South Jakarta, Jakarta).",
+        },
       },
     },
     {
       name: "whatsappCta",
-      label: "Pengaturan Tombol WhatsApp",
+      label: { id: "Pengaturan Tombol WhatsApp", en: "WhatsApp Button Settings" },
       type: "group",
       fields: [
         {
           name: "title",
-          label: "Judul Tombol",
+          label: { id: "Judul Tombol", en: "Button Title" },
           type: "text",
           localized: true,
           required: true,
@@ -91,7 +96,7 @@ export const Kontak: GlobalConfig = {
         },
         {
           name: "subtitle",
-          label: "Sub-judul Tombol",
+          label: { id: "Subjudul Tombol", en: "Button Subtitle" },
           type: "text",
           localized: true,
           required: true,
@@ -99,7 +104,7 @@ export const Kontak: GlobalConfig = {
         },
         {
           name: "defaultMessage",
-          label: "Pesan Default (Otomatis terisi)",
+          label: { id: "Pesan Default (Otomatis terisi)", en: "Default Prefilled Message" },
           type: "textarea",
           localized: true,
           required: true,
@@ -109,16 +114,19 @@ export const Kontak: GlobalConfig = {
     },
     {
       name: "formSubjects",
-      label: "Pilihan Subjek Formulir",
+      label: { id: "Pilihan Subjek Formulir", en: "Form Subject Options" },
       type: "array",
       minRows: 1,
       admin: {
-        description: "Daftar pilihan keperluan / subjek yang akan muncul di dropdown formulir kontak.",
+        description: {
+          id: "Daftar pilihan keperluan atau subjek pada formulir kontak.",
+          en: "Options displayed in the contact form subject dropdown.",
+        },
       },
       fields: [
         {
           name: "subject",
-          label: "Subjek",
+          label: { id: "Subjek", en: "Subject" },
           type: "text",
           localized: true,
           required: true,

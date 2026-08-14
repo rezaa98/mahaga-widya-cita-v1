@@ -7,7 +7,9 @@ export const Navbar: GlobalConfig = {
   label: { id: "Navbar (Menu Atas)", en: "Navbar (Top Menu)" },
   admin: {
     group: { id: "Website", en: "Website" },
-    components: { elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
+    components: {
+      elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] },
+    },
   },
   access: {
     read: () => true,
@@ -19,39 +21,39 @@ export const Navbar: GlobalConfig = {
   fields: [
     {
       name: "links",
-      label: "Daftar Menu Navigasi",
+      label: { id: "Daftar Menu Navigasi", en: "Navigation Menu" },
       type: "array",
       required: true,
       fields: [
         {
           name: "label",
-          label: "Label Menu (contoh: Tentang Kami)",
+          label: { id: "Label Menu (contoh: Tentang Kami)", en: "Menu Label (example: About Us)" },
           type: "text",
           localized: true,
           required: true,
         },
         {
           name: "href",
-          label: "URL Tautan",
+          label: { id: "URL Tautan", en: "Link URL" },
           type: "text",
           localized: true,
           required: true,
         },
         {
           name: "children",
-          label: "Sub Menu (Dropdown) - Opsional",
+          label: { id: "Submenu (Dropdown) — Opsional", en: "Optional Dropdown Submenu" },
           type: "array",
           fields: [
             {
               name: "label",
-              label: "Label Sub Menu",
+              label: { id: "Label Submenu", en: "Submenu Label" },
               type: "text",
               localized: true,
               required: true,
             },
             {
               name: "href",
-              label: "URL Tautan",
+              label: { id: "URL Tautan", en: "Link URL" },
               type: "text",
               localized: true,
               required: true,

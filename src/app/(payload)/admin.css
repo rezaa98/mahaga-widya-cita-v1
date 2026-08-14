@@ -531,6 +531,16 @@ html[data-theme="dark"] {
   background: #1d4ed8;
   transform: translateY(-1px);
 }
+.mwc-editor-action-bar__btn--secondary {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #334155;
+}
+.mwc-editor-action-bar__btn--secondary:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+  color: #1e293b;
+}
 .mwc-editor-action-bar__btn:active {
   transform: translateY(0);
 }
@@ -979,6 +989,9 @@ html[data-theme="dark"] {
   font-size: 10px;
   font-weight: 700;
 }
+.mwc-editor-action-bar__status small.is-saved {
+  color: #15803d;
+}
 .mwc-editor-action-bar__preview[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.55;
@@ -1069,13 +1082,71 @@ aside.nav {
   font-weight: 600 !important;
 }
 
-/* --- Force All Sidebar Nav Groups Expanded --- */
+/* Let editors collapse groups they do not use. Forced expansion made the
+   navigation unnecessarily long and hid utilities below the fold. */
 .nav-group__content {
-  display: block !important;
-  height: auto !important;
-  max-height: none !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+  transition: opacity 0.15s ease !important;
+}
+
+.nav__wrapper {
+  scrollbar-gutter: stable;
+}
+
+/* Cleaner list surfaces while retaining Payload's filtering, selection and
+   bulk-operation behavior. */
+.collection-list .table {
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(15 23 42 / 4%);
+}
+.collection-list .table table {
+  margin: 0;
+}
+.collection-list .table thead {
+  background: #f8fafc;
+}
+.collection-list .table th {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.collection-list .table tbody tr:hover {
+  background: #f8fbff;
+}
+.collection-list .list-controls {
+  margin-bottom: 16px;
+}
+.collection-list .search-filter input:focus,
+.collection-list button:focus-visible,
+.collection-list a:focus-visible {
+  outline: none;
+  box-shadow: var(--admin-focus-ring);
+}
+
+.mwc-translation-technical {
+  color: #64748b;
+  font-size: 10px;
+}
+.mwc-translation-technical summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.mwc-translation-technical > div {
+  display: grid;
+  gap: 4px;
+  margin-top: 7px;
+  min-width: 190px;
+  padding: 8px 10px;
+  position: absolute;
+  z-index: 4;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgb(15 23 42 / 12%);
 }
 
 /* --- Nav Link Material Icons --- */

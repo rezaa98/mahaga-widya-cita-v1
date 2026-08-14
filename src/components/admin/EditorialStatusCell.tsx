@@ -40,7 +40,7 @@ const STATUS_CONFIG: Record<string, { label: string; bg: string; color: string; 
     tip: "Konten dijadwalkan untuk dipublikasikan secara otomatis.",
   },
   published: {
-    label: "Published",
+    label: "Dipublikasikan",
     bg: "#dcfce7",
     color: "#166534",
     icon: "public",

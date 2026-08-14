@@ -2,9 +2,11 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAdminLanguage } from "./adminLocale";
 
 export const DashboardNavLink: React.FC = () => {
   const pathname = usePathname();
+  const isEn = useAdminLanguage() === "en";
   const isActive = pathname === "/admin";
 
   return (
@@ -40,7 +42,7 @@ export const DashboardNavLink: React.FC = () => {
         >
           dashboard
         </span>
-        Dashboard
+        {isEn ? "Dashboard" : "Ringkasan"}
       </Link>
     </div>
   );

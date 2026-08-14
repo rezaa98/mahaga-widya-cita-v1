@@ -67,6 +67,7 @@ export default buildConfig({
         "@/components/admin/ThemeForceProvider#ThemeForceProvider",
         "@/components/admin/AdminLocaleShell#AdminLocaleShell",
       ],
+      beforeNavLinks: ["@/components/admin/DashboardNavLink#DashboardNavLink"],
       afterNavLinks: ["@/components/admin/CustomNavLinks#CustomNavLinks"],
       views: {
         dashboard: {

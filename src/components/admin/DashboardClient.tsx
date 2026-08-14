@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { useAuth } from "@payloadcms/ui";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { ImportJournalModal } from "./ImportJournalModal";
 import { useAdminLanguage, useContentLocale, withLocale } from "./adminLocale";
@@ -290,8 +291,14 @@ function ActivityList({
 }
 
 export const DashboardClient: React.FC = () => {
+  const { user } = useAuth();
   const locale = useContentLocale();
   const isEn = useAdminLanguage() === "en";
+  const authUser = user as unknown as { role?: unknown } | null;
+  const role = typeof authUser?.role === "string" ? authUser.role : "member";
+  const canCreateContent = ["admin", "editor", "super_admin"].includes(role);
+  const canReviewContent = ["admin", "reviewer", "super_admin"].includes(role);
+  const canManageMedia = ["admin", "editor", "super_admin"].includes(role);
 
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -302,27 +309,43 @@ export const DashboardClient: React.FC = () => {
   const greeting = isEn ? "Welcome back" : "Selamat datang";
 
   const actionItems = useMemo(
-    () => [
-      {
-        href: withLocale("/admin/collections/articles/create", locale),
-        icon: "post_add",
-        label: isEn ? "New Article" : "Artikel Baru",
-        primary: true,
-      },
-      {
-        href: withLocale("/admin/collections/journals/create", locale),
-        icon: "note_add",
-        label: isEn ? "New Journal" : "Jurnal Baru",
-        primary: true,
-      },
-      { href: withLocale("/admin/collections/media/create", locale), icon: "upload_file", label: "Upload Media" },
-      {
-        href: withLocale("/admin/collections/contact-submissions", locale),
-        icon: "mail",
-        label: isEn ? "Inbox Messages" : "Pesan Masuk",
-      },
-    ],
-    [isEn, locale],
+    () =>
+      [
+        {
+          href: withLocale("/admin/collections/articles/create", locale),
+          icon: "post_add",
+          label: isEn ? "New Article" : "Artikel Baru",
+          primary: true,
+          visible: canCreateContent,
+        },
+        {
+          href: withLocale("/admin/collections/journals/create", locale),
+          icon: "note_add",
+          label: isEn ? "New Journal" : "Jurnal Baru",
+          primary: true,
+          visible: canCreateContent,
+        },
+        {
+          href: withLocale("/admin/collections/articles?where[status][equals]=in_review", locale),
+          icon: "rate_review",
+          label: isEn ? "Review Content" : "Review Konten",
+          primary: true,
+          visible: canReviewContent,
+        },
+        {
+          href: withLocale("/admin/collections/media/create", locale),
+          icon: "upload_file",
+          label: "Upload Media",
+          visible: canManageMedia,
+        },
+        {
+          href: withLocale("/admin/collections/contact-submissions", locale),
+          icon: "mail",
+          label: isEn ? "Inbox Messages" : "Pesan Masuk",
+          visible: ["admin", "super_admin"].includes(role),
+        },
+      ].filter((item) => item.visible),
+    [canCreateContent, canManageMedia, canReviewContent, isEn, locale, role],
   );
 
   useEffect(() => {
@@ -410,6 +433,7 @@ export const DashboardClient: React.FC = () => {
             className="mwc-action mwc-action--primary"
             onClick={() => setIsImportModalOpen(true)}
             style={{ background: "#7e22ce", borderColor: "#7e22ce", cursor: "pointer" }}
+            hidden={!canCreateContent}
           >
             <Icon>link</Icon>
             {isEn ? "Import Journal (OJS Link)" : "Impor Jurnal (Link OJS)"}

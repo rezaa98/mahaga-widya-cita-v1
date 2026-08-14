@@ -4,7 +4,10 @@ import { useLocale, useTranslation } from "@payloadcms/ui";
 
 export type AdminContentLocale = "id" | "en";
 
-export const CONTENT_LOCALES: Record<AdminContentLocale, { code: AdminContentLocale; label: string; shortLabel: string }> = {
+export const CONTENT_LOCALES: Record<
+  AdminContentLocale,
+  { code: AdminContentLocale; label: string; shortLabel: string }
+> = {
   id: { code: "id", label: "Indonesia", shortLabel: "ID" },
   en: { code: "en", label: "English", shortLabel: "EN" },
 };

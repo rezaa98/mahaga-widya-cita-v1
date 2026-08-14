@@ -241,6 +241,7 @@ export const Articles: CollectionConfig = {
       name: "author",
       type: "relationship",
       relationTo: "users",
+      label: { id: "Penulis", en: "Author" },
       admin: {
         position: "sidebar",
       },
@@ -253,6 +254,7 @@ export const Articles: CollectionConfig = {
       name: "category",
       type: "relationship",
       relationTo: "categories",
+      label: { id: "Kategori", en: "Category" },
       admin: {
         position: "sidebar",
       },
@@ -263,20 +265,23 @@ export const Articles: CollectionConfig = {
     {
       name: "status",
       type: "select",
+      label: { id: "Status Editorial", en: "Editorial Status" },
       options: [
         { label: "Draft", value: "draft" },
-        { label: "Menunggu Review", value: "in_review" },
-        { label: "Perlu Revisi", value: "revision_requested" },
-        { label: "Disetujui", value: "approved" },
-        { label: "Terjadwal", value: "scheduled" },
+        { label: { id: "Menunggu Review", en: "In Review" }, value: "in_review" },
+        { label: { id: "Perlu Revisi", en: "Revision Required" }, value: "revision_requested" },
+        { label: { id: "Disetujui", en: "Approved" }, value: "approved" },
+        { label: { id: "Terjadwal", en: "Scheduled" }, value: "scheduled" },
         { label: "Published", value: "published" },
-        { label: "Diarsipkan", value: "archived" },
+        { label: { id: "Diarsipkan", en: "Archived" }, value: "archived" },
       ],
       defaultValue: "draft",
       admin: {
         position: "sidebar",
-        description:
-          "Editor dapat mengirim review; reviewer dapat menyetujui atau meminta revisi; hanya admin yang dapat menjadwalkan atau menerbitkan.",
+        description: {
+          id: "Editor dapat mengirim review; reviewer dapat menyetujui atau meminta revisi; hanya admin yang dapat menjadwalkan atau menerbitkan.",
+          en: "Editors can submit for review; reviewers can approve or request revisions; only administrators can schedule or publish.",
+        },
         components: {
           Cell: "@/components/admin/EditorialStatusCell#EditorialStatusCell",
         },
@@ -285,7 +290,7 @@ export const Articles: CollectionConfig = {
     {
       name: "reviewNotes",
       type: "textarea",
-      label: "Catatan Review",
+      label: { id: "Catatan Review", en: "Review Notes" },
       admin: {
         position: "sidebar",
         condition: (_, siblingData) => ["in_review", "revision_requested", "approved"].includes(siblingData?.status),
@@ -305,6 +310,7 @@ export const Articles: CollectionConfig = {
     {
       name: "publishedAt",
       type: "date",
+      label: { id: "Tanggal Publikasi", en: "Publication Date" },
       admin: {
         position: "sidebar",
       },

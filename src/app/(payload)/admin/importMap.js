@@ -35,6 +35,7 @@ import { JournalTitleCell as JournalTitleCell_3b568554b167eaeaa081125997ee6af6 }
 import { Icon as Icon_534076e2c753ea5d539a54b05f456b1b } from "@/components/admin/Icon";
 import { Logo as Logo_a44df17d0fc3dcd873dae43dc3bf66bd } from "@/components/admin/Logo";
 import { CustomNavLinks as CustomNavLinks_2933d2a8f89709880c8e9b62dfcc7d84 } from "@/components/admin/CustomNavLinks";
+import { DashboardNavLink as DashboardNavLink_3987d42d9edba53cc710fb1f6cc541b5 } from "@/components/admin/DashboardNavLink";
 import { ThemeForceProvider as ThemeForceProvider_bafdd812978598fcfadcb4693fefc9da } from "@/components/admin/ThemeForceProvider";
 import { AdminLocaleShell as AdminLocaleShell_5309924103614428c3c1171ab112a6f9 } from "@/components/admin/AdminLocaleShell";
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from "@payloadcms/storage-vercel-blob/client";
@@ -92,6 +93,7 @@ export const importMap = {
   "@/components/admin/Icon#Icon": Icon_534076e2c753ea5d539a54b05f456b1b,
   "@/components/admin/Logo#Logo": Logo_a44df17d0fc3dcd873dae43dc3bf66bd,
   "@/components/admin/CustomNavLinks#CustomNavLinks": CustomNavLinks_2933d2a8f89709880c8e9b62dfcc7d84,
+  "@/components/admin/DashboardNavLink#DashboardNavLink": DashboardNavLink_3987d42d9edba53cc710fb1f6cc541b5,
   "@/components/admin/ThemeForceProvider#ThemeForceProvider": ThemeForceProvider_bafdd812978598fcfadcb4693fefc9da,
   "@/components/admin/AdminLocaleShell#AdminLocaleShell": AdminLocaleShell_5309924103614428c3c1171ab112a6f9,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler":

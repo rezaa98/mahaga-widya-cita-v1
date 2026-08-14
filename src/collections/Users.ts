@@ -4,7 +4,12 @@ import { generateResetPasswordEmail } from "../utils/resetPasswordEmail";
 
 export const Users: CollectionConfig = {
   slug: "users",
+  labels: {
+    singular: { id: "Pengguna", en: "User" },
+    plural: { id: "Pengguna", en: "Users" },
+  },
   admin: {
+    group: { id: "Sistem", en: "System" },
     useAsTitle: "email",
   },
   auth: {
@@ -40,6 +45,7 @@ export const Users: CollectionConfig = {
     {
       name: "role",
       type: "select",
+      label: { id: "Peran", en: "Role" },
       options: [
         { label: "Super Admin", value: "super_admin" },
         { label: "Admin", value: "admin" },
@@ -55,8 +61,10 @@ export const Users: CollectionConfig = {
         update: canManageUsers,
       },
       admin: {
-        description:
-          "Member dipertahankan untuk akun lama dan hanya memiliki akses baca. Gunakan Editor, Reviewer, Admin, atau Super Admin untuk akun baru.",
+        description: {
+          id: "Member dipertahankan untuk akun lama dan hanya memiliki akses baca. Gunakan Editor, Reviewer, Admin, atau Super Admin untuk akun baru.",
+          en: "Member is retained for legacy read-only accounts. Use Editor, Reviewer, Admin, or Super Admin for new accounts.",
+        },
       },
     },
   ],

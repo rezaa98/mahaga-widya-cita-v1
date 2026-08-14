@@ -50,6 +50,12 @@ export const EditorActionBar: React.FC = () => {
   const locale = useContentLocale();
   const isEn = useAdminLanguage() === "en";
   const [processingStatus, setProcessingStatus] = useState<string | null>(null);
+  const previewSection =
+    docInfo.collectionSlug === "journals"
+      ? "jurnal"
+      : docInfo.collectionSlug === "policy-reviews"
+        ? "policy-reviews"
+        : "artikel";
 
   const currentStatus = (statusField?.value as string) || "draft";
   const actions = STATUS_ACTIONS[currentStatus] || [];
@@ -68,10 +74,26 @@ export const EditorActionBar: React.FC = () => {
     return false;
   });
 
-  const statusLabel = (isEn
-    ? { draft: "Draft", in_review: "In Review", revision_requested: "Revision Required", approved: "Approved", scheduled: "Scheduled", published: "Published", archived: "Archived" }
-    : { draft: "Draft", in_review: "Menunggu Review", revision_requested: "Perlu Revisi", approved: "Disetujui", scheduled: "Terjadwal", published: "Published", archived: "Diarsipkan" }
-  )[currentStatus] || currentStatus;
+  const statusLabel =
+    (isEn
+      ? {
+          draft: "Draft",
+          in_review: "In Review",
+          revision_requested: "Revision Required",
+          approved: "Approved",
+          scheduled: "Scheduled",
+          published: "Published",
+          archived: "Archived",
+        }
+      : {
+          draft: "Draft",
+          in_review: "Menunggu Review",
+          revision_requested: "Perlu Revisi",
+          approved: "Disetujui",
+          scheduled: "Terjadwal",
+          published: "Published",
+          archived: "Diarsipkan",
+        })[currentStatus] || currentStatus;
 
   return (
     <div className="mwc-editor-action-bar">
@@ -83,25 +105,32 @@ export const EditorActionBar: React.FC = () => {
           {isEn ? "Status" : "Status"}: <strong>{statusLabel}</strong>
         </span>
         {modified && <small>{isEn ? "Save required" : "Perlu disimpan"}</small>}
+        {!modified && <small className="is-saved">{isEn ? "All changes saved" : "Semua perubahan tersimpan"}</small>}
       </div>
       <div className="mwc-editor-action-bar__actions">
         <a
           className="mwc-editor-action-bar__preview"
           aria-disabled={!docInfo?.id || currentStatus !== "published"}
-          href={docInfo?.id && currentStatus === "published"
-            ? `/${locale}/${docInfo.collectionSlug === "journals" ? "jurnal" : "artikel"}/${String(docInfo.data?.slug || docInfo.id)}`
-            : undefined}
+          href={
+            docInfo?.id && currentStatus === "published"
+              ? `/${locale}/${previewSection}/${String(docInfo.data?.slug || docInfo.id)}`
+              : undefined
+          }
           rel="noreferrer"
           target="_blank"
         >
           <span className="material-symbols-outlined" aria-hidden style={{ fontSize: 16 }}>
             visibility
           </span>
-          {currentStatus === "published" ? `${isEn ? "Preview" : "Preview"} ${locale.toUpperCase()}` : isEn ? "Preview after publishing" : "Preview setelah terbit"}
+          {currentStatus === "published"
+            ? `${isEn ? "Preview" : "Preview"} ${locale.toUpperCase()}`
+            : isEn
+              ? "Preview after publishing"
+              : "Preview setelah terbit"}
         </a>
         {availableActions.map((action) => (
           <button
-            className="mwc-editor-action-bar__btn"
+            className={`mwc-editor-action-bar__btn ${["revision_requested", "scheduled"].includes(action.nextStatuses[0]) ? "mwc-editor-action-bar__btn--secondary" : ""}`}
             key={action.label}
             disabled={Boolean(processingStatus)}
             onClick={async () => {
@@ -122,8 +151,14 @@ export const EditorActionBar: React.FC = () => {
               {action.icon}
             </span>
             {processingStatus === action.nextStatuses[0]
-              ? (isEn ? "Saving…" : "Menyimpan…")
-              : isEn ? EN_ACTION_LABELS[action.label] || action.label : action.label}
+              ? isEn
+                ? "Saving…"
+                : "Menyimpan…"
+              : modified
+                ? `${isEn ? "Save &" : "Simpan &"} ${isEn ? EN_ACTION_LABELS[action.label] || action.label : action.label}`
+                : isEn
+                  ? EN_ACTION_LABELS[action.label] || action.label
+                  : action.label}
           </button>
         ))}
       </div>

@@ -9,7 +9,7 @@ export const TeamMembers: CollectionConfig = {
     plural: { id: "Tim Ahli", en: "Team Members" },
   },
   admin: {
-    group: { id: "Manajemen Konten", en: "Content Management" },
+    group: { id: "Profil Perusahaan", en: "Corporate Profile" },
     useAsTitle: "name",
     defaultColumns: ["name", "category", "expertise", "updatedAt"],
     components: {
@@ -30,47 +30,47 @@ export const TeamMembers: CollectionConfig = {
       type: "tabs",
       tabs: [
         {
-          label: "Data Profil",
+          label: { id: "Data Profil", en: "Profile Details" },
           fields: [
             {
               name: "photo",
               type: "upload",
               relationTo: "media",
-              label: "Foto Profil",
+              label: { id: "Foto Profil", en: "Profile Photo" },
             },
             {
               name: "name",
               type: "text",
               required: true,
               localized: true,
-              label: "Nama Lengkap",
+              label: { id: "Nama Lengkap", en: "Full Name" },
             },
             {
               name: "initials",
               type: "text",
               required: true,
-              label: "Inisial (Maks 3 huruf)",
+              label: { id: "Inisial (Maks 3 huruf)", en: "Initials (Max. 3 characters)" },
               maxLength: 3,
             },
             {
               name: "bio",
               type: "textarea",
               localized: true,
-              label: "Profil Singkat",
+              label: { id: "Profil Singkat", en: "Short Profile" },
             },
           ],
         },
         {
-          label: "Jabatan & Afiliasi",
+          label: { id: "Jabatan & Afiliasi", en: "Role & Affiliation" },
           fields: [
             {
               name: "category",
               type: "select",
               required: true,
-              label: "Kategori Tim",
+              label: { id: "Kategori Tim", en: "Team Category" },
               options: [
-                { label: "Manajemen Perusahaan", value: "management" },
-                { label: "Tenaga Ahli", value: "expert" },
+                { label: { id: "Manajemen Perusahaan", en: "Company Management" }, value: "management" },
+                { label: { id: "Tenaga Ahli", en: "Expert" }, value: "expert" },
               ],
               defaultValue: "expert",
             },
@@ -78,7 +78,7 @@ export const TeamMembers: CollectionConfig = {
               name: "role",
               type: "text",
               localized: true,
-              label: "Jabatan (Khusus Manajemen)",
+              label: { id: "Jabatan (Khusus Manajemen)", en: "Role (Management Only)" },
               admin: {
                 condition: (data) => data.category === "management",
               },
@@ -99,7 +99,7 @@ export const TeamMembers: CollectionConfig = {
               name: "institution",
               type: "text",
               localized: true,
-              label: "Instansi Asal (Khusus Tenaga Ahli)",
+              label: { id: "Instansi Asal (Khusus Tenaga Ahli)", en: "Institution (Experts Only)" },
               admin: {
                 condition: (data) => data.category === "expert",
               },
@@ -107,22 +107,25 @@ export const TeamMembers: CollectionConfig = {
           ],
         },
         {
-          label: "Tampilan (Advanced)",
+          label: { id: "Tampilan Lanjutan", en: "Advanced Appearance" },
           fields: [
             {
               name: "color",
               type: "text",
               required: true,
               defaultValue: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
-              label: "Gradien Warna (CSS)",
+              label: { id: "Gradien Warna (CSS)", en: "Color Gradient (CSS)" },
             },
             {
               name: "order",
               type: "number",
-              label: "Urutan Tampil",
+              label: { id: "Urutan Tampil", en: "Display Order" },
               defaultValue: 0,
               admin: {
-                description: "Semakin kecil angkanya, semakin atas tampilannya",
+                description: {
+                  id: "Semakin kecil angkanya, semakin atas tampilannya.",
+                  en: "Lower numbers appear first.",
+                },
               },
             },
           ],

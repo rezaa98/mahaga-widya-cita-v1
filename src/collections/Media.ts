@@ -3,7 +3,12 @@ import { canManageMedia } from "@/utils/access";
 
 export const Media: CollectionConfig = {
   slug: "media",
+  labels: {
+    singular: { id: "Media", en: "Media" },
+    plural: { id: "Media", en: "Media" },
+  },
   admin: {
+    group: { id: "Aset", en: "Assets" },
     useAsTitle: "alt",
     defaultColumns: ["filename", "alt", "mimeType", "updatedAt"],
     listSearchableFields: ["alt", "filename"],
@@ -46,23 +51,29 @@ export const Media: CollectionConfig = {
       type: "text",
       required: true,
       localized: true,
-      label: "Alt Text",
+      label: { id: "Teks Alternatif", en: "Alternative Text" },
       admin: {
-        description: "Deskripsikan gambar secara ringkas untuk aksesibilitas. Wajib untuk setiap media.",
+        description: {
+          id: "Deskripsikan gambar secara ringkas untuk aksesibilitas. Wajib untuk setiap media.",
+          en: "Briefly describe the image for accessibility. Required for every media item.",
+        },
       },
     },
     {
       name: "caption",
       type: "text",
       localized: true,
-      label: "Caption",
+      label: { id: "Keterangan", en: "Caption" },
     },
     {
       name: "credit",
       type: "text",
-      label: "Kredit / Sumber",
+      label: { id: "Kredit / Sumber", en: "Credit / Source" },
       admin: {
-        description: "Cantumkan fotografer, organisasi, atau lisensi bila diperlukan.",
+        description: {
+          id: "Cantumkan fotografer, organisasi, atau lisensi bila diperlukan.",
+          en: "Include the photographer, organization, or license when applicable.",
+        },
       },
     },
   ],

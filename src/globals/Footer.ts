@@ -7,7 +7,9 @@ export const Footer: GlobalConfig = {
   label: { id: "Footer", en: "Footer" },
   admin: {
     group: { id: "Website", en: "Website" },
-    components: { elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
+    components: {
+      elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] },
+    },
   },
   access: {
     read: () => true,
@@ -19,7 +21,7 @@ export const Footer: GlobalConfig = {
   fields: [
     {
       name: "companyDescription",
-      label: "Deskripsi Singkat Perusahaan",
+      label: { id: "Deskripsi Singkat Perusahaan", en: "Short Company Description" },
       type: "textarea",
       localized: true,
       required: true,
@@ -28,7 +30,7 @@ export const Footer: GlobalConfig = {
     },
     {
       name: "socialMedia",
-      label: "Media Sosial",
+      label: { id: "Media Sosial", en: "Social Media" },
       type: "array",
       fields: [
         {
@@ -44,7 +46,7 @@ export const Footer: GlobalConfig = {
         },
         {
           name: "url",
-          label: "URL Tautan",
+          label: { id: "URL Tautan", en: "Link URL" },
           type: "text",
           localized: true,
           required: true,
@@ -59,7 +61,7 @@ export const Footer: GlobalConfig = {
     },
     {
       name: "linksCompany",
-      label: "Tautan Kolom Perusahaan",
+      label: { id: "Tautan Kolom Perusahaan", en: "Company Column Links" },
       type: "array",
       fields: [
         { name: "label", type: "text", required: true, localized: true },
@@ -75,7 +77,7 @@ export const Footer: GlobalConfig = {
     },
     {
       name: "linksServices",
-      label: "Tautan Kolom Layanan",
+      label: { id: "Tautan Kolom Layanan", en: "Services Column Links" },
       type: "array",
       fields: [
         { name: "label", type: "text", required: true, localized: true },
@@ -92,7 +94,7 @@ export const Footer: GlobalConfig = {
     },
     {
       name: "copyrightText",
-      label: "Teks Hak Cipta (Copyright)",
+      label: { id: "Teks Hak Cipta", en: "Copyright Text" },
       type: "text",
       localized: true,
       required: true,

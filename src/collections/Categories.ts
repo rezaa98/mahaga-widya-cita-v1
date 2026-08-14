@@ -11,7 +11,9 @@ export const Categories: CollectionConfig = {
   admin: {
     group: { id: "Manajemen Konten", en: "Content Management" },
     useAsTitle: "name",
-    components: { edit: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] } },
+    components: {
+      edit: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] },
+    },
   },
   access: {
     read: () => true,
@@ -28,12 +30,14 @@ export const Categories: CollectionConfig = {
       type: "text",
       required: true,
       localized: true,
+      label: { id: "Nama Kategori", en: "Category Name" },
     },
     {
       name: "slug",
       type: "text",
       required: true,
       unique: true,
+      label: { id: "Slug URL", en: "URL Slug" },
       admin: {
         position: "sidebar",
       },

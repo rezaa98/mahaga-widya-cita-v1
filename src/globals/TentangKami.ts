@@ -47,14 +47,14 @@ export const TentangKami: GlobalConfig = {
     },
     {
       name: "hero",
-      label: "Bagian Hero (Atas)",
+      label: { id: "Bagian Hero (Atas)", en: "Hero Section" },
       type: "group",
       fields: [
         {
           name: "backgroundImage",
           type: "upload",
           relationTo: "media",
-          label: "Gambar Latar Belakang (Opsional)",
+          label: { id: "Gambar Latar Belakang (Opsional)", en: "Optional Background Image" },
           required: false,
           admin: {
             description: {
@@ -83,7 +83,7 @@ export const TentangKami: GlobalConfig = {
     },
     {
       name: "stats",
-      label: "Statistik Singkat (Angka)",
+      label: { id: "Statistik Singkat", en: "Key Statistics" },
       type: "array",
       localized: true,
       admin: {
@@ -93,8 +93,13 @@ export const TentangKami: GlobalConfig = {
         },
       },
       fields: [
-        { name: "value", type: "text", required: true, label: "Angka (misal: 7+)" },
-        { name: "label", type: "text", required: true, label: "Label (misal: Area Layanan)" },
+        { name: "value", type: "text", required: true, label: { id: "Angka (misal: 7+)", en: "Value (example: 7+)" } },
+        {
+          name: "label",
+          type: "text",
+          required: true,
+          label: { id: "Label (misal: Area Layanan)", en: "Label (example: Service Areas)" },
+        },
         {
           name: "icon",
           type: "select",
@@ -115,7 +120,7 @@ export const TentangKami: GlobalConfig = {
     },
     {
       name: "profil",
-      label: "Profil Perusahaan",
+      label: { id: "Profil Perusahaan", en: "Company Profile" },
       type: "group",
       fields: [
         {
@@ -146,7 +151,7 @@ export const TentangKami: GlobalConfig = {
     },
     {
       name: "visi",
-      label: "Visi",
+      label: { id: "Visi", en: "Vision" },
       type: "textarea",
       localized: true,
       required: true,
@@ -155,7 +160,7 @@ export const TentangKami: GlobalConfig = {
     },
     {
       name: "misi",
-      label: "Misi",
+      label: { id: "Misi", en: "Mission" },
       type: "array",
       localized: true,
       fields: [
@@ -166,19 +171,24 @@ export const TentangKami: GlobalConfig = {
 
     {
       name: "coreValues",
-      label: "Core Value (FUTURISTIC)",
+      label: { id: "Nilai Inti (FUTURISTIC)", en: "Core Values (FUTURISTIC)" },
       type: "array",
       localized: true,
       fields: [
-        { name: "letter", type: "text", required: true, label: "Huruf (misal: F)" },
-        { name: "name", type: "text", required: true, label: "Kata (misal: FORESIGHT)" },
-        { name: "desc", type: "textarea", required: true, label: "Deskripsi" },
+        { name: "letter", type: "text", required: true, label: { id: "Huruf (misal: F)", en: "Letter (example: F)" } },
+        {
+          name: "name",
+          type: "text",
+          required: true,
+          label: { id: "Kata (misal: FORESIGHT)", en: "Word (example: FORESIGHT)" },
+        },
+        { name: "desc", type: "textarea", required: true, label: { id: "Deskripsi", en: "Description" } },
       ],
     },
 
     {
       name: "ceoMessage",
-      label: "Pesan CEO",
+      label: { id: "Pesan CEO", en: "CEO Message" },
       type: "group",
       fields: [
         {
@@ -186,9 +196,12 @@ export const TentangKami: GlobalConfig = {
           type: "relationship",
           relationTo: "team-members",
           required: true,
-          label: "Pilih Anggota Tim (CEO)",
+          label: { id: "Pilih Anggota Tim (CEO)", en: "Select CEO Team Member" },
           admin: {
-            description: "Pilih anggota tim yang akan ditampilkan sebagai CEO di halaman ini.",
+            description: {
+              id: "Pilih anggota tim yang ditampilkan sebagai CEO pada halaman ini.",
+              en: "Select the team member displayed as CEO on this page.",
+            },
           },
         },
         {

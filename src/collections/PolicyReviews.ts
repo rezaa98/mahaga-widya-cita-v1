@@ -46,8 +46,15 @@ export const PolicyReviews: CollectionConfig = {
   admin: {
     group: { id: "Manajemen Konten", en: "Content Management" },
     useAsTitle: "title",
+    defaultColumns: ["title", "status", "updatedAt"],
+    listSearchableFields: ["title", "slug", "summary"],
     components: {
-      edit: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] },
+      edit: {
+        beforeDocumentControls: [
+          "@/components/admin/LocaleDocumentControls#LocaleDocumentControls",
+          "@/components/admin/EditorActionBar#EditorActionBar",
+        ],
+      },
     },
     hidden: ({ user }) => {
       if (!user) return true;
@@ -185,19 +192,21 @@ export const PolicyReviews: CollectionConfig = {
     {
       name: "status",
       type: "select",
+      label: { id: "Status Editorial", en: "Editorial Status" },
       options: [
         { label: "Draft", value: "draft" },
-        { label: "In Review", value: "in_review" },
-        { label: "Revision Requested", value: "revision_requested" },
-        { label: "Approved", value: "approved" },
-        { label: "Scheduled", value: "scheduled" },
+        { label: { id: "Menunggu Review", en: "In Review" }, value: "in_review" },
+        { label: { id: "Perlu Revisi", en: "Revision Required" }, value: "revision_requested" },
+        { label: { id: "Disetujui", en: "Approved" }, value: "approved" },
+        { label: { id: "Terjadwal", en: "Scheduled" }, value: "scheduled" },
         { label: "Published", value: "published" },
-        { label: "Archived", value: "archived" },
+        { label: { id: "Diarsipkan", en: "Archived" }, value: "archived" },
       ],
       defaultValue: "draft",
       required: true,
       admin: {
         position: "sidebar",
+        components: { Cell: "@/components/admin/EditorialStatusCell#EditorialStatusCell" },
       },
       access: {
         // The beforeChange hook validates the exact transition. Field access

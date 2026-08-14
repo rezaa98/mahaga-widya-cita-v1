@@ -24,7 +24,7 @@ export const Subscribers: CollectionConfig = {
       type: "email",
       required: true,
       unique: true,
-      label: "Alamat Email",
+      label: { id: "Alamat Email", en: "Email Address" },
     },
   ],
 };
