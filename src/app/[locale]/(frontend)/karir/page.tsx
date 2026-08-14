@@ -5,14 +5,24 @@ import WhatsAppFloat from "@/components/WhatsAppFloat";
 import Link from "next/link";
 import { MapPin, Clock, Briefcase, ChevronRight, ArrowRight, Users, Heart } from "lucide-react";
 import { WaveDivider } from "@/components/ui/WaveDivider";
+import { localizedAlternates } from "@/utils/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
-export const metadata: Metadata = {
-  title: "Karir",
-  description:
-    "Bergabunglah bersama tim PT Mahaga Widya Cita dan ikut berkontribusi dalam penguatan tata kelola dan edukasi profesional di Indonesia.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return locale === "en"
+    ? {
+        title: "Careers",
+        description: "Build a meaningful career with PT Mahaga Widya Cita.",
+        alternates: localizedAlternates(locale, "/karir"),
+      }
+    : {
+        title: "Karir",
+        description: "Bergabunglah bersama tim PT Mahaga Widya Cita.",
+        alternates: localizedAlternates(locale, "/karir"),
+      };
+}
 
 const openings = [
   {
@@ -103,8 +113,84 @@ const departmentColors: Record<string, { color: string; bg: string }> = {
   Program: { color: "var(--color-success)", bg: "var(--color-success-light)" },
 };
 
+const INDONESIAN_MONTHS: Record<string, number> = {
+  januari: 0,
+  februari: 1,
+  maret: 2,
+  april: 3,
+  mei: 4,
+  juni: 5,
+  juli: 6,
+  agustus: 7,
+  september: 8,
+  oktober: 9,
+  november: 10,
+  desember: 11,
+};
+
+function openingIsActive(deadline: string, now = new Date()) {
+  const [day, monthName, year] = deadline.toLocaleLowerCase().trim().split(/\s+/);
+  const month = INDONESIAN_MONTHS[monthName];
+  if (month === undefined) return false;
+  const closesAt = new Date(Number(year), month, Number(day), 23, 59, 59, 999);
+  return Number.isFinite(closesAt.getTime()) && closesAt >= now;
+}
+
 export default async function KarirPage(props: { params: Promise<{ locale: string }> }) {
   const params = await props.params;
+  const isEn = params.locale === "en";
+  const activeOpenings = openings.filter((opening) => openingIsActive(opening.deadline));
+  const copy = isEn
+    ? {
+        badge: "Careers",
+        hero: "Join Us & Create",
+        highlight: "Meaningful Impact",
+        intro: "We welcome talented people who want to strengthen organizations, people, and sustainable governance.",
+        why: "Why Join Us",
+        benefits: "More Than Just a Job",
+        openings: "Open Positions",
+        current: "Current Opportunities",
+        empty: "There are no open positions at the moment.",
+        emptyBody: "You can still send us your profile for future opportunities.",
+        noMatch: "No Suitable Position?",
+        spontaneous: "We are always interested in meeting talented professionals.",
+        send: "Send Your Profile",
+      }
+    : {
+        badge: "Karir",
+        hero: "Bergabunglah & Buat",
+        highlight: "Dampak Nyata untuk Indonesia",
+        intro: "Kami mencari individu terbaik yang ingin memperkuat kapasitas SDM dan tata kelola di Indonesia.",
+        why: "Mengapa Bergabung",
+        benefits: "Lebih dari Sekadar Pekerjaan",
+        openings: "Posisi Terbuka",
+        current: "Lowongan Saat Ini",
+        empty: "Belum ada posisi yang dibuka saat ini.",
+        emptyBody: "Anda tetap dapat mengirimkan profil untuk peluang mendatang.",
+        noMatch: "Tidak Ada Posisi yang Sesuai?",
+        spontaneous: "Kami selalu tertarik bertemu dengan individu-individu berbakat.",
+        send: "Kirim Profil Spontan",
+      };
+  const localizedBenefits = isEn
+    ? [
+        {
+          icon: Briefcase,
+          title: "Meaningful Career",
+          desc: "Contribute to organizational and professional development.",
+        },
+        {
+          icon: Users,
+          title: "Collaborative Team",
+          desc: "Work with academics, experts, and experienced practitioners.",
+        },
+        { icon: Heart, title: "Supportive Environment", desc: "Grow, learn, and innovate in a supportive culture." },
+        {
+          icon: ArrowRight,
+          title: "Continuous Development",
+          desc: "Access learning and professional development opportunities.",
+        },
+      ]
+    : benefits;
   return (
     <>
       <Navbar />
@@ -132,17 +218,14 @@ export default async function KarirPage(props: { params: Promise<{ locale: strin
             className="badge"
             style={{ background: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.9)", marginBottom: "1rem" }}
           >
-            Karir
+            {copy.badge}
           </span>
           <h1 className="text-display" style={{ color: "white", marginBottom: "1.25rem", maxWidth: "640px" }}>
-            Bergabunglah & Buat
+            {copy.hero}
             <br />
-            <span style={{ color: "var(--color-gold-300)" }}>Dampak Nyata untuk Indonesia</span>
+            <span style={{ color: "var(--color-gold-300)" }}>{copy.highlight}</span>
           </h1>
-          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "1.125rem", maxWidth: "500px" }}>
-            Kami mencari individu-individu terbaik yang passionate untuk ikut memperkuat kapasitas SDM dan tata kelola
-            di Indonesia.
-          </p>
+          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "1.125rem", maxWidth: "500px" }}>{copy.intro}</p>
         </div>
         <WaveDivider fill="white" />
       </section>
@@ -151,12 +234,15 @@ export default async function KarirPage(props: { params: Promise<{ locale: strin
       <section className="section">
         <div className="container">
           <div className="section-title">
-            <span className="overline">Mengapa Bergabung</span>
-            <h2>Lebih dari Sekedar Pekerjaan</h2>
+            <span className="overline">{copy.why}</span>
+            <h2>{copy.benefits}</h2>
             <div className="gold-divider" />
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.5rem" }}>
-            {benefits.map(({ icon: Icon, title, desc }) => (
+          <div
+            className="responsive-benefits-grid"
+            style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.5rem" }}
+          >
+            {localizedBenefits.map(({ icon: Icon, title, desc }) => (
               <div key={title} className="card" style={{ padding: "2rem", textAlign: "center" }}>
                 <div
                   style={{
@@ -184,14 +270,20 @@ export default async function KarirPage(props: { params: Promise<{ locale: strin
       <section className="section section-alt">
         <div className="container">
           <div className="section-title">
-            <span className="overline">Posisi Terbuka</span>
-            <h2>Lowongan Saat Ini</h2>
+            <span className="overline">{copy.openings}</span>
+            <h2>{copy.current}</h2>
             <div className="gold-divider" />
           </div>
           <div
             style={{ display: "flex", flexDirection: "column", gap: "1.25rem", maxWidth: "900px", margin: "0 auto" }}
           >
-            {openings.map((job) => {
+            {activeOpenings.length === 0 && (
+              <div className="card" style={{ padding: "2.5rem", textAlign: "center" }}>
+                <h3>{copy.empty}</h3>
+                <p style={{ color: "var(--color-neutral-500)", marginTop: ".75rem" }}>{copy.emptyBody}</p>
+              </div>
+            )}
+            {activeOpenings.map((job) => {
               const deptStyle = departmentColors[job.department] ?? {
                 color: "var(--color-neutral-600)",
                 bg: "var(--color-neutral-100)",
@@ -295,16 +387,16 @@ export default async function KarirPage(props: { params: Promise<{ locale: strin
         }}
       >
         <div className="container" style={{ textAlign: "center" }}>
-          <h2 style={{ color: "white", marginBottom: "1rem" }}>Tidak Ada Posisi yang Sesuai?</h2>
+          <h2 style={{ color: "white", marginBottom: "1rem" }}>{copy.noMatch}</h2>
           <p style={{ color: "rgba(255,255,255,0.75)", marginBottom: "2rem", fontSize: "1.0625rem" }}>
-            Kirimkan lamaran spontan Anda. Kami selalu tertarik bertemu dengan individu-individu berbakat.
+            {copy.spontaneous}
           </p>
           <Link
             href={`/${params.locale}/kontak?subjek=Lamaran%20Spontan`}
             className="btn btn-gold btn-lg"
             id="cta-spontaneous-apply"
           >
-            Kirim Lamaran Spontan
+            {copy.send}
           </Link>
         </div>
       </section>

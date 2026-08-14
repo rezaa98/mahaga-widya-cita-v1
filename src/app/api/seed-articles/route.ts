@@ -4,8 +4,11 @@ import configPromise from "@payload-config";
 import { articlesPart1 } from "./data1";
 import { articlesPart2 } from "./data2";
 import { requireAdminAuth } from "@/utils/adminAuth";
+import { denyProductionMaintenance } from "@/utils/maintenanceGuard";
 
 export async function POST(req: Request) {
+  const disabled = denyProductionMaintenance();
+  if (disabled) return disabled;
   const authError = await requireAdminAuth(req);
   if (authError) return authError;
   try {

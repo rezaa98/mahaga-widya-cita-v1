@@ -4,6 +4,7 @@ import configPromise from "@payload-config";
 import { queueTranslation } from "@/translation/service";
 import { TentangKami } from "@/globals/TentangKami";
 import { requireAdminAuth } from "@/utils/adminAuth";
+import { denyProductionMaintenance } from "@/utils/maintenanceGuard";
 
 function extractDefaults(fields: any[]): any {
   const result: any = {};
@@ -29,6 +30,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const disabled = denyProductionMaintenance();
+  if (disabled) return disabled;
   try {
     const payload = await getPayload({ config: configPromise });
 

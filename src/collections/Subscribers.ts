@@ -14,7 +14,7 @@ export const Subscribers: CollectionConfig = {
   },
   access: {
     read: canViewAudience,
-    create: () => true, // allow public subscriptions
+    create: canManageAudience,
     update: canManageAudience,
     delete: canManageAudience,
   },

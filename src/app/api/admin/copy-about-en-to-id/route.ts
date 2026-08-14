@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { requireAdminAuth } from "@/utils/adminAuth";
+import { denyProductionMaintenance } from "@/utils/maintenanceGuard";
 
 type Row = Record<string, unknown> & { id?: string | null };
 
@@ -37,6 +38,8 @@ function scopedSnapshot(document: any) {
 }
 
 export async function POST(request: Request) {
+  const disabled = denyProductionMaintenance();
+  if (disabled) return disabled;
   const authError = await requireAdminAuth(request);
   if (authError) return authError;
 

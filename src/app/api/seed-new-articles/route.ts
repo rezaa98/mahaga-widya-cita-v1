@@ -6,8 +6,11 @@ import { dataBisnis } from "../seed-articles/data_bisnis";
 import { dataPemerintah } from "../seed-articles/data_pemerintah";
 import { requireAdminAuth } from "@/utils/adminAuth";
 import { createLexicalContent } from "@/utils/contentMedia";
+import { denyProductionMaintenance } from "@/utils/maintenanceGuard";
 
 export async function POST(req: Request) {
+  const disabled = denyProductionMaintenance();
+  if (disabled) return disabled;
   const authError = await requireAdminAuth(req);
   if (authError) return authError;
 

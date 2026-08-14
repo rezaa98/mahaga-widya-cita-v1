@@ -739,6 +739,9 @@ label {
    ============================================ */
 .footer-link {
   color: rgba(255, 255, 255, 0.65);
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   transition: color 0.2s ease;
 }
 .footer-link:hover {
@@ -791,6 +794,33 @@ label {
     padding-inline: 1rem;
   }
 
+  .responsive-benefits-grid,
+  .responsive-partner-grid,
+  .responsive-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .contact-layout-grid,
+  .service-detail-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .contact-form-card {
+    padding: 1.5rem !important;
+  }
+
+  .footer-newsletter {
+    align-items: flex-start !important;
+  }
+
+  .footer-newsletter form,
+  .footer-newsletter input[type="email"],
+  .footer-newsletter button {
+    width: 100%;
+    min-width: 0 !important;
+  }
+
   /* ── Section title ── */
   .section-title {
     margin-bottom: 2rem;
@@ -813,6 +843,18 @@ label {
   .hero-section {
     min-height: auto !important;
     padding-bottom: 5rem !important;
+    align-items: flex-start !important;
+  }
+
+  .hero-section > .container {
+    z-index: 2 !important;
+    padding-block: 3.5rem 5rem !important;
+  }
+
+  .hero-section .animate-fade-in-up {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 
   /* ── Stats bar below hero ── */

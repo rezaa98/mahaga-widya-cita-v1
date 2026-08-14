@@ -27,7 +27,7 @@ import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { localizedAlternates } from "@/utils/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;

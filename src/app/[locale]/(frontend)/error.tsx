@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 
 export default function FrontendError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
@@ -92,8 +93,8 @@ export default function FrontendError({ error, reset }: { error: Error & { diges
               >
                 Muat Ulang
               </button>
-              <a
-                href="/"
+              <Link
+                href="/id"
                 style={{
                   padding: "0.75rem 1.5rem",
                   borderRadius: 10,
@@ -113,7 +114,7 @@ export default function FrontendError({ error, reset }: { error: Error & { diges
                 }}
               >
                 Kembali ke Beranda
-              </a>
+              </Link>
             </div>
             {error.digest && (
               <p style={{ color: "#94a3b8", fontSize: "0.75rem", marginTop: "1.5rem" }}>Kode error: {error.digest}</p>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { requireAdminAuth } from "@/utils/adminAuth";
+import { denyProductionMaintenance } from "@/utils/maintenanceGuard";
 
 export const dynamic = "force-dynamic";
 
@@ -80,6 +81,8 @@ const services = [
 ] as const;
 
 export async function POST(req: Request) {
+  const disabled = denyProductionMaintenance();
+  if (disabled) return disabled;
   const authError = await requireAdminAuth(req);
   if (authError) return authError;
 

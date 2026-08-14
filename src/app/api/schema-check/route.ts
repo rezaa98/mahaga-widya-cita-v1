@@ -3,8 +3,11 @@ import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { sql } from "drizzle-orm";
 import { requireAdminAuth } from "@/utils/adminAuth";
+import { denyProductionMaintenance } from "@/utils/maintenanceGuard";
 
 export async function POST(req: Request) {
+  const disabled = denyProductionMaintenance();
+  if (disabled) return disabled;
   const authError = await requireAdminAuth(req);
   if (authError) return authError;
   const payload = await getPayload({ config: configPromise });

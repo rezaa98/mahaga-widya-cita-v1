@@ -8,8 +8,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, User, Download, FileText } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { localizedAlternatesForLocales } from "@/utils/seo";
+import { isLikelyEnglishDocument } from "@/utils/contentLanguage";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const resolvedParams = await params;
@@ -20,10 +22,17 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       and: [{ slug: { equals: resolvedParams.slug } }, { status: { equals: "published" } }],
     },
     locale: resolvedParams.locale as any,
+    fallbackLocale: "none" as any,
+    limit: 1,
   });
 
-  if (!docs || docs.length === 0) {
-    return { title: "Policy Review Tidak Ditemukan" };
+  if (
+    !docs ||
+    docs.length === 0 ||
+    (resolvedParams.locale === "en" &&
+      !isLikelyEnglishDocument({ title: docs[0].title, excerpt: docs[0].excerpt, content: docs[0].summary }))
+  ) {
+    return { title: resolvedParams.locale === "en" ? "Policy review not found" : "Kajian kebijakan tidak ditemukan" };
   }
 
   const review: any = docs[0];
@@ -33,10 +42,36 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     review.excerpt ||
     `Baca analisis kebijakan publik "${review.title}" di Mahaga Widya Cita.`;
   const imageUrl = review.meta?.image ? (typeof review.meta.image === "object" ? review.meta.image.url : null) : null;
+  const alternateResult = await payload.find({
+    collection: "policy-reviews",
+    where: { and: [{ slug: { equals: review.slug } }, { status: { equals: "published" } }] },
+    locale: (resolvedParams.locale === "en" ? "id" : "en") as any,
+    fallbackLocale: "none" as any,
+    limit: 1,
+    depth: 0,
+  });
+  const alternateReview = alternateResult.docs[0];
+  const alternateIsValid = Boolean(
+    alternateReview?.title &&
+    (resolvedParams.locale === "en" ||
+      isLikelyEnglishDocument({
+        title: alternateReview.title,
+        excerpt: alternateReview.excerpt,
+        content: alternateReview.summary,
+      })),
+  );
+  const availableLocales = alternateIsValid
+    ? [resolvedParams.locale, resolvedParams.locale === "en" ? "id" : "en"]
+    : [resolvedParams.locale];
 
   return {
     title,
     description,
+    alternates: localizedAlternatesForLocales(
+      resolvedParams.locale,
+      `/policy-reviews/${review.slug}`,
+      availableLocales,
+    ),
     openGraph: {
       title,
       description,
@@ -144,9 +179,15 @@ export default async function PolicyReviewDetailPage({
       and: [{ slug: { equals: resolvedParams.slug } }, { status: { equals: "published" } }],
     },
     locale: resolvedParams.locale as any,
+    fallbackLocale: "none" as any,
+    limit: 1,
   });
 
-  if (!docs || docs.length === 0) {
+  if (
+    !docs ||
+    docs.length === 0 ||
+    (isEn && !isLikelyEnglishDocument({ title: docs[0].title, excerpt: docs[0].excerpt, content: docs[0].summary }))
+  ) {
     notFound();
   }
 

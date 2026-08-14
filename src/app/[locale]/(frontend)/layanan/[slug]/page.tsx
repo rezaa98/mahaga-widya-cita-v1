@@ -9,9 +9,9 @@ import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { WaveDivider } from "@/components/ui/WaveDivider";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { localizedAlternates } from "@/utils/seo";
+import { localizedAlternatesForLocales } from "@/utils/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export async function generateMetadata({
   params,
@@ -46,11 +46,21 @@ export async function generateMetadata({
       ? service.meta.image.url
       : null
     : null;
+  const alternateResult = await payload.find({
+    collection: "services",
+    where: { slug: { equals: service.slug } },
+    locale: (isEn ? "id" : "en") as any,
+    fallbackLocale: "none" as any,
+    limit: 1,
+    depth: 0,
+  });
+  const alternateIsValid = Boolean(alternateResult.docs[0]?.title);
+  const availableLocales = alternateIsValid ? [locale, isEn ? "id" : "en"] : [locale];
 
   return {
     title,
     description,
-    alternates: localizedAlternates(locale, `/layanan/${service.slug}`),
+    alternates: localizedAlternatesForLocales(locale, `/layanan/${service.slug}`, availableLocales),
     openGraph: {
       title,
       description,
@@ -184,7 +194,10 @@ export default async function LayananDetail({ params }: { params: Promise<{ slug
       <section className="section" style={{ background: "var(--color-neutral-50)" }}>
         <div className="container">
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "4rem" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", alignItems: "start" }}>
+            <div
+              className="service-detail-grid"
+              style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", alignItems: "start" }}
+            >
               {/* Features List */}
               <div className="card" style={{ padding: "2.5rem" }}>
                 <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem", color: "var(--color-neutral-900)" }}>

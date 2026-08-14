@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 
 function MemberVisual({
@@ -14,6 +14,8 @@ function MemberVisual({
   initials: string;
   visibleRole?: string;
 }) {
+  const [imageFailed, setImageFailed] = useState(false);
+
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div
@@ -28,10 +30,15 @@ function MemberVisual({
           position: "relative",
         }}
       >
-        {photoUrl ? (
+        {photoUrl && !imageFailed ? (
           // Profile media can be hosted by the CMS on a runtime-configured domain.
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={photoUrl} alt={member.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img
+            src={photoUrl}
+            alt={member.name}
+            onError={() => setImageFailed(true)}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
         ) : (
           <div
             style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
@@ -87,6 +94,8 @@ function MemberVisual({
 
 export default function TeamMemberCard({ member, locale = "id" }: { member: any; locale?: string }) {
   const [isOpen, setIsOpen] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const visibleRole = [member.role, member.expertise].find(
     (value) => typeof value === "string" && value.trim() && value.trim() !== "-",
   );
@@ -103,6 +112,32 @@ export default function TeamMemberCard({ member, locale = "id" }: { member: any;
     return () => {
       document.body.style.overflow = "unset";
     };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const dialog = dialogRef.current;
+    dialog?.querySelector<HTMLElement>("button")?.focus();
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        requestAnimationFrame(() => triggerRef.current?.focus());
+      }
+      if (event.key !== "Tab" || !dialog) return;
+      const focusable = [...dialog.querySelectorAll<HTMLElement>('button, a[href], [tabindex]:not([tabindex="-1"])')];
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
   }, [isOpen]);
 
   let photoUrl = member.photo && typeof member.photo !== "string" ? member.photo.url : null;
@@ -130,6 +165,7 @@ export default function TeamMemberCard({ member, locale = "id" }: { member: any;
     <>
       {/* GRID CARD */}
       <div
+        ref={triggerRef}
         className="card"
         role="button"
         tabIndex={0}
@@ -183,6 +219,7 @@ export default function TeamMemberCard({ member, locale = "id" }: { member: any;
           onClick={() => setIsOpen(false)}
         >
           <div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby={`team-member-${member.id || member.initials}`}

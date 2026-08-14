@@ -8,17 +8,19 @@ import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { PageHero } from "@/components/ui/PageHero";
 import { selectCorporateServices } from "@/data/serviceCatalog";
+import { localizedAlternates } from "@/utils/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const isEn = locale === "en";
   return {
-    title: isEn ? "Our Services | Mahaga Widya Cita" : "Layanan Kami | Mahaga Widya Cita",
+    title: isEn ? "Our Services" : "Layanan Kami",
     description: isEn
       ? "Explore our comprehensive range of services including consulting, executive education, and governance review."
       : "Jelajahi berbagai layanan komprehensif kami termasuk konsultasi, edukasi eksekutif, dan tinjauan tata kelola.",
+    alternates: localizedAlternates(locale, "/layanan"),
   };
 }
 
@@ -56,7 +58,7 @@ export default async function LayananPage({ params }: { params: Promise<{ locale
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
               gap: "2rem",
             }}
           >

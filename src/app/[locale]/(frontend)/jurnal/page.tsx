@@ -246,12 +246,12 @@ export default async function JournalListPage({
                       }}
                     >
                       {cover ? (
-                        <img
+                        <Image
                           alt={mediaAlt(journal.coverImage, journal.title)}
                           src={cover}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           style={{
-                            width: "100%",
-                            height: "100%",
                             objectFit: "cover",
                             objectPosition: "center top",
                             display: "block",

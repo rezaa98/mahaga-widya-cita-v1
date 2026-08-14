@@ -17,9 +17,9 @@ import {
   getLocalizedArticlesHref,
 } from "@/utils/contentMedia";
 import { isLikelyEnglishDocument } from "@/utils/contentLanguage";
-import { localizedAlternates } from "@/utils/seo";
+import { localizedAlternatesForLocales } from "@/utils/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const resolvedParams = await params;
@@ -39,6 +39,17 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   }
 
   const article: any = docs[0];
+  const alternateResult = await payload.find({
+    collection: "articles",
+    where: { and: [{ slug: { equals: article.slug } }, { status: { equals: "published" } }] },
+    locale: (isEn ? "id" : "en") as any,
+    fallbackLocale: "none" as any,
+    limit: 1,
+    depth: 0,
+  });
+  const alternate = alternateResult.docs[0];
+  const alternateIsValid = Boolean(alternate?.title && (!isEn ? isLikelyEnglishDocument(alternate) : true));
+  const availableLocales = alternateIsValid ? [resolvedParams.locale, isEn ? "id" : "en"] : [resolvedParams.locale];
   const imageUrl = article.meta?.image
     ? typeof article.meta.image === "object"
       ? article.meta.image.url
@@ -55,7 +66,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title,
     description,
-    alternates: localizedAlternates(resolvedParams.locale, `/artikel/${article.slug}`),
+    alternates: localizedAlternatesForLocales(resolvedParams.locale, `/artikel/${article.slug}`, availableLocales),
     openGraph: {
       title,
       description,

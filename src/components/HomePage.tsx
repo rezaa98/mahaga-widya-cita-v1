@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import TeamMemberCard from "@/components/ui/TeamMemberCard";
 import {
@@ -113,10 +113,10 @@ const defaultServices = [
 ];
 
 const stats = [
-  { value: 500, suffix: "+", label: "Sesi Webinar", icon: Mic2 },
-  { value: 10000, suffix: "+", label: "Peserta Terdaftar", icon: Users },
-  { value: 200, suffix: "+", label: "Instansi Mitra", icon: Building2 },
-  { value: 50, suffix: "+", label: "Mitra Strategis", icon: Globe },
+  { value: 500, suffix: "+", label: "Sesi Webinar", labelEn: "Webinar Sessions", icon: Mic2 },
+  { value: 10000, suffix: "+", label: "Peserta Terdaftar", labelEn: "Registered Participants", icon: Users },
+  { value: 200, suffix: "+", label: "Instansi Mitra", labelEn: "Partner Institutions", icon: Building2 },
+  { value: 50, suffix: "+", label: "Mitra Strategis", labelEn: "Strategic Partners", icon: Globe },
 ];
 
 const articles = [
@@ -281,6 +281,34 @@ const IconMapping: Record<string, any> = {
   "workforce-solutions": UserPlus,
 };
 
+function plainTextLines(value: unknown, fallback: string) {
+  const source = typeof value === "string" && value.trim() ? value : fallback;
+  return source
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]*>/g, "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function copyMatchesLocale(value: unknown, locale: string) {
+  const text = typeof value === "string" ? value.toLocaleLowerCase() : "";
+  if (!text.trim()) return true;
+  const english = (
+    text.match(
+      /\b(the|and|through|your|we|our|business|company|consulting|growth|solutions|support|from|to|of|ready|trusted|institutions|partners|more|than|management)\b/g,
+    ) || []
+  ).length;
+  const indonesian = (
+    text.match(/\b(dan|yang|untuk|kami|dengan|melalui|pertumbuhan|layanan|solusi|dari|organisasi)\b/g) || []
+  ).length;
+  return locale === "en" ? english >= indonesian : indonesian >= english;
+}
+
+function localizedCopy(value: unknown, fallback: string, locale: string) {
+  return typeof value === "string" && value.trim() && copyMatchesLocale(value, locale) ? value : fallback;
+}
+
 export default function HomePage({
   articles: payloadArticles = [],
   teamMembers: payloadTeamMembers = [],
@@ -389,7 +417,7 @@ export default function HomePage({
           description: s.description,
           href: `/layanan/${s.slug}`,
           gradient: s.gradient || "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
-          tag: s.tagline || "Layanan",
+          tag: s.tagline || (isEn ? "Service" : "Layanan"),
         }))
       : defaultServices.map((service) => ({
           ...service,
@@ -397,18 +425,48 @@ export default function HomePage({
           description: isEn ? service.descriptionEn : service.description,
         }));
 
+  // Every fallback is locale-specific so an incomplete CMS locale cannot leak
+  // Indonesian interface copy into the English public site (or vice versa).
+  const heroDefaults = isEn
+    ? {
+        badge: "Sustainable Growth Through Knowledge & Technology",
+        title: "Your One-Stop",
+        highlight: "Consulting Partner",
+        suffix: "",
+        description:
+          "We provide integrated consulting solutions in strategy, research, technology, and human resource development to help organizations achieve sustainable growth.",
+        features: ["Experienced Consultants", "Data-Driven Solutions", "End-to-End Support"],
+      }
+    : {
+        badge: "Pertumbuhan Berkelanjutan Melalui Pengetahuan & Teknologi",
+        title: "Mitra Konsultasi",
+        highlight: "Terintegrasi",
+        suffix: "untuk Pertumbuhan Berkelanjutan",
+        description:
+          "Kami menghadirkan solusi konsultasi terintegrasi di bidang strategi, riset, teknologi, dan pengembangan SDM untuk membantu organisasi mencapai pertumbuhan berkelanjutan.",
+        features: ["Konsultan Berpengalaman", "Solusi Berbasis Data", "Pendampingan Menyeluruh"],
+      };
+
+  const cmsHero = berandaData?.hero;
+  const cmsHeroText = [
+    cmsHero?.badge,
+    cmsHero?.title,
+    cmsHero?.titleHighlight,
+    cmsHero?.titleSuffix,
+    cmsHero?.description,
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const localizedHero = copyMatchesLocale(cmsHeroText, locale) ? cmsHero : undefined;
+
   // HERO DATA
-  const heroBadge = berandaData?.hero?.badge || "Platform Edukasi & Tata Kelola Terpercaya Sejak 2015";
-  const heroTitle = berandaData?.hero?.title || "Platform Edukasi &";
-  const heroTitleHighlight = berandaData?.hero?.titleHighlight || "Tata Kelola";
-  const heroTitleSuffix = berandaData?.hero?.titleSuffix || "untuk Profesional Indonesia";
-  const heroDescription =
-    berandaData?.hero?.description ||
-    "Tingkatkan kompetensi SDM dan perkuat tata kelola instansi Anda melalui program edukasi, konsultasi, dan webinar berkualitas tinggi bersama para pakar terbaik Indonesia.";
+  const heroBadge = localizedHero?.badge || heroDefaults.badge;
+  const heroTitle = localizedHero?.title || heroDefaults.title;
+  const heroTitleHighlight = localizedHero?.titleHighlight || heroDefaults.highlight;
+  const heroTitleSuffix = localizedHero?.titleSuffix || heroDefaults.suffix;
+  const heroDescription = localizedHero?.description || heroDefaults.description;
   const heroFeatures =
-    berandaData?.hero?.features?.length > 0
-      ? berandaData.hero.features.map((f: any) => f.text)
-      : ["Sertifikat Digital Resmi", "Webinar Gratis Setiap Bulan", "500+ Materi Edukasi"];
+    localizedHero?.features?.length > 0 ? localizedHero.features.map((f: any) => f.text) : heroDefaults.features;
 
   // STATS DATA
   const iconMap: Record<string, any> = { Mic2, Users, Building2, Globe, Target, CheckCircle2 };
@@ -420,10 +478,14 @@ export default function HomePage({
           label: s.label,
           icon: iconMap[s.icon] || Mic2,
         }))
-      : stats;
+      : stats.map((stat) => ({ ...stat, label: isEn ? stat.labelEn : stat.label }));
 
   // PARTNERS DATA
-  const partnersTitle = berandaData?.partners?.title || "Dipercaya oleh Lebih dari 200 Instansi dan Mitra Strategis";
+  const partnersTitle = localizedCopy(
+    berandaData?.partners?.title,
+    isEn ? "Trusted by Institutions and Strategic Partners" : "Dipercaya oleh Instansi dan Mitra Strategis",
+    locale,
+  );
   const displayPartnersRaw = berandaData?.partners?.list?.length > 0 ? berandaData.partners.list : partners;
 
   // Intercept and fix old broken URLs that might be cached in the CMS database
@@ -604,16 +666,37 @@ export default function HomePage({
         <section className="section">
           <div className="container">
             <div className="section-title">
-              <span className="overline">{berandaData?.servicesIntro?.badge || "Layanan Kami"}</span>
-              <h2
-                dangerouslySetInnerHTML={{
-                  __html: berandaData?.servicesIntro?.title || "Solusi Lengkap untuk<br />Penguatan Kapasitas Instansi",
-                }}
-              ></h2>
+              <span className="overline">
+                {localizedCopy(berandaData?.servicesIntro?.badge, isEn ? "Our Services" : "Layanan Kami", locale)}
+              </span>
+              <h2>
+                {plainTextLines(
+                  localizedCopy(
+                    berandaData?.servicesIntro?.title,
+                    isEn
+                      ? "Integrated Solutions for\nOrganizational Growth"
+                      : "Solusi Terintegrasi untuk\nPertumbuhan Organisasi",
+                    locale,
+                  ),
+                  isEn
+                    ? "Integrated Solutions for\nOrganizational Growth"
+                    : "Solusi Terintegrasi untuk\nPertumbuhan Organisasi",
+                ).map((line, index) => (
+                  <Fragment key={`${line}-${index}`}>
+                    {index > 0 && <br />}
+                    {line}
+                  </Fragment>
+                ))}
+              </h2>
               <div className="gold-divider" />
               <p style={{ marginTop: "1rem" }}>
-                {berandaData?.servicesIntro?.description ||
-                  "Enam pilar layanan terintegrasi yang dirancang khusus untuk memenuhi kebutuhan transformasi instansi pemerintah dan profesional Indonesia."}
+                {localizedCopy(
+                  berandaData?.servicesIntro?.description,
+                  isEn
+                    ? "Six integrated service pillars designed to support transformation across government, business, and organizations."
+                    : "Enam pilar layanan terintegrasi yang dirancang untuk mendukung transformasi pemerintah, bisnis, dan organisasi.",
+                  locale,
+                )}
               </p>
             </div>
 
@@ -942,14 +1025,21 @@ export default function HomePage({
           <div className="container">
             <div className="section-title" style={{ maxWidth: "800px", margin: "0 auto 3rem" }}>
               <h2 style={{ fontSize: "clamp(1.75rem, 3vw, 2.25rem)", lineHeight: "1.3" }}>
-                {berandaData?.teamIntro?.title || (isEn ? "Company Management" : "Manajemen Perusahaan")}
+                {localizedCopy(
+                  berandaData?.teamIntro?.title,
+                  isEn ? "Company Management" : "Manajemen Perusahaan",
+                  locale,
+                )}
               </h2>
               <div className="gold-divider" style={{ margin: "1.5rem auto" }} />
               <p style={{ color: "var(--color-neutral-600)", fontSize: "1.0625rem", lineHeight: "1.6" }}>
-                {berandaData?.teamIntro?.description ||
-                  (isEn
+                {localizedCopy(
+                  berandaData?.teamIntro?.description,
+                  isEn
                     ? "Professionals who prioritize strategy, governance, and innovation to deliver value for every client."
-                    : "Profesional yang mengedepankan strategi, tata kelola, dan inovasi untuk menghadirkan nilai bagi setiap klien.")}
+                    : "Profesional yang mengedepankan strategi, tata kelola, dan inovasi untuk menghadirkan nilai bagi setiap klien.",
+                  locale,
+                )}
               </p>
             </div>
 
@@ -1082,16 +1172,22 @@ export default function HomePage({
                   }}
                 >
                   {partner.logo && typeof partner.logo === "object" && partner.logo.url ? (
-                    <img
+                    <Image
                       src={partner.logo.url}
                       alt={partner.name}
-                      style={{ height: "100%", maxHeight: "30px", objectFit: "contain" }}
+                      width={160}
+                      height={30}
+                      unoptimized
+                      style={{ width: "auto", height: "30px", maxWidth: "160px", objectFit: "contain" }}
                     />
                   ) : partner.logoUrl ? (
-                    <img
+                    <Image
                       src={partner.logoUrl}
                       alt={partner.name}
-                      style={{ height: "100%", maxHeight: "30px", objectFit: "contain" }}
+                      width={160}
+                      height={30}
+                      unoptimized
+                      style={{ width: "auto", height: "30px", maxWidth: "160px", objectFit: "contain" }}
                     />
                   ) : (
                     <span>{partner.name}</span>
@@ -1132,12 +1228,25 @@ export default function HomePage({
                 marginBottom: "1rem",
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
               }}
-              dangerouslySetInnerHTML={{
-                __html: (
-                  berandaData?.cta?.title || "Siap Melakukan Transformasi\\nInstansi Anda Bersama Kami?"
-                ).replace(/\\n/g, "<br />"),
-              }}
-            ></h2>
+            >
+              {plainTextLines(
+                localizedCopy(
+                  berandaData?.cta?.title?.replace(/\\n/g, "\n"),
+                  isEn
+                    ? "Ready to Transform\nYour Organization with Us?"
+                    : "Siap Mentransformasi\nOrganisasi Anda Bersama Kami?",
+                  locale,
+                ),
+                isEn
+                  ? "Ready to Transform\nYour Organization with Us?"
+                  : "Siap Mentransformasi\nOrganisasi Anda Bersama Kami?",
+              ).map((line, index) => (
+                <Fragment key={`${line}-${index}`}>
+                  {index > 0 && <br />}
+                  {line}
+                </Fragment>
+              ))}
+            </h2>
             <p
               style={{
                 color: "rgba(255,255,255,0.75)",
@@ -1147,8 +1256,13 @@ export default function HomePage({
                 margin: "0 auto 2.5rem",
               }}
             >
-              {berandaData?.cta?.description ||
-                "Lebih dari 200 instansi pemerintah dan swasta telah mempercayakan pengembangan SDM dan tata kelola mereka kepada PT Mahaga Widya Cita."}
+              {localizedCopy(
+                berandaData?.cta?.description,
+                isEn
+                  ? "Organizations trust PT Mahaga Widya Cita for strategic consulting, technology, and human resource development."
+                  : "Organisasi mempercayakan konsultasi strategis, teknologi, dan pengembangan SDM kepada PT Mahaga Widya Cita.",
+                locale,
+              )}
             </p>
             <div
               className="cta-buttons"

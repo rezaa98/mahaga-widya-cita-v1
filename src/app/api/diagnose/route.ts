@@ -3,8 +3,18 @@ import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { sql } from "drizzle-orm";
 import { requireAdminAuth } from "@/utils/adminAuth";
+import { denyProductionMaintenance } from "@/utils/maintenanceGuard";
 
-export async function GET(req: Request) {
+export async function GET() {
+  return NextResponse.json(
+    { error: "Use POST. This maintenance operation changes localized content." },
+    { headers: { Allow: "POST" }, status: 405 },
+  );
+}
+
+export async function POST(req: Request) {
+  const disabled = denyProductionMaintenance();
+  if (disabled) return disabled;
   const authError = await requireAdminAuth(req);
   if (authError) return authError;
   const payload = await getPayload({ config: configPromise });

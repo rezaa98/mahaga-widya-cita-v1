@@ -35,11 +35,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       url: `/${locale}`,
       siteName: "PT Mahaga Widya Cita",
       description,
+      images: [{ url: "/opengraph-image.jpg", width: 1200, height: 630, alt: "PT Mahaga Widya Cita" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "PT Mahaga Widya Cita",
-      description: "Platform edukasi dan tata kelola profesional untuk ASN Indonesia.",
+      description,
+      images: ["/opengraph-image.jpg"],
     },
     robots: {
       index: true,
@@ -64,9 +66,32 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.mahagawidyacita.com/#organization",
+        name: "PT Mahaga Widya Cita",
+        url: "https://www.mahagawidyacita.com",
+        logo: "https://www.mahagawidyacita.com/logo-transparent.png",
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://www.mahagawidyacita.com/#website",
+        name: "PT Mahaga Widya Cita",
+        url: "https://www.mahagawidyacita.com",
+        publisher: { "@id": "https://www.mahagawidyacita.com/#organization" },
+        inLanguage: locale === "en" ? "en-US" : "id-ID",
+      },
+    ],
+  };
   return (
     <html lang={locale}>
-      <body id="frontend-app">{children}</body>
+      <body id="frontend-app">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+        {children}
+      </body>
     </html>
   );
 }

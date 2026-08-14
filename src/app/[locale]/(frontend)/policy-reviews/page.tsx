@@ -5,13 +5,23 @@ import Link from "next/link";
 import { ArrowRight, FileText, Download } from "lucide-react";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
+import type { Metadata } from "next";
+import { localizedAlternates } from "@/utils/seo";
+import { isLikelyEnglishDocument } from "@/utils/contentLanguage";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
-export const metadata = {
-  title: "Policy Reviews | Mahaga Widya Cita",
-  description: "Dokumen analisis kebijakan dan review komprehensif oleh pakar PT Mahaga Widya Cita.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const isEn = locale === "en";
+  return {
+    title: isEn ? "Policy Reviews" : "Kajian Kebijakan",
+    description: isEn
+      ? "Policy analysis and comprehensive reviews by PT Mahaga Widya Cita experts."
+      : "Analisis kebijakan dan kajian komprehensif oleh pakar PT Mahaga Widya Cita.",
+    alternates: localizedAlternates(locale, "/policy-reviews"),
+  };
+}
 
 export default async function PolicyReviewsPage(props: { params: Promise<{ locale: string }> }) {
   const params = await props.params;
@@ -94,12 +104,18 @@ export default async function PolicyReviewsPage(props: { params: Promise<{ local
     );
   }
 
-  const { docs: reviews } = await payload.find({
+  const { docs } = await payload.find({
     collection: "policy-reviews",
     where: { status: { equals: "published" } },
     sort: "-createdAt",
     locale: params.locale as any,
+    fallbackLocale: "none" as any,
   });
+  const reviews = isEn
+    ? docs.filter((review) =>
+        isLikelyEnglishDocument({ title: review.title, excerpt: review.excerpt, content: review.summary }),
+      )
+    : docs;
 
   return (
     <>
@@ -108,12 +124,13 @@ export default async function PolicyReviewsPage(props: { params: Promise<{ local
         <div className="container">
           <div style={{ textAlign: "center", marginBottom: "40px" }}>
             <span className="badge badge-secondary" style={{ marginBottom: "1rem" }}>
-              Layanan Publikasi
+              {isEn ? "Publications" : "Publikasi"}
             </span>
-            <h1 style={{ color: "#1a2b4c", marginBottom: "1rem" }}>Policy Reviews</h1>
+            <h1 style={{ color: "#1a2b4c", marginBottom: "1rem" }}>{isEn ? "Policy Reviews" : "Kajian Kebijakan"}</h1>
             <p style={{ color: "#666", maxWidth: "600px", margin: "0 auto" }}>
-              Kajian, analisis, dan ringkasan eksekutif terkait kebijakan publik dan regulasi pemerintah yang disusun
-              oleh para ahli kami.
+              {isEn
+                ? "Studies, analyses, and executive summaries on public policy and government regulation prepared by our experts."
+                : "Kajian, analisis, dan ringkasan eksekutif terkait kebijakan publik dan regulasi pemerintah yang disusun oleh para ahli kami."}
             </p>
           </div>
 
@@ -128,8 +145,12 @@ export default async function PolicyReviewsPage(props: { params: Promise<{ local
               }}
             >
               <FileText size={48} color="#ccc" style={{ marginBottom: "16px" }} />
-              <h3>Belum ada Policy Review</h3>
-              <p style={{ color: "#666" }}>Dokumen kebijakan terbaru akan segera dipublikasikan.</p>
+              <h3>{isEn ? "No policy reviews yet" : "Belum ada kajian kebijakan"}</h3>
+              <p style={{ color: "#666" }}>
+                {isEn
+                  ? "New policy documents will be published here."
+                  : "Dokumen kebijakan terbaru akan segera dipublikasikan."}
+              </p>
             </div>
           ) : (
             <div

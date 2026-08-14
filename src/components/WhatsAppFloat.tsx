@@ -5,10 +5,16 @@ import configPromise from "@payload-config";
 export default async function WhatsAppFloat({ locale = "id" }: { locale?: string }) {
   const isEn = locale === "en";
   const payload = await getPayload({ config: configPromise });
-  const kontakData = await payload.findGlobal({
-    slug: "kontak",
-    locale: locale as "id" | "en",
-  });
+  let kontakData: any = null;
+  try {
+    kontakData = await payload.findGlobal({
+      slug: "kontak",
+      locale: locale as "id" | "en",
+      fallbackLocale: "none" as any,
+    });
+  } catch (error) {
+    console.error("[WhatsAppFloat] Unable to load contact settings:", error);
+  }
 
   const rawPhone = kontakData?.phone || "082332567816";
   const waNumber = rawPhone.replace(/\D/g, "").replace(/^0/, "62");

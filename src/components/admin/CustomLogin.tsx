@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export const CustomLogin = () => {
   const [email, setEmail] = useState("");
@@ -176,8 +177,10 @@ export const CustomLogin = () => {
                     justifyContent: "center",
                   }}
                 >
-                  <img
+                  <Image
                     alt="Mahaga Widya Cita Logo"
+                    width={80}
+                    height={80}
                     style={{ width: "100%", height: "100%", objectFit: "contain" }}
                     src="/logo-transparent.png"
                   />
@@ -346,7 +349,7 @@ export const CustomLogin = () => {
                 style={{ marginTop: "2rem", paddingTop: "2rem", borderTop: "1px solid #c3c6d7", textAlign: "center" }}
               >
                 <p style={{ fontSize: "0.875rem", color: "#434655", margin: 0 }}>
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <a href="#" style={{ color: "#004ac6", fontWeight: 600, textDecoration: "none" }}>
                     Contact Administrator
                   </a>

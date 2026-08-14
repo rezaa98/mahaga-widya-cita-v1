@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useParams } from "next/navigation";
+import { usePathname, useParams, useRouter } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 
 const defaultNavLinksId = [
@@ -79,6 +79,7 @@ const defaultNavLinksEn = [
 ];
 
 export default function Navbar() {
+  const router = useRouter();
   const params = useParams();
   const locale = (params?.locale as string) || "id";
   const [links, setLinks] = useState<any[]>(locale === "en" ? defaultNavLinksEn : defaultNavLinksId);
@@ -176,7 +177,7 @@ export default function Navbar() {
       : currentPath;
 
     const newPath = `/${newLocale}${pathWithoutLocale.startsWith("/") ? pathWithoutLocale : "/" + pathWithoutLocale}`;
-    window.location.href = newPath;
+    router.push(newPath);
   };
 
   return (
@@ -444,6 +445,10 @@ export default function Navbar() {
                 cursor: "pointer",
                 color: shouldBeSolid ? "var(--color-primary-900)" : "white",
                 padding: "0.375rem",
+                minWidth: "44px",
+                minHeight: "44px",
+                alignItems: "center",
+                justifyContent: "center",
                 display: "none",
               }}
               aria-label="Toggle mobile menu"

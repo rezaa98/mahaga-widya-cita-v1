@@ -8,6 +8,7 @@ import { Beranda } from "@/globals/Beranda";
 import { TentangKami } from "@/globals/TentangKami";
 import { Kontak } from "@/globals/Kontak";
 import { requireAdminAuth } from "@/utils/adminAuth";
+import { denyProductionMaintenance } from "@/utils/maintenanceGuard";
 
 function extractDefaults(fields: any[]): any {
   const result: any = {};
@@ -33,6 +34,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const disabled = denyProductionMaintenance();
+  if (disabled) return disabled;
   const authError = await requireAdminAuth(request);
   if (authError) return authError;
   try {

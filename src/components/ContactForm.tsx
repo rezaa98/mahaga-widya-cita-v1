@@ -1,8 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Send, CheckCircle2 } from "lucide-react";
 
 interface ContactFormProps {
+  initialMessage?: string;
+  initialSubject?: string;
   subjects?: string[];
   locale?: string;
 }
@@ -27,9 +29,18 @@ const defaultSubjectsEn = [
   "Other",
 ];
 
-export default function ContactForm({ subjects, locale = "id" }: ContactFormProps) {
+export default function ContactForm({
+  initialMessage = "",
+  initialSubject = "",
+  subjects,
+  locale = "id",
+}: ContactFormProps) {
   const isEn = locale === "en";
-  const subjectOptions = subjects?.length ? subjects : isEn ? defaultSubjectsEn : defaultSubjectsId;
+  const configuredSubjects = subjects?.length ? subjects : isEn ? defaultSubjectsEn : defaultSubjectsId;
+  const subjectOptions =
+    initialSubject && !configuredSubjects.includes(initialSubject)
+      ? [initialSubject, ...configuredSubjects]
+      : configuredSubjects;
   const copy = isEn
     ? {
         title: "Send a Message",
@@ -78,9 +89,22 @@ export default function ContactForm({ subjects, locale = "id" }: ContactFormProp
         errorNetwork: "Terjadi kesalahan koneksi. Silakan coba lagi.",
       };
 
-  const [form, setForm] = useState({ name: "", email: "", phone: "", institution: "", subject: "", message: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    institution: "",
+    subject: initialSubject,
+    message: initialMessage,
+  });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [website, setWebsite] = useState("");
+  const startedAt = useRef(0);
+
+  useEffect(() => {
+    startedAt.current = Date.now();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -91,17 +115,18 @@ export default function ContactForm({ subjects, locale = "id" }: ContactFormProp
     setLoading(true);
 
     try {
-      const res = await fetch("/api/contact-submissions", {
+      const res = await fetch("/api/public/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, website, startedAt: startedAt.current }),
       });
 
       if (res.ok) {
         setSubmitted(true);
         setForm({ name: "", email: "", phone: "", institution: "", subject: "", message: "" });
+        startedAt.current = Date.now();
       } else {
         alert(copy.errorSend);
       }
@@ -150,7 +175,24 @@ export default function ContactForm({ subjects, locale = "id" }: ContactFormProp
       <h2 style={{ fontSize: "1.5rem", marginBottom: "0.375rem" }}>{copy.title}</h2>
       <p style={{ color: "var(--color-neutral-500)", marginBottom: "2rem", fontSize: "0.9375rem" }}>{copy.intro}</p>
       <form onSubmit={handleSubmit}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem", marginBottom: "1.25rem" }}>
+        <div
+          aria-hidden="true"
+          style={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}
+        >
+          <label htmlFor="contact-website">Website</label>
+          <input
+            id="contact-website"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={website}
+            onChange={(event) => setWebsite(event.target.value)}
+          />
+        </div>
+        <div
+          className="responsive-form-grid"
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem", marginBottom: "1.25rem" }}
+        >
           <div>
             <label htmlFor="contact-name">{copy.name}</label>
             <input
@@ -162,6 +204,7 @@ export default function ContactForm({ subjects, locale = "id" }: ContactFormProp
               value={form.name}
               onChange={handleChange}
               required
+              maxLength={100}
             />
           </div>
           <div>
@@ -175,6 +218,7 @@ export default function ContactForm({ subjects, locale = "id" }: ContactFormProp
               value={form.email}
               onChange={handleChange}
               required
+              maxLength={254}
             />
           </div>
           <div>
@@ -187,6 +231,7 @@ export default function ContactForm({ subjects, locale = "id" }: ContactFormProp
               placeholder={copy.phonePh}
               value={form.phone}
               onChange={handleChange}
+              maxLength={30}
             />
           </div>
           <div>
@@ -199,6 +244,7 @@ export default function ContactForm({ subjects, locale = "id" }: ContactFormProp
               placeholder={copy.institutionPh}
               value={form.institution}
               onChange={handleChange}
+              maxLength={150}
             />
           </div>
         </div>
@@ -232,6 +278,7 @@ export default function ContactForm({ subjects, locale = "id" }: ContactFormProp
             value={form.message}
             onChange={handleChange}
             required
+            maxLength={5000}
             style={{ resize: "vertical" }}
           />
         </div>

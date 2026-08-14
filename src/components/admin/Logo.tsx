@@ -1,11 +1,14 @@
 import React from "react";
+import Image from "next/image";
 
 export const Logo = () => {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "6px 0" }}>
-      <img
+      <Image
         src="/logo-transparent.png"
         alt="Mahaga Widya Cita Logo"
+        width={36}
+        height={36}
         style={{ height: "36px", width: "auto", objectFit: "contain", display: "block" }}
       />
       <span

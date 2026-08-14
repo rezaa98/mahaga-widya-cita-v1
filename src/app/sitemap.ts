@@ -80,12 +80,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           fallbackLocale: "none" as any,
           limit: 1000,
         });
-        return docs.map((journal) => ({
-          url: `${baseUrl}/${locale}/jurnal/${journal.slug}`,
-          lastModified: new Date(journal.updatedAt || journal.createdAt),
-          changeFrequency: "monthly" as const,
-          priority: 0.7,
-        }));
+        return docs
+          .filter(
+            (journal) =>
+              locale !== "en" || isLikelyEnglishDocument({ title: journal.title, content: journal.abstract }),
+          )
+          .map((journal) => ({
+            url: `${baseUrl}/${locale}/jurnal/${journal.slug}`,
+            lastModified: new Date(journal.updatedAt || journal.createdAt),
+            changeFrequency: "monthly" as const,
+            priority: 0.7,
+          }));
       }),
     );
     journalRoutes = routes.flat();
@@ -97,19 +102,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let policyRoutes: MetadataRoute.Sitemap = [];
   if (isPolicyReviewsEnabled) {
     try {
-      const { docs: policyReviews } = await payload.find({
-        collection: "policy-reviews",
-        where: { status: { equals: "published" } },
-        limit: 1000,
-      });
-      policyRoutes = policyReviews.flatMap((review) =>
-        locales.map((locale) => ({
-          url: `${baseUrl}/${locale}/policy-reviews/${review.slug}`,
-          lastModified: new Date(review.updatedAt || review.createdAt),
-          changeFrequency: "monthly" as const,
-          priority: 0.7,
-        })),
+      const routes = await Promise.all(
+        locales.map(async (locale) => {
+          const { docs } = await payload.find({
+            collection: "policy-reviews",
+            where: { status: { equals: "published" } },
+            locale: locale as any,
+            fallbackLocale: "none" as any,
+            limit: 1000,
+          });
+          return docs
+            .filter(
+              (review) =>
+                locale !== "en" ||
+                isLikelyEnglishDocument({ title: review.title, excerpt: review.excerpt, content: review.summary }),
+            )
+            .map((review) => ({
+              url: `${baseUrl}/${locale}/policy-reviews/${review.slug}`,
+              lastModified: new Date(review.updatedAt || review.createdAt),
+              changeFrequency: "monthly" as const,
+              priority: 0.7,
+            }));
+        }),
       );
+      policyRoutes = routes.flat();
     } catch (err) {
       console.error("[sitemap] Failed to load policy reviews:", err);
     }
@@ -126,12 +142,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           fallbackLocale: "none" as any,
           limit: 100,
         });
-        return selectCorporateServices(docs).map((service) => ({
-          url: `${baseUrl}/${locale}/layanan/${service.slug}`,
-          lastModified: new Date(service.updatedAt || service.createdAt),
-          changeFrequency: "monthly" as const,
-          priority: 0.9,
-        }));
+        return selectCorporateServices(docs)
+          .filter((service) => Boolean(service.title))
+          .map((service) => ({
+            url: `${baseUrl}/${locale}/layanan/${service.slug}`,
+            lastModified: new Date(service.updatedAt || service.createdAt),
+            changeFrequency: "monthly" as const,
+            priority: 0.9,
+          }));
       }),
     );
     serviceRoutes = routes.flat();

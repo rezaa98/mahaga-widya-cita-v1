@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
 import { requireAdminAuth } from "@/utils/adminAuth";
+import { denyProductionMaintenance } from "@/utils/maintenanceGuard";
 
 const BRAIN_DIR = path.join(process.cwd(), "public/media");
 
@@ -107,6 +108,8 @@ const experts = [
 ];
 
 export async function POST(req: Request) {
+  const disabled = denyProductionMaintenance();
+  if (disabled) return disabled;
   const authError = await requireAdminAuth(req);
   if (authError) return authError;
   try {

@@ -3,6 +3,10 @@ import "@payloadcms/next/css";
 import "./admin.css";
 import { RootLayout } from "@payloadcms/next/layouts";
 import React from "react";
+import type { Metadata } from "next";
+import { SITE_URL } from "@/utils/seo";
+
+export const metadata: Metadata = { metadataBase: new URL(SITE_URL) };
 
 import { importMap } from "./admin/importMap";
 import { serverFunction } from "./admin/serverFunction";

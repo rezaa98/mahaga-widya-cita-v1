@@ -14,7 +14,7 @@ export const ContactSubmissions: CollectionConfig = {
   },
   access: {
     read: canViewAudience,
-    create: () => true, // allow public form submissions
+    create: canManageAudience,
     update: canManageAudience,
     delete: canManageAudience,
   },
@@ -23,6 +23,7 @@ export const ContactSubmissions: CollectionConfig = {
       name: "name",
       type: "text",
       required: true,
+      maxLength: 100,
       label: "Nama Lengkap",
     },
     {
@@ -35,22 +36,26 @@ export const ContactSubmissions: CollectionConfig = {
       name: "phone",
       type: "text",
       label: "Nomor Telepon",
+      maxLength: 30,
     },
     {
       name: "institution",
       type: "text",
       label: "Instansi / Perusahaan",
+      maxLength: 150,
     },
     {
       name: "subject",
       type: "text",
       required: true,
+      maxLength: 150,
       label: "Subjek Pesan",
     },
     {
       name: "message",
       type: "textarea",
       required: true,
+      maxLength: 5000,
       label: "Isi Pesan",
     },
   ],

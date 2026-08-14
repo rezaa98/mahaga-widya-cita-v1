@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { Home, Layers, PenTool, Users, Building, X, PlayCircle, ArrowRight, BookOpen } from "lucide-react";
@@ -11,17 +11,15 @@ interface Props {
 
 export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
+  const mounted = useSyncExternalStore(
+    () => () => undefined,
+    () => true,
+    () => false,
+  );
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
     if (isOpen) {
-      setIsClosing(false);
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -32,14 +30,10 @@ export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
   }, [isOpen]);
 
   if (!mounted) return null;
-  if (!isOpen && !isClosing) return null;
+  if (!isOpen) return null;
 
   const handleClose = () => {
-    setIsClosing(true);
-    setTimeout(() => {
-      onClose();
-      setIsClosing(false);
-    }, 300); // matches animation duration
+    onClose();
   };
 
   const tutorials = [
@@ -91,11 +85,8 @@ export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
   ];
 
   const handleSelectTutorial = (path: string) => {
-    handleClose();
-    setTimeout(() => {
-      // Navigate with a query param to trigger the tour on load
-      router.push(`${path}?tour=1`);
-    }, 300);
+    onClose();
+    router.push(`${path}?tour=1`);
   };
 
   const backdropStyle: React.CSSProperties = {
@@ -108,7 +99,7 @@ export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
     alignItems: "center",
     justifyContent: "center",
     padding: "1rem",
-    opacity: isClosing ? 0 : 1,
+    opacity: 1,
     transition: "opacity 0.3s ease-out",
   };
 
@@ -122,8 +113,8 @@ export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
     flexDirection: "column",
     boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.05)",
     fontFamily: '"Inter", "Plus Jakarta Sans", sans-serif',
-    transform: isClosing ? "scale(0.95) translateY(10px)" : "scale(1) translateY(0)",
-    opacity: isClosing ? 0 : 1,
+    transform: "scale(1) translateY(0)",
+    opacity: 1,
     transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
     overflow: "hidden",
   };

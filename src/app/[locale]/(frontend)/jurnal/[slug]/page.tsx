@@ -18,8 +18,10 @@ import {
 } from "../_journal";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { notFound } from "next/navigation";
+import { localizedAlternatesForLocales } from "@/utils/seo";
+import { isLikelyEnglishDocument } from "@/utils/contentLanguage";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 type RouteParams = { locale: string; slug: string };
 
@@ -30,6 +32,7 @@ async function getJournal({ locale, slug }: RouteParams) {
       collection: "journals" as any,
       where: publishedJournalWhere([{ slug: { equals: slug } }]),
       locale: locale as any,
+      fallbackLocale: "none" as any,
       depth: 1,
       limit: 1,
     } as any);
@@ -43,7 +46,11 @@ async function getJournal({ locale, slug }: RouteParams) {
 export async function generateMetadata({ params }: { params: Promise<RouteParams> }) {
   const resolved = await params;
   const journal = await getJournal(resolved);
-  if (!journal) return { title: resolved.locale === "en" ? "Journal not found" : "Jurnal tidak ditemukan" };
+  if (
+    !journal ||
+    (resolved.locale === "en" && !isLikelyEnglishDocument({ title: journal.title, content: journal.abstract }))
+  )
+    return { title: resolved.locale === "en" ? "Journal not found" : "Jurnal tidak ditemukan" };
   const title = journal.meta?.title || journal.metaTitle || `${journal.title} | Mahaga Widya Cita`;
   const description =
     journal.meta?.description ||
@@ -57,15 +64,20 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
     : mediaURL(journal.ogImage) || mediaURL(journal.coverImage);
   const path = `/jurnal/${journal.slug || journal.id}`;
   const url = `https://www.mahagawidyacita.com${journalHref(resolved.locale, journal.slug || journal.id)}`;
+  const alternateLocale = resolved.locale === "en" ? "id" : "en";
+  const alternateJournal = await getJournal({ locale: alternateLocale, slug: journal.slug });
+  const alternateIsValid = Boolean(
+    alternateJournal?.title &&
+    (alternateLocale !== "en" ||
+      isLikelyEnglishDocument({ title: alternateJournal.title, content: alternateJournal.abstract })),
+  );
+  const availableLocales = alternateIsValid ? [resolved.locale, alternateLocale] : [resolved.locale];
   return {
     title,
     description,
     alternates: journal.canonicalUrl
       ? { canonical: journal.canonicalUrl }
-      : {
-          canonical: `/${resolved.locale}${path}`,
-          languages: { "id-ID": `/id${path}`, "en-US": `/en${path}`, "x-default": `/id${path}` },
-        },
+      : localizedAlternatesForLocales(resolved.locale, path, availableLocales),
     openGraph: { title, description, type: "article", url, images: image ? [{ url: image }] : [] },
     twitter: { card: "summary_large_image", title, description, images: image ? [image] : [] },
   };
@@ -74,7 +86,11 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
 export default async function JournalDetailPage({ params }: { params: Promise<RouteParams> }) {
   const resolved = await params;
   const journal = await getJournal(resolved);
-  if (!journal) notFound();
+  if (
+    !journal ||
+    (resolved.locale === "en" && !isLikelyEnglishDocument({ title: journal.title, content: journal.abstract }))
+  )
+    notFound();
 
   let related: any[] = [];
   try {
@@ -87,6 +103,7 @@ export default async function JournalDetailPage({ params }: { params: Promise<Ro
         ...(categoryID ? [{ category: { equals: categoryID } }] : []),
       ]),
       locale: resolved.locale as any,
+      fallbackLocale: "none" as any,
       depth: 1,
       sort: "-publishedAt",
       limit: 3,
@@ -221,15 +238,14 @@ export default async function JournalDetailPage({ params }: { params: Promise<Ro
                     boxShadow: "0 12px 30px -8px rgba(0,0,0,0.18)",
                   }}
                 >
-                  <img
+                  <Image
                     alt={mediaAlt(journal.coverImage, journal.title)}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 420px"
                     src={cover || "/media/wiga-journal-cover.png"}
                     style={{
-                      width: "100%",
-                      height: "100%",
                       objectFit: "cover",
                       objectPosition: "center top",
-                      display: "block",
                     }}
                   />
                 </div>

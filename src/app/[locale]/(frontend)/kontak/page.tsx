@@ -9,7 +9,7 @@ import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { localizedAlternates } from "@/utils/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -23,8 +23,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
-export default async function KontakPage(props: { params: Promise<{ locale: string }> }) {
+export default async function KontakPage(props: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ posisi?: string; subjek?: string }>;
+}) {
   const params = await props.params;
+  const searchParams = await props.searchParams;
   const isEn = params.locale === "en";
   const payload = await getPayload({ config: configPromise });
   const kontakData: any = await payload.findGlobal({
@@ -82,6 +86,22 @@ export default async function KontakPage(props: { params: Promise<{ locale: stri
 
   const waNumber = phone.replace(/\D/g, "").replace(/^0/, "62");
   const formSubjects = kontakData?.formSubjects?.map((s: any) => s.subject).filter(Boolean) || undefined;
+  const requestedSubject = String(searchParams.subjek || "").toLocaleLowerCase();
+  const initialSubject = requestedSubject.includes("lamaran")
+    ? isEn
+      ? "Career Application"
+      : "Lamaran Pekerjaan"
+    : requestedSubject.includes("kemitraan")
+      ? isEn
+        ? "Partnership & Collaboration"
+        : "Kemitraan & Kolaborasi"
+      : "";
+  const position = String(searchParams.posisi || "").slice(0, 150);
+  const initialMessage = position
+    ? isEn
+      ? `I would like to apply for the ${position} position.`
+      : `Saya ingin melamar untuk posisi ${position}.`
+    : "";
 
   return (
     <>
@@ -97,10 +117,18 @@ export default async function KontakPage(props: { params: Promise<{ locale: stri
       {/* MAIN CONTENT */}
       <section className="section">
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "3.5rem", alignItems: "start" }}>
+          <div
+            className="contact-layout-grid"
+            style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "3.5rem", alignItems: "start" }}
+          >
             {/* FORM */}
-            <div className="card" style={{ padding: "2.5rem" }}>
-              <ContactForm locale={params.locale} subjects={formSubjects} />
+            <div className="card contact-form-card" style={{ padding: "2.5rem" }}>
+              <ContactForm
+                locale={params.locale}
+                subjects={formSubjects}
+                initialSubject={initialSubject}
+                initialMessage={initialMessage}
+              />
             </div>
 
             {/* SIDEBAR INFO */}

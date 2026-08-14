@@ -4,6 +4,8 @@ import { lexicalEditor, UploadFeature } from "@payloadcms/richtext-lexical";
 import path from "path";
 import { fileURLToPath } from "url";
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
+import sharp from "sharp";
+import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 import { Users } from "./collections/Users";
 import { Media } from "./collections/Media";
 import { Categories } from "./collections/Categories";
@@ -30,8 +32,26 @@ import { en } from "@payloadcms/translations/languages/en";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
+const smtpPort = Number(process.env.SMTP_PORT || 587);
+const emailAdapter = process.env.SMTP_HOST
+  ? nodemailerAdapter({
+      defaultFromAddress: process.env.SMTP_FROM_ADDRESS || "noreply@mahagawidyacita.com",
+      defaultFromName: process.env.SMTP_FROM_NAME || "PT Mahaga Widya Cita",
+      transportOptions: {
+        host: process.env.SMTP_HOST,
+        port: Number.isFinite(smtpPort) ? smtpPort : 587,
+        secure: process.env.SMTP_SECURE === "true",
+        auth:
+          process.env.SMTP_USER && process.env.SMTP_PASSWORD
+            ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASSWORD }
+            : undefined,
+      },
+    })
+  : undefined;
 
 export default buildConfig({
+  sharp,
+  email: emailAdapter,
   i18n: {
     supportedLanguages: { id, en },
   },
@@ -106,6 +126,13 @@ export default buildConfig({
       }),
     ],
   }),
+  upload: {
+    abortOnLimit: true,
+    limits: { fileSize: 10 * 1024 * 1024, files: 1 },
+    responseOnLimit: "Ukuran file maksimum adalah 10 MB.",
+    safeFileNames: true,
+    uploadTimeout: 30_000,
+  },
   secret:
     process.env.PAYLOAD_SECRET ||
     (process.env.NODE_ENV === "production"
