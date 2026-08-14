@@ -206,6 +206,7 @@ html[data-theme="dark"] {
   font-size: 12px;
 }
 .mwc-dashboard__content {
+  align-items: start;
   display: grid;
   gap: 16px;
   grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
@@ -217,6 +218,12 @@ html[data-theme="dark"] {
 }
 .mwc-panel {
   padding: 20px;
+}
+.mwc-activity {
+  grid-column: 1 / -1;
+}
+.mwc-attention {
+  align-self: start;
 }
 .mwc-panel__heading {
   align-items: flex-start;
