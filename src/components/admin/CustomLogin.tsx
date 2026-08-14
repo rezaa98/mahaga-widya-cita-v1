@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 export const CustomLogin = () => {
   const [email, setEmail] = useState("");
@@ -260,12 +261,12 @@ export const CustomLogin = () => {
                     >
                       Password
                     </label>
-                    <a
-                      href="#"
+                    <Link
+                      href="/admin/forgot"
                       style={{ fontSize: "0.75rem", fontWeight: 600, color: "#004ac6", textDecoration: "none" }}
                     >
                       Forgot password?
-                    </a>
+                    </Link>
                   </div>
                   <div
                     className="input-glow"
