@@ -1,12 +1,19 @@
 import type { CollectionConfig } from "payload";
 import { canBootstrapOrManageUsers, canManageUsers, canReadUser, canUpdateUser } from "../utils/access";
+import { generateResetPasswordEmail } from "../utils/resetPasswordEmail";
 
 export const Users: CollectionConfig = {
   slug: "users",
   admin: {
     useAsTitle: "email",
   },
-  auth: true,
+  auth: {
+    forgotPassword: {
+      expiration: 60 * 60 * 1000,
+      generateEmailHTML: (args) => generateResetPasswordEmail({ email: args?.user?.email, token: args?.token }),
+      generateEmailSubject: () => "Atur ulang kata sandi | PT Mahaga Widya Cita",
+    },
+  },
   access: {
     // The first account becomes a super administrator. Every following user
     // management action is limited to an existing super administrator.

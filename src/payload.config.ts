@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import sharp from "sharp";
 import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
+import { getServerURL } from "./utils/serverURL";
 import { Users } from "./collections/Users";
 import { Media } from "./collections/Media";
 import { Categories } from "./collections/Categories";
@@ -50,6 +51,7 @@ const emailAdapter = process.env.SMTP_HOST
   : undefined;
 
 export default buildConfig({
+  serverURL: getServerURL(),
   sharp,
   email: emailAdapter,
   i18n: {
@@ -72,6 +74,9 @@ export default buildConfig({
         },
         login: {
           Component: "@/components/admin/CustomLogin#CustomLogin",
+        },
+        forgot: {
+          Component: "@/components/admin/CustomForgotPassword#CustomForgotPassword",
         },
       },
       graphics: {
