@@ -482,68 +482,66 @@ export const DashboardClient: React.FC = () => {
 
         {data && !error && (
           <section className="mwc-dashboard__content">
-            <div className="mwc-dashboard__primary">
-              <TranslationPanel data={data} isEn={isEn} />
-              <section className="mwc-panel mwc-chart">
-                <div className="mwc-panel__heading">
-                  <div>
-                    <p className="mwc-eyebrow">{isEn ? "Publications" : "Publikasi"}</p>
-                    <h2>{isEn ? "Content Growth" : "Pertumbuhan konten"}</h2>
-                  </div>
-                  <span>{isEn ? "Last 4 weeks" : "4 minggu terakhir"}</span>
+            <TranslationPanel data={data} isEn={isEn} />
+            <section className="mwc-panel mwc-chart">
+              <div className="mwc-panel__heading">
+                <div>
+                  <p className="mwc-eyebrow">{isEn ? "Publications" : "Publikasi"}</p>
+                  <h2>{isEn ? "Content Growth" : "Pertumbuhan konten"}</h2>
                 </div>
-                {data.weeklyChartData.length ? (
-                  <div className="mwc-chart__area">
-                    <ResponsiveContainer height="100%" width="100%">
-                      <AreaChart data={data.weeklyChartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-                        <defs>
-                          <linearGradient id="mwc-content-growth" x1="0" x2="0" y1="0" y2="1">
-                            <stop offset="5%" stopColor="#2563eb" stopOpacity={0.28} />
-                            <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid stroke="#e4e6ee" strokeDasharray="3 3" vertical={false} />
-                        <XAxis
-                          axisLine={false}
-                          dataKey="name"
-                          tick={{ fill: "#687087", fontSize: 11 }}
-                          tickLine={false}
-                        />
-                        <YAxis
-                          allowDecimals={false}
-                          axisLine={false}
-                          tick={{ fill: "#687087", fontSize: 11 }}
-                          tickLine={false}
-                        />
-                        <Tooltip />
-                        <Area
-                          dataKey="articles"
-                          fill="url(#mwc-content-growth)"
-                          name={isEn ? "Articles" : "Artikel"}
-                          stroke="#2563eb"
-                          strokeWidth={2.5}
-                          type="monotone"
-                        />
-                        <Area
-                          dataKey="journals"
-                          fill="none"
-                          name={isEn ? "Journals" : "Jurnal"}
-                          stroke="#7c3aed"
-                          strokeWidth={2.5}
-                          type="monotone"
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                ) : (
-                  <p className="mwc-empty">
-                    {isEn ? "No growth data available to display." : "Belum ada data pertumbuhan untuk ditampilkan."}
-                  </p>
-                )}
-              </section>
-              <ActivityList data={data} isEn={isEn} loading={loading} locale={locale} />
-            </div>
+                <span>{isEn ? "Last 4 weeks" : "4 minggu terakhir"}</span>
+              </div>
+              {data.weeklyChartData.length ? (
+                <div className="mwc-chart__area">
+                  <ResponsiveContainer height="100%" width="100%">
+                    <AreaChart data={data.weeklyChartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="mwc-content-growth" x1="0" x2="0" y1="0" y2="1">
+                          <stop offset="5%" stopColor="#2563eb" stopOpacity={0.28} />
+                          <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid stroke="#e4e6ee" strokeDasharray="3 3" vertical={false} />
+                      <XAxis
+                        axisLine={false}
+                        dataKey="name"
+                        tick={{ fill: "#687087", fontSize: 11 }}
+                        tickLine={false}
+                      />
+                      <YAxis
+                        allowDecimals={false}
+                        axisLine={false}
+                        tick={{ fill: "#687087", fontSize: 11 }}
+                        tickLine={false}
+                      />
+                      <Tooltip />
+                      <Area
+                        dataKey="articles"
+                        fill="url(#mwc-content-growth)"
+                        name={isEn ? "Articles" : "Artikel"}
+                        stroke="#2563eb"
+                        strokeWidth={2.5}
+                        type="monotone"
+                      />
+                      <Area
+                        dataKey="journals"
+                        fill="none"
+                        name={isEn ? "Journals" : "Jurnal"}
+                        stroke="#7c3aed"
+                        strokeWidth={2.5}
+                        type="monotone"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <p className="mwc-empty">
+                  {isEn ? "No growth data available to display." : "Belum ada data pertumbuhan untuk ditampilkan."}
+                </p>
+              )}
+            </section>
             <AttentionPanel data={data} isEn={isEn} locale={locale} />
+            <ActivityList data={data} isEn={isEn} loading={loading} locale={locale} />
           </section>
         )}
       </div>

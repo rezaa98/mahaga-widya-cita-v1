@@ -209,12 +209,7 @@ html[data-theme="dark"] {
   align-items: start;
   display: grid;
   gap: 16px;
-  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
-}
-.mwc-dashboard__primary {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: minmax(0, 3fr) minmax(260px, 2fr);
+  grid-template-columns: minmax(360px, 1.5fr) minmax(260px, 1fr) minmax(300px, 1.2fr);
 }
 .mwc-panel {
   padding: 20px;
@@ -378,8 +373,7 @@ html[data-theme="dark"] {
   .mwc-metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .mwc-dashboard__content,
-  .mwc-dashboard__primary {
+  .mwc-dashboard__content {
     grid-template-columns: 1fr;
   }
 }
