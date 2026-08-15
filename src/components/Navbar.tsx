@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useParams, useRouter } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
+import { CORPORATE_SERVICE_SLUGS, selectCorporateServices } from "@/data/serviceCatalog";
 
 const defaultNavLinksId = [
   {
@@ -21,12 +22,12 @@ const defaultNavLinksId = [
     label: "Layanan",
     href: "/layanan",
     children: [
-      { label: "Smart Consulting", href: "/layanan/konsultasi" },
-      { label: "Smart Executive Education", href: "/layanan/edukasi" },
-      { label: "Smart Software Service", href: "/layanan/software" },
-      { label: "Smart Governance Review", href: "/layanan/governance-review" },
-      { label: "Smart Online Course", href: "/layanan/online-course" },
-      { label: "Smart Digital Conference", href: "/layanan/digital-conference" },
+      { label: "Manajemen Talenta", href: "/layanan/workforce-solutions" },
+      { label: "Transformasi Digital", href: "/layanan/technology-digital-solutions" },
+      { label: "Pengembangan SDM", href: "/layanan/human-capital-development" },
+      { label: "Kajian Strategis", href: "/layanan/research-strategic-studies" },
+      { label: "Konsultasi Keuangan & Pajak", href: "/layanan/tax-financial-advisory" },
+      { label: "Konsultasi Bisnis & Investasi", href: "/layanan/business-investment-advisory" },
     ],
   },
   {
@@ -78,6 +79,13 @@ const defaultNavLinksEn = [
   { label: "Contact", href: "/kontak" },
 ];
 
+const corporateServiceSlugs = new Set<string>(CORPORATE_SERVICE_SLUGS);
+
+function isCorporateServiceLink(link: { href?: string | null }) {
+  const slug = link.href?.split("/layanan/")[1]?.split(/[?#]/)[0];
+  return Boolean(slug && corporateServiceSlugs.has(slug));
+}
+
 export default function Navbar() {
   const router = useRouter();
   const params = useParams();
@@ -119,22 +127,37 @@ export default function Navbar() {
         currentLinks = navbarData.links;
       }
 
+      const servicesLinkIndex = currentLinks.findIndex(
+        (link: any) =>
+          link.label?.toLowerCase() === "layanan" ||
+          link.label?.toLowerCase() === "services" ||
+          link.href?.includes("/layanan"),
+      );
+
+      // Keep CMS navigation aligned with the six official corporate services,
+      // including when the services API is temporarily unavailable.
+      if (servicesLinkIndex !== -1 && Array.isArray(currentLinks[servicesLinkIndex].children)) {
+        const filteredChildren = currentLinks[servicesLinkIndex].children.filter(isCorporateServiceLink);
+        const fallbackServices = (locale === "en" ? defaultNavLinksEn : defaultNavLinksId)[1].children;
+        currentLinks[servicesLinkIndex] = {
+          ...currentLinks[servicesLinkIndex],
+          children: filteredChildren.length > 0 ? filteredChildren : fallbackServices,
+        };
+      }
+
       // Inject live services into the "Layanan" / "Services" dropdown
       if (servicesData?.docs && Array.isArray(servicesData.docs)) {
-        const dynamicServiceChildren = servicesData.docs.map((s: any) => ({
-          label: s.title,
-          href: `/layanan/${s.slug}`,
+        const dynamicServiceChildren = selectCorporateServices(servicesData.docs).map((service: any) => ({
+          label: service.title,
+          href: `/layanan/${service.slug}`,
         }));
 
-        // Find the Services link (either 'Layanan' or 'Services')
-        const servicesLinkIndex = currentLinks.findIndex(
-          (l: any) =>
-            l.label.toLowerCase() === "layanan" || l.label.toLowerCase() === "services" || l.href?.includes("/layanan"),
-        );
-
-        if (servicesLinkIndex !== -1) {
-          currentLinks[servicesLinkIndex].children = dynamicServiceChildren;
-        } else {
+        if (servicesLinkIndex !== -1 && dynamicServiceChildren.length > 0) {
+          currentLinks[servicesLinkIndex] = {
+            ...currentLinks[servicesLinkIndex],
+            children: dynamicServiceChildren,
+          };
+        } else if (servicesLinkIndex === -1 && dynamicServiceChildren.length > 0) {
           // If not found, add it
           currentLinks.splice(1, 0, {
             label: locale === "en" ? "Services" : "Layanan",

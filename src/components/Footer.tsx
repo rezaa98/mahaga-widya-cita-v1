@@ -5,7 +5,6 @@ import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { IconInstagram, IconYoutube, IconLinkedin, IconXTwitter } from "./icons/SocialIcons";
 import { selectCorporateServices } from "@/data/serviceCatalog";
-import NewsletterForm from "./NewsletterForm";
 
 const defaultFooterLinksId = {
   company: [
@@ -313,31 +312,6 @@ export default async function Footer({ locale = "id" }: { locale?: string }) {
               ))}
             </div>
           </div>
-        </div>
-
-        <div
-          className="footer-newsletter"
-          style={{
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            padding: "1.5rem 0",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "1.5rem",
-            flexWrap: "wrap",
-          }}
-        >
-          <div>
-            <h4 style={{ color: "white", marginBottom: ".35rem" }}>
-              {isEn ? "Corporate Insights" : "Insight Korporasi"}
-            </h4>
-            <p style={{ color: "rgba(255,255,255,.62)", fontSize: ".875rem" }}>
-              {isEn
-                ? "Receive our latest articles and strategic insights."
-                : "Dapatkan artikel dan insight strategis terbaru dari kami."}
-            </p>
-          </div>
-          <NewsletterForm locale={locale} />
         </div>
 
         {/* Bottom bar */}
