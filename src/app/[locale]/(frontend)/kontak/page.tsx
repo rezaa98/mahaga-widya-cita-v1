@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function KontakPage(props: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ posisi?: string; subjek?: string }>;
+  searchParams: Promise<{ posisi?: string; subjek?: string; layanan?: string; sumber?: string }>;
 }) {
   const params = await props.params;
   const searchParams = await props.searchParams;
@@ -87,21 +87,32 @@ export default async function KontakPage(props: {
   const waNumber = phone.replace(/\D/g, "").replace(/^0/, "62");
   const formSubjects = kontakData?.formSubjects?.map((s: any) => s.subject).filter(Boolean) || undefined;
   const requestedSubject = String(searchParams.subjek || "").toLocaleLowerCase();
-  const initialSubject = requestedSubject.includes("lamaran")
+  const requestedService = String(searchParams.layanan || "")
+    .trim()
+    .slice(0, 150);
+  const initialSubject = requestedService
     ? isEn
-      ? "Career Application"
-      : "Lamaran Pekerjaan"
-    : requestedSubject.includes("kemitraan")
+      ? `Service Consultation — ${requestedService}`
+      : `Konsultasi Layanan — ${requestedService}`
+    : requestedSubject.includes("lamaran")
       ? isEn
-        ? "Partnership & Collaboration"
-        : "Kemitraan & Kolaborasi"
-      : "";
+        ? "Career Application"
+        : "Lamaran Pekerjaan"
+      : requestedSubject.includes("kemitraan")
+        ? isEn
+          ? "Partnership & Collaboration"
+          : "Kemitraan & Kolaborasi"
+        : "";
   const position = String(searchParams.posisi || "").slice(0, 150);
-  const initialMessage = position
+  const initialMessage = requestedService
     ? isEn
-      ? `I would like to apply for the ${position} position.`
-      : `Saya ingin melamar untuk posisi ${position}.`
-    : "";
+      ? `I would like to discuss how the ${requestedService} service can support our organization.`
+      : `Saya ingin mendiskusikan bagaimana layanan ${requestedService} dapat mendukung organisasi kami.`
+    : position
+      ? isEn
+        ? `I would like to apply for the ${position} position.`
+        : `Saya ingin melamar untuk posisi ${position}.`
+      : "";
 
   return (
     <>

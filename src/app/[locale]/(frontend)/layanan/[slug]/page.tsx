@@ -1,17 +1,54 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import {
+  ArrowRight,
+  BarChart3,
+  Building2,
+  CheckCircle2,
+  ChevronRight,
+  ClipboardCheck,
+  Compass,
+  Cpu,
+  Database,
+  GraduationCap,
+  Landmark,
+  Layers3,
+  Lightbulb,
+  MessageSquare,
+  Network,
+  Rocket,
+  Route,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  Target,
+  Users,
+} from "lucide-react";
+import { getPayload } from "payload";
+import configPromise from "@payload-config";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
-import { notFound } from "next/navigation";
-import { CheckCircle2, ArrowRight, MessageSquare } from "lucide-react";
-import Link from "next/link";
-import { getPayload } from "payload";
-import configPromise from "@payload-config";
-import { WaveDivider } from "@/components/ui/WaveDivider";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { selectCorporateServices } from "@/data/serviceCatalog";
 import { localizedAlternatesForLocales } from "@/utils/seo";
+import styles from "./page.module.css";
 
 export const revalidate = 300;
+type Entry = Record<string, any>;
+const capabilityIcons = [Layers3, Network, Cpu, BarChart3, Database, ShieldCheck];
+const audienceIcons = [Building2, Landmark, Users, GraduationCap];
+
+function mediaValue(value: unknown): { url?: string | null; alt?: string | null } | null {
+  return value && typeof value === "object" ? (value as { url?: string | null; alt?: string | null }) : null;
+}
+
+function contactHref(locale: string, service: Entry) {
+  const query = new URLSearchParams({ layanan: service.title, sumber: service.slug });
+  return `/${locale}/kontak?${query.toString()}`;
+}
 
 export async function generateMetadata({
   params,
@@ -23,316 +60,408 @@ export async function generateMetadata({
   const payload = await getPayload({ config: configPromise });
   const result = await payload.find({
     collection: "services",
-    where: {
-      slug: {
-        equals: slug,
-      },
-    },
-    locale: locale as any,
-    fallbackLocale: "none" as any,
+    where: { slug: { equals: slug } },
+    locale: locale as "id" | "en",
+    fallbackLocale: "none",
     limit: 1,
+    depth: 1,
   });
-
-  const service: any = result.docs[0];
-
-  if (!service) {
-    return { title: isEn ? "Service Not Found" : "Layanan Tidak Ditemukan" };
-  }
-
+  const service = result.docs[0] as Entry | undefined;
+  if (!service) return { title: isEn ? "Service Not Found" : "Layanan Tidak Ditemukan" };
   const title = service.meta?.title || `${service.title} | Mahaga Widya Cita`;
   const description = service.meta?.description || service.description;
-  const imageUrl = service.meta?.image
-    ? typeof service.meta.image === "object"
-      ? service.meta.image.url
-      : null
-    : null;
-  const alternateResult = await payload.find({
+  const image = mediaValue(service.meta?.image);
+  const alternate = await payload.find({
     collection: "services",
     where: { slug: { equals: service.slug } },
-    locale: (isEn ? "id" : "en") as any,
-    fallbackLocale: "none" as any,
+    locale: (isEn ? "id" : "en") as "id" | "en",
+    fallbackLocale: "none",
     limit: 1,
     depth: 0,
   });
-  const alternateIsValid = Boolean(alternateResult.docs[0]?.title);
-  const availableLocales = alternateIsValid ? [locale, isEn ? "id" : "en"] : [locale];
-
+  const locales = alternate.docs[0]?.title ? [locale, isEn ? "id" : "en"] : [locale];
   return {
     title,
     description,
-    alternates: localizedAlternatesForLocales(locale, `/layanan/${service.slug}`, availableLocales),
+    alternates: localizedAlternatesForLocales(locale, `/layanan/${service.slug}`, locales),
     openGraph: {
       title,
       description,
       url: `https://www.mahagawidyacita.com/${locale}/layanan/${service.slug}`,
       type: "website",
-      images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630 }] : [],
+      images: image?.url ? [{ url: image.url, width: 1200, height: 630, alt: image.alt || service.title }] : [],
     },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: imageUrl ? [imageUrl] : [],
-    },
+    twitter: { card: "summary_large_image", title, description, images: image?.url ? [image.url] : [] },
   };
 }
 
-export default async function LayananDetail({ params }: { params: Promise<{ slug: string; locale: string }> }) {
+export default async function ServiceDetail({ params }: { params: Promise<{ slug: string; locale: string }> }) {
   const { slug, locale } = await params;
   const isEn = locale === "en";
   const payload = await getPayload({ config: configPromise });
-  const result = await payload.find({
-    collection: "services",
-    where: {
-      slug: {
-        equals: slug,
-      },
-    },
-    locale: locale as any,
-    fallbackLocale: "none" as any,
-    limit: 1,
-  });
+  const [serviceResult, relatedResult] = await Promise.all([
+    payload.find({
+      collection: "services",
+      where: { slug: { equals: slug } },
+      locale: locale as "id" | "en",
+      fallbackLocale: "none",
+      limit: 1,
+      depth: 1,
+    }),
+    payload.find({
+      collection: "services",
+      where: { slug: { not_equals: slug } },
+      locale: locale as "id" | "en",
+      fallbackLocale: "none",
+      limit: 20,
+      sort: "title",
+      depth: 0,
+    }),
+  ]);
+  const service = serviceResult.docs[0] as Entry | undefined;
+  if (!service) notFound();
 
-  const service = result.docs[0];
-
-  if (!service) {
-    notFound();
-  }
-
-  const benefits = service.benefits ?? [];
-  const targetAudience = service.targetAudience ?? [];
+  const features = (service.features ?? []).filter((item: Entry) => item.feature || item.title || item.text);
+  const benefits = (service.benefits ?? []).filter((item: Entry) => item.title || item.desc);
+  const audiences = (service.targetAudience ?? []).filter((item: Entry) => item.audience);
+  const heroImage = mediaValue(service.meta?.image);
+  const consultationHref = contactHref(locale, service);
+  const processSteps = isEn
+    ? [
+        { icon: Search, title: "Assessment", text: "We map your needs, challenges, and current capabilities." },
+        {
+          icon: Route,
+          title: "Solution roadmap",
+          text: "We define priorities, scope, milestones, and measurable outcomes.",
+        },
+        {
+          icon: Rocket,
+          title: "Implementation",
+          text: "Our specialists deliver the solution through focused collaboration.",
+        },
+        {
+          icon: ClipboardCheck,
+          title: "Evaluation",
+          text: "We measure impact and identify the next improvement opportunities.",
+        },
+      ]
+    : [
+        {
+          icon: Search,
+          title: "Asesmen kebutuhan",
+          text: "Kami memetakan kebutuhan, tantangan, dan kapabilitas yang tersedia.",
+        },
+        {
+          icon: Route,
+          title: "Roadmap solusi",
+          text: "Kami menyusun prioritas, ruang lingkup, tahapan, dan hasil terukur.",
+        },
+        {
+          icon: Rocket,
+          title: "Implementasi",
+          text: "Tim spesialis menjalankan solusi melalui kolaborasi yang terarah.",
+        },
+        {
+          icon: ClipboardCheck,
+          title: "Evaluasi",
+          text: "Kami mengukur dampak dan merumuskan peluang pengembangan berikutnya.",
+        },
+      ];
+  const copy = isEn
+    ? {
+        badge: "Corporate Solution",
+        primary: "Discuss Your Needs",
+        secondary: "Explore Our Approach",
+        visualLabel: "Integrated approach",
+        visualTitle: "From challenge to measurable impact",
+        scope: "Service scope",
+        overview: "Capabilities designed around your organization",
+        overviewText:
+          "Every engagement is tailored to your objectives, operating context, and organizational readiness.",
+        capabilities: "Key capabilities",
+        benefits: "Benefits for your organization",
+        value: "Expected value",
+        approach: "How we work",
+        approachTitle: "A clear path from discovery to impact",
+        approachText: "A structured yet adaptable approach keeps stakeholders aligned throughout the engagement.",
+        suited: "Best suited for",
+        audienceTitle: "Organizations we can support",
+        explore: "Explore more",
+        related: "Related corporate services",
+        link: "View service",
+        all: "All services",
+        ctaTitle: "Ready to discuss the right solution?",
+        ctaText:
+          "Tell us about your goals and challenges. Our team will help define a practical next step for your organization.",
+        cta: "Contact Our Consultants",
+      }
+    : {
+        badge: "Solusi Korporat",
+        primary: "Konsultasikan Kebutuhan Anda",
+        secondary: "Pelajari Pendekatan Kami",
+        visualLabel: "Pendekatan terintegrasi",
+        visualTitle: "Dari tantangan menjadi dampak terukur",
+        scope: "Ruang lingkup layanan",
+        overview: "Kapabilitas yang dirancang sesuai kebutuhan organisasi",
+        overviewText:
+          "Setiap pendampingan disesuaikan dengan tujuan, konteks operasional, dan kesiapan organisasi Anda.",
+        capabilities: "Kapabilitas utama",
+        benefits: "Manfaat bagi organisasi Anda",
+        value: "Nilai yang dihasilkan",
+        approach: "Cara kami bekerja",
+        approachTitle: "Tahapan yang jelas dari asesmen hingga dampak",
+        approachText: "Pendekatan yang terstruktur dan adaptif menjaga seluruh pemangku kepentingan tetap selaras.",
+        suited: "Cocok untuk",
+        audienceTitle: "Organisasi yang dapat kami dukung",
+        explore: "Jelajahi layanan",
+        related: "Solusi korporat lainnya",
+        link: "Lihat layanan",
+        all: "Semua layanan",
+        ctaTitle: "Siap mendiskusikan solusi yang tepat?",
+        ctaText:
+          "Ceritakan tujuan dan tantangan Anda. Tim kami akan membantu merumuskan langkah berikutnya yang realistis.",
+        cta: "Hubungi Konsultan Kami",
+      };
+  const relatedServices = selectCorporateServices(relatedResult.docs).slice(0, 3);
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: service.title,
+    description: service.description,
+    url: `https://www.mahagawidyacita.com/${locale}/layanan/${service.slug}`,
+    provider: { "@type": "Organization", name: "PT Mahaga Widya Cita", url: "https://www.mahagawidyacita.com" },
+    areaServed: { "@type": "Country", name: "Indonesia" },
+  };
 
   return (
     <>
       <Navbar />
-
-      {/* HERO SECTION */}
-      <section
-        style={{
-          background: service.gradient,
-          paddingTop: "calc(72px + 4rem)",
-          paddingBottom: "4rem",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: "radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)",
-            pointerEvents: "none",
-          }}
-        />
-        <div className="container" style={{ position: "relative" }}>
-          <Breadcrumbs
-            locale={locale}
-            isDarkBg={true}
-            items={[{ label: isEn ? "Services" : "Layanan", href: `/${locale}/layanan` }, { label: service.title }]}
-          />
-
-          <div style={{ maxWidth: "800px" }}>
-            <div
-              className="badge"
-              style={{
-                background: "rgba(255, 255, 255, 0.25)",
-                color: "#ffffff",
-                fontWeight: "600",
-                marginBottom: "1.25rem",
-                backdropFilter: "blur(4px)",
-              }}
-            >
-              {isEn ? "Core Service" : "Layanan Utama"}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
+      />
+      <main>
+        <section className={styles.hero} style={{ background: service.gradient }}>
+          <div className={styles.heroGlow} aria-hidden="true" />
+          <div className={`container ${styles.heroInner}`}>
+            <Breadcrumbs
+              locale={locale}
+              isDarkBg
+              items={[{ label: isEn ? "Services" : "Layanan", href: `/${locale}/layanan` }, { label: service.title }]}
+            />
+            <div className={styles.heroGrid}>
+              <div className={styles.heroCopy}>
+                <span className={styles.eyebrowLight}>
+                  <Sparkles size={15} />
+                  {copy.badge}
+                </span>
+                <h1>{service.title}</h1>
+                <p className={styles.tagline}>{service.tagline}</p>
+                {service.description && service.description !== service.tagline && (
+                  <p className={styles.description}>{service.description}</p>
+                )}
+                <div className={styles.heroActions}>
+                  <Link href={consultationHref} className={styles.primaryButton}>
+                    {copy.primary}
+                    <ArrowRight size={18} />
+                  </Link>
+                  <a href="#pendekatan" className={styles.secondaryButton}>
+                    {copy.secondary}
+                  </a>
+                </div>
+              </div>
+              <div className={styles.heroVisual} aria-label={copy.visualTitle}>
+                {heroImage?.url ? (
+                  <Image
+                    src={heroImage.url}
+                    alt={heroImage.alt || service.title}
+                    className={styles.heroImage}
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, 45vw"
+                  />
+                ) : (
+                  <div className={styles.visualCanvas} aria-hidden="true">
+                    <div className={styles.visualOrbit} />
+                    <div className={`${styles.visualCard} ${styles.visualCardMain}`}>
+                      <Target size={26} />
+                      <span>{copy.visualLabel}</span>
+                      <strong>{service.title}</strong>
+                    </div>
+                    <div className={`${styles.visualCard} ${styles.visualCardTop}`}>
+                      <Lightbulb size={21} />
+                      <span>Insight</span>
+                    </div>
+                    <div className={`${styles.visualCard} ${styles.visualCardBottom}`}>
+                      <BarChart3 size={21} />
+                      <span>Impact</span>
+                    </div>
+                  </div>
+                )}
+                <div className={styles.visualCaption}>
+                  <CheckCircle2 size={19} />
+                  <span>{copy.visualTitle}</span>
+                </div>
+              </div>
             </div>
-            <h1 className="text-display" style={{ color: "#ffffff", fontWeight: "800", marginBottom: "1.25rem" }}>
-              {service.title}
-            </h1>
-            {service.tagline && (
-              <p
-                style={{
-                  color: "#ffffff",
-                  fontSize: "1.25rem",
-                  fontWeight: "600",
-                  lineHeight: "1.6",
-                  marginBottom: service.description && service.description !== service.tagline ? "1rem" : "2rem",
-                }}
-              >
-                {service.tagline}
-              </p>
+          </div>
+        </section>
+
+        <nav className={styles.sectionNav} aria-label={isEn ? "Service page sections" : "Bagian halaman layanan"}>
+          <div className="container">
+            <a href="#kapabilitas">{copy.capabilities}</a>
+            <a href="#pendekatan">{copy.approach}</a>
+            {benefits.length > 0 && <a href="#manfaat">{copy.benefits}</a>}
+            {audiences.length > 0 && <a href="#audiens">{copy.suited}</a>}
+          </div>
+        </nav>
+
+        <section id="kapabilitas" className={styles.section}>
+          <div className="container">
+            <div className={styles.sectionHeading}>
+              <span className={styles.eyebrow}>{copy.scope}</span>
+              <h2>{copy.overview}</h2>
+              <p>{copy.overviewText}</p>
+            </div>
+            {features.length > 0 && (
+              <div className={styles.capabilityGrid}>
+                {features.map((feature: Entry, index: number) => {
+                  const Icon = capabilityIcons[index % capabilityIcons.length];
+                  return (
+                    <article className={styles.capabilityCard} key={feature.id || index}>
+                      <div className={styles.iconBox} style={{ color: service.color }}>
+                        <Icon size={25} />
+                      </div>
+                      <span className={styles.cardNumber}>{String(index + 1).padStart(2, "0")}</span>
+                      <h3>{feature.feature || feature.title || feature.text}</h3>
+                    </article>
+                  );
+                })}
+              </div>
             )}
-            {service.description && service.description !== service.tagline && (
-              <p
-                style={{
-                  color: "rgba(255, 255, 255, 0.95)",
-                  fontSize: "1.0625rem",
-                  lineHeight: "1.7",
-                  maxWidth: "680px",
-                  marginBottom: "2rem",
-                }}
-              >
-                {service.description}
-              </p>
+            {benefits.length > 0 && (
+              <div id="manfaat" className={styles.benefitPanel}>
+                <div className={styles.benefitIntro}>
+                  <span className={styles.eyebrow}>{copy.value}</span>
+                  <h2>{copy.benefits}</h2>
+                </div>
+                <div className={styles.benefitList}>
+                  {benefits.map((benefit: Entry, index: number) => (
+                    <article key={benefit.id || index}>
+                      <CheckCircle2 size={22} style={{ color: service.color }} />
+                      <div>
+                        <h3>{benefit.title}</h3>
+                        {(benefit.desc || benefit.description) && <p>{benefit.desc || benefit.description}</p>}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
             )}
-            <div style={{ display: "flex", gap: "1rem" }}>
-              <Link
-                href={`/${locale}/kontak`}
-                className="btn"
-                style={{ background: "white", color: service.color, border: "none" }}
-              >
-                {isEn ? "Consult Now" : "Konsultasikan Sekarang"}{" "}
-                <ArrowRight size={18} style={{ marginLeft: "0.5rem" }} />
+          </div>
+        </section>
+
+        <section id="pendekatan" className={`${styles.section} ${styles.processSection}`}>
+          <div className="container">
+            <div className={styles.sectionHeading}>
+              <span className={styles.eyebrow}>{copy.approach}</span>
+              <h2>{copy.approachTitle}</h2>
+              <p>{copy.approachText}</p>
+            </div>
+            <div className={styles.processGrid}>
+              {processSteps.map(({ icon: Icon, title, text }, index) => (
+                <article className={styles.processCard} key={title}>
+                  <span className={styles.processNumber}>{String(index + 1).padStart(2, "0")}</span>
+                  <div className={styles.processIcon}>
+                    <Icon size={23} />
+                  </div>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                  {index < processSteps.length - 1 && (
+                    <ChevronRight className={styles.processArrow} aria-hidden="true" />
+                  )}
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {audiences.length > 0 && (
+          <section id="audiens" className={styles.audienceSection}>
+            <div className="container">
+              <div className={styles.audienceLayout}>
+                <div>
+                  <span className={styles.eyebrowLight}>{copy.suited}</span>
+                  <h2>{copy.audienceTitle}</h2>
+                </div>
+                <div className={styles.audienceGrid}>
+                  {audiences.map((item: Entry, index: number) => {
+                    const Icon = audienceIcons[index % audienceIcons.length];
+                    return (
+                      <article key={item.id || index}>
+                        <Icon size={22} />
+                        <span>{item.audience}</span>
+                      </article>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {relatedServices.length > 0 && (
+          <section className={styles.relatedSection}>
+            <div className="container">
+              <div className={styles.relatedHeader}>
+                <div>
+                  <span className={styles.eyebrow}>{copy.explore}</span>
+                  <h2>{copy.related}</h2>
+                </div>
+                <Link href={`/${locale}/layanan`}>
+                  {copy.all}
+                  <ArrowRight size={17} />
+                </Link>
+              </div>
+              <div className={styles.relatedGrid}>
+                {relatedServices.map((item: Entry) => (
+                  <Link href={`/${locale}/layanan/${item.slug}`} className={styles.relatedCard} key={item.id}>
+                    <span className={styles.relatedIcon}>
+                      <Compass size={22} />
+                    </span>
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.tagline || item.description}</p>
+                      <span>
+                        {copy.link}
+                        <ArrowRight size={16} />
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        <section className={styles.ctaSection}>
+          <div className="container">
+            <div className={styles.ctaCard} style={{ background: service.gradient }}>
+              <div className={styles.ctaIcon}>
+                <MessageSquare size={28} />
+              </div>
+              <div>
+                <h2>{copy.ctaTitle}</h2>
+                <p>{copy.ctaText}</p>
+              </div>
+              <Link href={consultationHref}>
+                {copy.cta}
+                <ArrowRight size={18} />
               </Link>
             </div>
           </div>
-        </div>
-
-        {/* Wave Divider */}
-        <WaveDivider fill="var(--color-neutral-50)" />
-      </section>
-
-      {/* MAIN CONTENT */}
-      <section className="section" style={{ background: "var(--color-neutral-50)" }}>
-        <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "4rem" }}>
-            <div
-              className="service-detail-grid"
-              style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", alignItems: "start" }}
-            >
-              {/* Features List */}
-              <div className="card" style={{ padding: "2.5rem" }}>
-                <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem", color: "var(--color-neutral-900)" }}>
-                  {isEn ? "Service Features" : "Fitur Layanan"}
-                </h2>
-                <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-                  {service.features?.map((f: any, idx: number) => (
-                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: "1rem" }}>
-                      <div
-                        style={{
-                          flexShrink: 0,
-                          width: "28px",
-                          height: "28px",
-                          borderRadius: "50%",
-                          background: "rgba(30, 111, 217, 0.1)",
-                          color: "var(--color-primary-600)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          marginTop: "2px",
-                        }}
-                      >
-                        <CheckCircle2 size={18} />
-                      </div>
-                      <span style={{ fontSize: "1.0625rem", color: "var(--color-neutral-700)", lineHeight: "1.6" }}>
-                        {f.feature || f.title || f.text}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Benefits */}
-              {benefits.length > 0 && (
-                <div>
-                  <h2 style={{ fontSize: "1.5rem", marginBottom: "1.5rem", color: "var(--color-neutral-900)" }}>
-                    {isEn ? "Benefits for Your Institution" : "Keuntungan bagi Instansi Anda"}
-                  </h2>
-                  <div style={{ display: "grid", gap: "1.5rem" }}>
-                    {benefits.map((b: any, idx: number) => (
-                      <div
-                        key={idx}
-                        className="card"
-                        style={{ padding: "1.5rem", borderLeft: `4px solid ${service.color}` }}
-                      >
-                        <h3 style={{ fontSize: "1.125rem", marginBottom: "0.5rem" }}>{b.title}</h3>
-                        <p style={{ color: "var(--color-neutral-600)", fontSize: "0.9375rem" }}>
-                          {b.desc || b.description}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Target Audience */}
-            {targetAudience.length > 0 && (
-              <div className="card" style={{ padding: "3rem", background: "white", textAlign: "center" }}>
-                <div
-                  className="badge"
-                  style={{
-                    background: "rgba(30,111,217,0.1)",
-                    color: "var(--color-primary-600)",
-                    marginBottom: "1rem",
-                    display: "inline-block",
-                  }}
-                >
-                  {isEn ? "Suitability" : "Kesesuaian"}
-                </div>
-                <h2 style={{ fontSize: "1.75rem", marginBottom: "2rem" }}>
-                  {isEn ? "Who Needs This Service?" : "Siapa yang Membutuhkan Layanan Ini?"}
-                </h2>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-                    gap: "1.5rem",
-                  }}
-                >
-                  {targetAudience.map((ta: any, idx: number) => (
-                    <div
-                      key={idx}
-                      style={{
-                        background: "var(--color-neutral-50)",
-                        padding: "1.5rem",
-                        borderRadius: "12px",
-                        border: "1px solid var(--color-neutral-200)",
-                      }}
-                    >
-                      <span style={{ fontWeight: "500", color: "var(--color-neutral-800)" }}>{ta.audience}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="section" style={{ background: "white" }}>
-        <div className="container">
-          <div
-            className="card"
-            style={{ padding: "4rem", textAlign: "center", background: service.gradient, color: "white" }}
-          >
-            <MessageSquare size={48} style={{ opacity: 0.8, margin: "0 auto 1.5rem" }} />
-            <h2 style={{ fontSize: "2rem", marginBottom: "1rem", color: "white" }}>
-              {isEn ? "Start Your Institutional Transformation" : "Mulai Transformasi Instansi Anda"}
-            </h2>
-            <p
-              style={{ fontSize: "1.125rem", color: "white", opacity: 0.85, maxWidth: "600px", margin: "0 auto 2rem" }}
-            >
-              {isEn
-                ? "Discuss your specific needs with our consultant team. We are ready to provide measurable and impactful solutions."
-                : "Diskusikan kebutuhan spesifik Anda dengan tim konsultan kami. Kami siap memberikan solusi yang terukur dan berdampak nyata."}
-            </p>
-            <Link
-              href={`/${locale}/kontak`}
-              className="btn"
-              style={{
-                background: "white",
-                color: service.color,
-                fontSize: "1.0625rem",
-                padding: "0.875rem 2rem",
-                border: "none",
-              }}
-            >
-              {isEn ? "Contact Our Consultants" : "Hubungi Konsultan Kami"}
-            </Link>
-          </div>
-        </div>
-      </section>
-
+        </section>
+      </main>
       <Footer locale={locale} />
       <WhatsAppFloat locale={locale} />
     </>
