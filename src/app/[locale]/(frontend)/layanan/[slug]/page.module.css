@@ -397,7 +397,8 @@
   align-items: center;
 }
 .audienceLayout h2 {
-  color: #fff;
+  /* The global frontend heading selector has higher specificity. */
+  color: #fff !important;
   margin-top: 0.85rem;
 }
 .audienceGrid {
@@ -512,7 +513,7 @@
   background: rgba(255, 255, 255, 0.12);
 }
 .ctaCard h2 {
-  color: #fff;
+  color: #fff !important;
   font-size: clamp(1.6rem, 2.5vw, 2.2rem);
 }
 .ctaCard p {
