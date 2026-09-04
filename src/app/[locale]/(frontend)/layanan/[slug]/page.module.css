@@ -173,7 +173,9 @@
 }
 .visualCardBottom {
   left: 7%;
-  bottom: 18%;
+  /* Reserve a predictable lane above the result caption. Percentage-based
+     positioning made these two cards collide on wider hero ratios. */
+  bottom: 6.75rem;
 }
 .visualCaption {
   position: absolute;
@@ -651,7 +653,7 @@
   }
   .visualCardBottom {
     left: 5%;
-    bottom: 22%;
+    bottom: 7.25rem;
   }
   .sectionHeading {
     margin-bottom: 2rem;
