@@ -526,6 +526,9 @@ export interface TeamMember {
   initials: string;
   bio?: string | null;
   category: 'management' | 'expert';
+  /**
+   * The management position or professional role displayed on the profile card.
+   */
   role?: string | null;
   /**
    * Optional. Leave blank when an area of expertise does not need to be displayed.

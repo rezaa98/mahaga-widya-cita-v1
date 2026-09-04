@@ -70,7 +70,7 @@ export const TeamMembers: CollectionConfig = {
               label: { id: "Kategori Tim", en: "Team Category" },
               options: [
                 { label: { id: "Manajemen Perusahaan", en: "Company Management" }, value: "management" },
-                { label: { id: "Tenaga Ahli", en: "Expert" }, value: "expert" },
+                { label: { id: "Tenaga Ahli Profesional", en: "Professional Expert" }, value: "expert" },
               ],
               defaultValue: "expert",
             },
@@ -78,9 +78,12 @@ export const TeamMembers: CollectionConfig = {
               name: "role",
               type: "text",
               localized: true,
-              label: { id: "Jabatan (Khusus Manajemen)", en: "Role (Management Only)" },
+              label: { id: "Jabatan", en: "Role" },
               admin: {
-                condition: (data) => data.category === "management",
+                description: {
+                  id: "Jabatan dalam manajemen atau peran profesional yang ditampilkan pada kartu profil.",
+                  en: "The management position or professional role displayed on the profile card.",
+                },
               },
             },
             {
