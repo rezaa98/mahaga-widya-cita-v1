@@ -38,7 +38,8 @@
 }
 .heroCopy h1 {
   margin: 1.35rem 0 1.2rem;
-  color: #fff;
+  /* Override the more specific global frontend heading color on dark heroes. */
+  color: #fff !important;
   font-size: clamp(3rem, 5.5vw, 5.6rem);
   line-height: 1;
   letter-spacing: -0.055em;
