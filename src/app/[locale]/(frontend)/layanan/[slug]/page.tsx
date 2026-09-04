@@ -179,7 +179,6 @@ export default async function ServiceDetail({ params }: { params: Promise<{ slug
         overview: "Capabilities designed around your organization",
         overviewText:
           "Every engagement is tailored to your objectives, operating context, and organizational readiness.",
-        capabilities: "Key capabilities",
         benefits: "Benefits for your organization",
         value: "Expected value",
         approach: "How we work",
@@ -206,7 +205,6 @@ export default async function ServiceDetail({ params }: { params: Promise<{ slug
         overview: "Kapabilitas yang dirancang sesuai kebutuhan organisasi",
         overviewText:
           "Setiap pendampingan disesuaikan dengan tujuan, konteks operasional, dan kesiapan organisasi Anda.",
-        capabilities: "Kapabilitas utama",
         benefits: "Manfaat bagi organisasi Anda",
         value: "Nilai yang dihasilkan",
         approach: "Cara kami bekerja",
@@ -307,15 +305,6 @@ export default async function ServiceDetail({ params }: { params: Promise<{ slug
             </div>
           </div>
         </section>
-
-        <nav className={styles.sectionNav} aria-label={isEn ? "Service page sections" : "Bagian halaman layanan"}>
-          <div className="container">
-            <a href="#kapabilitas">{copy.capabilities}</a>
-            <a href="#pendekatan">{copy.approach}</a>
-            {benefits.length > 0 && <a href="#manfaat">{copy.benefits}</a>}
-            {audiences.length > 0 && <a href="#audiens">{copy.suited}</a>}
-          </div>
-        </nav>
 
         <section id="kapabilitas" className={styles.section}>
           <div className="container">

@@ -192,30 +192,6 @@
   padding: 1rem 1.1rem;
   font-weight: 700;
 }
-.sectionNav {
-  position: sticky;
-  z-index: 20;
-  top: 72px;
-  background: rgba(255, 255, 255, 0.95);
-  border-bottom: 1px solid var(--color-neutral-200);
-  box-shadow: 0 8px 30px rgba(11, 45, 107, 0.05);
-  backdrop-filter: blur(14px);
-}
-.sectionNav > div {
-  display: flex;
-  gap: 2rem;
-  overflow-x: auto;
-}
-.sectionNav a {
-  white-space: nowrap;
-  padding: 1rem 0;
-  color: var(--color-neutral-600);
-  font-size: 0.88rem;
-  font-weight: 700;
-}
-.sectionNav a:hover {
-  color: var(--color-primary-700);
-}
 .section {
   padding: 6rem 0;
   background: #fff;
@@ -577,12 +553,6 @@
   }
   .heroVisual {
     min-height: 330px;
-  }
-  .sectionNav {
-    top: 72px;
-  }
-  .sectionNav > div {
-    gap: 1.4rem;
   }
   .section {
     padding: 4rem 0;
