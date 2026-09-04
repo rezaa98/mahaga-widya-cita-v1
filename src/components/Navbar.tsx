@@ -22,12 +22,12 @@ const defaultNavLinksId = [
     label: "Layanan",
     href: "/layanan",
     children: [
-      { label: "Manajemen Talenta", href: "/layanan/workforce-solutions" },
-      { label: "Transformasi Digital", href: "/layanan/technology-digital-solutions" },
-      { label: "Pengembangan SDM", href: "/layanan/human-capital-development" },
       { label: "Kajian Strategis", href: "/layanan/research-strategic-studies" },
+      { label: "Transformasi Digital", href: "/layanan/technology-digital-solutions" },
       { label: "Konsultasi Keuangan & Pajak", href: "/layanan/tax-financial-advisory" },
+      { label: "Manajemen Talenta", href: "/layanan/workforce-solutions" },
       { label: "Konsultasi Bisnis & Investasi", href: "/layanan/business-investment-advisory" },
+      { label: "Property Management & Investment", href: "/layanan/property-management-investment" },
     ],
   },
   {
@@ -58,12 +58,12 @@ const defaultNavLinksEn = [
     label: "Services",
     href: "/layanan",
     children: [
-      { label: "Talent Management", href: "/layanan/workforce-solutions" },
-      { label: "Digital Transformation", href: "/layanan/technology-digital-solutions" },
-      { label: "Human Resource Development", href: "/layanan/human-capital-development" },
       { label: "Strategic Studies", href: "/layanan/research-strategic-studies" },
+      { label: "Digital Transformation", href: "/layanan/technology-digital-solutions" },
       { label: "Financial & Tax Advisory", href: "/layanan/tax-financial-advisory" },
+      { label: "Talent Management", href: "/layanan/workforce-solutions" },
       { label: "Business & Investment Advisory", href: "/layanan/business-investment-advisory" },
+      { label: "Property Management & Investment", href: "/layanan/property-management-investment" },
     ],
   },
   {

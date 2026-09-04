@@ -1,201 +1,199 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import {
+  ArrowRight,
+  BarChart3,
+  Building2,
+  Calculator,
+  CheckCircle2,
+  ClipboardList,
+  MonitorSmartphone,
+  Sparkles,
+  TrendingUp,
+  UserPlus,
+} from "lucide-react";
+import { getPayload } from "payload";
+import configPromise from "@payload-config";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
-import Link from "next/link";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
-import { getPayload } from "payload";
-import configPromise from "@payload-config";
-import { PageHero } from "@/components/ui/PageHero";
 import { selectCorporateServices } from "@/data/serviceCatalog";
 import { localizedAlternates } from "@/utils/seo";
+import styles from "./page.module.css";
 
 export const revalidate = 300;
+type Entry = Record<string, any>;
+const serviceIcons: Record<string, typeof CheckCircle2> = {
+  "research-strategic-studies": ClipboardList,
+  "technology-digital-solutions": MonitorSmartphone,
+  "tax-financial-advisory": Calculator,
+  "workforce-solutions": UserPlus,
+  "business-investment-advisory": TrendingUp,
+  "property-management-investment": Building2,
+};
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const isEn = locale === "en";
   return {
-    title: isEn ? "Our Services" : "Layanan Kami",
+    title: isEn ? "Corporate Services" : "Layanan Korporat",
     description: isEn
-      ? "Explore our comprehensive range of services including consulting, executive education, and governance review."
-      : "Jelajahi berbagai layanan komprehensif kami termasuk konsultasi, edukasi eksekutif, dan tinjauan tata kelola.",
+      ? "Explore strategic studies, digital transformation, financial and tax advisory, talent management, business advisory, and property management solutions."
+      : "Temukan solusi kajian strategis, transformasi digital, konsultasi keuangan dan pajak, manajemen talenta, konsultasi bisnis, serta pengelolaan properti.",
     alternates: localizedAlternates(locale, "/layanan"),
   };
 }
 
-export default async function LayananPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function ServicesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const isEn = locale === "en";
-
   const payload = await getPayload({ config: configPromise });
   const result = await payload.find({
     collection: "services",
-    locale: locale as any,
-    fallbackLocale: "none" as any,
-    limit: 20,
+    locale: locale as "id" | "en",
+    fallbackLocale: "none",
+    limit: 50,
+    depth: 1,
   });
-
-  const services = selectCorporateServices(result.docs);
+  const services = selectCorporateServices(result.docs as Entry[]);
+  const copy = isEn
+    ? {
+        eyebrow: "Your Next Move",
+        title: "Turn possibilities into meaningful progress.",
+        description:
+          "We help you identify opportunities, make the right move, and develop potential into sustainable value.",
+        closing: "Let’s see what’s possible.",
+        primary: "Discuss Your Needs",
+        secondary: "Explore Our Services",
+        sectionLabel: "Our expertise",
+        sectionTitle: "Integrated solutions for every stage of growth",
+        sectionText:
+          "Each service combines strategic thinking, practical execution, and measurable outcomes tailored to your organization.",
+        scope: "Core capabilities",
+        more: "View Service",
+        ctaTitle: "Not sure where to begin?",
+        ctaText:
+          "Tell us about your challenge. We will help identify the most relevant service and practical next step.",
+        cta: "Talk to Our Team",
+      }
+    : {
+        eyebrow: "Your Next Move",
+        title: "Ubah peluang menjadi langkah yang berarti.",
+        description:
+          "Kami membantu Anda melihat peluang, mengambil langkah yang tepat, dan mengembangkan potensi menjadi sesuatu yang bernilai.",
+        closing: "Let’s see what’s possible.",
+        primary: "Konsultasikan Kebutuhan Anda",
+        secondary: "Jelajahi Layanan Kami",
+        sectionLabel: "Keahlian kami",
+        sectionTitle: "Solusi terintegrasi untuk setiap tahap pertumbuhan",
+        sectionText:
+          "Setiap layanan memadukan pemikiran strategis, eksekusi praktis, dan hasil terukur yang disesuaikan dengan kebutuhan organisasi Anda.",
+        scope: "Kapabilitas utama",
+        more: "Lihat Layanan",
+        ctaTitle: "Belum yakin harus mulai dari mana?",
+        ctaText:
+          "Ceritakan tantangan Anda. Kami akan membantu memilih layanan yang relevan dan merumuskan langkah berikutnya.",
+        cta: "Diskusikan dengan Tim Kami",
+      };
 
   return (
     <>
       <Navbar />
-
-      <PageHero
-        badge={isEn ? "Our Expertise" : "Keahlian Kami"}
-        title={isEn ? "Comprehensive Services for Your Success" : "Layanan Komprehensif untuk Kesuksesan Anda"}
-        description={
-          isEn
-            ? "We provide end-to-end solutions combining academic rigor with practical industry experience to transform governments, businesses, and communities."
-            : "Kami menyediakan solusi ujung-ke-ujung yang menggabungkan ketelitian akademis dengan pengalaman industri praktis untuk mentransformasi pemerintahan, bisnis, dan masyarakat."
-        }
-      />
-
-      {/* SERVICES GRID SECTION */}
-      <section className="section" style={{ background: "var(--color-neutral-50)" }}>
-        <div className="container">
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
-              gap: "2rem",
-            }}
-          >
-            {services.map((service: any, idx: number) => {
-              // Icon fallback if not in DB
-              let IconComp = CheckCircle2;
-
-              return (
-                <div
-                  key={service.id}
-                  style={{
-                    background: "#fff",
-                    borderRadius: "16px",
-                    padding: "2.5rem 2rem",
-                    boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
-                    border: "1px solid var(--color-neutral-200)",
-                    display: "flex",
-                    flexDirection: "column",
-                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                    position: "relative",
-                  }}
-                  className="service-card-hover"
-                >
-                  <style>{`
-                    .service-card-hover:hover {
-                      transform: translateY(-5px);
-                      box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important;
-                    }
-                  `}</style>
-
-                  {/* Icon & Badge Container */}
-                  <div style={{ position: "relative", marginBottom: "2rem", display: "flex", alignItems: "center" }}>
-                    <div
-                      style={{
-                        width: "72px",
-                        height: "72px",
-                        background: "var(--color-primary-600)",
-                        borderRadius: "50%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxShadow: "0 8px 24px rgba(30, 111, 217, 0.25)",
-                      }}
-                    >
-                      <IconComp size={32} color="var(--color-gold-400)" strokeWidth={1.5} />
-                    </div>
-                    {/* Number Badge */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: "-4px",
-                        left: "-4px",
-                        width: "28px",
-                        height: "28px",
-                        background: "var(--color-gold-500)",
-                        color: "#fff",
-                        borderRadius: "50%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "0.75rem",
-                        fontWeight: "bold",
-                        border: "3px solid #fff",
-                        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-                      }}
-                    >
-                      {(idx + 1).toString().padStart(2, "0")}
-                    </div>
-                  </div>
-
-                  <h2
-                    style={{
-                      fontSize: "1.25rem",
-                      color: "var(--color-primary-900)",
-                      marginBottom: "1rem",
-                      lineHeight: "1.4",
-                    }}
-                  >
-                    {service.title}
-                  </h2>
-
-                  <p
-                    style={{
-                      color: "var(--color-neutral-600)",
-                      fontSize: "0.9375rem",
-                      lineHeight: "1.6",
-                      marginBottom: "1.5rem",
-                      flexGrow: 1,
-                    }}
-                  >
-                    {service.tagline || service.description}
-                  </p>
-
-                  <div style={{ marginTop: "auto" }}>
-                    <Link
-                      href={`/${locale}/layanan/${service.slug}`}
-                      className="btn btn-outline-primary"
-                      style={{ width: "100%", justifyContent: "center" }}
-                    >
-                      {isEn ? "Learn More" : "Pelajari Lebih Lanjut"}{" "}
-                      <ArrowRight size={18} style={{ marginLeft: "0.5rem" }} />
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
+      <main>
+        <section className={styles.hero}>
+          <div className={styles.heroGlow} aria-hidden="true" />
+          <div className={`container ${styles.heroGrid}`}>
+            <div className={styles.heroCopy}>
+              <span className={styles.eyebrow}>
+                <Sparkles size={16} />
+                {copy.eyebrow}
+              </span>
+              <h1>{copy.title}</h1>
+              <p>{copy.description}</p>
+              <strong>{copy.closing}</strong>
+              <div className={styles.heroActions}>
+                <Link href={`/${locale}/kontak?sumber=halaman-layanan`} className={styles.primaryButton}>
+                  {copy.primary}
+                  <ArrowRight size={18} />
+                </Link>
+                <a href="#daftar-layanan" className={styles.secondaryButton}>
+                  {copy.secondary}
+                </a>
+              </div>
+            </div>
+            <div className={styles.heroVisual} aria-hidden="true">
+              <div className={styles.visualRing} />
+              <div className={styles.visualCardMain}>
+                <BarChart3 size={30} />
+                <span>Strategy</span>
+                <strong>Opportunity → Value</strong>
+              </div>
+              <div className={styles.visualCardTop}>
+                <Sparkles size={20} />
+                <span>Insight</span>
+              </div>
+              <div className={styles.visualCardBottom}>
+                <CheckCircle2 size={20} />
+                <span>Impact</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* CTA SECTION */}
-      <section className="section" style={{ background: "white", textAlign: "center" }}>
-        <div className="container">
-          <div
-            style={{
-              maxWidth: "600px",
-              margin: "0 auto",
-              padding: "3rem",
-              background: "var(--color-primary-50)",
-              borderRadius: "24px",
-            }}
-          >
-            <h2 style={{ fontSize: "1.75rem", color: "var(--color-primary-900)", marginBottom: "1rem" }}>
-              {isEn ? "Need a Custom Solution?" : "Butuh Solusi Khusus?"}
-            </h2>
-            <p style={{ color: "var(--color-neutral-700)", marginBottom: "2rem", fontSize: "1.0625rem" }}>
-              {isEn
-                ? "Contact our team to discuss how we can tailor our services to meet your specific institutional needs."
-                : "Hubungi tim kami untuk mendiskusikan bagaimana kami dapat menyesuaikan layanan kami untuk memenuhi kebutuhan spesifik instansi Anda."}
-            </p>
-            <Link href={`/${locale}/kontak`} className="btn btn-primary btn-lg">
-              {isEn ? "Contact Us Today" : "Hubungi Kami Hari Ini"}
+        </section>
+        <section id="daftar-layanan" className={styles.servicesSection}>
+          <div className="container">
+            <div className={styles.sectionHeading}>
+              <span>{copy.sectionLabel}</span>
+              <h2>{copy.sectionTitle}</h2>
+              <p>{copy.sectionText}</p>
+            </div>
+            <div className={styles.servicesGrid}>
+              {services.map((service: Entry, index: number) => {
+                const Icon = serviceIcons[service.slug] || CheckCircle2;
+                const features = (service.features ?? []).filter((item: Entry) => item.feature).slice(0, 3);
+                return (
+                  <article className={styles.serviceCard} key={service.id}>
+                    <div className={styles.cardTop}>
+                      <span className={styles.iconBox} style={{ color: service.color }}>
+                        <Icon size={27} />
+                      </span>
+                      <span className={styles.cardNumber}>{String(index + 1).padStart(2, "0")}</span>
+                    </div>
+                    <h2>{service.title}</h2>
+                    <p>{service.tagline || service.description}</p>
+                    {features.length > 0 && (
+                      <div className={styles.featurePreview}>
+                        <span>{copy.scope}</span>
+                        <ul>
+                          {features.map((item: Entry, itemIndex: number) => (
+                            <li key={item.id || itemIndex}>{item.feature}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    <Link href={`/${locale}/layanan/${service.slug}`}>
+                      {copy.more}
+                      <ArrowRight size={17} />
+                    </Link>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+        <section className={styles.ctaSection}>
+          <div className={`container ${styles.ctaCard}`}>
+            <div>
+              <span>{isEn ? "Start a conversation" : "Mulai percakapan"}</span>
+              <h2>{copy.ctaTitle}</h2>
+              <p>{copy.ctaText}</p>
+            </div>
+            <Link href={`/${locale}/kontak?sumber=halaman-layanan`}>
+              {copy.cta}
+              <ArrowRight size={18} />
             </Link>
           </div>
-        </div>
-      </section>
-
+        </section>
+      </main>
       <Footer locale={locale} />
       <WhatsAppFloat locale={locale} />
     </>

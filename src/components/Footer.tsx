@@ -15,12 +15,12 @@ const defaultFooterLinksId = {
     { label: "Karir", url: "/karir" },
   ],
   services: [
-    { label: "Smart Consulting", url: "/layanan/konsultasi" },
-    { label: "Smart Executive Education", url: "/layanan/edukasi" },
-    { label: "Smart Software Service", url: "/layanan/software" },
-    { label: "Smart Governance Review", url: "/layanan/governance-review" },
-    { label: "Smart Online Course", url: "/kursus" },
-    { label: "Smart Digital Conference", url: "/webinar" },
+    { label: "Kajian Strategis", url: "/layanan/research-strategic-studies" },
+    { label: "Transformasi Digital", url: "/layanan/technology-digital-solutions" },
+    { label: "Konsultasi Keuangan & Pajak", url: "/layanan/tax-financial-advisory" },
+    { label: "Manajemen Talenta", url: "/layanan/workforce-solutions" },
+    { label: "Konsultasi Bisnis & Investasi", url: "/layanan/business-investment-advisory" },
+    { label: "Property Management & Investment", url: "/layanan/property-management-investment" },
   ],
 };
 
@@ -33,12 +33,12 @@ const defaultFooterLinksEn = {
     { label: "Careers", url: "/karir" },
   ],
   services: [
-    { label: "Talent Management", url: "/layanan/workforce-solutions" },
-    { label: "Digital Transformation", url: "/layanan/technology-digital-solutions" },
-    { label: "Human Resource Development", url: "/layanan/human-capital-development" },
     { label: "Strategic Studies", url: "/layanan/research-strategic-studies" },
+    { label: "Digital Transformation", url: "/layanan/technology-digital-solutions" },
     { label: "Financial & Tax Advisory", url: "/layanan/tax-financial-advisory" },
+    { label: "Talent Management", url: "/layanan/workforce-solutions" },
     { label: "Business & Investment Advisory", url: "/layanan/business-investment-advisory" },
+    { label: "Property Management & Investment", url: "/layanan/property-management-investment" },
   ],
 };
 

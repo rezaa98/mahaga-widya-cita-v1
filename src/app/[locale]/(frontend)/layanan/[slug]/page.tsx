@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import {
   ArrowRight,
   BarChart3,
@@ -97,6 +97,7 @@ export async function generateMetadata({
 
 export default async function ServiceDetail({ params }: { params: Promise<{ slug: string; locale: string }> }) {
   const { slug, locale } = await params;
+  if (slug === "human-capital-development") redirect(`/${locale}/layanan/property-management-investment`);
   const isEn = locale === "en";
   const payload = await getPayload({ config: configPromise });
   const [serviceResult, relatedResult] = await Promise.all([
@@ -334,6 +335,7 @@ export default async function ServiceDetail({ params }: { params: Promise<{ slug
                       </div>
                       <span className={styles.cardNumber}>{String(index + 1).padStart(2, "0")}</span>
                       <h3>{feature.feature || feature.title || feature.text}</h3>
+                      {feature.description && <p>{feature.description}</p>}
                     </article>
                   );
                 })}

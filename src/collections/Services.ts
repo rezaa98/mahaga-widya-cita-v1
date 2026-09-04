@@ -33,6 +33,29 @@ export const Services: CollectionConfig = {
           label: { id: "Informasi Dasar", en: "Basic Information" },
           fields: [
             {
+              type: "row",
+              fields: [
+                {
+                  name: "active",
+                  type: "checkbox",
+                  defaultValue: true,
+                  label: { id: "Tampilkan di Website", en: "Show on Website" },
+                  admin: { width: "50%" },
+                },
+                {
+                  name: "sortOrder",
+                  type: "number",
+                  defaultValue: 100,
+                  min: 1,
+                  label: { id: "Urutan Tampil", en: "Display Order" },
+                  admin: {
+                    width: "50%",
+                    description: { id: "Angka lebih kecil tampil lebih awal.", en: "Lower numbers appear first." },
+                  },
+                },
+              ],
+            },
+            {
               name: "title",
               type: "text",
               required: true,
@@ -95,6 +118,13 @@ export const Services: CollectionConfig = {
                   type: "text",
                   localized: true,
                   required: true,
+                  label: { id: "Nama Sublayanan", en: "Sub-service Name" },
+                },
+                {
+                  name: "description",
+                  type: "textarea",
+                  localized: true,
+                  label: { id: "Deskripsi Sublayanan", en: "Sub-service Description" },
                 },
               ],
             },

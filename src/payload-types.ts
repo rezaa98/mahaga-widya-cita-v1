@@ -164,7 +164,7 @@ export interface UserAuthOperations {
 export interface User {
   id: number;
   /**
-   * Member dipertahankan untuk akun lama dan hanya memiliki akses baca. Gunakan Editor, Reviewer, Admin, atau Super Admin untuk akun baru.
+   * Member is retained for legacy read-only accounts. Use Editor, Reviewer, Admin, or Super Admin for new accounts.
    */
   role: 'super_admin' | 'admin' | 'editor' | 'reviewer' | 'member';
   updatedAt: string;
@@ -193,12 +193,12 @@ export interface User {
 export interface Media {
   id: number;
   /**
-   * Deskripsikan gambar secara ringkas untuk aksesibilitas. Wajib untuk setiap media.
+   * Briefly describe the image for accessibility. Required for every media item.
    */
   alt: string;
   caption?: string | null;
   /**
-   * Cantumkan fotografer, organisasi, atau lisensi bila diperlukan.
+   * Include the photographer, organization, or license when applicable.
    */
   credit?: string | null;
   updatedAt: string;
@@ -292,7 +292,7 @@ export interface Article {
   author?: (number | null) | User;
   category?: (number | null) | Category;
   /**
-   * Editor dapat mengirim review; reviewer dapat menyetujui atau meminta revisi; hanya admin yang dapat menjadwalkan atau menerbitkan.
+   * Editors can submit for review; reviewers can approve or request revisions; only administrators can schedule or publish.
    */
   status?: ('draft' | 'in_review' | 'revision_requested' | 'approved' | 'scheduled' | 'published' | 'archived') | null;
   reviewNotes?: string | null;
@@ -381,7 +381,7 @@ export interface Journal {
   author?: (number | null) | User;
   category?: (number | null) | Category;
   /**
-   * Editor dapat mengirim review; reviewer dapat menyetujui atau meminta revisi; hanya admin yang dapat menjadwalkan atau menerbitkan.
+   * Editors can submit for review; reviewers can approve or request revisions; only administrators can schedule or publish.
    */
   status?: ('draft' | 'in_review' | 'revision_requested' | 'approved' | 'scheduled' | 'published' | 'archived') | null;
   reviewNotes?: string | null;
@@ -473,6 +473,11 @@ export interface Subscriber {
  */
 export interface Service {
   id: number;
+  active?: boolean | null;
+  /**
+   * Lower numbers appear first.
+   */
+  sortOrder?: number | null;
   title: string;
   slug: string;
   tagline: string;
@@ -482,6 +487,7 @@ export interface Service {
   features?:
     | {
         feature: string;
+        description?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -528,7 +534,7 @@ export interface TeamMember {
   institution?: string | null;
   color: string;
   /**
-   * Semakin kecil angkanya, semakin atas tampilannya
+   * Lower numbers appear first.
    */
   order?: number | null;
   updatedAt: string;
@@ -1045,6 +1051,8 @@ export interface SubscribersSelect<T extends boolean = true> {
  * via the `definition` "services_select".
  */
 export interface ServicesSelect<T extends boolean = true> {
+  active?: T;
+  sortOrder?: T;
   title?: T;
   slug?: T;
   tagline?: T;
@@ -1055,6 +1063,7 @@ export interface ServicesSelect<T extends boolean = true> {
     | T
     | {
         feature?: T;
+        description?: T;
         id?: T;
       };
   benefits?:
@@ -1365,7 +1374,7 @@ export interface TentangKami {
     | null;
   ceoMessage: {
     /**
-     * Pilih anggota tim yang akan ditampilkan sebagai CEO di halaman ini.
+     * Select the team member displayed as CEO on this page.
      */
     ceo: number | TeamMember;
     quote: string;
@@ -1386,7 +1395,7 @@ export interface Kontak {
   address: string;
   workingHours: string;
   /**
-   * Teks singkat untuk ikon pin peta (misal: Jakarta Selatan, DKI Jakarta)
+   * Short text displayed beside the map pin (for example: South Jakarta, Jakarta).
    */
   locationTag: string;
   whatsappCta: {
@@ -1395,7 +1404,7 @@ export interface Kontak {
     defaultMessage: string;
   };
   /**
-   * Daftar pilihan keperluan / subjek yang akan muncul di dropdown formulir kontak.
+   * Options displayed in the contact form subject dropdown.
    */
   formSubjects?:
     | {

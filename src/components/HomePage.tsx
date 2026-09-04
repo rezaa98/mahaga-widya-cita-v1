@@ -46,16 +46,15 @@ import {
 
 const defaultServices = [
   {
-    icon: UserPlus,
-    title: "Manajemen Talenta",
-    titleEn: "Talent Management",
+    icon: ClipboardList,
+    title: "Kajian Strategis",
+    titleEn: "Strategic Studies",
     description:
-      "Solusi strategis untuk pengelolaan talenta, pengembangan kompetensi, dan peningkatan kinerja organisasi.",
-    descriptionEn:
-      "Strategic solutions for talent management, competency development, and organizational performance improvement.",
-    slug: "workforce-solutions",
+      "Mengubah data dan kompleksitas menjadi insight strategis untuk keputusan yang lebih tepat dan berdampak.",
+    descriptionEn: "Turning data and complexity into strategic insights for more precise and impactful decisions.",
+    slug: "research-strategic-studies",
     gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
-    tag: "Talenta",
+    tag: "Kajian",
   },
   {
     icon: MonitorSmartphone,
@@ -70,35 +69,25 @@ const defaultServices = [
     tag: "Digital",
   },
   {
-    icon: Users,
-    title: "Pengembangan SDM",
-    titleEn: "Human Resource Development",
-    description:
-      "Membangun sumber daya manusia yang unggul melalui pelatihan, pendampingan, dan pengembangan kompetensi.",
-    descriptionEn: "Building high-performing human resources through training, mentoring, and competency development.",
-    slug: "human-capital-development",
-    gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
-    tag: "SDM",
-  },
-  {
-    icon: ClipboardList,
-    title: "Kajian Strategis",
-    titleEn: "Strategic Studies",
-    description: "Kajian berbasis data untuk mendukung kebijakan, perencanaan, dan keputusan strategis.",
-    descriptionEn: "Data-driven studies to support policy formulation, planning, and strategic decision-making.",
-    slug: "research-strategic-studies",
-    gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
-    tag: "Kajian",
-  },
-  {
     icon: Calculator,
     title: "Konsultasi Keuangan & Pajak",
     titleEn: "Financial & Tax Advisory",
-    description: "Solusi keuangan dan perpajakan yang berorientasi pada kepatuhan, efisiensi, dan keberlanjutan.",
-    descriptionEn: "Financial and tax solutions focused on compliance, efficiency, and sustainability.",
+    description:
+      "Mengoptimalkan pengelolaan keuangan dan perpajakan untuk efisiensi, kepatuhan, dan keberlanjutan bisnis.",
+    descriptionEn: "Optimizing financial and tax management for business efficiency, compliance, and sustainability.",
     slug: "tax-financial-advisory",
     gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
     tag: "Keuangan",
+  },
+  {
+    icon: UserPlus,
+    title: "Manajemen Talenta",
+    titleEn: "Talent Management",
+    description: "Mengembangkan SDM melalui pengelolaan talenta, peningkatan kompetensi, dan penguatan kinerja.",
+    descriptionEn: "Developing people through talent management, competency improvement, and stronger performance.",
+    slug: "workforce-solutions",
+    gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
+    tag: "Talenta",
   },
   {
     icon: TrendingUp,
@@ -109,6 +98,18 @@ const defaultServices = [
     slug: "business-investment-advisory",
     gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
     tag: "Bisnis",
+  },
+  {
+    icon: Building2,
+    title: "Property Management & Investment",
+    titleEn: "Property Management & Investment",
+    description:
+      "Pengelolaan profesional vila dan akomodasi wisata untuk mengoptimalkan operasional, pendapatan, dan nilai aset.",
+    descriptionEn:
+      "Professional management of villas and tourism accommodation to optimize operations, revenue, and asset value.",
+    slug: "property-management-investment",
+    gradient: "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
+    tag: "Properti",
   },
 ];
 
@@ -276,7 +277,7 @@ const IconMapping: Record<string, any> = {
   "business-investment-advisory": TrendingUp,
   "tax-financial-advisory": Calculator,
   "research-strategic-studies": ClipboardList,
-  "human-capital-development": Users,
+  "property-management-investment": Building2,
   "technology-digital-solutions": MonitorSmartphone,
   "workforce-solutions": UserPlus,
 };
