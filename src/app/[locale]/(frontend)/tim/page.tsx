@@ -42,7 +42,15 @@ export default async function TimPage({ params }: { params: Promise<{ locale: st
   });
 
   const team = result.docs;
-  const management = team.filter((member) => member.category === "management");
+  const managementMembers = team.filter((member) => member.category === "management");
+  const isThataDebora = (name: unknown) =>
+    typeof name === "string" && name.toLocaleLowerCase("id-ID").includes("thata debora");
+  const leadershipIds = new Set([
+    ...managementMembers.slice(0, 3).map((member) => member.id),
+    ...managementMembers.filter((member) => isThataDebora(member.name)).map((member) => member.id),
+  ]);
+  const management = managementMembers.filter((member) => leadershipIds.has(member.id));
+  const professionals = managementMembers.filter((member) => !leadershipIds.has(member.id));
   const experts = team.filter((member) => member.category === "expert");
 
   return (
@@ -106,8 +114,34 @@ export default async function TimPage({ params }: { params: Promise<{ locale: st
         </div>
       </section>
 
+      {/* PROFESSIONAL TEAM */}
+      {professionals.length > 0 && (
+        <section className="section" style={{ background: "var(--color-neutral-50)" }} id="profesional">
+          <div className="container">
+            <div className="section-title text-center" style={{ alignItems: "center" }}>
+              <span className="overline">{isEn ? "Professional Team" : "Tim Profesional"}</span>
+              <h2>{isEn ? "Corporate Professional Team" : "Tim Profesional Perusahaan"}</h2>
+              <div className="gold-divider" />
+              <p style={{ color: "var(--color-neutral-600)", maxWidth: "640px", margin: "1rem auto 0" }}>
+                {isEn
+                  ? "Professionals who support the company's strategy, operations, and delivery of high-quality services."
+                  : "Para profesional yang mendukung strategi, operasional, dan penyelenggaraan layanan perusahaan secara berkualitas."}
+              </p>
+            </div>
+
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "2rem" }}>
+              {professionals.map((professional) => (
+                <div key={professional.id} style={{ width: "100%", maxWidth: "320px", flexGrow: 1 }}>
+                  <TeamMemberCard member={professional} locale={locale} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* EXPERTS */}
-      <section className="section" style={{ background: "var(--color-neutral-50)" }} id="ahli">
+      <section className="section" id="ahli">
         <div className="container">
           <div className="section-title text-center" style={{ alignItems: "center" }}>
             <span className="overline">{isEn ? "Expert Network" : "Jejaring Kepakaran"}</span>
