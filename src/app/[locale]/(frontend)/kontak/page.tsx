@@ -48,11 +48,15 @@ export default async function KontakPage(props: {
     kontakData?.workingHours || (isEn ? "Monday – Friday, 08.00 – 17.00 WIB" : "Senin – Jumat, 08.00 – 17.00 WIB");
   const locationTag = kontakData?.locationTag || (isEn ? "South Jakarta, DKI Jakarta" : "Jakarta Selatan, DKI Jakarta");
   const heroTitle = kontakData?.heroTitle || (isEn ? "Let's Collaborate With Us" : "Mari Berkolaborasi Bersama Kami");
-  const heroSubtitle =
+  const heroSubtitle = (
     kontakData?.heroSubtitle ||
     (isEn
-      ? "Our team is ready to assist with your institution's education and consultation needs. Response within 1×24 working hours."
-      : "Tim kami siap membantu kebutuhan edukasi dan konsultasi instansi Anda. Respons dalam 1×24 jam kerja.");
+      ? "Our team is ready to assist with your institution's education and consultation needs."
+      : "Tim kami siap membantu kebutuhan edukasi dan konsultasi instansi Anda.")
+  )
+    .replace(/\s*Respons dalam 1×24 jam kerja\.?/gi, "")
+    .replace(/\s*Response within 1×24 working hours\.?/gi, "")
+    .trim();
 
   const whatsappCta = kontakData?.whatsappCta || {
     title: isEn ? "Chat via WhatsApp" : "Chat via WhatsApp",

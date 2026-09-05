@@ -33,8 +33,7 @@ export const Kontak: GlobalConfig = {
       type: "textarea",
       localized: true,
       required: true,
-      defaultValue:
-        "Tim kami siap membantu kebutuhan edukasi dan konsultasi instansi Anda. Respons dalam 1×24 jam kerja.",
+      defaultValue: "Tim kami siap membantu kebutuhan edukasi dan konsultasi instansi Anda.",
     },
     {
       name: "phone",
