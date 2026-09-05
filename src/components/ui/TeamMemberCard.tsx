@@ -99,9 +99,6 @@ export default function TeamMemberCard({ member, locale = "id" }: { member: any;
   const visibleRole = [member.role, member.expertise].find(
     (value) => typeof value === "string" && value.trim() && value.trim() !== "-",
   );
-  const visibleExpertise =
-    typeof member.expertise === "string" && member.expertise.trim() !== "-" ? member.expertise.trim() : "";
-
   // Prevent scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -296,11 +293,6 @@ export default function TeamMemberCard({ member, locale = "id" }: { member: any;
               )}
 
               <div style={{ color: "#475569", lineHeight: "1.8", fontSize: "1.125rem" }}>
-                {visibleExpertise && (
-                  <p style={{ marginBottom: "1rem" }}>
-                    <strong>{locale === "en" ? "Expertise" : "Spesialisasi"}:</strong> {visibleExpertise}
-                  </p>
-                )}
                 {member.institution && (
                   <p style={{ marginBottom: member.bio ? "1.5rem" : "1rem" }}>
                     <strong>{locale === "en" ? "Institution" : "Instansi"}:</strong> {member.institution}

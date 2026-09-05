@@ -283,7 +283,7 @@ export const Beranda: GlobalConfig = {
                   type: "text",
                   localized: true,
                   required: true,
-                  defaultValue: "Layanan Kami",
+                  defaultValue: "Your Next Move",
                 },
                 {
                   name: "title",
@@ -291,7 +291,8 @@ export const Beranda: GlobalConfig = {
                   type: "text",
                   localized: true,
                   required: true,
-                  defaultValue: "Solusi Lengkap untuk Penguatan Kapasitas Instansi",
+                  defaultValue:
+                    "Kami membantu Anda melihat peluang, mengambil langkah yang tepat, dan mengembangkan potensi menjadi sesuatu yang bernilai.",
                   admin: {
                     description: {
                       id: "Gunakan HTML <br /> untuk membuat baris baru.",
@@ -305,8 +306,7 @@ export const Beranda: GlobalConfig = {
                   type: "textarea",
                   localized: true,
                   required: true,
-                  defaultValue:
-                    "Enam pilar layanan terintegrasi yang dirancang khusus untuk memenuhi kebutuhan transformasi instansi pemerintah dan profesional Indonesia.",
+                  defaultValue: "LET’S SEE WHAT’S POSSIBLE.",
                 },
               ],
             },

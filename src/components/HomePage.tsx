@@ -431,8 +431,8 @@ export default function HomePage({
   const heroDefaults = isEn
     ? {
         badge: "Sustainable Growth Through Knowledge & Technology",
-        title: "Your One-Stop",
-        highlight: "Consulting Partner",
+        title: "YOUR ONE-STOP",
+        highlight: "CONSULTING PARTNER",
         suffix: "",
         description:
           "We provide integrated consulting solutions in strategy, research, technology, and human resource development to help organizations achieve sustainable growth.",
@@ -440,9 +440,9 @@ export default function HomePage({
       }
     : {
         badge: "Pertumbuhan Berkelanjutan Melalui Pengetahuan & Teknologi",
-        title: "Mitra Konsultasi",
-        highlight: "Terintegrasi",
-        suffix: "untuk Pertumbuhan Berkelanjutan",
+        title: "YOUR ONE-STOP",
+        highlight: "CONSULTING PARTNER",
+        suffix: "",
         description:
           "Kami menghadirkan solusi konsultasi terintegrasi di bidang strategi, riset, teknologi, dan pengembangan SDM untuk membantu organisasi mencapai pertumbuhan berkelanjutan.",
         features: ["Konsultan Berpengalaman", "Solusi Berbasis Data", "Pendampingan Menyeluruh"],
@@ -459,12 +459,18 @@ export default function HomePage({
     .filter(Boolean)
     .join(" ");
   const localizedHero = copyMatchesLocale(cmsHeroText, locale) ? cmsHero : undefined;
+  const usesOneStopBrandHeadline =
+    typeof cmsHero?.title === "string" &&
+    typeof cmsHero?.titleHighlight === "string" &&
+    cmsHero.title.toLocaleLowerCase().includes("one-stop") &&
+    cmsHero.titleHighlight.toLocaleLowerCase().includes("consulting partner");
 
   // HERO DATA
   const heroBadge = localizedHero?.badge || heroDefaults.badge;
-  const heroTitle = localizedHero?.title || heroDefaults.title;
-  const heroTitleHighlight = localizedHero?.titleHighlight || heroDefaults.highlight;
-  const heroTitleSuffix = localizedHero?.titleSuffix || heroDefaults.suffix;
+  const heroTitle = (usesOneStopBrandHeadline ? cmsHero.title : localizedHero?.title) || heroDefaults.title;
+  const heroTitleHighlight =
+    (usesOneStopBrandHeadline ? cmsHero.titleHighlight : localizedHero?.titleHighlight) || heroDefaults.highlight;
+  const heroTitleSuffix = usesOneStopBrandHeadline ? "" : localizedHero?.titleSuffix || heroDefaults.suffix;
   const heroDescription = localizedHero?.description || heroDefaults.description;
   const heroFeatures =
     localizedHero?.features?.length > 0 ? localizedHero.features.map((f: any) => f.text) : heroDefaults.features;
@@ -668,20 +674,20 @@ export default function HomePage({
           <div className="container">
             <div className="section-title">
               <span className="overline">
-                {localizedCopy(berandaData?.servicesIntro?.badge, isEn ? "Our Services" : "Layanan Kami", locale)}
+                {localizedCopy(berandaData?.servicesIntro?.badge, "Your Next Move", locale)}
               </span>
               <h2>
                 {plainTextLines(
                   localizedCopy(
                     berandaData?.servicesIntro?.title,
                     isEn
-                      ? "Integrated Solutions for\nOrganizational Growth"
-                      : "Solusi Terintegrasi untuk\nPertumbuhan Organisasi",
+                      ? "We help you identify opportunities, take the right steps, and develop potential into something of value."
+                      : "Kami membantu Anda melihat peluang, mengambil langkah yang tepat, dan mengembangkan potensi menjadi sesuatu yang bernilai.",
                     locale,
                   ),
                   isEn
-                    ? "Integrated Solutions for\nOrganizational Growth"
-                    : "Solusi Terintegrasi untuk\nPertumbuhan Organisasi",
+                    ? "We help you identify opportunities, take the right steps, and develop potential into something of value."
+                    : "Kami membantu Anda melihat peluang, mengambil langkah yang tepat, dan mengembangkan potensi menjadi sesuatu yang bernilai.",
                 ).map((line, index) => (
                   <Fragment key={`${line}-${index}`}>
                     {index > 0 && <br />}
@@ -691,13 +697,7 @@ export default function HomePage({
               </h2>
               <div className="gold-divider" />
               <p style={{ marginTop: "1rem" }}>
-                {localizedCopy(
-                  berandaData?.servicesIntro?.description,
-                  isEn
-                    ? "Six integrated service pillars designed to support transformation across government, business, and organizations."
-                    : "Enam pilar layanan terintegrasi yang dirancang untuk mendukung transformasi pemerintah, bisnis, dan organisasi.",
-                  locale,
-                )}
+                {localizedCopy(berandaData?.servicesIntro?.description, "LET’S SEE WHAT’S POSSIBLE.", locale)}
               </p>
             </div>
 
