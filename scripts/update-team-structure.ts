@@ -6,9 +6,21 @@ import { getPayload } from "payload";
 
 const shouldApply = process.argv.includes("--apply");
 const removableNames = ["sari dewi purnama", "ningrum aja"];
-const managementNames = ["shella h. valsi", "brian l.djumaty", "sikin m.nor", "ramona akhadiyah"];
+const managementNames = ["shellahvalsi", "brianldjumaty", "sikinmnor", "ramonaakhadiyah", "thatadebora"];
+const canonicalNames = [
+  { match: "shellahvalsi", id: "Shella H. Valsi, S.AP., M.AP", en: "Shella H. Valsi, S.AP., M.AP" },
+  {
+    match: "brianldjumaty",
+    id: "Dr.(C) Brian L. Djumaty, S.Si., M.Si., C.Ed",
+    en: "Dr.(C) Brian L. Djumaty, S.Si., M.Si., C.Ed",
+  },
+  { match: "sikinmnor", id: "Sikin M. Nor, SP., MM", en: "Sikin M. Nor, SP., MM" },
+  { match: "ramonaakhadiyah", id: "Ramona Akhadiyah, S.AP", en: "Ramona Akhadiyah, S.AP" },
+  { match: "thatadebora", id: "Thata Debora Agnesia", en: "Thata Debora Agnesia, S.H." },
+] as const;
 
 const normalize = (value: unknown) => (typeof value === "string" ? value.trim().toLocaleLowerCase("id-ID") : "");
+const identityKey = (value: unknown) => normalize(value).replace(/[^a-z0-9]/g, "");
 
 async function run() {
   const payload = await getPayload({ config: configPromise });
@@ -21,8 +33,8 @@ async function run() {
     sort: "order",
   });
 
-  const ramona = result.docs.find((member) => normalize(member.name).includes("ramona akhadiyah"));
-  const debora = result.docs.find((member) => normalize(member.name).includes("thata debora"));
+  const ramona = result.docs.find((member) => identityKey(member.name).includes("ramonaakhadiyah"));
+  const debora = result.docs.find((member) => identityKey(member.name).includes("thatadebora"));
   const removals = result.docs.filter((member) => removableNames.some((name) => normalize(member.name).includes(name)));
 
   if (!ramona || !debora) {
@@ -68,14 +80,14 @@ async function run() {
     collection: "team-members",
     id: debora.id,
     locale: "id",
-    data: { category: "expert", role: "Supervisor", order: 5 },
+    data: { category: "management", role: "Supervisor", order: 5 },
     context: { skipAutoTranslate: true },
   });
   await payload.update({
     collection: "team-members",
     id: debora.id,
     locale: "en",
-    data: { category: "expert", role: "Supervisor", order: 5 },
+    data: { category: "management", role: "Supervisor", order: 5 },
     context: { skipAutoTranslate: true },
   });
 
@@ -84,12 +96,31 @@ async function run() {
       item.id !== ramona.id &&
       item.id !== debora.id &&
       !removals.some((removal) => removal.id === item.id) &&
-      !managementNames.some((name) => normalize(item.name).includes(name)),
+      !managementNames.some((name) => identityKey(item.name).includes(name)),
   )) {
     await payload.update({
       collection: "team-members",
       id: member.id,
       data: { category: "expert" },
+      context: { skipAutoTranslate: true },
+    });
+  }
+
+  for (const canonical of canonicalNames) {
+    const member = result.docs.find((item) => identityKey(item.name).includes(canonical.match));
+    if (!member) throw new Error(`Unable to find team member for canonical name: ${canonical.match}`);
+    await payload.update({
+      collection: "team-members",
+      id: member.id,
+      locale: "id",
+      data: { name: canonical.id },
+      context: { skipAutoTranslate: true },
+    });
+    await payload.update({
+      collection: "team-members",
+      id: member.id,
+      locale: "en",
+      data: { name: canonical.en },
       context: { skipAutoTranslate: true },
     });
   }
