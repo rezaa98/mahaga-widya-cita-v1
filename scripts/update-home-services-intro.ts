@@ -8,14 +8,15 @@ const shouldApply = process.argv.includes("--apply");
 const content = {
   id: {
     badge: "Your Next Move",
-    title:
+    title: "Melihat Peluang.\nMenentukan Langkah.\nMenciptakan Nilai.",
+    description:
       "Kami membantu Anda melihat peluang, mengambil langkah yang tepat, dan mengembangkan potensi menjadi sesuatu yang bernilai.",
-    description: "LET’S SEE WHAT’S POSSIBLE.",
   },
   en: {
     badge: "Your Next Move",
-    title: "We help you identify opportunities, take the right steps, and develop potential into something of value.",
-    description: "LET’S SEE WHAT’S POSSIBLE.",
+    title: "See Opportunities.\nMake the Right Move.\nCreate Value.",
+    description:
+      "We help you identify opportunities, take the right steps, and develop potential into something of value.",
   },
 } as const;
 

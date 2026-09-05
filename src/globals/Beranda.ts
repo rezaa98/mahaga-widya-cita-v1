@@ -291,8 +291,7 @@ export const Beranda: GlobalConfig = {
                   type: "text",
                   localized: true,
                   required: true,
-                  defaultValue:
-                    "Kami membantu Anda melihat peluang, mengambil langkah yang tepat, dan mengembangkan potensi menjadi sesuatu yang bernilai.",
+                  defaultValue: "Melihat Peluang.\nMenentukan Langkah.\nMenciptakan Nilai.",
                   admin: {
                     description: {
                       id: "Gunakan HTML <br /> untuk membuat baris baru.",
@@ -306,7 +305,8 @@ export const Beranda: GlobalConfig = {
                   type: "textarea",
                   localized: true,
                   required: true,
-                  defaultValue: "LET’S SEE WHAT’S POSSIBLE.",
+                  defaultValue:
+                    "Kami membantu Anda melihat peluang, mengambil langkah yang tepat, dan mengembangkan potensi menjadi sesuatu yang bernilai.",
                 },
               ],
             },

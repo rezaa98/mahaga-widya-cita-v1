@@ -672,22 +672,22 @@ export default function HomePage({
       {showServices && (
         <section className="section">
           <div className="container">
-            <div className="section-title">
+            <div className="section-title" style={{ maxWidth: "920px", marginInline: "auto" }}>
               <span className="overline">
                 {localizedCopy(berandaData?.servicesIntro?.badge, "Your Next Move", locale)}
               </span>
-              <h2>
+              <h2 style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)", lineHeight: 1.08, letterSpacing: "-0.035em" }}>
                 {plainTextLines(
                   localizedCopy(
                     berandaData?.servicesIntro?.title,
                     isEn
-                      ? "We help you identify opportunities, take the right steps, and develop potential into something of value."
-                      : "Kami membantu Anda melihat peluang, mengambil langkah yang tepat, dan mengembangkan potensi menjadi sesuatu yang bernilai.",
+                      ? "See Opportunities.\nMake the Right Move.\nCreate Value."
+                      : "Melihat Peluang.\nMenentukan Langkah.\nMenciptakan Nilai.",
                     locale,
                   ),
                   isEn
-                    ? "We help you identify opportunities, take the right steps, and develop potential into something of value."
-                    : "Kami membantu Anda melihat peluang, mengambil langkah yang tepat, dan mengembangkan potensi menjadi sesuatu yang bernilai.",
+                    ? "See Opportunities.\nMake the Right Move.\nCreate Value."
+                    : "Melihat Peluang.\nMenentukan Langkah.\nMenciptakan Nilai.",
                 ).map((line, index) => (
                   <Fragment key={`${line}-${index}`}>
                     {index > 0 && <br />}
@@ -696,9 +696,26 @@ export default function HomePage({
                 ))}
               </h2>
               <div className="gold-divider" />
-              <p style={{ marginTop: "1rem" }}>
-                {localizedCopy(berandaData?.servicesIntro?.description, "LET’S SEE WHAT’S POSSIBLE.", locale)}
+              <p style={{ maxWidth: "760px", margin: "1.25rem auto 0", fontSize: "1.0625rem", lineHeight: 1.75 }}>
+                {localizedCopy(
+                  berandaData?.servicesIntro?.description,
+                  isEn
+                    ? "We help you identify opportunities, take the right steps, and develop potential into something of value."
+                    : "Kami membantu Anda melihat peluang, mengambil langkah yang tepat, dan mengembangkan potensi menjadi sesuatu yang bernilai.",
+                  locale,
+                )}
               </p>
+              <strong
+                style={{
+                  display: "inline-block",
+                  marginTop: "1rem",
+                  color: "var(--color-primary-600)",
+                  fontSize: "0.875rem",
+                  letterSpacing: "0.08em",
+                }}
+              >
+                LET’S SEE WHAT’S POSSIBLE.
+              </strong>
             </div>
 
             <div

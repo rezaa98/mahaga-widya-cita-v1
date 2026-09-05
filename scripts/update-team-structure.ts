@@ -16,8 +16,16 @@ const canonicalNames = [
   },
   { match: "sikinmnor", id: "Sikin M. Nor, SP., MM", en: "Sikin M. Nor, SP., MM" },
   { match: "ramonaakhadiyah", id: "Ramona Akhadiyah, S.AP", en: "Ramona Akhadiyah, S.AP" },
-  { match: "thatadebora", id: "Thata Debora Agnesia", en: "Thata Debora Agnesia, S.H." },
+  { match: "thatadebora", id: "Thata Debora Agnesia, S.H.", en: "Thata Debora Agnesia, S.H." },
 ] as const;
+
+const deboraProfile = {
+  category: "management" as const,
+  role: "Operations Manager",
+  institution: "PT Mahaga Widya Cita",
+  bio: "Thata Debora Agnesia serves as the Operations Manager of PT Mahaga Widya Cita, overseeing project operations, corporate administration, and organizational coordination. With a legal background, she ensures effective operational management, regulatory compliance, and seamless execution of consulting and research projects while supporting the company's commitment to professional and high-quality services.",
+  order: 5,
+};
 
 const normalize = (value: unknown) => (typeof value === "string" ? value.trim().toLocaleLowerCase("id-ID") : "");
 const identityKey = (value: unknown) => normalize(value).replace(/[^a-z0-9]/g, "");
@@ -80,14 +88,14 @@ async function run() {
     collection: "team-members",
     id: debora.id,
     locale: "id",
-    data: { category: "management", role: "Supervisor", order: 5 },
+    data: deboraProfile,
     context: { skipAutoTranslate: true },
   });
   await payload.update({
     collection: "team-members",
     id: debora.id,
     locale: "en",
-    data: { category: "management", role: "Supervisor", order: 5 },
+    data: deboraProfile,
     context: { skipAutoTranslate: true },
   });
 
