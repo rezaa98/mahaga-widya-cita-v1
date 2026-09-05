@@ -21,7 +21,7 @@ const canonicalNames = [
 
 const deboraProfile = {
   category: "management" as const,
-  role: "Operations Manager",
+  role: "Supervisor",
   institution: "PT Mahaga Widya Cita",
   bio: "Thata Debora Agnesia serves as the Operations Manager of PT Mahaga Widya Cita, overseeing project operations, corporate administration, and organizational coordination. With a legal background, she ensures effective operational management, regulatory compliance, and seamless execution of consulting and research projects while supporting the company's commitment to professional and high-quality services.",
   order: 5,
