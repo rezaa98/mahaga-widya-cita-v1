@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import TeamMemberCard from "@/components/ui/TeamMemberCard";
+import { getServiceIcon } from "@/data/serviceIcons";
 import {
   getContentImage,
   getContentImageAlt,
@@ -33,7 +34,6 @@ import {
   TrendingUp,
   Users,
   Video,
-  Landmark,
   Calculator,
   ClipboardList,
   MonitorSmartphone,
@@ -272,16 +272,6 @@ function StatCard({ stat, index, total, visible }: { stat: StatItem; index: numb
    HOMEPAGE COMPONENT
    ============================================ */
 
-const IconMapping: Record<string, any> = {
-  "government-consulting": Landmark,
-  "business-investment-advisory": TrendingUp,
-  "tax-financial-advisory": Calculator,
-  "research-strategic-studies": ClipboardList,
-  "property-management-investment": Building2,
-  "technology-digital-solutions": MonitorSmartphone,
-  "workforce-solutions": UserPlus,
-};
-
 function plainTextLines(value: unknown, fallback: string) {
   const source = typeof value === "string" && value.trim() ? value : fallback;
   return source
@@ -413,11 +403,12 @@ export default function HomePage({
   const displayServices =
     payloadServices?.length > 0
       ? payloadServices.map((s: any) => ({
-          icon: IconMapping[s.slug] || Target,
+          icon: getServiceIcon(s.slug),
           title: s.title,
           description: s.description,
           href: `/layanan/${s.slug}`,
           gradient: s.gradient || "linear-gradient(135deg, #1E6FD9, #0B2D6B)",
+          color: s.color || "var(--color-primary-600)",
           tag: s.tagline || (isEn ? "Service" : "Layanan"),
         }))
       : defaultServices.map((service) => ({
@@ -773,46 +764,38 @@ export default function HomePage({
                   }
                 `}</style>
 
-                  {/* Icon & Badge Container */}
-                  <div style={{ position: "relative", marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                  <div
+                    style={{
+                      marginBottom: "1.5rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
                     <div
                       style={{
-                        width: "72px",
-                        height: "72px",
-                        background: "var(--color-primary-600)",
-                        borderRadius: "50%",
+                        width: "52px",
+                        height: "52px",
+                        background: "var(--color-primary-50)",
+                        borderRadius: "14px",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        boxShadow: "0 8px 24px rgba(30, 111, 217, 0.25)",
+                        color: service.color || "var(--color-primary-600)",
                       }}
                     >
-                      <service.icon size={32} color="var(--color-gold-400)" strokeWidth={1.5} />
+                      <service.icon size={27} />
                     </div>
-                    {/* Number Badge */}
-                    <div
+                    <span
                       style={{
-                        position: "absolute",
-                        bottom: "-4px",
-                        left: "-4px",
-                        width: "28px",
-                        height: "28px",
-                        background: "var(--color-gold-500)",
-                        color: "#fff",
-                        borderRadius: "50%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "0.75rem",
-                        fontWeight: "bold",
-                        border: "3px solid #fff",
-                        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                        color: "var(--color-neutral-300)",
+                        fontSize: "0.78rem",
+                        fontWeight: 850,
+                        letterSpacing: "0.1em",
                       }}
                     >
                       {(idx + 1).toString().padStart(2, "0")}
-                    </div>
-
-                    {/* Title beside icon on larger cards if preferred, but let's keep it below */}
+                    </span>
                   </div>
 
                   <h3

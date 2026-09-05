@@ -1,36 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  ArrowRight,
-  BarChart3,
-  Building2,
-  Calculator,
-  CheckCircle2,
-  ClipboardList,
-  MonitorSmartphone,
-  Sparkles,
-  TrendingUp,
-  UserPlus,
-} from "lucide-react";
+import { ArrowRight, BarChart3, CheckCircle2, Sparkles } from "lucide-react";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { selectCorporateServices } from "@/data/serviceCatalog";
+import { getServiceIcon } from "@/data/serviceIcons";
 import { localizedAlternates } from "@/utils/seo";
 import styles from "./page.module.css";
 
 export const revalidate = 300;
 type Entry = Record<string, any>;
-const serviceIcons: Record<string, typeof CheckCircle2> = {
-  "research-strategic-studies": ClipboardList,
-  "technology-digital-solutions": MonitorSmartphone,
-  "tax-financial-advisory": Calculator,
-  "workforce-solutions": UserPlus,
-  "business-investment-advisory": TrendingUp,
-  "property-management-investment": Building2,
-};
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -148,7 +130,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
             </div>
             <div className={styles.servicesGrid}>
               {services.map((service: Entry, index: number) => {
-                const Icon = serviceIcons[service.slug] || CheckCircle2;
+                const Icon = getServiceIcon(service.slug);
                 const features = (service.features ?? []).filter((item: Entry) => item.feature).slice(0, 3);
                 return (
                   <article className={styles.serviceCard} key={service.id}>
