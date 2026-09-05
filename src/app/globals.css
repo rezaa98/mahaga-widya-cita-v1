@@ -1169,3 +1169,64 @@ label {
     grid-template-columns: 1fr;
   }
 }
+
+/* Keep four footer sections balanced, including iPad portrait and landscape. */
+.footer-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.footer-grid > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+@media (min-width: 769px) and (max-width: 1199px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem;
+  }
+}
+.home-logo-link {
+  position: relative;
+  border-radius: 8px;
+}
+.home-logo-link:active {
+  opacity: 0.7;
+}
+.home-logo-link:focus-visible {
+  outline: 2px solid var(--color-gold-400);
+  outline-offset: 5px;
+}
+.home-navigation-status {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: var(--color-primary-900);
+  color: white;
+  box-shadow: var(--shadow-card);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.home-navigation-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: home-navigation-spin 0.8s linear infinite;
+}
+@keyframes home-navigation-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-navigation-spinner {
+    animation: none;
+  }
+}

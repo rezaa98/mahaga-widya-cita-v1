@@ -1295,12 +1295,18 @@ export default function HomePage({
             >
               {(berandaData?.cta?.features?.length > 0
                 ? berandaData.cta.features.map((f: any) => f.text)
-                : ["Respons dalam 24 Jam", "Konsultasi Awal Gratis", "Tim Berpengalaman 10+ Tahun"]
+                : isEn
+                  ? ["Quick Response", "Free Initial Consultation", "Team with 10+ Years of Experience"]
+                  : ["Respon Cepat", "Konsultasi Awal Gratis", "Tim Berpengalaman 10+ Tahun"]
               ).map((item: string) => (
                 <div key={item} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   <CheckCircle2 size={15} color="var(--color-gold-300)" />
                   <span style={{ fontSize: "0.875rem", color: "rgba(255,255,255,0.8)", fontWeight: "500" }}>
-                    {item}
+                    {/^(?:respon[s]?|response)\s+(?:dalam\s+|within\s+)?24\s*(?:jam|hours?)\.?$/i.test(item.trim())
+                      ? isEn
+                        ? "Quick Response"
+                        : "Respon Cepat"
+                      : item}
                   </span>
                 </div>
               ))}

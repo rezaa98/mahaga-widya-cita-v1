@@ -451,7 +451,7 @@ export const Beranda: GlobalConfig = {
                   type: "array",
                   fields: [{ name: "text", type: "text", required: true, localized: true }],
                   defaultValue: [
-                    { text: "Respons dalam 24 Jam" },
+                    { text: "Respon Cepat" },
                     { text: "Konsultasi Awal Gratis" },
                     { text: "Tim Berpengalaman 10+ Tahun" },
                   ],

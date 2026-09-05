@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import Image from "next/image";
 import { usePathname, useParams, useRouter } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
@@ -84,6 +84,17 @@ const corporateServiceSlugs = new Set<string>(CORPORATE_SERVICE_SLUGS);
 function isCorporateServiceLink(link: { href?: string | null }) {
   const slug = link.href?.split("/layanan/")[1]?.split(/[?#]/)[0];
   return Boolean(slug && corporateServiceSlugs.has(slug));
+}
+
+function HomeNavigationStatus({ locale }: { locale: string }) {
+  const { pending } = useLinkStatus();
+  if (!pending) return null;
+  return (
+    <span className="home-navigation-status" role="status">
+      <span className="home-navigation-spinner" aria-hidden="true" />
+      {locale === "en" ? "Opening home…" : "Membuka beranda…"}
+    </span>
+  );
 }
 
 export default function Navbar() {
@@ -217,7 +228,20 @@ export default function Navbar() {
             }}
           >
             {/* Logo */}
-            <Link href={`/${locale}`} style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexShrink: 0 }}>
+            <Link
+              href={`/${locale}`}
+              prefetch={true}
+              className="home-logo-link"
+              aria-label={locale === "en" ? "Back to home" : "Kembali ke beranda"}
+              onNavigate={() => {
+                setMobileOpen(false);
+                setOpenDropdown(null);
+                if (pathname === `/${locale}` || pathname === `/${locale}/`) {
+                  window.scrollTo({ top: 0, behavior: "instant" });
+                }
+              }}
+              style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexShrink: 0 }}
+            >
               <Image
                 src="/logo-transparent.png"
                 alt="Logo PT Mahaga Widya Cita"
@@ -239,6 +263,7 @@ export default function Navbar() {
               >
                 PT Mahaga Widya Cita
               </span>
+              <HomeNavigationStatus locale={locale} />
             </Link>
 
             {/* Desktop Nav */}
