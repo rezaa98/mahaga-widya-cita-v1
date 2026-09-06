@@ -96,12 +96,16 @@ export default function TeamMemberCard({ member, locale = "id" }: { member: any;
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
-  const isIraNingrum = typeof member.name === "string" && member.name.toLowerCase().includes("ira ningrum");
+  const memberName = typeof member.name === "string" ? member.name.toLowerCase() : "";
+  const isIraNingrum = memberName.includes("ira ningrum");
+  const isThataDebora = memberName.includes("thata debora");
   const visibleRole = isIraNingrum
     ? "Government & Regional Autonomy Expert"
-    : [member.role, member.expertise].find(
-        (value) => typeof value === "string" && value.trim() && value.trim() !== "-",
-      );
+    : isThataDebora
+      ? "Supervisor"
+      : [member.role, member.expertise].find(
+          (value) => typeof value === "string" && value.trim() && value.trim() !== "-",
+        );
   // Prevent scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
