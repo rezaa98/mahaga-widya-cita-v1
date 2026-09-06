@@ -230,9 +230,9 @@ export default async function Footer({ locale = "id" }: { locale?: string }) {
             >
               {isEn ? "Company" : "Perusahaan"}
             </h4>
-            <ul style={{ listStyle: "none" }}>
+            <ul className="footer-link-list" style={{ listStyle: "none" }}>
               {displayCompanyLinks.map((link: any) => (
-                <li key={link.label} style={{ marginBottom: "0.625rem" }}>
+                <li key={link.label} className="footer-list-item">
                   <Link
                     href={link.url && link.url.startsWith("/") ? `/${locale}${link.url}` : link.url || "#"}
                     className="footer-link"
@@ -260,9 +260,9 @@ export default async function Footer({ locale = "id" }: { locale?: string }) {
             >
               {isEn ? "Services" : "Layanan"}
             </h4>
-            <ul style={{ listStyle: "none" }}>
+            <ul className="footer-link-list" style={{ listStyle: "none" }}>
               {displayServicesLinks.map((link: any) => (
-                <li key={link.label} style={{ marginBottom: "0.625rem" }}>
+                <li key={link.label} className="footer-list-item">
                   <Link
                     href={link.url && link.url.startsWith("/") ? `/${locale}${link.url}` : link.url || "#"}
                     className="footer-link"

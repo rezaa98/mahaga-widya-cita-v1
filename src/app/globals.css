@@ -747,6 +747,9 @@ label {
 .footer-link:hover {
   color: white;
 }
+.footer-list-item {
+  margin-bottom: 0.625rem;
+}
 
 .footer-link-muted {
   color: rgba(255, 255, 255, 0.45);
@@ -983,6 +986,21 @@ label {
   /* ── Footer: 1 column ── */
   .footer-grid {
     grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  .footer-link-list {
+    display: grid;
+    gap: 0.125rem;
+  }
+
+  .footer-list-item {
+    margin-bottom: 0;
+  }
+
+  .footer-link {
+    min-height: 38px;
+    line-height: 1.45;
   }
 
   /* ── Artikel page header ── */
