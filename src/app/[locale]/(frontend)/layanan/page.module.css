@@ -360,6 +360,13 @@
   }
   .ctaCard > a {
     width: 100%;
+    min-width: 0;
+    white-space: normal;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+  .ctaCard > div {
+    min-width: 0;
   }
 }
 @media (prefers-reduced-motion: reduce) {
