@@ -236,7 +236,7 @@ export default function TeamMemberCard({ member, locale = "id" }: { member: any;
               animation: "slideUp 0.3s ease-out",
             }}
             onClick={(e) => e.stopPropagation()}
-            className="flex-col md:flex-row"
+            className="team-member-dialog"
           >
             {/* Close Button */}
             <button
@@ -266,7 +266,10 @@ export default function TeamMemberCard({ member, locale = "id" }: { member: any;
             </button>
 
             {/* Modal Content - Left side */}
-            <div style={{ padding: "3.5rem 3rem", flex: 1, overflowY: "auto", maxHeight: "90vh" }}>
+            <div
+              className="team-member-dialog-copy"
+              style={{ padding: "3.5rem 3rem", flex: 1, overflowY: "auto", maxHeight: "90vh" }}
+            >
               <h2
                 id={`team-member-${member.id || member.initials}`}
                 style={{
@@ -325,7 +328,7 @@ export default function TeamMemberCard({ member, locale = "id" }: { member: any;
                 justifyContent: "center",
                 borderLeft: "1px solid var(--color-neutral-200)",
               }}
-              className="hidden md:flex"
+              className="team-member-dialog-visual"
             >
               <div
                 style={{
