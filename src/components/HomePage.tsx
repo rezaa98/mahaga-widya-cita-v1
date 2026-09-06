@@ -1231,16 +1231,8 @@ export default function HomePage({
               }}
             >
               {plainTextLines(
-                localizedCopy(
-                  berandaData?.cta?.title?.replace(/\\n/g, "\n"),
-                  isEn
-                    ? "Ready to Transform\nYour Organization with Us?"
-                    : "Siap Mentransformasi\nOrganisasi Anda Bersama Kami?",
-                  locale,
-                ),
-                isEn
-                  ? "Ready to Transform\nYour Organization with Us?"
-                  : "Siap Mentransformasi\nOrganisasi Anda Bersama Kami?",
+                isEn ? "Ready to transform with us?" : "Siap bertransformasi bersama kami?",
+                isEn ? "Ready to transform with us?" : "Siap bertransformasi bersama kami?",
               ).map((line, index) => (
                 <Fragment key={`${line}-${index}`}>
                   {index > 0 && <br />}
@@ -1248,23 +1240,6 @@ export default function HomePage({
                 </Fragment>
               ))}
             </h2>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.75)",
-                fontSize: "1.0625rem",
-                marginBottom: "2.5rem",
-                maxWidth: "560px",
-                margin: "0 auto 2.5rem",
-              }}
-            >
-              {localizedCopy(
-                berandaData?.cta?.description,
-                isEn
-                  ? "Organizations trust PT Mahaga Widya Cita for strategic consulting, technology, and human resource development."
-                  : "Organisasi mempercayakan konsultasi strategis, teknologi, dan pengembangan SDM kepada PT Mahaga Widya Cita.",
-                locale,
-              )}
-            </p>
             <div
               className="cta-buttons"
               style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}

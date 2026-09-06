@@ -407,7 +407,7 @@ export const Beranda: GlobalConfig = {
                   type: "text",
                   localized: true,
                   required: true,
-                  defaultValue: "Siap Melakukan Transformasi\nInstansi Anda Bersama Kami?",
+                  defaultValue: "Siap bertransformasi bersama kami?",
                   admin: {
                     description: {
                       id: "Gunakan Enter/baris baru untuk memisahkan baris teks.",

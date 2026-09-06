@@ -602,6 +602,40 @@
     height: 50px;
   }
 }
+@media (min-width: 769px) and (max-width: 1024px) {
+  .heroVisual {
+    min-height: 440px;
+  }
+  .visualCardMain {
+    left: 1.25rem;
+    right: 1.25rem;
+    top: 6.25rem;
+  }
+  .visualCardMain strong {
+    font-size: 1.05rem;
+    line-height: 1.35;
+  }
+  .visualCardTop {
+    right: 1.25rem;
+    top: 1.5rem;
+  }
+  .visualCardBottom {
+    left: 1.25rem;
+    top: 16.75rem;
+    bottom: auto;
+  }
+  .visualCaption {
+    left: 1.25rem;
+    right: 1.25rem;
+    bottom: 1.25rem;
+  }
+}
+@media (min-width: 1025px) and (max-width: 1199px) {
+  .visualCardBottom {
+    top: 17.5rem;
+    bottom: auto;
+  }
+}
 @media (max-width: 480px) {
   .heroActions {
     align-items: stretch;
@@ -612,18 +646,32 @@
     width: 100%;
   }
   .heroVisual {
-    min-height: 290px;
+    min-height: 420px;
   }
   .visualCardMain {
-    left: 6%;
-    right: 6%;
+    left: 1.25rem;
+    right: 1.25rem;
+    top: 7.25rem;
+    padding: 0.9rem;
+  }
+  .visualCardMain strong {
+    font-size: 1.05rem;
+    line-height: 1.35;
+    margin-top: 0.35rem;
   }
   .visualCardTop {
-    right: 5%;
+    right: 1.25rem;
+    top: 1.5rem;
   }
   .visualCardBottom {
-    left: 5%;
-    bottom: 7.25rem;
+    left: 1.25rem;
+    bottom: 7rem;
+  }
+  .visualCaption {
+    left: 1.25rem;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    min-height: 4.5rem;
   }
   .sectionHeading {
     margin-bottom: 2rem;

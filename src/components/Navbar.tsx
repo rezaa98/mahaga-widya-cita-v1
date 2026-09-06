@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import Link, { useLinkStatus } from "next/link";
 import Image from "next/image";
 import { usePathname, useParams, useRouter } from "next/navigation";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import MobileNavigation from "./MobileNavigation";
 import { CORPORATE_SERVICE_SLUGS, selectCorporateServices } from "@/data/serviceCatalog";
 
 const defaultNavLinksId = [
@@ -103,7 +104,6 @@ export default function Navbar() {
   const locale = (params?.locale as string) || "id";
   const [links, setLinks] = useState<any[]>(locale === "en" ? defaultNavLinksEn : defaultNavLinksId);
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [langDropdown, setLangDropdown] = useState(false);
 
@@ -219,6 +219,7 @@ export default function Navbar() {
       <nav className={`navbar ${shouldBeSolid ? "scrolled" : "transparent"}`} style={{ padding: "0" }}>
         <div className="container">
           <div
+            className="navbar-row"
             style={{
               display: "flex",
               alignItems: "center",
@@ -234,7 +235,6 @@ export default function Navbar() {
               className="home-logo-link"
               aria-label={locale === "en" ? "Back to home" : "Kembali ke beranda"}
               onNavigate={() => {
-                setMobileOpen(false);
                 setOpenDropdown(null);
                 if (pathname === `/${locale}` || pathname === `/${locale}/`) {
                   window.scrollTo({ top: 0, behavior: "instant" });
@@ -483,88 +483,19 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Mobile Hamburger */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="mobile-nav-toggle"
-              style={{
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                color: shouldBeSolid ? "var(--color-primary-900)" : "white",
-                padding: "0.375rem",
-                minWidth: "44px",
-                minHeight: "44px",
-                alignItems: "center",
-                justifyContent: "center",
-                display: "none",
-              }}
-              aria-label="Toggle mobile menu"
-            >
-              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            <MobileNavigation
+              links={links}
+              locale={locale}
+              pathname={pathname}
+              solid={shouldBeSolid}
+              onLanguageChange={switchLanguage}
+            />
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {mobileOpen && (
-          <div
-            style={{
-              background: "white",
-              borderTop: "1px solid var(--color-neutral-100)",
-              padding: "1rem 0",
-              maxHeight: "80vh",
-              overflowY: "auto",
-            }}
-          >
-            <div className="container">
-              {links.map((link) => (
-                <div key={link.label}>
-                  <Link
-                    href={link.href && link.href.startsWith("/") ? `/${locale}${link.href}` : link.href || "#"}
-                    onClick={() => setMobileOpen(false)}
-                    style={{
-                      display: "block",
-                      padding: "0.75rem 0",
-                      fontWeight: "600",
-                      fontSize: "0.9375rem",
-                      color: "var(--color-neutral-800)",
-                      borderBottom: "1px solid var(--color-neutral-100)",
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    }}
-                  >
-                    {link.label}
-                  </Link>
-                  {link.children?.map((child: any) => (
-                    <Link
-                      key={child.label}
-                      href={child.href && child.href.startsWith("/") ? `/${locale}${child.href}` : child.href || "#"}
-                      onClick={() => setMobileOpen(false)}
-                      style={{
-                        display: "block",
-                        padding: "0.5rem 1rem",
-                        fontSize: "0.875rem",
-                        color: "var(--color-primary-600)",
-                        borderBottom: "1px solid var(--color-neutral-50)",
-                      }}
-                    >
-                      → {child.label}
-                    </Link>
-                  ))}
-                </div>
-              ))}
-              <div style={{ display: "flex", gap: "0.75rem", marginTop: "1.25rem" }}>
-                <Link href="/admin" className="btn btn-secondary" style={{ flex: 1, justifyContent: "center" }}>
-                  {locale === "en" ? "Login" : "Masuk"}
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
       </nav>
 
       <style jsx>{`
-        @media (max-width: 1024px) {
+        @media (max-width: 1199px) {
           .desktop-nav {
             display: none !important;
           }

@@ -178,6 +178,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
           />
 
           <div
+            className="article-detail-card"
             style={{
               backgroundColor: "#fff",
               padding: "40px",
@@ -200,11 +201,15 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
               {categoryName}
             </span>
 
-            <h1 style={{ color: "#1a2b4c", marginBottom: "1.5rem", fontSize: "2.5rem", lineHeight: 1.2 }}>
+            <h1
+              className="article-detail-title"
+              style={{ color: "#1a2b4c", marginBottom: "1.5rem", fontSize: "2.5rem", lineHeight: 1.2 }}
+            >
               {article.title}
             </h1>
 
             <div
+              className="article-detail-meta"
               style={{
                 display: "flex",
                 gap: "2rem",
@@ -235,6 +240,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
 
             {articleImage && (
               <div
+                className="article-detail-cover"
                 style={{
                   position: "relative",
                   width: "100%",
@@ -370,7 +376,14 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
           {relatedDocs.length > 0 && (
             <div style={{ marginTop: "4rem" }}>
               <div
-                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem" }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: "2rem",
+                  flexWrap: "wrap",
+                  gap: "1rem",
+                }}
               >
                 <h3 style={{ fontSize: "1.5rem", color: "#1a2b4c", fontWeight: 700, margin: 0 }}>{copy.related}</h3>
                 <Link
