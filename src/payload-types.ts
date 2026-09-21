@@ -278,11 +278,11 @@ export interface Article {
     [k: string]: unknown;
   };
   /**
-   * Digunakan pada card artikel, hasil pencarian, dan metadata SEO.
+   * 💡 Opsional — Bila dikosongkan, sistem akan otomatis mengambil kalimat pembuka naskah Anda untuk cuplikan di Google dan kartu berita.
    */
   excerpt?: string | null;
   /**
-   * Upload gambar baru atau pilih dari Media Library. Gambar ini digunakan sebagai thumbnail card dan banner utama artikel.
+   * 💡 Opsional — Rekomendasi: Lanskap 16:9 (1200 × 675 px). Jika Anda mengunggah Galeri Dokumentasi di bawah, foto pertama otomatis dijadikan sampul bila bagian ini tidak dipilih.
    */
   featuredImage?: (number | null) | Media;
   featuredImageCaption?: string | null;
@@ -304,6 +304,9 @@ export interface Article {
    * Dipertahankan sementara untuk artikel lama. Gunakan “Gambar Utama Artikel” untuk konten baru.
    */
   imageUrl?: string | null;
+  /**
+   * 💡 Otomatis dibuat dari judul artikel (contoh: 'penerapan-ai-dalam-layanan'). Anda tidak perlu mengubah ini kecuali menginginkan alamat tautan khusus.
+   */
   slug?: string | null;
   author?: (number | null) | User;
   category?: (number | null) | Category;
@@ -537,8 +540,14 @@ export interface Service {
  */
 export interface TeamMember {
   id: number;
+  /**
+   * 💡 Recommended: Formal portrait photo with 3:4 or 1:1 ratio and clean background.
+   */
   photo?: (number | null) | Media;
   name: string;
+  /**
+   * 💡 Automatically generated from initials. Displayed as avatar if photo is not yet uploaded.
+   */
   initials: string;
   bio?: string | null;
   category: 'management' | 'expert';

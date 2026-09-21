@@ -443,6 +443,28 @@ export const LocaleDocumentControls: React.FC = () => {
           </div>
 
           <div className="mwc-document-locale__right">
+            {/* View on live web for Globals (Beranda, Tentang Kami, Kontak) */}
+            {globalSlug && (
+              <a
+                href={
+                  globalSlug === "tentang-kami"
+                    ? `/${locale}/tentang-kami`
+                    : globalSlug === "kontak"
+                      ? `/${locale}/kontak`
+                      : `/${locale}`
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="mwc-document-locale__switch-link"
+                title={isEn ? "View page on live website" : "Lihat halaman ini di website"}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: 16 }}>
+                  visibility
+                </span>
+                <span>{isEn ? "View on Web" : "Lihat di Web"}</span>
+              </a>
+            )}
+
             {/* Quick Switch between ID and EN */}
             <a
               href={withLocale(

@@ -13,16 +13,63 @@ import {
 const EDITOR_STATUSES = ["draft", "in_review", "revision_requested"];
 const REVIEWER_STATUSES = ["in_review", "revision_requested", "approved"];
 
+function extractPlainTextFromLexical(lexical: any): string {
+  if (!lexical) return "";
+  const texts: string[] = [];
+  const walk = (node: any) => {
+    if (!node) return;
+    if (typeof node.text === "string" && node.text.trim()) {
+      texts.push(node.text.trim());
+    }
+    if (Array.isArray(node.children)) {
+      node.children.forEach(walk);
+    }
+  };
+  walk(lexical.root || lexical);
+  return texts.join(" ").trim();
+}
+
 /**
  * Collection access determines which documents a role may open. This hook
  * protects the status transition itself, including requests made outside the
  * admin UI, so an editor cannot publish via a handcrafted API request.
+ * It also applies smart auto-fill defaults for excerpt and featured image.
  */
 function guardArticleStatusTransition({ data, originalDoc, operation, req }: any) {
   // The translation job mirrors an already-authorized document into the other
   // locale. It must not be treated as a human editorial status transition.
   if (req.context?.skipAutoTranslate) {
     return data;
+  }
+
+  // Smart Auto-fill: Excerpt and Featured Image defaults for beginner friendliness
+  if (data) {
+    const currentLocale = req?.locale || "id";
+    const rawExcerpt =
+      typeof data.excerpt === "string"
+        ? data.excerpt
+        : data.excerpt && typeof data.excerpt === "object"
+          ? data.excerpt[currentLocale]
+          : null;
+
+    if (!rawExcerpt || !String(rawExcerpt).trim()) {
+      const plainText = extractPlainTextFromLexical(data.content);
+      if (plainText) {
+        const snippet = plainText.length > 160 ? plainText.slice(0, 157).replace(/\s+\S*$/, "") + "..." : plainText;
+        if (typeof data.excerpt === "object" && data.excerpt !== null) {
+          data.excerpt[currentLocale] = snippet;
+        } else {
+          data.excerpt = snippet;
+        }
+      }
+    }
+
+    if (!data.featuredImage && Array.isArray(data.gallery) && data.gallery.length > 0) {
+      const firstImg = data.gallery[0]?.image;
+      if (firstImg) {
+        data.featuredImage = firstImg;
+      }
+    }
   }
 
   if (operation === "create" && req.user?.id && !canPublishContent({ req })) {
@@ -143,9 +190,12 @@ export const Articles: CollectionConfig = {
               type: "textarea",
               localized: true,
               maxLength: 320,
-              label: "Ringkasan Artikel",
+              label: "Ringkasan Artikel (Opsional)",
               admin: {
-                description: "Digunakan pada card artikel, hasil pencarian, dan metadata SEO.",
+                placeholder:
+                  "Tulis 1–2 kalimat ringkasan menarik, atau biarkan kosong agar sistem mengisinya otomatis dari paragraf pertama...",
+                description:
+                  "💡 Opsional — Bila dikosongkan, sistem akan otomatis mengambil kalimat pembuka naskah Anda untuk cuplikan di Google dan kartu berita.",
               },
               access: {
                 update: canManageContent,
@@ -164,10 +214,10 @@ export const Articles: CollectionConfig = {
               name: "featuredImage",
               type: "upload",
               relationTo: "media",
-              label: "Gambar Utama Artikel (Sampul)",
+              label: "Gambar Utama Artikel / Sampul (Opsional)",
               admin: {
                 description:
-                  "Upload gambar baru atau pilih dari Media Library. Gambar ini digunakan sebagai thumbnail card dan banner utama artikel.",
+                  "💡 Opsional — Rekomendasi: Lanskap 16:9 (1200 × 675 px). Jika Anda mengunggah Galeri Dokumentasi di bawah, foto pertama otomatis dijadikan sampul bila bagian ini tidak dipilih.",
               },
               access: {
                 update: canManageContent,
@@ -251,8 +301,11 @@ export const Articles: CollectionConfig = {
       name: "slug",
       type: "text",
       unique: true,
+      label: "Tautan URL Halaman (Otomatis)",
       admin: {
         position: "sidebar",
+        description:
+          "💡 Otomatis dibuat dari judul artikel (contoh: 'penerapan-ai-dalam-layanan'). Anda tidak perlu mengubah ini kecuali menginginkan alamat tautan khusus.",
       },
       access: {
         update: canManageContent,

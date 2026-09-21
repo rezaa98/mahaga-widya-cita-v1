@@ -37,6 +37,12 @@ export const TeamMembers: CollectionConfig = {
               type: "upload",
               relationTo: "media",
               label: { id: "Foto Profil", en: "Profile Photo" },
+              admin: {
+                description: {
+                  id: "💡 Rekomendasi: Pas foto formal rasio 3:4 atau 1:1, latar belakang bersih atau transparan.",
+                  en: "💡 Recommended: Formal portrait photo with 3:4 or 1:1 ratio and clean background.",
+                },
+              },
             },
             {
               name: "name",
@@ -49,8 +55,44 @@ export const TeamMembers: CollectionConfig = {
               name: "initials",
               type: "text",
               required: true,
-              label: { id: "Inisial (Maks 3 huruf)", en: "Initials (Max. 3 characters)" },
+              label: { id: "Inisial (Otomatis / Maks 3 huruf)", en: "Initials (Auto / Max. 3 characters)" },
               maxLength: 3,
+              admin: {
+                placeholder: "Otomatis dari nama (misal: AF)",
+                description: {
+                  id: "💡 Dibuat otomatis dari huruf depan nama. Tampil sebagai avatar bila foto belum diunggah.",
+                  en: "💡 Automatically generated from initials. Displayed as avatar if photo is not yet uploaded.",
+                },
+              },
+              hooks: {
+                beforeValidate: [
+                  ({ value, data }) => {
+                    if (value && String(value).trim()) {
+                      return String(value).trim().toUpperCase().slice(0, 3);
+                    }
+                    const rawName =
+                      typeof data?.name === "string"
+                        ? data.name
+                        : typeof data?.name === "object" && data?.name
+                          ? (data.name as any).id || (data.name as any).en
+                          : "";
+                    if (rawName) {
+                      const words = String(rawName)
+                        .replace(/^(Dr\.|Prof\.|Ir\.|H\.|Hj\.)\s+/gi, "")
+                        .trim()
+                        .split(/\s+/);
+                      const inits = words
+                        .map((w) => w[0])
+                        .filter(Boolean)
+                        .join("")
+                        .toUpperCase()
+                        .slice(0, 3);
+                      return inits || "MWC";
+                    }
+                    return value || "MWC";
+                  },
+                ],
+              },
             },
             {
               name: "bio",
