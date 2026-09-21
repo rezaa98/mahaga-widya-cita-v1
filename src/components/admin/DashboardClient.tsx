@@ -5,6 +5,22 @@ import { useAuth } from "@payloadcms/ui";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { ImportJournalModal } from "./ImportJournalModal";
 import { useAdminLanguage, useContentLocale, withLocale } from "./adminLocale";
+import {
+  Home,
+  Building2,
+  PhoneCall,
+  Users,
+  Briefcase,
+  PenSquare,
+  ArrowRight,
+  ExternalLink,
+  FileText,
+  BookOpen,
+  FileCheck,
+  UploadCloud,
+  Mail,
+  Link as LinkIcon,
+} from "lucide-react";
 
 type Stats = {
   articles: { total: number; published: number; draft: number };
@@ -313,34 +329,34 @@ export const DashboardClient: React.FC = () => {
       [
         {
           href: withLocale("/admin/collections/articles/create", locale),
-          icon: "post_add",
+          icon: <FileText size={16} />,
           label: isEn ? "New Article" : "Artikel Baru",
           primary: true,
           visible: canCreateContent,
         },
         {
           href: withLocale("/admin/collections/journals/create", locale),
-          icon: "note_add",
+          icon: <BookOpen size={16} />,
           label: isEn ? "New Journal" : "Jurnal Baru",
           primary: true,
           visible: canCreateContent,
         },
         {
           href: withLocale("/admin/collections/articles?where[status][equals]=in_review", locale),
-          icon: "rate_review",
+          icon: <FileCheck size={16} />,
           label: isEn ? "Review Content" : "Review Konten",
           primary: true,
           visible: canReviewContent,
         },
         {
           href: withLocale("/admin/collections/media/create", locale),
-          icon: "upload_file",
+          icon: <UploadCloud size={16} />,
           label: "Upload Media",
           visible: canManageMedia,
         },
         {
           href: withLocale("/admin/collections/contact-submissions", locale),
-          icon: "mail",
+          icon: <Mail size={16} />,
           label: isEn ? "Inbox Messages" : "Pesan Masuk",
           visible: ["admin", "super_admin"].includes(role),
         },
@@ -412,7 +428,7 @@ export const DashboardClient: React.FC = () => {
             <p>{subtitle}</p>
           </div>
           <a className="mwc-dashboard__site-link" href={`/${locale}`} target="_blank" rel="noreferrer">
-            <Icon>open_in_new</Icon>
+            <ExternalLink size={15} />
             {isEn ? "View website" : "Lihat website"}
           </a>
         </header>
@@ -424,7 +440,7 @@ export const DashboardClient: React.FC = () => {
               href={item.href}
               key={item.href}
             >
-              <Icon>{item.icon}</Icon>
+              {item.icon}
               {item.label}
             </a>
           ))}
@@ -435,7 +451,7 @@ export const DashboardClient: React.FC = () => {
             style={{ background: "#7e22ce", borderColor: "#7e22ce", cursor: "pointer" }}
             hidden={!canCreateContent}
           >
-            <Icon>link</Icon>
+            <LinkIcon size={15} />
             {isEn ? "Import Journal (OJS Link)" : "Impor Jurnal (Link OJS)"}
           </button>
         </nav>
@@ -463,7 +479,7 @@ export const DashboardClient: React.FC = () => {
             <a href={withLocale("/admin/globals/beranda", locale)} className="mwc-hub-card mwc-hub-card--blue">
               <div className="mwc-hub-card__top">
                 <span className="mwc-hub-card__icon">
-                  <Icon>home</Icon>
+                  <Home size={20} strokeWidth={2.2} />
                 </span>
                 <span className="mwc-hub-card__badge">{isEn ? "Landing Page" : "Halaman Utama"}</span>
               </div>
@@ -475,7 +491,7 @@ export const DashboardClient: React.FC = () => {
               </p>
               <div className="mwc-hub-card__action">
                 <span>{isEn ? "Edit Homepage" : "Edit Tampilan Beranda"}</span>
-                <Icon>arrow_forward</Icon>
+                <ArrowRight size={15} strokeWidth={2.5} />
               </div>
             </a>
 
@@ -483,7 +499,7 @@ export const DashboardClient: React.FC = () => {
             <a href={withLocale("/admin/globals/tentang-kami", locale)} className="mwc-hub-card mwc-hub-card--indigo">
               <div className="mwc-hub-card__top">
                 <span className="mwc-hub-card__icon">
-                  <Icon>domain</Icon>
+                  <Building2 size={20} strokeWidth={2.2} />
                 </span>
                 <span className="mwc-hub-card__badge">{isEn ? "About Us" : "Profil Perusahaan"}</span>
               </div>
@@ -495,7 +511,7 @@ export const DashboardClient: React.FC = () => {
               </p>
               <div className="mwc-hub-card__action">
                 <span>{isEn ? "Edit Profile" : "Edit Tentang Kami"}</span>
-                <Icon>arrow_forward</Icon>
+                <ArrowRight size={15} strokeWidth={2.5} />
               </div>
             </a>
 
@@ -503,7 +519,7 @@ export const DashboardClient: React.FC = () => {
             <a href={withLocale("/admin/globals/kontak", locale)} className="mwc-hub-card mwc-hub-card--amber">
               <div className="mwc-hub-card__top">
                 <span className="mwc-hub-card__icon">
-                  <Icon>contact_phone</Icon>
+                  <PhoneCall size={20} strokeWidth={2.2} />
                 </span>
                 <span className="mwc-hub-card__badge">{isEn ? "Contact" : "Informasi Kontak"}</span>
               </div>
@@ -515,7 +531,7 @@ export const DashboardClient: React.FC = () => {
               </p>
               <div className="mwc-hub-card__action">
                 <span>{isEn ? "Edit Contact" : "Ubah Kontak & Alamat"}</span>
-                <Icon>arrow_forward</Icon>
+                <ArrowRight size={15} strokeWidth={2.5} />
               </div>
             </a>
 
@@ -526,7 +542,7 @@ export const DashboardClient: React.FC = () => {
             >
               <div className="mwc-hub-card__top">
                 <span className="mwc-hub-card__icon">
-                  <Icon>groups</Icon>
+                  <Users size={20} strokeWidth={2.2} />
                 </span>
                 <span className="mwc-hub-card__badge">{isEn ? "Team" : "Profil Tim"}</span>
               </div>
@@ -538,7 +554,7 @@ export const DashboardClient: React.FC = () => {
               </p>
               <div className="mwc-hub-card__action">
                 <span>{isEn ? "Manage Team" : "Kelola Anggota Tim"}</span>
-                <Icon>arrow_forward</Icon>
+                <ArrowRight size={15} strokeWidth={2.5} />
               </div>
             </a>
 
@@ -546,7 +562,7 @@ export const DashboardClient: React.FC = () => {
             <a href={withLocale("/admin/collections/services", locale)} className="mwc-hub-card mwc-hub-card--purple">
               <div className="mwc-hub-card__top">
                 <span className="mwc-hub-card__icon">
-                  <Icon>design_services</Icon>
+                  <Briefcase size={20} strokeWidth={2.2} />
                 </span>
                 <span className="mwc-hub-card__badge">{isEn ? "Services" : "Layanan"}</span>
               </div>
@@ -558,7 +574,7 @@ export const DashboardClient: React.FC = () => {
               </p>
               <div className="mwc-hub-card__action">
                 <span>{isEn ? "Manage Services" : "Kelola Layanan"}</span>
-                <Icon>arrow_forward</Icon>
+                <ArrowRight size={15} strokeWidth={2.5} />
               </div>
             </a>
 
@@ -569,7 +585,7 @@ export const DashboardClient: React.FC = () => {
             >
               <div className="mwc-hub-card__top">
                 <span className="mwc-hub-card__icon">
-                  <Icon>post_add</Icon>
+                  <PenSquare size={20} strokeWidth={2.2} />
                 </span>
                 <span className="mwc-hub-card__badge">{isEn ? "Articles" : "Publikasi Baru"}</span>
               </div>
@@ -581,7 +597,7 @@ export const DashboardClient: React.FC = () => {
               </p>
               <div className="mwc-hub-card__action">
                 <span>{isEn ? "Write New Article" : "Tulis Artikel Baru"}</span>
-                <Icon>arrow_forward</Icon>
+                <ArrowRight size={15} strokeWidth={2.5} />
               </div>
             </a>
           </div>
