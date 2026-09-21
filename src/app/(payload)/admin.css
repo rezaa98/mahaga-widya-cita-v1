@@ -455,7 +455,24 @@ html[data-theme="dark"] {
   --admin-focus-ring: 0 0 0 2px #93c5fd;
 }
 
-/* --- Custom List Cell: Article --- */
+/* --- Custom List Cell: Article & Journal --- */
+.mwc-cell-article,
+.mwc-cell-journal {
+  transition: opacity 0.15s ease;
+}
+
+.mwc-cell-article:hover .mwc-cell-article__title,
+.mwc-cell-journal:hover .mwc-cell-journal__title {
+  color: #1d4ed8 !important;
+  text-decoration: underline;
+}
+
+.mwc-cell-article:hover .mwc-cell-article__thumb,
+.mwc-cell-journal:hover .mwc-cell-journal__thumb {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgb(0 0 0 / 12%);
+}
+
 .mwc-cell-article__category {
   display: inline-block;
   font-size: 11px;
