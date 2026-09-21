@@ -110,23 +110,28 @@ export const EditorActionBar: React.FC = () => {
       <div className="mwc-editor-action-bar__actions">
         <a
           className="mwc-editor-action-bar__preview"
-          aria-disabled={!docInfo?.id || currentStatus !== "published"}
+          aria-disabled={!docInfo?.id}
           href={
-            docInfo?.id && currentStatus === "published"
-              ? `/${locale}/${previewSection}/${String(docInfo.data?.slug || docInfo.id)}`
+            docInfo?.id
+              ? `/${locale}/${previewSection}/${String(docInfo.data?.slug || docInfo.id)}?preview=1`
               : undefined
           }
           rel="noreferrer"
           target="_blank"
+          title={
+            !docInfo?.id
+              ? isEn
+                ? "Save draft first to preview"
+                : "Simpan draf terlebih dahulu untuk melihat pratinjau"
+              : undefined
+          }
         >
           <span className="material-symbols-outlined" aria-hidden style={{ fontSize: 16 }}>
             visibility
           </span>
           {currentStatus === "published"
-            ? `${isEn ? "Preview" : "Preview"} ${locale.toUpperCase()}`
-            : isEn
-              ? "Preview after publishing"
-              : "Preview setelah terbit"}
+            ? `${isEn ? "View on Web" : "Lihat di Web"} (${locale.toUpperCase()})`
+            : `${isEn ? "Preview Draft" : "Pratinjau Draf"} (${locale.toUpperCase()})`}
         </a>
         {availableActions.map((action) => (
           <button

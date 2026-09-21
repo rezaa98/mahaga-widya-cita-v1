@@ -2,7 +2,19 @@
 import React, { useState, useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
-import { Home, Layers, PenTool, Users, Building, X, PlayCircle, ArrowRight, BookOpen } from "lucide-react";
+import {
+  Home,
+  Layers,
+  PenTool,
+  Users,
+  Building,
+  X,
+  PlayCircle,
+  ArrowRight,
+  BookOpen,
+  Camera,
+  Phone,
+} from "lucide-react";
 
 interface Props {
   isOpen: boolean;
@@ -41,25 +53,16 @@ export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
       id: "beranda",
       icon: Home,
       title: "Cara Edit Beranda",
-      desc: "Panduan mengelola teks Hero, Statistik, dan Mitra.",
+      desc: "Panduan mengelola teks Hero, Statistik, dan Logo Mitra.",
       path: "/admin/globals/beranda",
       color: "#3b82f6",
       bgLight: "#eff6ff",
     },
     {
-      id: "layanan",
-      icon: Layers,
-      title: "Cara Tambah Layanan",
-      desc: "Pelajari cara menambah dan mengedit Layanan baru.",
-      path: "/admin/collections/services",
-      color: "#8b5cf6",
-      bgLight: "#f5f3ff",
-    },
-    {
       id: "artikel",
-      icon: PenTool,
-      title: "Cara Menulis Artikel",
-      desc: "Panduan membuat, menerjemahkan, dan mempublikasikan Artikel.",
+      icon: Camera,
+      title: "Tulis Artikel & Galeri Foto",
+      desc: "Panduan membuat artikel, upload banyak foto kegiatan, dan preview draf.",
       path: "/admin/collections/articles/create",
       color: "#10b981",
       bgLight: "#ecfdf5",
@@ -67,20 +70,38 @@ export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
     {
       id: "tim",
       icon: Users,
-      title: "Cara Mengelola Tim",
-      desc: "Cara menambah anggota tim atau profil direksi.",
-      path: "/admin/globals/tentang-kami", // Tim currently managed in Tentang Kami
+      title: "Cara Mengelola Tim Ahli",
+      desc: "Cara menambah anggota tim ahli, direksi, foto profil, dan keahlian.",
+      path: "/admin/collections/team-members",
       color: "#f59e0b",
       bgLight: "#fffbeb",
+    },
+    {
+      id: "layanan",
+      icon: Layers,
+      title: "Cara Kelola Layanan",
+      desc: "Pelajari cara menambah dan mengedit portofolio layanan.",
+      path: "/admin/collections/services",
+      color: "#8b5cf6",
+      bgLight: "#f5f3ff",
     },
     {
       id: "tentangkami",
       icon: Building,
       title: "Cara Edit Tentang Kami",
-      desc: "Panduan mengelola Visi, Misi, dan profil perusahaan.",
+      desc: "Panduan mengelola Visi, Misi, profil perusahaan, dan pesan CEO.",
       path: "/admin/globals/tentang-kami",
       color: "#ec4899",
       bgLight: "#fdf2f8",
+    },
+    {
+      id: "kontak",
+      icon: Phone,
+      title: "Cara Ubah Kontak & Lokasi",
+      desc: "Panduan mengganti nomor WhatsApp, email kantor, dan Google Maps.",
+      path: "/admin/globals/kontak",
+      color: "#0284c7",
+      bgLight: "#f0f9ff",
     },
   ];
 

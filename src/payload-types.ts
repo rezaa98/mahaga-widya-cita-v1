@@ -259,6 +259,9 @@ export interface Category {
 export interface Article {
   id: number;
   title: string;
+  /**
+   * Tulis naskah artikel Anda di sini. Ingin menyisipkan foto di sela-sela paragraf? Klik ikon media/gambar pada toolbar editor atau ketik '/' lalu pilih Gambar.
+   */
   content: {
     root: {
       type: string;
@@ -279,11 +282,24 @@ export interface Article {
    */
   excerpt?: string | null;
   /**
-   * Upload gambar baru atau pilih gambar dari Media Library. Gambar ini digunakan sebagai thumbnail dan hero artikel.
+   * Upload gambar baru atau pilih dari Media Library. Gambar ini digunakan sebagai thumbnail card dan banner utama artikel.
    */
   featuredImage?: (number | null) | Media;
   featuredImageCaption?: string | null;
   featuredImageCredit?: string | null;
+  /**
+   * Opsional. Unggah beberapa foto dokumentasi kegiatan atau foto pelengkap artikel. Semua foto ini akan otomatis ditampilkan rapi di bagian bawah artikel.
+   */
+  gallery?:
+    | {
+        image: number | Media;
+        /**
+         * Keterangan singkat kegiatan atau momen pada foto.
+         */
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   /**
    * Dipertahankan sementara untuk artikel lama. Gunakan “Gambar Utama Artikel” untuk konten baru.
    */
@@ -933,6 +949,13 @@ export interface ArticlesSelect<T extends boolean = true> {
   featuredImage?: T;
   featuredImageCaption?: T;
   featuredImageCredit?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
+        id?: T;
+      };
   imageUrl?: T;
   slug?: T;
   author?: T;

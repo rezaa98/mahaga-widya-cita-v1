@@ -50,8 +50,8 @@ export const startInteractiveTour = (pathname: string) => {
       {
         element: 'input[name="title"]',
         popover: {
-          title: "Judul Artikel",
-          description: "Tulis judul artikel Anda di sini.",
+          title: "1. Judul Artikel",
+          description: "Tulis judul artikel atau rilis kegiatan Anda di sini.",
           side: "bottom",
           align: "start",
         },
@@ -59,18 +59,28 @@ export const startInteractiveTour = (pathname: string) => {
       {
         element: 'button[title="Locale"]',
         popover: {
-          title: "Pilih Bahasa",
+          title: "2. Bahasa Konten",
           description:
-            "Penting! Gunakan dropdown ini untuk berpindah ke bahasa Indonesia atau Inggris untuk meninjau hasil terjemahan.",
+            "Secara default Anda menulis versi Bahasa Indonesia. Setelah disimpan, Anda dapat mengaktifkan terjemahan otomatis ke Bahasa Inggris.",
           side: "left",
+          align: "start",
+        },
+      },
+      {
+        element: ".mwc-editor-action-bar__preview",
+        popover: {
+          title: "3. Pratinjau Draf (Draft Preview)",
+          description:
+            "Sangat aman! Setelah menyimpan draf, Anda dapat mengklik tombol ini untuk melihat tampilan asli artikel di website sebelum dipublikasikan ke umum.",
+          side: "bottom",
           align: "start",
         },
       },
       {
         element: "button#action-save",
         popover: {
-          title: "Simpan / Terbitkan",
-          description: "Setelah selesai, klik tombol ini untuk mempublikasikan artikel Anda.",
+          title: "4. Simpan / Terbitkan",
+          description: "Klik tombol ini untuk menyimpan draf atau mempublikasikan artikel Anda.",
           side: "left",
           align: "start",
         },

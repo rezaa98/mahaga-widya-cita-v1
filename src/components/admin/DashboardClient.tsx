@@ -440,6 +440,152 @@ export const DashboardClient: React.FC = () => {
           </button>
         </nav>
         <ImportJournalModal isOpen={isImportModalOpen} onClose={() => setIsImportModalOpen(false)} isEn={isEn} />
+
+        {/* Pusat Kendali Halaman Website (Beginner-Friendly Page Control Center) */}
+        <section
+          className="mwc-control-hub"
+          aria-label={isEn ? "Website Pages Control Center" : "Pusat Kendali Halaman Website"}
+        >
+          <div className="mwc-control-hub__header">
+            <div>
+              <p className="mwc-eyebrow">{isEn ? "QUICK ACCESS & EDIT" : "AKSES & EDIT MUDAH"}</p>
+              <h2>{isEn ? "Website Page & Content Center" : "Pusat Kendali Halaman & Konten"}</h2>
+              <p className="mwc-control-hub__subtitle">
+                {isEn
+                  ? "Select the page or content you want to edit. All changes can be previewed directly before publishing."
+                  : "Pilih bagian tampilan halaman atau konten yang ingin Anda ubah. Tidak perlu bingung mencari di menu samping."}
+              </p>
+            </div>
+          </div>
+
+          <div className="mwc-control-hub__grid">
+            {/* 1. Beranda */}
+            <a href={withLocale("/admin/globals/beranda", locale)} className="mwc-hub-card mwc-hub-card--blue">
+              <div className="mwc-hub-card__top">
+                <span className="mwc-hub-card__icon">
+                  <Icon>home</Icon>
+                </span>
+                <span className="mwc-hub-card__badge">{isEn ? "Landing Page" : "Halaman Utama"}</span>
+              </div>
+              <h3>{isEn ? "Homepage (Beranda)" : "Halaman Beranda"}</h3>
+              <p>
+                {isEn
+                  ? "Edit banner hero message, statistics, partner logos, and call-to-action."
+                  : "Ubah tulisan banner depan, angka statistik, logo mitra, dan tombol ajakan."}
+              </p>
+              <div className="mwc-hub-card__action">
+                <span>{isEn ? "Edit Homepage" : "Edit Tampilan Beranda"}</span>
+                <Icon>arrow_forward</Icon>
+              </div>
+            </a>
+
+            {/* 2. Tentang Kami */}
+            <a href={withLocale("/admin/globals/tentang-kami", locale)} className="mwc-hub-card mwc-hub-card--indigo">
+              <div className="mwc-hub-card__top">
+                <span className="mwc-hub-card__icon">
+                  <Icon>domain</Icon>
+                </span>
+                <span className="mwc-hub-card__badge">{isEn ? "About Us" : "Profil Perusahaan"}</span>
+              </div>
+              <h3>{isEn ? "About Us & Profile" : "Tentang Kami & Profil"}</h3>
+              <p>
+                {isEn
+                  ? "Update vision, mission, corporate profile, core values, and CEO statement."
+                  : "Kelola visi-misi, sejarah singkat, profil korporat, nilai inti, dan pesan CEO."}
+              </p>
+              <div className="mwc-hub-card__action">
+                <span>{isEn ? "Edit Profile" : "Edit Tentang Kami"}</span>
+                <Icon>arrow_forward</Icon>
+              </div>
+            </a>
+
+            {/* 3. Kontak */}
+            <a href={withLocale("/admin/globals/kontak", locale)} className="mwc-hub-card mwc-hub-card--amber">
+              <div className="mwc-hub-card__top">
+                <span className="mwc-hub-card__icon">
+                  <Icon>contact_phone</Icon>
+                </span>
+                <span className="mwc-hub-card__badge">{isEn ? "Contact" : "Informasi Kontak"}</span>
+              </div>
+              <h3>{isEn ? "Contact & Location" : "Kontak & Lokasi"}</h3>
+              <p>
+                {isEn
+                  ? "Update WhatsApp number, official email, office address, and Google Maps."
+                  : "Ubah nomor WhatsApp, email kantor, alamat gedung, dan peta Google Maps."}
+              </p>
+              <div className="mwc-hub-card__action">
+                <span>{isEn ? "Edit Contact" : "Ubah Kontak & Alamat"}</span>
+                <Icon>arrow_forward</Icon>
+              </div>
+            </a>
+
+            {/* 4. Tim Ahli */}
+            <a
+              href={withLocale("/admin/collections/team-members", locale)}
+              className="mwc-hub-card mwc-hub-card--emerald"
+            >
+              <div className="mwc-hub-card__top">
+                <span className="mwc-hub-card__icon">
+                  <Icon>groups</Icon>
+                </span>
+                <span className="mwc-hub-card__badge">{isEn ? "Team" : "Profil Tim"}</span>
+              </div>
+              <h3>{isEn ? "Expert Team & Board" : "Tim Ahli & Manajemen"}</h3>
+              <p>
+                {isEn
+                  ? "Add or update team profile photos, titles, biographies, and expertise."
+                  : "Tambah atau perbarui foto profil, jabatan, biografi, dan keahlian anggota tim."}
+              </p>
+              <div className="mwc-hub-card__action">
+                <span>{isEn ? "Manage Team" : "Kelola Anggota Tim"}</span>
+                <Icon>arrow_forward</Icon>
+              </div>
+            </a>
+
+            {/* 5. Layanan */}
+            <a href={withLocale("/admin/collections/services", locale)} className="mwc-hub-card mwc-hub-card--purple">
+              <div className="mwc-hub-card__top">
+                <span className="mwc-hub-card__icon">
+                  <Icon>design_services</Icon>
+                </span>
+                <span className="mwc-hub-card__badge">{isEn ? "Services" : "Layanan"}</span>
+              </div>
+              <h3>{isEn ? "Consulting Services" : "Layanan Perusahaan"}</h3>
+              <p>
+                {isEn
+                  ? "Manage consulting areas, features, benefits, and service descriptions."
+                  : "Kelola bidang layanan konsultasi, fitur keunggulan, dan penjelasan layanan."}
+              </p>
+              <div className="mwc-hub-card__action">
+                <span>{isEn ? "Manage Services" : "Kelola Layanan"}</span>
+                <Icon>arrow_forward</Icon>
+              </div>
+            </a>
+
+            {/* 6. Artikel & Galeri Foto */}
+            <a
+              href={withLocale("/admin/collections/articles/create", locale)}
+              className="mwc-hub-card mwc-hub-card--rose"
+            >
+              <div className="mwc-hub-card__top">
+                <span className="mwc-hub-card__icon">
+                  <Icon>post_add</Icon>
+                </span>
+                <span className="mwc-hub-card__badge">{isEn ? "Articles" : "Publikasi Baru"}</span>
+              </div>
+              <h3>{isEn ? "Write Article & Photos" : "Tulis Artikel & Foto"}</h3>
+              <p>
+                {isEn
+                  ? "Create news articles with banner cover and multi-photo documentation gallery."
+                  : "Buat rilis berita lengkap dengan sampul dan album galeri banyak foto kegiatan."}
+              </p>
+              <div className="mwc-hub-card__action">
+                <span>{isEn ? "Write New Article" : "Tulis Artikel Baru"}</span>
+                <Icon>arrow_forward</Icon>
+              </div>
+            </a>
+          </div>
+        </section>
         {error && (
           <section className="mwc-dashboard__error" role="alert">
             <span>

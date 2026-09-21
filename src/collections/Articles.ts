@@ -106,7 +106,7 @@ export const Articles: CollectionConfig = {
           label: "Konten Penulisan",
           admin: {
             description:
-              "Isi judul, ringkasan, dan artikel. Gambar dapat diunggah langsung melalui tombol media di editor.",
+              "Tulis judul, naskah artikel, dan ringkasan. Anda dapat menyisipkan foto langsung di tengah tulisan menggunakan tombol media pada toolbar editor.",
           },
           fields: [
             {
@@ -130,6 +130,10 @@ export const Articles: CollectionConfig = {
               required: true,
               localized: true,
               label: "Isi Artikel",
+              admin: {
+                description:
+                  "Tulis naskah artikel Anda di sini. Ingin menyisipkan foto di sela-sela paragraf? Klik ikon media/gambar pada toolbar editor atau ketik '/' lalu pilih Gambar.",
+              },
               access: {
                 update: canManageContent,
               },
@@ -153,17 +157,17 @@ export const Articles: CollectionConfig = {
           label: "Media",
           admin: {
             description:
-              "Pilih thumbnail dari Media Library. Field URL lama hanya digunakan sebagai fallback untuk artikel yang belum dimigrasikan.",
+              "Atur Gambar Utama (sampul/banner artikel) dan tambahkan Galeri Dokumentasi di bawah jika artikel memiliki banyak foto kegiatan.",
           },
           fields: [
             {
               name: "featuredImage",
               type: "upload",
               relationTo: "media",
-              label: "Gambar Utama Artikel",
+              label: "Gambar Utama Artikel (Sampul)",
               admin: {
                 description:
-                  "Upload gambar baru atau pilih gambar dari Media Library. Gambar ini digunakan sebagai thumbnail dan hero artikel.",
+                  "Upload gambar baru atau pilih dari Media Library. Gambar ini digunakan sebagai thumbnail card dan banner utama artikel.",
               },
               access: {
                 update: canManageContent,
@@ -188,6 +192,40 @@ export const Articles: CollectionConfig = {
               admin: {
                 condition: (_, siblingData) => Boolean(siblingData?.featuredImage),
               },
+              access: {
+                update: canManageContent,
+              },
+            },
+            {
+              name: "gallery",
+              type: "array",
+              label: "Dokumentasi & Galeri Foto Tambahan",
+              labels: {
+                singular: "Foto Dokumentasi",
+                plural: "Daftar Foto Dokumentasi",
+              },
+              admin: {
+                description:
+                  "Opsional. Unggah beberapa foto dokumentasi kegiatan atau foto pelengkap artikel. Semua foto ini akan otomatis ditampilkan rapi di bagian bawah artikel.",
+              },
+              fields: [
+                {
+                  name: "image",
+                  type: "upload",
+                  relationTo: "media",
+                  required: true,
+                  label: "Pilih / Unggah Foto",
+                },
+                {
+                  name: "caption",
+                  type: "text",
+                  localized: true,
+                  label: "Keterangan Foto (Caption)",
+                  admin: {
+                    description: "Keterangan singkat kegiatan atau momen pada foto.",
+                  },
+                },
+              ],
               access: {
                 update: canManageContent,
               },

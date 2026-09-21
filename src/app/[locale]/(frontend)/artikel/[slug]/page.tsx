@@ -6,8 +6,9 @@ import RichTextRenderer from "@/components/RichTextRenderer";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import Link from "next/link";
-import { ArrowLeft, Calendar, User, Share2, Link as LinkIcon, BookOpen, ArrowRight } from "lucide-react";
+import { ArrowLeft, Calendar, User, Share2, Link as LinkIcon, BookOpen, ArrowRight, Camera } from "lucide-react";
 import { IconLinkedin, IconXTwitter } from "@/components/icons/SocialIcons";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import {
@@ -84,8 +85,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
-export default async function ArticleDetailPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+export default async function ArticleDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+  searchParams?: Promise<{ preview?: string }>;
+}) {
   const resolvedParams = await params;
+  const resolvedSearchParams = await (searchParams || Promise.resolve({} as { preview?: string }));
   const isEn = resolvedParams.locale === "en";
   const copy = isEn
     ? {
@@ -97,11 +105,33 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
       }
     : { article: "Artikel", general: "UMUM", related: "Baca Juga", share: "Bagikan Artikel:", viewAll: "Lihat Semua" };
   const payload = await getPayload({ config: configPromise });
+
+  // Check if preview mode is requested
+  let isPreview = false;
+  if (resolvedSearchParams?.preview) {
+    try {
+      const nextHeaders = await headers();
+      const authResult = await payload.auth({ headers: nextHeaders });
+      if (authResult?.user) {
+        isPreview = true;
+      }
+    } catch {
+      // In local development or preview fallback
+      if (process.env.NODE_ENV !== "production") {
+        isPreview = true;
+      }
+    }
+  }
+
+  const whereCondition = isPreview
+    ? { slug: { equals: resolvedParams.slug } }
+    : {
+        and: [{ slug: { equals: resolvedParams.slug } }, { status: { equals: "published" } }],
+      };
+
   const { docs } = await payload.find({
     collection: "articles",
-    where: {
-      and: [{ slug: { equals: resolvedParams.slug } }, { status: { equals: "published" } }],
-    },
+    where: whereCondition,
     locale: resolvedParams.locale as any,
     fallbackLocale: "none" as any,
   });
@@ -111,7 +141,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
   }
 
   const article: any = docs[0];
-  if (isEn && !isLikelyEnglishDocument(article)) {
+  if (isEn && !isLikelyEnglishDocument(article) && !isPreview) {
     notFound();
   }
 
@@ -163,6 +193,48 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
   return (
     <>
       <Navbar />
+      {article.status !== "published" && (
+        <aside
+          style={{
+            position: "sticky",
+            top: "80px",
+            zIndex: 40,
+            backgroundColor: "#fffbeb",
+            borderBottom: "1px solid #fef3c7",
+            color: "#92400e",
+            padding: "0.75rem 1.5rem",
+            fontSize: "0.875rem",
+            fontWeight: 500,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "0.75rem",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+            <span style={{ fontSize: "1.1rem" }}>🔍</span>
+            <span>
+              <strong>{isEn ? "Draft Preview Mode:" : "Mode Pratinjau Draf:"}</strong>{" "}
+              {isEn
+                ? `This article is currently in "${article.status}" status and is not yet published to the public.`
+                : `Artikel ini berstatus "${article.status}" dan belum dipublikasikan ke publik.`}
+            </span>
+          </div>
+          <a
+            href={`/admin/collections/articles/${article.id}`}
+            style={{
+              color: "#b45309",
+              textDecoration: "underline",
+              fontWeight: 600,
+              fontSize: "0.85rem",
+            }}
+          >
+            {isEn ? "Back to Admin Editor" : "Kembali ke Editor Admin"} &rarr;
+          </a>
+        </aside>
+      )}
       <main style={{ paddingTop: "120px", minHeight: "100vh", backgroundColor: "#f8f9fa", paddingBottom: "60px" }}>
         <div className="container" style={{ maxWidth: "800px" }}>
           <Breadcrumbs
@@ -264,6 +336,103 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
             <div className="article-content">
               <RichTextRenderer content={article.content} />
             </div>
+
+            {Array.isArray(article.gallery) && article.gallery.length > 0 && (
+              <section
+                className="article-gallery-section"
+                style={{
+                  marginTop: "3rem",
+                  paddingTop: "2.5rem",
+                  borderTop: "1px solid #f1f5f9",
+                }}
+              >
+                <div style={{ marginBottom: "1.5rem" }}>
+                  <h3
+                    style={{
+                      fontSize: "1.35rem",
+                      fontWeight: 700,
+                      color: "#1a2b4c",
+                      marginBottom: "0.35rem",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <Camera size={20} color="var(--color-primary-600)" />
+                    {isEn ? "Event Documentation & Photo Gallery" : "Dokumentasi & Galeri Foto"}
+                  </h3>
+                  <p style={{ color: "#64748b", fontSize: "0.9rem", margin: 0 }}>
+                    {isEn
+                      ? `${article.gallery.length} photos attached to this article`
+                      : `${article.gallery.length} foto dokumentasi kegiatan`}
+                  </p>
+                </div>
+
+                <div
+                  className="article-gallery-grid"
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: article.gallery.length === 1 ? "1fr" : "repeat(auto-fill, minmax(220px, 1fr))",
+                    gap: "1.25rem",
+                  }}
+                >
+                  {article.gallery.map((item: any, idx: number) => {
+                    const imgObj = typeof item.image === "object" && item.image ? item.image : null;
+                    const imgUrl = imgObj?.url || (typeof item.image === "string" ? item.image : null);
+                    const imgAlt = item.caption || imgObj?.alt || `Foto dokumentasi ${idx + 1}`;
+                    if (!imgUrl) return null;
+
+                    return (
+                      <figure
+                        key={idx}
+                        style={{
+                          margin: 0,
+                          borderRadius: "12px",
+                          overflow: "hidden",
+                          backgroundColor: "#f8fafc",
+                          border: "1px solid #e2e8f0",
+                          display: "flex",
+                          flexDirection: "column",
+                          boxShadow: "0 2px 6px rgba(0,0,0,0.03)",
+                        }}
+                      >
+                        <div
+                          style={{
+                            position: "relative",
+                            width: "100%",
+                            height: "190px",
+                            overflow: "hidden",
+                          }}
+                        >
+                          <Image
+                            src={imgUrl}
+                            alt={imgAlt}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            style={{ objectFit: "cover" }}
+                            loading="lazy"
+                          />
+                        </div>
+                        {item.caption && (
+                          <figcaption
+                            style={{
+                              padding: "0.65rem 0.85rem",
+                              fontSize: "0.825rem",
+                              color: "#475569",
+                              lineHeight: 1.4,
+                              backgroundColor: "#ffffff",
+                              borderTop: "1px solid #f1f5f9",
+                            }}
+                          >
+                            {item.caption}
+                          </figcaption>
+                        )}
+                      </figure>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
 
             {/* Share Section */}
             <div

@@ -134,10 +134,10 @@ export default buildConfig({
   }),
   upload: {
     abortOnLimit: true,
-    limits: { fileSize: 10 * 1024 * 1024, files: 1 },
-    responseOnLimit: "Ukuran file maksimum adalah 10 MB.",
+    limits: { fileSize: 10 * 1024 * 1024, files: 10 },
+    responseOnLimit: "Ukuran file maksimum adalah 10 MB per file.",
     safeFileNames: true,
-    uploadTimeout: 30_000,
+    uploadTimeout: 45_000,
   },
   secret:
     process.env.PAYLOAD_SECRET ||
