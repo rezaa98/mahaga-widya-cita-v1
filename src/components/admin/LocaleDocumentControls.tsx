@@ -5,7 +5,8 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { toast, useDocumentInfo, useFormModified } from "@payloadcms/ui";
-import { CONTENT_LOCALES, useAdminLanguage, useContentLocale } from "./adminLocale";
+import { CONTENT_LOCALES, useAdminLanguage, useContentLocale, withLocale } from "./adminLocale";
+import { TranslationModal } from "./TranslationModal";
 
 type Availability = "checking" | "available" | "missing" | "new" | "error";
 type TranslationState =
@@ -182,6 +183,7 @@ export const LocaleDocumentControls: React.FC = () => {
   const [processingField, setProcessingField] = useState<string | null>(null);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [draftEdits, setDraftEdits] = useState<Record<string, string>>({});
+  const [transModalOpen, setTransModalOpen] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -421,210 +423,208 @@ export const LocaleDocumentControls: React.FC = () => {
       : null;
 
   return (
-    <section
-      className={`mwc-document-locale mwc-document-locale--${locale}`}
-      aria-label={isEn ? "Translation workflow" : "Workflow terjemahan"}
-    >
-      <div className="mwc-document-locale__content">
-        <span className="mwc-document-locale__badge">{current.shortLabel}</span>
-        <strong>{isEn ? `Editing ${current.label}` : `Mengedit ${current.label}`}</strong>
-        <span className={`mwc-document-locale__status mwc-document-locale__status--${availability}`}>
-          {availabilityText}
-        </span>
-        {modified && (
-          <span className="mwc-document-locale__dirty">
-            {isEn ? "Save before translating" : "Simpan sebelum menerjemahkan"}
-          </span>
-        )}
-      </div>
-
-      {identifier && (id || globalSlug) && (
-        <div className="mwc-translation-workflow">
-          <span className={`mwc-translation-workflow__state mwc-translation-workflow__state--${translation.status}`}>
-            <span aria-hidden className="mwc-translation-workflow__dot" />
-            {translationChecking
-              ? isEn
-                ? "Checking workflow…"
-                : "Memeriksa workflow…"
-              : stateCopy[translation.status]}
-          </span>
-          {(translation.progress || translatedDate || translation.model || translation.publicationStatus) && (
-            <details className="mwc-translation-technical">
-              <summary>{isEn ? "Details" : "Detail"}</summary>
-              <div>
-                {translation.progress && (
-                  <span>
-                    {isEn ? "Review" : "Pemeriksaan"}: {translation.progress.completed}/{translation.progress.total}
-                  </span>
-                )}
-                {translatedDate && (
-                  <span>
-                    {isEn ? "Last processed" : "Terakhir diproses"}: {translatedDate}
-                  </span>
-                )}
-                {translation.publicationStatus && (
-                  <span>
-                    {isEn ? "Publication" : "Publikasi"}: {translation.publicationStatus}
-                  </span>
-                )}
-                {translation.model && (
-                  <span>
-                    {isEn ? "Model" : "Model"}: {translation.model}
-                  </span>
-                )}
-              </div>
-            </details>
-          )}
-          {translation.error && (
-            <span className="mwc-translation-workflow__error" title={translation.error}>
-              {translation.error}
+    <>
+      <section
+        className={`mwc-document-locale mwc-document-locale--${locale}`}
+        aria-label={isEn ? "Translation workflow" : "Workflow terjemahan"}
+      >
+        <div className="mwc-document-locale__bar">
+          <div className="mwc-document-locale__left">
+            <span className="mwc-document-locale__badge">{current.shortLabel}</span>
+            <strong className="mwc-document-locale__title">
+              {isEn ? `Editing ${current.label}` : `Mengedit ${current.label}`}
+            </strong>
+            <span className={`mwc-document-locale__status mwc-document-locale__status--${availability}`}>
+              {availabilityText}
             </span>
-          )}
-          {locale === "id" && translation.status === "needs_review" && (
-            <a className="mwc-translation-workflow__action" href="?locale=en&reviewTranslation=1">
-              <span className="material-symbols-outlined" aria-hidden>
-                rate_review
-              </span>
-              {isEn ? "Review English draft" : "Tinjau draf Inggris"}
-            </a>
-          )}
-          {locale === "en" && translation.status === "needs_update" && (
-            <a className="mwc-translation-workflow__action" href="?locale=id">
-              <span className="material-symbols-outlined" aria-hidden>
-                arrow_back
-              </span>
-              {isEn ? "Open Indonesian source" : "Buka sumber Indonesia"}
-            </a>
-          )}
-          {locale === "en" && translation.status === "needs_review" && Boolean(translation.preview?.length) && (
-            <details
-              className="mwc-translation-preview"
-              open={reviewOpen}
-              onToggle={(event) => setReviewOpen(event.currentTarget.open)}
-            >
-              <summary>{isEn ? "Review AI draft" : "Tinjau draf AI"}</summary>
-              {translation.review && (
-                <p className="mwc-translation-preview__progress">
-                  {isEn ? "Reviewed" : "Diperiksa"}: {translation.review.completed}/{translation.review.total}
-                </p>
+            {modified && (
+              <span className="mwc-document-locale__dirty">{isEn ? "Save required" : "Perlu disimpan"}</span>
+            )}
+          </div>
+
+          <div className="mwc-document-locale__right">
+            {/* Quick Switch between ID and EN */}
+            <a
+              href={withLocale(
+                typeof window !== "undefined" ? window.location.pathname : "",
+                locale === "id" ? "en" : "id",
               )}
-              <div className="mwc-translation-preview__grid">
-                {translation.preview?.map((item) => (
-                  <article
-                    className={`mwc-translation-preview__item ${translation.review?.fields.includes(item.field) ? "is-reviewed" : ""}`}
-                    key={item.field}
-                  >
-                    <div className="mwc-translation-preview__field">
-                      <strong>{item.field}</strong>
-                      {translation.review?.fields.includes(item.field) && (
-                        <span>{isEn ? "Reviewed" : "Sudah diperiksa"}</span>
-                      )}
-                      {item.issues.map((issue) => (
-                        <em key={issue}>{issueCopy(issue)}</em>
-                      ))}
-                    </div>
-                    <div>
-                      <small>{isEn ? "Indonesian source" : "Sumber Indonesia"}</small>
-                      <p>{item.source}</p>
-                    </div>
-                    <div>
-                      <small>{isEn ? "English candidate" : "Kandidat Inggris"}</small>
-                      {item.editable && translation.canReview ? (
-                        <textarea
-                          aria-label={`${item.field} English candidate`}
-                          onChange={(event) =>
-                            setDraftEdits((value) => ({ ...value, [item.field]: event.target.value }))
-                          }
-                          value={draftEdits[item.field] ?? item.translated}
-                        />
-                      ) : (
-                        <p>{item.translated}</p>
-                      )}
-                      {translation.canReview && (
-                        <button
-                          className="mwc-translation-preview__review"
-                          disabled={processingField === item.field}
-                          onClick={() =>
-                            void reviewField(
-                              item.field,
-                              item.editable ? (draftEdits[item.field] ?? item.translated) : undefined,
-                            )
-                          }
-                          type="button"
-                        >
-                          {processingField === item.field
-                            ? isEn
-                              ? "Saving…"
-                              : "Menyimpan…"
-                            : translation.review?.fields.includes(item.field)
-                              ? isEn
-                                ? "Save review"
-                                : "Simpan review"
-                              : isEn
-                                ? "Mark reviewed"
-                                : "Tandai diperiksa"}
-                        </button>
-                      )}
-                    </div>
-                  </article>
-                ))}
-                {(translation.previewTotal || 0) > (translation.preview?.length || 0) && (
-                  <p className="mwc-translation-preview__notice">
-                    {isEn
-                      ? `Showing ${translation.preview?.length} of ${translation.previewTotal} field groups. Review long content in the editor before approval.`
-                      : `Menampilkan ${translation.preview?.length} dari ${translation.previewTotal} grup field. Tinjau konten panjang di editor sebelum menyetujui.`}
+              className="mwc-document-locale__switch-link"
+              title={locale === "id" ? "Beralih ke Bahasa Inggris" : "Beralih ke Bahasa Indonesia"}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: 16 }}>
+                swap_horiz
+              </span>
+              <span>{locale === "id" ? "Ke Versi EN" : "Ke Versi ID"}</span>
+            </a>
+
+            {/* Quick Translation Modal Trigger */}
+            {identifier && (id || globalSlug) && (
+              <button
+                type="button"
+                className="mwc-document-locale__trans-btn"
+                onClick={() => setTransModalOpen(true)}
+                title={isEn ? "English Translation AI" : "Terjemahan Bahasa Inggris (AI)"}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: 15 }}>
+                  translate
+                </span>
+                <span>{isEn ? "Translation (AI)" : "Terjemahan (AI)"}</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* In English mode: show review and approval tools if ready */}
+        {locale === "en" && identifier && (id || globalSlug) && (
+          <div className="mwc-translation-workflow">
+            <span className={`mwc-translation-workflow__state mwc-translation-workflow__state--${translation.status}`}>
+              <span aria-hidden className="mwc-translation-workflow__dot" />
+              {translationChecking
+                ? isEn
+                  ? "Checking workflow…"
+                  : "Memeriksa workflow…"
+                : stateCopy[translation.status]}
+            </span>
+
+            {translation.status === "needs_update" && (
+              <a className="mwc-translation-workflow__action" href="?locale=id">
+                <span className="material-symbols-outlined" aria-hidden>
+                  arrow_back
+                </span>
+                {isEn ? "Open Indonesian source" : "Buka sumber Indonesia"}
+              </a>
+            )}
+
+            {translation.status === "needs_review" && Boolean(translation.preview?.length) && (
+              <details
+                className="mwc-translation-preview"
+                open={reviewOpen}
+                onToggle={(event) => setReviewOpen(event.currentTarget.open)}
+              >
+                <summary>{isEn ? "Review AI draft fields" : "Tinjau field draf AI"}</summary>
+                {translation.review && (
+                  <p className="mwc-translation-preview__progress">
+                    {isEn ? "Reviewed" : "Diperiksa"}: {translation.review.completed}/{translation.review.total}
                   </p>
                 )}
-              </div>
-            </details>
-          )}
-          {locale === "en" && translation.status === "needs_review" && !translation.canApprove && (
-            <span className="mwc-translation-workflow__meta">
-              {isEn ? "Publisher approval required" : "Memerlukan persetujuan publisher"}
-            </span>
-          )}
-          {locale === "en" &&
-            translation.status === "needs_review" &&
-            translation.canApprove &&
-            translation.review &&
-            translation.review.completed < translation.review.total && (
+                <div className="mwc-translation-preview__grid">
+                  {translation.preview?.map((item) => (
+                    <article
+                      className={`mwc-translation-preview__item ${translation.review?.fields.includes(item.field) ? "is-reviewed" : ""}`}
+                      key={item.field}
+                    >
+                      <div className="mwc-translation-preview__field">
+                        <strong>{item.field}</strong>
+                        {translation.review?.fields.includes(item.field) && (
+                          <span>{isEn ? "Reviewed" : "Sudah diperiksa"}</span>
+                        )}
+                        {item.issues.map((issue) => (
+                          <em key={issue}>{issueCopy(issue)}</em>
+                        ))}
+                      </div>
+                      <div>
+                        <small>{isEn ? "Indonesian source" : "Sumber Indonesia"}</small>
+                        <p>{item.source}</p>
+                      </div>
+                      <div>
+                        <small>{isEn ? "English candidate" : "Kandidat Inggris"}</small>
+                        {item.editable && translation.canReview ? (
+                          <textarea
+                            aria-label={`${item.field} English candidate`}
+                            onChange={(event) =>
+                              setDraftEdits((value) => ({ ...value, [item.field]: event.target.value }))
+                            }
+                            value={draftEdits[item.field] ?? item.translated}
+                          />
+                        ) : (
+                          <p>{item.translated}</p>
+                        )}
+                        {translation.canReview && (
+                          <button
+                            className="mwc-translation-preview__review"
+                            disabled={processingField === item.field}
+                            onClick={() =>
+                              void reviewField(
+                                item.field,
+                                item.editable ? (draftEdits[item.field] ?? item.translated) : undefined,
+                              )
+                            }
+                            type="button"
+                          >
+                            {processingField === item.field
+                              ? isEn
+                                ? "Saving…"
+                                : "Menyimpan…"
+                              : translation.review?.fields.includes(item.field)
+                                ? isEn
+                                  ? "Save review"
+                                  : "Simpan review"
+                                : isEn
+                                  ? "Mark reviewed"
+                                  : "Tandai diperiksa"}
+                          </button>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                  {(translation.previewTotal || 0) > (translation.preview?.length || 0) && (
+                    <p className="mwc-translation-preview__notice">
+                      {isEn
+                        ? `Showing ${translation.preview?.length} of ${translation.previewTotal} field groups. Review long content in the editor before approval.`
+                        : `Menampilkan ${translation.preview?.length} dari ${translation.previewTotal} grup field. Tinjau konten panjang di editor sebelum menyetujui.`}
+                    </p>
+                  )}
+                </div>
+              </details>
+            )}
+
+            {translation.status === "needs_review" && !translation.canApprove && (
               <span className="mwc-translation-workflow__meta">
-                {isEn ? "Review every field to enable approval" : "Periksa semua field untuk mengaktifkan persetujuan"}
+                {isEn ? "Publisher approval required" : "Memerlukan persetujuan publisher"}
               </span>
             )}
-          {action && (
-            <button className="mwc-translation-workflow__action" type="button" onClick={() => void runAction(action)}>
-              <span className="material-symbols-outlined" aria-hidden>
-                {action === "approve" ? "check_circle" : action === "retry" ? "refresh" : "translate"}
-              </span>
-              {actionLabel(action)}
-            </button>
-          )}
-          {processingAction && (
-            <button className="mwc-translation-workflow__action" type="button" disabled>
-              {isEn ? "Processing…" : "Memproses…"}
-            </button>
-          )}
-          {Boolean(translation.auditLog?.length) && (
-            <details className="mwc-translation-audit">
-              <summary>{isEn ? "Translation history" : "Riwayat terjemahan"}</summary>
-              <ol>
-                {translation.auditLog?.map((event, index) => (
-                  <li key={`${event.at}-${index}`}>
-                    <strong>{event.action.replaceAll("_", " ")}</strong>
-                    <time dateTime={event.at}>
-                      {new Intl.DateTimeFormat(isEn ? "en-US" : "id-ID", {
-                        dateStyle: "medium",
-                        timeStyle: "short",
-                      }).format(new Date(event.at))}
-                    </time>
-                  </li>
-                ))}
-              </ol>
-            </details>
-          )}
-        </div>
-      )}
-    </section>
+
+            {translation.status === "needs_review" &&
+              translation.canApprove &&
+              translation.review &&
+              translation.review.completed < translation.review.total && (
+                <span className="mwc-translation-workflow__meta">
+                  {isEn
+                    ? "Review every field to enable approval"
+                    : "Periksa semua field untuk mengaktifkan persetujuan"}
+                </span>
+              )}
+
+            {action && (
+              <button className="mwc-translation-workflow__action" type="button" onClick={() => void runAction(action)}>
+                <span className="material-symbols-outlined" aria-hidden>
+                  {action === "approve" ? "check_circle" : action === "retry" ? "refresh" : "translate"}
+                </span>
+                {actionLabel(action)}
+              </button>
+            )}
+
+            {processingAction && (
+              <button className="mwc-translation-workflow__action" type="button" disabled>
+                {isEn ? "Processing…" : "Memproses…"}
+              </button>
+            )}
+          </div>
+        )}
+      </section>
+
+      <TranslationModal
+        isOpen={transModalOpen}
+        onClose={() => {
+          setTransModalOpen(false);
+          void loadTranslationStatus();
+        }}
+        identifier={identifier}
+        id={id}
+        isGlobal={isGlobal}
+        isPostPublish={false}
+      />
+    </>
   );
 };

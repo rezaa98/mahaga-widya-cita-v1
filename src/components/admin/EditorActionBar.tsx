@@ -2,8 +2,10 @@
 
 import React, { useState } from "react";
 import { toast, useForm, useFormFields, useAuth, useDocumentInfo, useFormModified } from "@payloadcms/ui";
+import { Globe } from "lucide-react";
 import { hasCapability } from "@/utils/access";
 import { useAdminLanguage, useContentLocale } from "./adminLocale";
+import { TranslationModal } from "./TranslationModal";
 
 type AuthUser = { role?: unknown } | null | undefined;
 
@@ -50,6 +52,9 @@ export const EditorActionBar: React.FC = () => {
   const locale = useContentLocale();
   const isEn = useAdminLanguage() === "en";
   const [processingStatus, setProcessingStatus] = useState<string | null>(null);
+  const [translationModalOpen, setTranslationModalOpen] = useState(false);
+  const [isPostPublish, setIsPostPublish] = useState(false);
+
   const previewSection =
     docInfo.collectionSlug === "journals"
       ? "jurnal"
@@ -96,77 +101,111 @@ export const EditorActionBar: React.FC = () => {
         })[currentStatus] || currentStatus;
 
   return (
-    <div className="mwc-editor-action-bar">
-      <div className="mwc-editor-action-bar__status">
-        <span className="material-symbols-outlined" aria-hidden style={{ fontSize: 18 }}>
-          {currentStatus === "published" ? "public" : currentStatus === "draft" ? "edit_note" : "pending"}
-        </span>
-        <span>
-          {isEn ? "Status" : "Status"}: <strong>{statusLabel}</strong>
-        </span>
-        {modified && <small>{isEn ? "Save required" : "Perlu disimpan"}</small>}
-        {!modified && <small className="is-saved">{isEn ? "All changes saved" : "Semua perubahan tersimpan"}</small>}
-      </div>
-      <div className="mwc-editor-action-bar__actions">
-        <a
-          className="mwc-editor-action-bar__preview"
-          aria-disabled={!docInfo?.id}
-          href={
-            docInfo?.id
-              ? `/${locale}/${previewSection}/${String(docInfo.data?.slug || docInfo.id)}?preview=1`
-              : undefined
-          }
-          rel="noreferrer"
-          target="_blank"
-          title={
-            !docInfo?.id
-              ? isEn
-                ? "Save draft first to preview"
-                : "Simpan draf terlebih dahulu untuk melihat pratinjau"
-              : undefined
-          }
-        >
-          <span className="material-symbols-outlined" aria-hidden style={{ fontSize: 16 }}>
-            visibility
+    <>
+      <div className="mwc-editor-action-bar">
+        <div className="mwc-editor-action-bar__status">
+          <span className="material-symbols-outlined" aria-hidden style={{ fontSize: 18 }}>
+            {currentStatus === "published" ? "public" : currentStatus === "draft" ? "edit_note" : "pending"}
           </span>
-          {currentStatus === "published"
-            ? `${isEn ? "View on Web" : "Lihat di Web"} (${locale.toUpperCase()})`
-            : `${isEn ? "Preview Draft" : "Pratinjau Draf"} (${locale.toUpperCase()})`}
-        </a>
-        {availableActions.map((action) => (
+          <span>
+            {isEn ? "Status" : "Status"}: <strong>{statusLabel}</strong>
+          </span>
+          {modified && <small>{isEn ? "Save required" : "Perlu disimpan"}</small>}
+          {!modified && <small className="is-saved">{isEn ? "All changes saved" : "Semua perubahan tersimpan"}</small>}
+        </div>
+        <div className="mwc-editor-action-bar__actions">
+          {/* Quick Translation Button */}
           <button
-            className={`mwc-editor-action-bar__btn ${["revision_requested", "scheduled"].includes(action.nextStatuses[0]) ? "mwc-editor-action-bar__btn--secondary" : ""}`}
-            key={action.label}
-            disabled={Boolean(processingStatus)}
-            onClick={async () => {
-              const nextStatus = action.nextStatuses[0];
-              setProcessingStatus(nextStatus);
-              try {
-                await submit({ overrides: { status: nextStatus } });
-                toast.success(isEn ? "Editorial status saved" : "Status editorial berhasil disimpan");
-              } catch {
-                toast.error(isEn ? "Failed to save editorial status" : "Gagal menyimpan status editorial");
-              } finally {
-                setProcessingStatus(null);
-              }
-            }}
             type="button"
+            className="mwc-editor-action-bar__btn mwc-editor-action-bar__btn--trans"
+            onClick={() => {
+              setIsPostPublish(false);
+              setTranslationModalOpen(true);
+            }}
+            title={isEn ? "Manage English Translation (AI)" : "Kelola Terjemahan Bahasa Inggris (AI)"}
+          >
+            <Globe size={15} />
+            <span>{isEn ? "Translation (EN)" : "Terjemahan (EN)"}</span>
+          </button>
+
+          <a
+            className="mwc-editor-action-bar__preview"
+            aria-disabled={!docInfo?.id}
+            href={
+              docInfo?.id
+                ? `/${locale}/${previewSection}/${String(docInfo.data?.slug || docInfo.id)}?preview=1`
+                : undefined
+            }
+            rel="noreferrer"
+            target="_blank"
+            title={
+              !docInfo?.id
+                ? isEn
+                  ? "Save draft first to preview"
+                  : "Simpan draf terlebih dahulu untuk melihat pratinjau"
+                : undefined
+            }
           >
             <span className="material-symbols-outlined" aria-hidden style={{ fontSize: 16 }}>
-              {action.icon}
+              visibility
             </span>
-            {processingStatus === action.nextStatuses[0]
-              ? isEn
-                ? "Saving…"
-                : "Menyimpan…"
-              : modified
-                ? `${isEn ? "Save &" : "Simpan &"} ${isEn ? EN_ACTION_LABELS[action.label] || action.label : action.label}`
-                : isEn
-                  ? EN_ACTION_LABELS[action.label] || action.label
-                  : action.label}
-          </button>
-        ))}
+            {currentStatus === "published"
+              ? `${isEn ? "View on Web" : "Lihat di Web"} (${locale.toUpperCase()})`
+              : `${isEn ? "Preview Draft" : "Pratinjau Draf"} (${locale.toUpperCase()})`}
+          </a>
+
+          {availableActions.map((action) => (
+            <button
+              className={`mwc-editor-action-bar__btn ${["revision_requested", "scheduled"].includes(action.nextStatuses[0]) ? "mwc-editor-action-bar__btn--secondary" : ""}`}
+              key={action.label}
+              disabled={Boolean(processingStatus)}
+              onClick={async () => {
+                const nextStatus = action.nextStatuses[0];
+                setProcessingStatus(nextStatus);
+                try {
+                  await submit({ overrides: { status: nextStatus } });
+                  toast.success(isEn ? "Editorial status saved" : "Status editorial berhasil disimpan");
+
+                  // Trigger post-publish translation modal when published in Indonesian
+                  if (nextStatus === "published" && locale === "id") {
+                    setIsPostPublish(true);
+                    setTranslationModalOpen(true);
+                  }
+                } catch {
+                  toast.error(isEn ? "Failed to save editorial status" : "Gagal menyimpan status editorial");
+                } finally {
+                  setProcessingStatus(null);
+                }
+              }}
+              type="button"
+            >
+              <span className="material-symbols-outlined" aria-hidden style={{ fontSize: 16 }}>
+                {action.icon}
+              </span>
+              {processingStatus === action.nextStatuses[0]
+                ? isEn
+                  ? "Saving…"
+                  : "Menyimpan…"
+                : modified
+                  ? `${isEn ? "Save &" : "Simpan &"} ${isEn ? EN_ACTION_LABELS[action.label] || action.label : action.label}`
+                  : isEn
+                    ? EN_ACTION_LABELS[action.label] || action.label
+                    : action.label}
+            </button>
+          ))}
+        </div>
       </div>
-    </div>
+
+      <TranslationModal
+        isOpen={translationModalOpen}
+        onClose={() => setTranslationModalOpen(false)}
+        identifier={docInfo.collectionSlug || docInfo.globalSlug || ""}
+        id={docInfo.id}
+        isGlobal={Boolean(docInfo.globalSlug)}
+        isPostPublish={isPostPublish}
+        docTitle={String(docInfo.data?.title || "")}
+        collectionSlug={docInfo.collectionSlug}
+      />
+    </>
   );
 };
