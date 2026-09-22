@@ -29,6 +29,7 @@ export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
     () => false,
   );
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"tutorials" | "faq">("tutorials");
 
   useEffect(() => {
     if (isOpen) {
@@ -53,7 +54,7 @@ export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
       id: "beranda",
       icon: Home,
       title: "Cara Edit Beranda",
-      desc: "Panduan mengelola teks Hero, Statistik, dan Logo Mitra.",
+      desc: "Panduan mengelola teks Hero banner, angka statistik, dan logo mitra.",
       path: "/admin/globals/beranda",
       color: "#3b82f6",
       bgLight: "#eff6ff",
@@ -62,7 +63,7 @@ export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
       id: "artikel",
       icon: Camera,
       title: "Tulis Artikel & Galeri Foto",
-      desc: "Panduan membuat artikel, upload banyak foto kegiatan, dan preview draf.",
+      desc: "Panduan membuat rilis berita, upload banyak foto kegiatan, dan preview draf.",
       path: "/admin/collections/articles/create",
       color: "#10b981",
       bgLight: "#ecfdf5",
@@ -71,7 +72,7 @@ export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
       id: "tim",
       icon: Users,
       title: "Cara Mengelola Tim Ahli",
-      desc: "Cara menambah anggota tim ahli, direksi, foto profil, dan keahlian.",
+      desc: "Cara menambah anggota tim ahli, pimpinan, foto profil, dan keahlian.",
       path: "/admin/collections/team-members",
       color: "#f59e0b",
       bgLight: "#fffbeb",
@@ -80,7 +81,7 @@ export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
       id: "layanan",
       icon: Layers,
       title: "Cara Kelola Layanan",
-      desc: "Pelajari cara menambah dan mengedit portofolio layanan.",
+      desc: "Pelajari cara menambah dan mengedit paket layanan konsultasi.",
       path: "/admin/collections/services",
       color: "#8b5cf6",
       bgLight: "#f5f3ff",
@@ -89,7 +90,7 @@ export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
       id: "tentangkami",
       icon: Building,
       title: "Cara Edit Tentang Kami",
-      desc: "Panduan mengelola Visi, Misi, profil perusahaan, dan pesan CEO.",
+      desc: "Panduan mengelola visi, misi, profil korporat, dan pesan direktur.",
       path: "/admin/globals/tentang-kami",
       color: "#ec4899",
       bgLight: "#fdf2f8",
@@ -105,9 +106,53 @@ export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
     },
   ];
 
+  const faqs = [
+    {
+      q: "Bagaimana cara mengubah nomor WhatsApp & alamat kantor?",
+      a: "Buka menu 'Halaman Website' > 'Kontak & Lokasi Kantor'. Ubah nomor telepon atau alamat gedung, lalu klik tombol biru 'Simpan' di kanan bawah.",
+      path: "/admin/globals/kontak",
+      btnText: "Buka Halaman Kontak",
+    },
+    {
+      q: "Bagaimana cara membuat berita baru dan memasukkan banyak foto?",
+      a: "Klik tombol 'Tulis Berita / Artikel Baru' di dashboard. Masukkan judul dan isi naskah. Di bawahnya terdapat bagian 'Dokumentasi & Galeri Foto' untuk mengunggah banyak foto kegiatan sekaligus.",
+      path: "/admin/collections/articles/create",
+      btnText: "Tulis Artikel Baru",
+    },
+    {
+      q: "Bagaimana cara melihat tampilan sebelum dipublikasikan ke umum?",
+      a: "Saat mengedit artikel atau halaman, ada tombol 'Pratinjau Draf' (Preview) di atas naskah. Klik tombol tersebut untuk melihat tampilan asli di website dengan aman sebelum tayang ke publik.",
+      path: "/admin/collections/articles",
+      btnText: "Buka Daftar Artikel",
+    },
+    {
+      q: "Apakah saya harus menerjemahkan sendiri ke Bahasa Inggris?",
+      a: "Tidak perlu repot! Cukup tulis dalam Bahasa Indonesia. Sistem AI Mahaga Widya Cita akan otomatis menyiapkan terjemahan Bahasa Inggris setelah dokumen disimpan.",
+      path: "/admin/globals/beranda",
+      btnText: "Lihat Beranda",
+    },
+    {
+      q: "Bagaimana cara menambah anggota tim ahli atau manajemen baru?",
+      a: "Buka menu 'Halaman Website' > 'Tim Ahli & Manajemen', klik tombol 'Tambah Baru'. Masukkan nama lengkap, jabatan, biografi singkat, dan pas foto formal.",
+      path: "/admin/collections/team-members",
+      btnText: "Kelola Tim Ahli",
+    },
+    {
+      q: "Di mana saya bisa melihat pesan dari formulir kontak website?",
+      a: "Buka menu 'Pesan & Pengunjung' > 'Pesan Masuk Formulir'. Semua nama pengirim, email, nomor telepon, dan subjek pertanyaan dari pengunjung website tersimpan rapi di sana.",
+      path: "/admin/collections/contact-submissions",
+      btnText: "Buka Pesan Masuk",
+    },
+  ];
+
   const handleSelectTutorial = (path: string) => {
     onClose();
     router.push(`${path}?tour=1`);
+  };
+
+  const handleGoToPage = (path: string) => {
+    onClose();
+    router.push(path);
   };
 
   const backdropStyle: React.CSSProperties = {
@@ -219,121 +264,227 @@ export const HelpCenterModal: React.FC<Props> = ({ isOpen, onClose }) => {
             >
               <BookOpen size={14} /> Pusat Bantuan
             </div>
-            <h2 style={{ margin: "0 0 12px 0", fontSize: "28px", fontWeight: 700, letterSpacing: "-0.5px" }}>
-              Selamat Datang di Mahaga Admin
+            <h2 style={{ margin: "0 0 12px 0", fontSize: "26px", fontWeight: 700, letterSpacing: "-0.5px" }}>
+              Pusat Panduan & Bantuan Admin
             </h2>
-            <p style={{ margin: 0, fontSize: "15px", opacity: 0.9, maxWidth: "500px", lineHeight: 1.5 }}>
-              Pilih topik panduan interaktif di bawah ini. Sistem akan memandu Anda langkah demi langkah langsung di
-              halaman yang bersangkutan.
+            <p style={{ margin: 0, fontSize: "14px", opacity: 0.9, maxWidth: "560px", lineHeight: 1.5 }}>
+              Pilih topik panduan interaktif atau baca tanya-jawab cepat di bawah. Anda akan dipandu langsung di halaman
+              yang bersangkutan tanpa kebingungan.
             </p>
           </div>
         </div>
 
-        {/* Content Area */}
-        <div style={{ padding: "2rem", overflowY: "auto", background: "#f8fafc" }}>
-          <div
+        {/* Tab Switcher */}
+        <div
+          style={{
+            display: "flex",
+            gap: "8px",
+            padding: "0 2rem",
+            marginTop: "-20px",
+            zIndex: 10,
+            position: "relative",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setActiveTab("tutorials")}
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-              gap: "1.25rem",
+              padding: "10px 18px",
+              borderRadius: "12px",
+              border: "1px solid #e2e8f0",
+              background: activeTab === "tutorials" ? "#ffffff" : "#f1f5f9",
+              color: activeTab === "tutorials" ? "#1e40af" : "#64748b",
+              fontWeight: 700,
+              fontSize: "14px",
+              cursor: "pointer",
+              boxShadow: activeTab === "tutorials" ? "0 4px 12px rgba(0,0,0,0.08)" : "none",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              transition: "all 0.2s",
             }}
           >
-            {tutorials.map((tut) => {
-              const Icon = tut.icon;
-              const isHovered = hoveredId === tut.id;
+            <span>🧭</span>
+            <span>Panduan Interaktif</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("faq")}
+            style={{
+              padding: "10px 18px",
+              borderRadius: "12px",
+              border: "1px solid #e2e8f0",
+              background: activeTab === "faq" ? "#ffffff" : "#f1f5f9",
+              color: activeTab === "faq" ? "#1e40af" : "#64748b",
+              fontWeight: 700,
+              fontSize: "14px",
+              cursor: "pointer",
+              boxShadow: activeTab === "faq" ? "0 4px 12px rgba(0,0,0,0.08)" : "none",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              transition: "all 0.2s",
+            }}
+          >
+            <span>💬</span>
+            <span>Tanya Jawab Pemula (FAQ)</span>
+          </button>
+        </div>
 
-              return (
-                <div
-                  key={tut.id}
-                  onClick={() => handleSelectTutorial(tut.path)}
-                  onMouseEnter={() => setHoveredId(tut.id)}
-                  onMouseLeave={() => setHoveredId(null)}
-                  style={{
-                    padding: "1.5rem",
-                    background: "white",
-                    borderRadius: "16px",
-                    cursor: "pointer",
-                    transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                    border: "1px solid #e2e8f0",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1rem",
-                    boxShadow: isHovered
-                      ? "0 12px 24px -10px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05)"
-                      : "0 2px 4px -2px rgba(0,0,0,0.05)",
-                    transform: isHovered ? "translateY(-4px)" : "translateY(0)",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
-                    <div
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        borderRadius: "12px",
-                        background: tut.bgLight,
-                        color: tut.color,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        transition: "transform 0.3s",
-                        transform: isHovered ? "scale(1.1)" : "scale(1)",
-                      }}
-                    >
-                      <Icon size={24} strokeWidth={2} />
-                    </div>
+        {/* Content Area */}
+        <div style={{ padding: "1.75rem 2rem 2rem", overflowY: "auto", background: "#f8fafc" }}>
+          {activeTab === "tutorials" ? (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+                gap: "1.25rem",
+              }}
+            >
+              {tutorials.map((tut) => {
+                const Icon = tut.icon;
+                const isHovered = hoveredId === tut.id;
 
-                    <div
-                      style={{
-                        width: "32px",
-                        height: "32px",
-                        borderRadius: "50%",
-                        background: isHovered ? tut.color : "#f1f5f9",
-                        color: isHovered ? "white" : "#94a3b8",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        transition: "all 0.3s",
-                      }}
-                    >
-                      <ArrowRight
-                        size={16}
-                        strokeWidth={2.5}
-                        style={{
-                          transform: isHovered ? "translateX(2px)" : "translateX(0)",
-                          transition: "transform 0.3s",
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 style={{ margin: "0 0 8px 0", fontSize: "17px", fontWeight: 600, color: "#0f172a" }}>
-                      {tut.title}
-                    </h3>
-                    <p style={{ margin: 0, fontSize: "14px", color: "#64748b", lineHeight: 1.5 }}>{tut.desc}</p>
-                  </div>
-
+                return (
                   <div
+                    key={tut.id}
+                    onClick={() => handleSelectTutorial(tut.path)}
+                    onMouseEnter={() => setHoveredId(tut.id)}
+                    onMouseLeave={() => setHoveredId(null)}
                     style={{
-                      marginTop: "auto",
-                      paddingTop: "12px",
-                      borderTop: "1px solid #f1f5f9",
+                      padding: "1.5rem",
+                      background: "white",
+                      borderRadius: "16px",
+                      cursor: "pointer",
+                      transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                      border: "1px solid #e2e8f0",
                       display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      fontSize: "13px",
-                      fontWeight: 600,
-                      color: tut.color,
-                      opacity: isHovered ? 1 : 0.7,
-                      transition: "opacity 0.3s",
+                      flexDirection: "column",
+                      gap: "1rem",
+                      boxShadow: isHovered
+                        ? "0 12px 24px -10px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05)"
+                        : "0 2px 4px -2px rgba(0,0,0,0.05)",
+                      transform: isHovered ? "translateY(-4px)" : "translateY(0)",
                     }}
                   >
-                    <PlayCircle size={16} /> Mulai Tur Interaktif
+                    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+                      <div
+                        style={{
+                          width: "48px",
+                          height: "48px",
+                          borderRadius: "12px",
+                          background: tut.bgLight,
+                          color: tut.color,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          transition: "transform 0.3s",
+                          transform: isHovered ? "scale(1.1)" : "scale(1)",
+                        }}
+                      >
+                        <Icon size={24} strokeWidth={2} />
+                      </div>
+
+                      <div
+                        style={{
+                          width: "32px",
+                          height: "32px",
+                          borderRadius: "50%",
+                          background: isHovered ? tut.color : "#f1f5f9",
+                          color: isHovered ? "white" : "#94a3b8",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          transition: "all 0.3s",
+                        }}
+                      >
+                        <ArrowRight
+                          size={16}
+                          strokeWidth={2.5}
+                          style={{
+                            transform: isHovered ? "translateX(2px)" : "translateX(0)",
+                            transition: "transform 0.3s",
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 style={{ margin: "0 0 8px 0", fontSize: "17px", fontWeight: 600, color: "#0f172a" }}>
+                        {tut.title}
+                      </h3>
+                      <p style={{ margin: 0, fontSize: "14px", color: "#64748b", lineHeight: 1.5 }}>{tut.desc}</p>
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: "auto",
+                        paddingTop: "12px",
+                        borderTop: "1px solid #f1f5f9",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        fontSize: "13px",
+                        fontWeight: 600,
+                        color: tut.color,
+                        opacity: isHovered ? 1 : 0.7,
+                        transition: "opacity 0.3s",
+                      }}
+                    >
+                      <PlayCircle size={16} /> Mulai Tur Interaktif
+                    </div>
                   </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              {faqs.map((faq, index) => (
+                <div
+                  key={index}
+                  style={{
+                    background: "#ffffff",
+                    borderRadius: "14px",
+                    border: "1px solid #e2e8f0",
+                    padding: "1.25rem 1.5rem",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                  }}
+                >
+                  <div
+                    style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "12px" }}
+                  >
+                    <h4 style={{ margin: 0, fontSize: "15px", fontWeight: 700, color: "#0f172a", lineHeight: 1.4 }}>
+                      ❓ {faq.q}
+                    </h4>
+                    <button
+                      type="button"
+                      onClick={() => handleGoToPage(faq.path)}
+                      style={{
+                        whiteSpace: "nowrap",
+                        padding: "6px 12px",
+                        borderRadius: "8px",
+                        background: "#eff6ff",
+                        color: "#1d4ed8",
+                        border: "1px solid #bfdbfe",
+                        fontSize: "12px",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      <span>{faq.btnText}</span>
+                      <ArrowRight size={13} />
+                    </button>
+                  </div>
+                  <p style={{ margin: 0, fontSize: "14px", color: "#475569", lineHeight: 1.5 }}>{faq.a}</p>
                 </div>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          )}
 
           <div
             style={{

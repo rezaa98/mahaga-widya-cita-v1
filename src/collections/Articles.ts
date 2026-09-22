@@ -104,8 +104,8 @@ function guardArticleStatusTransition({ data, originalDoc, operation, req }: any
 export const Articles: CollectionConfig = {
   slug: "articles",
   labels: {
-    singular: { id: "Artikel", en: "Article" },
-    plural: { id: "Artikel", en: "Articles" },
+    singular: { id: "Artikel Berita", en: "News Article" },
+    plural: { id: "Artikel & Berita", en: "Articles & News" },
   },
   versions: {
     drafts: {
@@ -114,7 +114,7 @@ export const Articles: CollectionConfig = {
     maxPerDoc: 15,
   },
   admin: {
-    group: { id: "Manajemen Konten", en: "Content Management" },
+    group: { id: "Publikasi & Berita", en: "Publications & News" },
     useAsTitle: "title",
     defaultColumns: ["title", "status", "author", "updatedAt"],
     listSearchableFields: ["title", "slug", "excerpt"],

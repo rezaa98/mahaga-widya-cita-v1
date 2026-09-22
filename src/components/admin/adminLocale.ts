@@ -8,8 +8,8 @@ export const CONTENT_LOCALES: Record<
   AdminContentLocale,
   { code: AdminContentLocale; label: string; shortLabel: string }
 > = {
-  id: { code: "id", label: "Indonesia", shortLabel: "ID" },
-  en: { code: "en", label: "English", shortLabel: "EN" },
+  id: { code: "id", label: "Bahasa Indonesia (Utama)", shortLabel: "🇮🇩 Indonesia" },
+  en: { code: "en", label: "English (Inggris)", shortLabel: "🇬🇧 English" },
 };
 
 export function useAdminLanguage() {

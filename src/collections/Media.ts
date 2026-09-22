@@ -4,11 +4,11 @@ import { canManageMedia } from "@/utils/access";
 export const Media: CollectionConfig = {
   slug: "media",
   labels: {
-    singular: { id: "Media", en: "Media" },
-    plural: { id: "Media", en: "Media" },
+    singular: { id: "Foto / Berkas Media", en: "Media File" },
+    plural: { id: "Galeri Foto & Media", en: "Photo & Media Gallery" },
   },
   admin: {
-    group: { id: "Aset", en: "Assets" },
+    group: { id: "Publikasi & Berita", en: "Publications & News" },
     useAsTitle: "alt",
     defaultColumns: ["filename", "alt", "mimeType", "updatedAt"],
     listSearchableFields: ["alt", "filename"],

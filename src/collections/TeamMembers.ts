@@ -6,10 +6,10 @@ export const TeamMembers: CollectionConfig = {
   slug: "team-members",
   labels: {
     singular: { id: "Anggota Tim", en: "Team Member" },
-    plural: { id: "Tim Ahli", en: "Team Members" },
+    plural: { id: "4. Tim Ahli & Manajemen", en: "4. Expert Team & Management" },
   },
   admin: {
-    group: { id: "Profil Perusahaan", en: "Corporate Profile" },
+    group: { id: "Halaman Website", en: "Website Pages" },
     useAsTitle: "name",
     defaultColumns: ["name", "category", "expertise", "updatedAt"],
     components: {

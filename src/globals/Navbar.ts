@@ -4,9 +4,9 @@ import { canManageSiteContent } from "../utils/access";
 
 export const Navbar: GlobalConfig = {
   slug: "navbar",
-  label: { id: "Navbar (Menu Atas)", en: "Navbar (Top Menu)" },
+  label: { id: "6. Menu Navigasi (Header)", en: "6. Navigation Menu" },
   admin: {
-    group: { id: "Website", en: "Website" },
+    group: { id: "Halaman Website", en: "Website Pages" },
     components: {
       elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] },
     },

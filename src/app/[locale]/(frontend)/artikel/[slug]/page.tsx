@@ -131,7 +131,7 @@ export default async function ArticleDetailPage({
 
   const { docs } = await payload.find({
     collection: "articles",
-    where: whereCondition,
+    where: whereCondition as any,
     locale: resolvedParams.locale as any,
     fallbackLocale: "none" as any,
   });

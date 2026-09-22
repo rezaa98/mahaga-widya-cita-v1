@@ -10,29 +10,33 @@ import { TranslationModal } from "./TranslationModal";
 type AuthUser = { role?: unknown } | null | undefined;
 
 const STATUS_ACTIONS: Record<string, { label: string; icon: string; nextStatuses: string[] }[]> = {
-  draft: [{ label: "Kirim Review", icon: "send", nextStatuses: ["in_review"] }],
+  draft: [
+    { label: "Publikasikan", icon: "rocket_launch", nextStatuses: ["published"] },
+    { label: "Kirim Review", icon: "send", nextStatuses: ["in_review"] },
+  ],
   in_review: [
     { label: "Setujui", icon: "check_circle", nextStatuses: ["approved"] },
     { label: "Minta Revisi", icon: "feedback", nextStatuses: ["revision_requested"] },
   ],
   revision_requested: [{ label: "Kirim Ulang", icon: "send", nextStatuses: ["in_review"] }],
   approved: [
-    { label: "Publish", icon: "public", nextStatuses: ["published"] },
+    { label: "Publikasikan", icon: "public", nextStatuses: ["published"] },
     { label: "Jadwalkan", icon: "schedule", nextStatuses: ["scheduled"] },
   ],
-  scheduled: [{ label: "Publish Sekarang", icon: "public", nextStatuses: ["published"] }],
+  scheduled: [{ label: "Publikasikan Sekarang", icon: "public", nextStatuses: ["published"] }],
   published: [{ label: "Arsipkan", icon: "inventory_2", nextStatuses: ["archived"] }],
   archived: [{ label: "Aktifkan Ulang", icon: "unarchive", nextStatuses: ["draft"] }],
 };
 
 const EN_ACTION_LABELS: Record<string, string> = {
+  Publikasikan: "Publish",
   "Kirim Review": "Send for Review",
   Setujui: "Approve",
   "Minta Revisi": "Request Revision",
   "Kirim Ulang": "Resubmit",
   Publish: "Publish",
   Jadwalkan: "Schedule",
-  "Publish Sekarang": "Publish Now",
+  "Publikasikan Sekarang": "Publish Now",
   Arsipkan: "Archive",
   "Aktifkan Ulang": "Reactivate",
 };
@@ -91,12 +95,12 @@ export const EditorActionBar: React.FC = () => {
           archived: "Archived",
         }
       : {
-          draft: "Draft",
+          draft: "Draf (Belum Tayang)",
           in_review: "Menunggu Review",
           revision_requested: "Perlu Revisi",
           approved: "Disetujui",
           scheduled: "Terjadwal",
-          published: "Published",
+          published: "Tayang di Website",
           archived: "Diarsipkan",
         })[currentStatus] || currentStatus;
 

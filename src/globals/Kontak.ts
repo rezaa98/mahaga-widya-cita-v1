@@ -4,9 +4,9 @@ import { canManageSiteContent } from "../utils/access";
 
 export const Kontak: GlobalConfig = {
   slug: "kontak",
-  label: { id: "Informasi Kontak", en: "Contact Information" },
+  label: { id: "5. Kontak & Lokasi Kantor", en: "5. Contact & Location" },
   admin: {
-    group: { id: "Website", en: "Website" },
+    group: { id: "Halaman Website", en: "Website Pages" },
     components: {
       elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] },
     },

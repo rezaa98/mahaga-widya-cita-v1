@@ -44,7 +44,7 @@ export const PolicyReviews: CollectionConfig = {
   },
   versions: { drafts: { autosave: true }, maxPerDoc: 15 },
   admin: {
-    group: { id: "Manajemen Konten", en: "Content Management" },
+    group: { id: "Publikasi & Berita", en: "Publications & News" },
     useAsTitle: "title",
     defaultColumns: ["title", "status", "updatedAt"],
     listSearchableFields: ["title", "slug", "summary"],

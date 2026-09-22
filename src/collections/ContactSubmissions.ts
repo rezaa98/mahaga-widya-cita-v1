@@ -4,11 +4,11 @@ import { canManageAudience, canViewAudience } from "../utils/access";
 export const ContactSubmissions: CollectionConfig = {
   slug: "contact-submissions",
   labels: {
-    singular: { id: "Pesan Masuk", en: "Contact Submission" },
-    plural: { id: "Pesan Masuk", en: "Contact Submissions" },
+    singular: { id: "Pesan Masuk", en: "Contact Message" },
+    plural: { id: "Pesan Masuk Formulir", en: "Inbox Messages" },
   },
   admin: {
-    group: { id: "Data Audiens", en: "Audience Data" },
+    group: { id: "Pesan & Pengunjung", en: "Messages & Visitors" },
     useAsTitle: "name",
     defaultColumns: ["name", "email", "subject", "createdAt"],
   },

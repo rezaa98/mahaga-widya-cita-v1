@@ -5,11 +5,11 @@ import { generateResetPasswordEmail } from "../utils/resetPasswordEmail";
 export const Users: CollectionConfig = {
   slug: "users",
   labels: {
-    singular: { id: "Pengguna", en: "User" },
-    plural: { id: "Pengguna", en: "Users" },
+    singular: { id: "Akun Pengguna", en: "User Account" },
+    plural: { id: "Kelola Pengguna / Admin", en: "Manage Users" },
   },
   admin: {
-    group: { id: "Sistem", en: "System" },
+    group: { id: "Pengaturan & Akun", en: "Settings & Accounts" },
     useAsTitle: "email",
   },
   auth: {

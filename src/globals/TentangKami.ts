@@ -4,9 +4,9 @@ import { canManageSiteContent } from "../utils/access";
 
 export const TentangKami: GlobalConfig = {
   slug: "tentang-kami",
-  label: { id: "Halaman Tentang Kami", en: "About Us Page" },
+  label: { id: "2. Tentang Kami & Profil", en: "2. About Us & Profile" },
   admin: {
-    group: { id: "Website", en: "Website" },
+    group: { id: "Halaman Website", en: "Website Pages" },
     components: {
       elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] },
     },

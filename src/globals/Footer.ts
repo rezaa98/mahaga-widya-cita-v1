@@ -4,9 +4,9 @@ import { canManageSiteContent } from "../utils/access";
 
 export const Footer: GlobalConfig = {
   slug: "footer",
-  label: { id: "Footer", en: "Footer" },
+  label: { id: "7. Footer Website (Bawah)", en: "7. Website Footer" },
   admin: {
-    group: { id: "Website", en: "Website" },
+    group: { id: "Halaman Website", en: "Website Pages" },
     components: {
       elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] },
     },

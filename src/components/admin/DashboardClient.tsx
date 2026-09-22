@@ -20,7 +20,12 @@ import {
   UploadCloud,
   Mail,
   Link as LinkIcon,
+  HelpCircle,
+  CheckCircle2,
+  Sparkles,
+  ChevronDown,
 } from "lucide-react";
+import { HelpCenterModal } from "./HelpCenterModal";
 
 type Stats = {
   articles: { total: number; published: number; draft: number };
@@ -111,7 +116,7 @@ function MetricCard({
       <span className="mwc-metric__body">
         <span className="mwc-metric__label">{label}</span>
         <strong className={loading ? "mwc-skeleton mwc-metric__value" : "mwc-metric__value"}>
-          {loading ? "" : value}
+          {loading ? "" : (value ?? 0)}
         </strong>
         <small>{detail}</small>
       </span>
@@ -310,7 +315,7 @@ export const DashboardClient: React.FC = () => {
   const { user } = useAuth();
   const locale = useContentLocale();
   const isEn = useAdminLanguage() === "en";
-  const authUser = user as unknown as { role?: unknown } | null;
+  const authUser = user as unknown as { role?: unknown; name?: unknown; email?: unknown } | null;
   const role = typeof authUser?.role === "string" ? authUser.role : "member";
   const canCreateContent = ["admin", "editor", "super_admin"].includes(role);
   const canReviewContent = ["admin", "reviewer", "super_admin"].includes(role);
@@ -320,24 +325,28 @@ export const DashboardClient: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [request, setRequest] = useState(0);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
-  // Keep the first server/client render deterministic across UTC and the user's timezone.
-  const greeting = isEn ? "Welcome back" : "Selamat datang";
+  // Friendly personal greeting
+  const userName =
+    typeof authUser?.name === "string" && authUser.name.trim()
+      ? authUser.name.trim()
+      : typeof authUser?.email === "string"
+        ? authUser.email.split("@")[0]
+        : null;
+
+  const greeting = isEn
+    ? `Welcome back${userName ? `, ${userName}` : ""}! 👋`
+    : `Selamat datang${userName ? `, ${userName}` : ""}! 👋`;
 
   const actionItems = useMemo(
     () =>
       [
         {
           href: withLocale("/admin/collections/articles/create", locale),
-          icon: <FileText size={16} />,
-          label: isEn ? "New Article" : "Artikel Baru",
-          primary: true,
-          visible: canCreateContent,
-        },
-        {
-          href: withLocale("/admin/collections/journals/create", locale),
-          icon: <BookOpen size={16} />,
-          label: isEn ? "New Journal" : "Jurnal Baru",
+          icon: <PenSquare size={16} />,
+          label: isEn ? "Write New Article" : "Tulis Berita / Artikel Baru",
           primary: true,
           visible: canCreateContent,
         },
@@ -345,13 +354,13 @@ export const DashboardClient: React.FC = () => {
           href: withLocale("/admin/collections/articles?where[status][equals]=in_review", locale),
           icon: <FileCheck size={16} />,
           label: isEn ? "Review Content" : "Review Konten",
-          primary: true,
+          primary: false,
           visible: canReviewContent,
         },
         {
           href: withLocale("/admin/collections/media/create", locale),
           icon: <UploadCloud size={16} />,
-          label: "Upload Media",
+          label: isEn ? "Upload Media" : "Upload Foto / Media",
           visible: canManageMedia,
         },
         {
@@ -400,40 +409,42 @@ export const DashboardClient: React.FC = () => {
     setRequest((value) => value + 1);
   };
 
-  const subtitle = error
-    ? isEn
-      ? "Data unavailable. Please try reloading."
-      : "Data belum tersedia. Silakan coba muat ulang."
-    : loading
-      ? isEn
-        ? "Preparing your operational summary…"
-        : "Menyiapkan ringkasan operasional Anda…"
-      : data?.stats.contacts.recentCount
-        ? isEn
-          ? `There are ${data.stats.contacts.recentCount} new contact messages in the last 30 days.`
-          : `Ada ${data.stats.contacts.recentCount} pesan kontak baru dalam 30 hari terakhir.`
-        : isEn
-          ? "Summary of your website content and activities."
-          : "Ringkasan konten dan aktivitas website Anda.";
-
-  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const subtitle = isEn
+    ? "Easily manage your website pages, news articles, and visitor messages without technical complexity."
+    : "Kelola halaman, tulisan berita, dan pesan website Anda dengan mudah tanpa perlu keahlian teknis.";
 
   return (
     <main className="mwc-dashboard">
       <div className="mwc-dashboard__canvas">
+        {/* Welcome Header */}
         <header className="mwc-dashboard__header">
-          <div>
-            <p className="mwc-eyebrow">Mahaga Widya Cita CMS</p>
+          <div className="mwc-dashboard__header-left">
+            <span className="mwc-dashboard__tag">
+              <Sparkles size={13} style={{ color: "#2563eb" }} />
+              <span>PT Mahaga Widya Cita CMS</span>
+            </span>
             <h1>{greeting}</h1>
             <p>{subtitle}</p>
           </div>
-          <a className="mwc-dashboard__site-link" href={`/${locale}`} target="_blank" rel="noreferrer">
-            <ExternalLink size={15} />
-            {isEn ? "View website" : "Lihat website"}
-          </a>
+          <div className="mwc-dashboard__header-right">
+            <button
+              type="button"
+              className="mwc-header-btn mwc-header-btn--help"
+              onClick={() => setIsHelpModalOpen(true)}
+              title={isEn ? "Open Beginner Guide" : "Buka Panduan Bantuan"}
+            >
+              <HelpCircle size={16} />
+              <span>{isEn ? "Beginner Guide" : "Panduan Bantuan"}</span>
+            </button>
+            <a className="mwc-header-btn mwc-header-btn--site" href={`/${locale}`} target="_blank" rel="noreferrer">
+              <ExternalLink size={16} />
+              <span>{isEn ? "View Website" : "Lihat Website"}</span>
+            </a>
+          </div>
         </header>
 
-        <nav className="mwc-actions" aria-label="Aksi cepat">
+        {/* Action Buttons Bar */}
+        <nav className="mwc-actions" aria-label={isEn ? "Quick actions" : "Aksi cepat"}>
           {actionItems.map((item) => (
             <a
               className={item.primary ? "mwc-action mwc-action--primary" : "mwc-action"}
@@ -446,30 +457,94 @@ export const DashboardClient: React.FC = () => {
           ))}
           <button
             type="button"
-            className="mwc-action mwc-action--primary"
+            className="mwc-action"
             onClick={() => setIsImportModalOpen(true)}
-            style={{ background: "#7e22ce", borderColor: "#7e22ce", cursor: "pointer" }}
+            style={{ cursor: "pointer" }}
             hidden={!canCreateContent}
           >
             <LinkIcon size={15} />
-            {isEn ? "Import Journal (OJS Link)" : "Impor Jurnal (Link OJS)"}
+            {isEn ? "Import Journal (OJS)" : "Impor Jurnal (Link OJS)"}
           </button>
         </nav>
         <ImportJournalModal isOpen={isImportModalOpen} onClose={() => setIsImportModalOpen(false)} isEn={isEn} />
+        <HelpCenterModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
 
-        {/* Pusat Kendali Halaman Website (Beginner-Friendly Page Control Center) */}
+        {/* Panduan Singkat Pemula (3 Langkah Mudah) */}
+        <section className="mwc-quick-guide" aria-label={isEn ? "Quick guide for beginners" : "Panduan singkat pemula"}>
+          <div className="mwc-quick-guide__top">
+            <div className="mwc-quick-guide__title-wrap">
+              <span className="mwc-quick-guide__bulb">💡</span>
+              <div>
+                <h3>{isEn ? "3 Easy Steps to Manage Website" : "3 Langkah Mudah Mengelola Website"}</h3>
+                <p>
+                  {isEn
+                    ? "Safe, intuitive, and foolproof. Follow these simple steps:"
+                    : "Sangat mudah dan aman. Ikuti 3 langkah berikut untuk mengupdate website:"}
+                </p>
+              </div>
+            </div>
+            <button type="button" className="mwc-quick-guide__btn-link" onClick={() => setIsHelpModalOpen(true)}>
+              {isEn ? "View FAQ & Interactive Tour →" : "Buka Tanya Jawab (FAQ) & Tutorial →"}
+            </button>
+          </div>
+          <div className="mwc-quick-guide__steps">
+            <div className="mwc-quick-guide__step">
+              <span className="mwc-quick-guide__num">1</span>
+              <div>
+                <strong>{isEn ? "1. Select Section" : "1. Pilih Bagian Halaman"}</strong>
+                <p>
+                  {isEn
+                    ? "Click any card in the control center below for the page you want to update."
+                    : "Klik salah satu kartu di bawah sesuai bagian halaman yang ingin Anda perbarui."}
+                </p>
+              </div>
+            </div>
+            <div className="mwc-quick-guide__step">
+              <span className="mwc-quick-guide__num">2</span>
+              <div>
+                <strong>{isEn ? "2. Edit Text or Photo" : "2. Ubah Tulisan atau Foto"}</strong>
+                <p>
+                  {isEn
+                    ? "Type your new text or upload images. Each field includes clear dimension guides."
+                    : "Ketik teks baru atau upload gambar. Setiap kolom sudah dilengkapi petunjuk ukuran."}
+                </p>
+              </div>
+            </div>
+            <div className="mwc-quick-guide__step">
+              <span className="mwc-quick-guide__num">3</span>
+              <div>
+                <strong>{isEn ? "3. Save (Done!)" : "3. Klik Simpan (Selesai!)"}</strong>
+                <p>
+                  {isEn
+                    ? "Click the blue 'Save' button at the bottom right. All changes are securely saved!"
+                    : "Klik tombol biru 'Simpan' di pojok kanan bawah. Perubahan otomatis aman tersimpan!"}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="mwc-quick-guide__bottom">
+            <span>
+              🛡️{" "}
+              {isEn
+                ? "Worry-free editing: You can always use the 'Preview' button to check the live design before publishing."
+                : "Bebas rasa khawatir: Tersedia tombol 'Pratinjau' (Preview) untuk melihat hasil tampilan sebelum dipublikasikan ke publik."}
+            </span>
+          </div>
+        </section>
+
+        {/* Pusat Kendali Halaman & Konten (8 Visual Cards) */}
         <section
           className="mwc-control-hub"
           aria-label={isEn ? "Website Pages Control Center" : "Pusat Kendali Halaman Website"}
         >
           <div className="mwc-control-hub__header">
             <div>
-              <p className="mwc-eyebrow">{isEn ? "QUICK ACCESS & EDIT" : "AKSES & EDIT MUDAH"}</p>
-              <h2>{isEn ? "Website Page & Content Center" : "Pusat Kendali Halaman & Konten"}</h2>
+              <p className="mwc-eyebrow">{isEn ? "CLICK TO EDIT" : "KLIK UNTUK MENGEDIT LANGSUNG"}</p>
+              <h2>{isEn ? "Website Pages & Content Center" : "Pusat Kendali Halaman & Konten"}</h2>
               <p className="mwc-control-hub__subtitle">
                 {isEn
-                  ? "Select the page or content you want to edit. All changes can be previewed directly before publishing."
-                  : "Pilih bagian tampilan halaman atau konten yang ingin Anda ubah. Tidak perlu bingung mencari di menu samping."}
+                  ? "Select the page or content you want to edit. Direct 1-click access without searching through menus."
+                  : "Pilih bagian tampilan website yang ingin Anda ubah. Langsung klik kartu di bawah tanpa perlu bingung mencari di menu samping."}
               </p>
             </div>
           </div>
@@ -479,15 +554,15 @@ export const DashboardClient: React.FC = () => {
             <a href={withLocale("/admin/globals/beranda", locale)} className="mwc-hub-card mwc-hub-card--blue">
               <div className="mwc-hub-card__top">
                 <span className="mwc-hub-card__icon">
-                  <Home size={20} strokeWidth={2.2} />
+                  <Home size={22} strokeWidth={2.2} />
                 </span>
                 <span className="mwc-hub-card__badge">{isEn ? "Landing Page" : "Halaman Utama"}</span>
               </div>
-              <h3>{isEn ? "Homepage (Beranda)" : "Halaman Beranda"}</h3>
+              <h3>{isEn ? "Homepage (Beranda)" : "Halaman Beranda (Depan)"}</h3>
               <p>
                 {isEn
                   ? "Edit banner hero message, statistics, partner logos, and call-to-action."
-                  : "Ubah tulisan banner depan, angka statistik, logo mitra, dan tombol ajakan."}
+                  : "Ubah tulisan banner depan, angka statistik prestasi, logo mitra kerja, dan tombol ajakan."}
               </p>
               <div className="mwc-hub-card__action">
                 <span>{isEn ? "Edit Homepage" : "Edit Tampilan Beranda"}</span>
@@ -499,15 +574,15 @@ export const DashboardClient: React.FC = () => {
             <a href={withLocale("/admin/globals/tentang-kami", locale)} className="mwc-hub-card mwc-hub-card--indigo">
               <div className="mwc-hub-card__top">
                 <span className="mwc-hub-card__icon">
-                  <Building2 size={20} strokeWidth={2.2} />
+                  <Building2 size={22} strokeWidth={2.2} />
                 </span>
-                <span className="mwc-hub-card__badge">{isEn ? "About Us" : "Profil Perusahaan"}</span>
+                <span className="mwc-hub-card__badge">{isEn ? "About Us" : "Profil Korporat"}</span>
               </div>
               <h3>{isEn ? "About Us & Profile" : "Tentang Kami & Profil"}</h3>
               <p>
                 {isEn
                   ? "Update vision, mission, corporate profile, core values, and CEO statement."
-                  : "Kelola visi-misi, sejarah singkat, profil korporat, nilai inti, dan pesan CEO."}
+                  : "Kelola visi-misi, sejarah singkat, profil korporat, nilai inti, dan pesan direktur."}
               </p>
               <div className="mwc-hub-card__action">
                 <span>{isEn ? "Edit Profile" : "Edit Tentang Kami"}</span>
@@ -515,22 +590,22 @@ export const DashboardClient: React.FC = () => {
               </div>
             </a>
 
-            {/* 3. Kontak */}
-            <a href={withLocale("/admin/globals/kontak", locale)} className="mwc-hub-card mwc-hub-card--amber">
+            {/* 3. Layanan */}
+            <a href={withLocale("/admin/collections/services", locale)} className="mwc-hub-card mwc-hub-card--purple">
               <div className="mwc-hub-card__top">
                 <span className="mwc-hub-card__icon">
-                  <PhoneCall size={20} strokeWidth={2.2} />
+                  <Briefcase size={22} strokeWidth={2.2} />
                 </span>
-                <span className="mwc-hub-card__badge">{isEn ? "Contact" : "Informasi Kontak"}</span>
+                <span className="mwc-hub-card__badge">{isEn ? "Services" : "Layanan"}</span>
               </div>
-              <h3>{isEn ? "Contact & Location" : "Kontak & Lokasi"}</h3>
+              <h3>{isEn ? "Consulting Services" : "Layanan Konsultasi"}</h3>
               <p>
                 {isEn
-                  ? "Update WhatsApp number, official email, office address, and Google Maps."
-                  : "Ubah nomor WhatsApp, email kantor, alamat gedung, dan peta Google Maps."}
+                  ? "Manage consulting areas, features, benefits, and service descriptions."
+                  : "Tambah & kelola bidang layanan konsultasi, fitur keunggulan, dan penjelasan paket layanan."}
               </p>
               <div className="mwc-hub-card__action">
-                <span>{isEn ? "Edit Contact" : "Ubah Kontak & Alamat"}</span>
+                <span>{isEn ? "Manage Services" : "Kelola Layanan"}</span>
                 <ArrowRight size={15} strokeWidth={2.5} />
               </div>
             </a>
@@ -542,7 +617,7 @@ export const DashboardClient: React.FC = () => {
             >
               <div className="mwc-hub-card__top">
                 <span className="mwc-hub-card__icon">
-                  <Users size={20} strokeWidth={2.2} />
+                  <Users size={22} strokeWidth={2.2} />
                 </span>
                 <span className="mwc-hub-card__badge">{isEn ? "Team" : "Profil Tim"}</span>
               </div>
@@ -550,7 +625,7 @@ export const DashboardClient: React.FC = () => {
               <p>
                 {isEn
                   ? "Add or update team profile photos, titles, biographies, and expertise."
-                  : "Tambah atau perbarui foto profil, jabatan, biografi, dan keahlian anggota tim."}
+                  : "Tambah atau perbarui pas foto profil, gelar, jabatan, biografi, dan keahlian anggota tim."}
               </p>
               <div className="mwc-hub-card__action">
                 <span>{isEn ? "Manage Team" : "Kelola Anggota Tim"}</span>
@@ -558,50 +633,91 @@ export const DashboardClient: React.FC = () => {
               </div>
             </a>
 
-            {/* 5. Layanan */}
-            <a href={withLocale("/admin/collections/services", locale)} className="mwc-hub-card mwc-hub-card--purple">
+            {/* 5. Kontak */}
+            <a href={withLocale("/admin/globals/kontak", locale)} className="mwc-hub-card mwc-hub-card--amber">
               <div className="mwc-hub-card__top">
                 <span className="mwc-hub-card__icon">
-                  <Briefcase size={20} strokeWidth={2.2} />
+                  <PhoneCall size={22} strokeWidth={2.2} />
                 </span>
-                <span className="mwc-hub-card__badge">{isEn ? "Services" : "Layanan"}</span>
+                <span className="mwc-hub-card__badge">{isEn ? "Contact" : "Informasi Kontak"}</span>
               </div>
-              <h3>{isEn ? "Consulting Services" : "Layanan Perusahaan"}</h3>
+              <h3>{isEn ? "Contact & Location" : "Kontak & Alamat Kantor"}</h3>
               <p>
                 {isEn
-                  ? "Manage consulting areas, features, benefits, and service descriptions."
-                  : "Kelola bidang layanan konsultasi, fitur keunggulan, dan penjelasan layanan."}
+                  ? "Update WhatsApp number, official email, office address, and Google Maps."
+                  : "Ubah nomor WhatsApp, email kantor, nomor telepon, alamat gedung, dan peta Google Maps."}
               </p>
               <div className="mwc-hub-card__action">
-                <span>{isEn ? "Manage Services" : "Kelola Layanan"}</span>
+                <span>{isEn ? "Edit Contact" : "Ubah Kontak & Alamat"}</span>
                 <ArrowRight size={15} strokeWidth={2.5} />
               </div>
             </a>
 
-            {/* 6. Artikel & Galeri Foto */}
-            <a
-              href={withLocale("/admin/collections/articles/create", locale)}
-              className="mwc-hub-card mwc-hub-card--rose"
-            >
+            {/* 6. Artikel & Berita */}
+            <a href={withLocale("/admin/collections/articles", locale)} className="mwc-hub-card mwc-hub-card--rose">
               <div className="mwc-hub-card__top">
                 <span className="mwc-hub-card__icon">
-                  <PenSquare size={20} strokeWidth={2.2} />
+                  <PenSquare size={22} strokeWidth={2.2} />
                 </span>
-                <span className="mwc-hub-card__badge">{isEn ? "Articles" : "Publikasi Baru"}</span>
+                <span className="mwc-hub-card__badge">{isEn ? "Articles" : "Publikasi Berita"}</span>
               </div>
-              <h3>{isEn ? "Write Article & Photos" : "Tulis Artikel & Foto"}</h3>
+              <h3>{isEn ? "Articles & News" : "Artikel & Berita Kegiatan"}</h3>
               <p>
                 {isEn
                   ? "Create news articles with banner cover and multi-photo documentation gallery."
-                  : "Buat rilis berita lengkap dengan sampul dan album galeri banyak foto kegiatan."}
+                  : "Tulis rilis berita resmi lengkap dengan foto sampul dan album galeri dokumentasi kegiatan."}
               </p>
               <div className="mwc-hub-card__action">
-                <span>{isEn ? "Write New Article" : "Tulis Artikel Baru"}</span>
+                <span>{isEn ? "Manage Articles" : "Buka Daftar Artikel"}</span>
+                <ArrowRight size={15} strokeWidth={2.5} />
+              </div>
+            </a>
+
+            {/* 7. Jurnal Ilmiah */}
+            <a href={withLocale("/admin/collections/journals", locale)} className="mwc-hub-card mwc-hub-card--cyan">
+              <div className="mwc-hub-card__top">
+                <span className="mwc-hub-card__icon">
+                  <BookOpen size={22} strokeWidth={2.2} />
+                </span>
+                <span className="mwc-hub-card__badge">{isEn ? "Journals" : "Karya Ilmiah"}</span>
+              </div>
+              <h3>{isEn ? "Scientific Journals" : "Jurnal & Riset Publikasi"}</h3>
+              <p>
+                {isEn
+                  ? "Manage scientific publications, DOI metadata, PDF documents, and OJS imports."
+                  : "Kelola publikasi karya ilmiah, nomor DOI, berkas PDF dokumen, dan impor dari link OJS."}
+              </p>
+              <div className="mwc-hub-card__action">
+                <span>{isEn ? "Manage Journals" : "Kelola Jurnal"}</span>
+                <ArrowRight size={15} strokeWidth={2.5} />
+              </div>
+            </a>
+
+            {/* 8. Pesan Masuk */}
+            <a
+              href={withLocale("/admin/collections/contact-submissions", locale)}
+              className="mwc-hub-card mwc-hub-card--orange"
+            >
+              <div className="mwc-hub-card__top">
+                <span className="mwc-hub-card__icon">
+                  <Mail size={22} strokeWidth={2.2} />
+                </span>
+                <span className="mwc-hub-card__badge">{isEn ? "Inbox" : "Pesan Masuk"}</span>
+              </div>
+              <h3>{isEn ? "Visitor Inbox Messages" : "Pesan Masuk Pengunjung"}</h3>
+              <p>
+                {isEn
+                  ? "View inquiries, collaboration offers, and messages sent via the contact form."
+                  : "Lihat pesan pertanyaan, tawaran kerjasama, dan kontak yang dikirim pengunjung website."}
+              </p>
+              <div className="mwc-hub-card__action">
+                <span>{isEn ? "View Messages" : "Buka Pesan Masuk"}</span>
                 <ArrowRight size={15} strokeWidth={2.5} />
               </div>
             </a>
           </div>
         </section>
+
         {error && (
           <section className="mwc-dashboard__error" role="alert">
             <span>
@@ -615,32 +731,33 @@ export const DashboardClient: React.FC = () => {
           </section>
         )}
 
+        {/* Ringkasan Singkat Website (4 Clean Metric Cards) */}
         <section className="mwc-metrics" aria-label={isEn ? "Content summary" : "Ringkasan konten"}>
           <MetricCard
             detail={
               data
-                ? `${data.stats.articles.published} published · ${data.stats.articles.draft} draft`
+                ? `${data.stats.articles.published} ${isEn ? "published" : "terbit"} · ${data.stats.articles.draft} draft`
                 : isEn
-                  ? "Loading status…"
-                  : "Memuat status…"
+                  ? "Loading..."
+                  : "Memuat..."
             }
             href={withLocale("/admin/collections/articles", locale)}
             icon="article"
-            label={isEn ? "Articles" : "Artikel"}
+            label={isEn ? "Articles & News" : "Artikel Berita"}
             loading={loading}
             value={data?.stats.articles.total}
           />
           <MetricCard
             detail={
               data
-                ? `${data.stats.journals.published} published · ${data.stats.journals.draft} draft`
+                ? `${data.stats.journals.published} ${isEn ? "published" : "terbit"} · ${data.stats.journals.draft} draft`
                 : isEn
-                  ? "Loading status…"
-                  : "Memuat status…"
+                  ? "Loading..."
+                  : "Memuat..."
             }
             href={withLocale("/admin/collections/journals", locale)}
             icon="menu_book"
-            label={isEn ? "Journals" : "Jurnal"}
+            label={isEn ? "Scientific Journals" : "Jurnal Ilmiah"}
             loading={loading}
             tone="purple"
             value={data?.stats.journals.total}
@@ -650,12 +767,12 @@ export const DashboardClient: React.FC = () => {
               data
                 ? `${data.stats.contacts.recentCount} ${isEn ? "new in 30 days" : "baru 30 hari ini"}`
                 : isEn
-                  ? "Loading status…"
-                  : "Memuat status…"
+                  ? "Loading..."
+                  : "Memuat..."
             }
             href={withLocale("/admin/collections/contact-submissions", locale)}
             icon="mail"
-            label={isEn ? "Contact Messages" : "Pesan kontak"}
+            label={isEn ? "Visitor Messages" : "Pesan Masuk Formulir"}
             loading={loading}
             tone="amber"
             value={data?.stats.contacts.total}
@@ -663,83 +780,118 @@ export const DashboardClient: React.FC = () => {
           <MetricCard
             detail={
               data
-                ? `${data.stats.media.total} ${isEn ? "files in library" : "file di library"}`
+                ? `${data.stats.media.total} ${isEn ? "files in gallery" : "file di galeri"}`
                 : isEn
-                  ? "Loading status…"
-                  : "Memuat status…"
+                  ? "Loading..."
+                  : "Memuat..."
             }
             href={withLocale("/admin/collections/media", locale)}
             icon="perm_media"
-            label={isEn ? "Media" : "Media"}
+            label={isEn ? "Photos & Media" : "Galeri Foto & Media"}
             loading={loading}
             tone="slate"
             value={data?.stats.media.total}
           />
         </section>
 
+        {/* Technical / Advanced Details Collapsible (Accordion) */}
         {data && !error && (
-          <section className="mwc-dashboard__content">
-            <TranslationPanel data={data} isEn={isEn} />
-            <section className="mwc-panel mwc-chart">
-              <div className="mwc-panel__heading">
-                <div>
-                  <p className="mwc-eyebrow">{isEn ? "Publications" : "Publikasi"}</p>
-                  <h2>{isEn ? "Content Growth" : "Pertumbuhan konten"}</h2>
-                </div>
-                <span>{isEn ? "Last 4 weeks" : "4 minggu terakhir"}</span>
+          <details className="mwc-advanced-details">
+            <summary className="mwc-advanced-details__summary">
+              <div className="mwc-advanced-details__summary-left">
+                <span className="material-symbols-outlined" style={{ fontSize: "20px", color: "#64748b" }}>
+                  settings_suggest
+                </span>
+                <span className="mwc-advanced-details__title">
+                  {isEn
+                    ? "Advanced System Status, AI Translation Queue & Activity Timeline"
+                    : "Rincian Teknis: Status Terjemahan AI & Riwayat Aktivitas"}
+                </span>
+                <span className="mwc-advanced-details__hint">
+                  {isEn ? "(Click to expand)" : "(Klik untuk membuka rincian teknis)"}
+                </span>
               </div>
-              {data.weeklyChartData.length ? (
-                <div className="mwc-chart__area">
-                  <ResponsiveContainer height="100%" width="100%">
-                    <AreaChart data={data.weeklyChartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="mwc-content-growth" x1="0" x2="0" y1="0" y2="1">
-                          <stop offset="5%" stopColor="#2563eb" stopOpacity={0.28} />
-                          <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid stroke="#e4e6ee" strokeDasharray="3 3" vertical={false} />
-                      <XAxis
-                        axisLine={false}
-                        dataKey="name"
-                        tick={{ fill: "#687087", fontSize: 11 }}
-                        tickLine={false}
-                      />
-                      <YAxis
-                        allowDecimals={false}
-                        axisLine={false}
-                        tick={{ fill: "#687087", fontSize: 11 }}
-                        tickLine={false}
-                      />
-                      <Tooltip />
-                      <Area
-                        dataKey="articles"
-                        fill="url(#mwc-content-growth)"
-                        name={isEn ? "Articles" : "Artikel"}
-                        stroke="#2563eb"
-                        strokeWidth={2.5}
-                        type="monotone"
-                      />
-                      <Area
-                        dataKey="journals"
-                        fill="none"
-                        name={isEn ? "Journals" : "Jurnal"}
-                        stroke="#7c3aed"
-                        strokeWidth={2.5}
-                        type="monotone"
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              ) : (
-                <p className="mwc-empty">
-                  {isEn ? "No growth data available to display." : "Belum ada data pertumbuhan untuk ditampilkan."}
-                </p>
-              )}
-            </section>
-            <AttentionPanel data={data} isEn={isEn} locale={locale} />
-            <ActivityList data={data} isEn={isEn} loading={loading} locale={locale} />
-          </section>
+              <span className="mwc-advanced-details__badge">
+                {data.stats.translations.needsReview +
+                  data.stats.translations.needsUpdate +
+                  data.stats.translations.failed >
+                0 ? (
+                  <span style={{ color: "#b45309", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                    ⚠️ {isEn ? "Attention required" : "Perlu perhatian"}
+                  </span>
+                ) : (
+                  <span style={{ color: "#166534", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                    <CheckCircle2 size={14} /> {isEn ? "All Synced & Translated" : "Semua Tersinkron Otomatis"}
+                  </span>
+                )}
+              </span>
+            </summary>
+
+            <div className="mwc-advanced-details__body">
+              <section className="mwc-dashboard__content">
+                <TranslationPanel data={data} isEn={isEn} />
+                <section className="mwc-panel mwc-chart">
+                  <div className="mwc-panel__heading">
+                    <div>
+                      <p className="mwc-eyebrow">{isEn ? "Publications" : "Publikasi"}</p>
+                      <h2>{isEn ? "Content Growth" : "Pertumbuhan konten"}</h2>
+                    </div>
+                    <span>{isEn ? "Last 4 weeks" : "4 minggu terakhir"}</span>
+                  </div>
+                  {data.weeklyChartData.length ? (
+                    <div className="mwc-chart__area">
+                      <ResponsiveContainer height="100%" width="100%">
+                        <AreaChart data={data.weeklyChartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id="mwc-content-growth" x1="0" x2="0" y1="0" y2="1">
+                              <stop offset="5%" stopColor="#2563eb" stopOpacity={0.28} />
+                              <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid stroke="#e4e6ee" strokeDasharray="3 3" vertical={false} />
+                          <XAxis
+                            axisLine={false}
+                            dataKey="name"
+                            tick={{ fill: "#687087", fontSize: 11 }}
+                            tickLine={false}
+                          />
+                          <YAxis
+                            allowDecimals={false}
+                            axisLine={false}
+                            tick={{ fill: "#687087", fontSize: 11 }}
+                            tickLine={false}
+                          />
+                          <Tooltip />
+                          <Area
+                            dataKey="articles"
+                            fill="url(#mwc-content-growth)"
+                            name={isEn ? "Articles" : "Artikel"}
+                            stroke="#2563eb"
+                            strokeWidth={2.5}
+                            type="monotone"
+                          />
+                          <Area
+                            dataKey="journals"
+                            fill="none"
+                            name={isEn ? "Journals" : "Jurnal"}
+                            stroke="#7c3aed"
+                            strokeWidth={2.5}
+                            type="monotone"
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  ) : (
+                    <p className="mwc-empty">
+                      {isEn ? "No growth data available to display." : "Belum ada data pertumbuhan untuk ditampilkan."}
+                    </p>
+                  )}
+                </section>
+                <AttentionPanel data={data} isEn={isEn} locale={locale} />
+                <ActivityList data={data} isEn={isEn} loading={loading} locale={locale} />
+              </section>
+            </div>
+          </details>
         )}
       </div>
     </main>

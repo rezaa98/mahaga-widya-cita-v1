@@ -6,10 +6,10 @@ export const Services: CollectionConfig = {
   slug: "services",
   labels: {
     singular: { id: "Layanan", en: "Service" },
-    plural: { id: "Layanan", en: "Services" },
+    plural: { id: "3. Layanan Perusahaan", en: "3. Corporate Services" },
   },
   admin: {
-    group: { id: "Profil Perusahaan", en: "Corporate Profile" },
+    group: { id: "Halaman Website", en: "Website Pages" },
     useAsTitle: "title",
     defaultColumns: ["title", "slug", "updatedAt"],
     components: {

@@ -72,12 +72,12 @@ async function validatePDF(value: unknown, { req }: { req: any }) {
 export const Journals: CollectionConfig = {
   slug: "journals",
   labels: {
-    singular: { id: "Jurnal", en: "Journal" },
-    plural: { id: "Jurnal", en: "Journals" },
+    singular: { id: "Jurnal Ilmiah", en: "Scientific Journal" },
+    plural: { id: "Jurnal Ilmiah", en: "Scientific Journals" },
   },
   versions: { drafts: { autosave: true }, maxPerDoc: 15 },
   admin: {
-    group: { id: "Manajemen Konten", en: "Content Management" },
+    group: { id: "Publikasi & Berita", en: "Publications & News" },
     useAsTitle: "title",
     defaultColumns: ["title", "publicationYear", "status", "updatedAt"],
     listSearchableFields: ["title", "slug", "doi"],

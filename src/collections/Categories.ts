@@ -5,11 +5,11 @@ import { canManageContent } from "../utils/access";
 export const Categories: CollectionConfig = {
   slug: "categories",
   labels: {
-    singular: { id: "Kategori", en: "Category" },
-    plural: { id: "Kategori", en: "Categories" },
+    singular: { id: "Kategori Berita", en: "News Category" },
+    plural: { id: "Kategori Berita", en: "News Categories" },
   },
   admin: {
-    group: { id: "Manajemen Konten", en: "Content Management" },
+    group: { id: "Publikasi & Berita", en: "Publications & News" },
     useAsTitle: "name",
     components: {
       edit: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] },

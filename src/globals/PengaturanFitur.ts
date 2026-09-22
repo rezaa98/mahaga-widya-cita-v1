@@ -9,8 +9,8 @@ export const PengaturanFitur: GlobalConfig = {
   },
   admin: {
     group: {
-      id: "Pengaturan Sistem",
-      en: "System Settings",
+      id: "Pengaturan & Akun",
+      en: "Settings & Accounts",
     },
   },
   access: {

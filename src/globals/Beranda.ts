@@ -4,9 +4,9 @@ import { canManageSiteContent } from "../utils/access";
 
 export const Beranda: GlobalConfig = {
   slug: "beranda",
-  label: { id: "Beranda (Landing Page)", en: "Home (Landing Page)" },
+  label: { id: "1. Halaman Beranda (Depan)", en: "1. Homepage" },
   admin: {
-    group: { id: "Website", en: "Website" },
+    group: { id: "Halaman Website", en: "Website Pages" },
     components: {
       elements: { beforeDocumentControls: ["@/components/admin/LocaleDocumentControls#LocaleDocumentControls"] },
     },

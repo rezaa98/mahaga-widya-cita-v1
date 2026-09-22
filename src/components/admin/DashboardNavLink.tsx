@@ -42,7 +42,7 @@ export const DashboardNavLink: React.FC = () => {
         >
           dashboard
         </span>
-        {isEn ? "Dashboard" : "Ringkasan"}
+        {isEn ? "Dashboard Overview" : "Beranda Admin"}
       </Link>
     </div>
   );
