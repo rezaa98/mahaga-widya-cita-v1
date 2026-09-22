@@ -2,55 +2,74 @@
 
 import React from "react";
 import { useAdminLanguage } from "./adminLocale";
+import {
+  FileEdit,
+  Clock,
+  MessageSquareWarning,
+  CheckCircle2,
+  CalendarClock,
+  Globe,
+  Archive,
+  HelpCircle,
+} from "lucide-react";
 
-const STATUS_CONFIG: Record<string, { label: string; bg: string; color: string; icon: string; tip: string }> = {
+const STATUS_CONFIG: Record<
+  string,
+  {
+    label: string;
+    bg: string;
+    color: string;
+    icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }>;
+    tip: string;
+  }
+> = {
   draft: {
     label: "Draft",
     bg: "#f1f5f9",
     color: "#475569",
-    icon: "edit_note",
+    icon: FileEdit,
     tip: "Konten sedang ditulis dan belum dikirim untuk review.",
   },
   in_review: {
     label: "Menunggu Review",
     bg: "#fef3c7",
     color: "#92400e",
-    icon: "rate_review",
+    icon: Clock,
     tip: "Konten sedang ditinjau oleh reviewer.",
   },
   revision_requested: {
     label: "Perlu Revisi",
     bg: "#fee2e2",
     color: "#991b1b",
-    icon: "feedback",
+    icon: MessageSquareWarning,
     tip: "Reviewer meminta perubahan sebelum disetujui.",
   },
   approved: {
     label: "Disetujui",
     bg: "#d1fae5",
     color: "#065f46",
-    icon: "check_circle",
+    icon: CheckCircle2,
     tip: "Konten disetujui dan siap untuk dipublikasikan oleh admin.",
   },
   scheduled: {
     label: "Terjadwal",
     bg: "#dbeafe",
     color: "#1e40af",
-    icon: "schedule",
+    icon: CalendarClock,
     tip: "Konten dijadwalkan untuk dipublikasikan secara otomatis.",
   },
   published: {
     label: "Dipublikasikan",
     bg: "#dcfce7",
     color: "#166534",
-    icon: "public",
+    icon: Globe,
     tip: "Konten sudah dipublikasikan dan dapat diakses publik.",
   },
   archived: {
     label: "Diarsipkan",
     bg: "#f3f4f6",
     color: "#6b7280",
-    icon: "inventory_2",
+    icon: Archive,
     tip: "Konten diarsipkan dan tidak ditampilkan di website.",
   },
 };
@@ -59,7 +78,7 @@ const DEFAULT_STATUS = {
   label: "Unknown",
   bg: "#f3f4f6",
   color: "#6b7280",
-  icon: "help",
+  icon: HelpCircle,
   tip: "",
 };
 
@@ -77,6 +96,7 @@ export const EditorialStatusCell: React.FC<any> = ({ cellData }) => {
     archived: { label: "Archived", tip: "Content is archived and hidden from the website." },
   };
   const localizedConfig = isEn && englishCopy[status] ? { ...config, ...englishCopy[status] } : config;
+  const StatusIcon = localizedConfig.icon;
 
   return (
     <span
@@ -97,9 +117,7 @@ export const EditorialStatusCell: React.FC<any> = ({ cellData }) => {
         cursor: localizedConfig.tip ? "help" : "default",
       }}
     >
-      <span aria-hidden className="material-symbols-outlined" style={{ fontSize: 15, lineHeight: 1 }}>
-        {localizedConfig.icon}
-      </span>
+      <StatusIcon size={13} style={{ flexShrink: 0 }} />
       {localizedConfig.label}
     </span>
   );

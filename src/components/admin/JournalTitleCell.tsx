@@ -3,6 +3,7 @@
 import Link from "next/link";
 import React from "react";
 import { useContentLocale, withLocale } from "./adminLocale";
+import { BookOpen } from "lucide-react";
 
 /**
  * Custom cell rendering a journal cover + title + year in the admin list view.
@@ -53,11 +54,7 @@ export const JournalTitleCell: React.FC<any> = ({ cellData, rowData }) => {
           transition: "all 0.15s ease",
         }}
       >
-        {!thumbUrl && (
-          <span aria-hidden className="material-symbols-outlined" style={{ fontSize: 18, color: "#94a3b8" }}>
-            menu_book
-          </span>
-        )}
+        {!thumbUrl && <BookOpen size={18} color="#94a3b8" />}
       </div>
       <div style={{ minWidth: 0 }}>
         <div

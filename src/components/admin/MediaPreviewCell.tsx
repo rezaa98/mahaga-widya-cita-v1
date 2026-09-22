@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { FileText, File } from "lucide-react";
 
 /**
  * Renders a small thumbnail preview of a media file in the admin list view.
@@ -30,11 +31,12 @@ export const MediaPreviewCell: React.FC<any> = ({ rowData }) => {
           overflow: "hidden",
         }}
       >
-        {(!isImage || !previewUrl) && (
-          <span aria-hidden className="material-symbols-outlined" style={{ fontSize: 20, color: "#64748b" }}>
-            {mimeType === "application/pdf" ? "picture_as_pdf" : "insert_drive_file"}
-          </span>
-        )}
+        {(!isImage || !previewUrl) &&
+          (mimeType === "application/pdf" ? (
+            <FileText size={20} color="#64748b" />
+          ) : (
+            <File size={20} color="#64748b" />
+          ))}
       </div>
       <div style={{ minWidth: 0 }}>
         <div

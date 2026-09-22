@@ -3,6 +3,7 @@
 import Link from "next/link";
 import React from "react";
 import { useContentLocale, withLocale } from "./adminLocale";
+import { Image as ImageIcon } from "lucide-react";
 
 /**
  * Custom cell rendering an article thumbnail + title + category in the admin
@@ -55,11 +56,7 @@ export const ArticleTitleCell: React.FC<any> = ({ cellData, rowData }) => {
           transition: "transform 0.15s ease",
         }}
       >
-        {!thumbUrl && (
-          <span aria-hidden className="material-symbols-outlined" style={{ fontSize: 22, color: "#94a3b8" }}>
-            image
-          </span>
-        )}
+        {!thumbUrl && <ImageIcon size={22} color="#94a3b8" />}
       </div>
       <div style={{ minWidth: 0 }}>
         <div

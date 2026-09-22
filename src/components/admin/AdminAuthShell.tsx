@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import type { ReactNode } from "react";
+import { ShieldCheck, Lock } from "lucide-react";
 
 type Props = {
   children: ReactNode;
@@ -13,7 +14,6 @@ export const AdminAuthShell = ({ children, description, title }: Props) => (
   <div className="admin-auth-shell">
     <style>{`
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-      @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
       .admin-auth-shell { position: fixed; inset: 0; z-index: 1000; display: grid; grid-template-columns: minmax(400px, 44%) 1fr; overflow: auto; background: #f5f8fd; color: #15233b; font-family: Inter,system-ui,sans-serif; }
       .admin-auth-brand { position: relative; min-height: 100vh; overflow: hidden; padding: clamp(36px,5vw,72px); display: flex; flex-direction: column; justify-content: space-between; color: #fff; background: linear-gradient(145deg,#071d47 0%,#0a3f91 52%,#1269d9 100%); }
       .admin-auth-brand::before { content: ''; position: absolute; width: 620px; height: 620px; right: -360px; top: -240px; border-radius: 50%; background: rgba(255,255,255,.09); }
@@ -23,7 +23,7 @@ export const AdminAuthShell = ({ children, description, title }: Props) => (
       .admin-auth-logo { display: flex; align-items: center; gap: 14px; font-size: 17px; font-weight: 700; letter-spacing: -.02em; }
       .admin-auth-message { max-width: 500px; margin-top: clamp(80px,14vh,160px); }
       .admin-auth-kicker { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid rgba(255,255,255,.24); border-radius: 999px; background: rgba(255,255,255,.1); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
-      .admin-auth-message h2 { max-width: 470px; margin: 24px 0 18px; font-size: clamp(40px,4.8vw,68px); line-height: 1.02; letter-spacing: -.055em; }
+      .admin-auth-message h2 { max-width: 470px; margin: 24px 0 18px; font-size: clamp(38px,4.5vw,62px); line-height: 1.16; letter-spacing: -.03em; }
       .admin-auth-message p { max-width: 450px; margin: 0; color: #d8e7ff; font-size: 15px; line-height: 1.8; }
       .admin-auth-brand-foot { display: flex; align-items: center; gap: 8px; color: #c5d9f8; font-size: 12px; }
       .admin-auth-content { min-height: 100vh; display: grid; place-items: center; padding: clamp(28px,6vw,88px); position: relative; }
@@ -63,9 +63,7 @@ export const AdminAuthShell = ({ children, description, title }: Props) => (
         </div>
         <div className="admin-auth-message">
           <span className="admin-auth-kicker">
-            <span className="material-symbols-outlined" style={{ fontSize: 15 }}>
-              verified_user
-            </span>{" "}
+            <ShieldCheck size={15} />
             Portal administrator
           </span>
           <h2>Kelola konten. Bangun kepercayaan.</h2>
@@ -76,9 +74,7 @@ export const AdminAuthShell = ({ children, description, title }: Props) => (
         </div>
       </div>
       <div className="admin-auth-brand-foot">
-        <span className="material-symbols-outlined" style={{ fontSize: 16 }}>
-          lock
-        </span>{" "}
+        <Lock size={15} />
         Akses terenkripsi dan terlindungi
       </div>
     </aside>

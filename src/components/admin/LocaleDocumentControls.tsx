@@ -7,6 +7,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { toast, useDocumentInfo, useFormModified } from "@payloadcms/ui";
 import { CONTENT_LOCALES, useAdminLanguage, useContentLocale, withLocale } from "./adminLocale";
 import { TranslationModal } from "./TranslationModal";
+import { Eye, ArrowLeftRight, Languages, ArrowLeft, CheckCircle2, RefreshCw } from "lucide-react";
 
 type Availability = "checking" | "available" | "missing" | "new" | "error";
 type TranslationState =
@@ -458,9 +459,7 @@ export const LocaleDocumentControls: React.FC = () => {
                 className="mwc-document-locale__switch-link"
                 title={isEn ? "View page on live website" : "Lihat halaman ini di website"}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: 16 }}>
-                  visibility
-                </span>
+                <Eye size={15} />
                 <span>{isEn ? "View on Web" : "Lihat di Web"}</span>
               </a>
             )}
@@ -474,9 +473,7 @@ export const LocaleDocumentControls: React.FC = () => {
               className="mwc-document-locale__switch-link"
               title={locale === "id" ? "Beralih ke Bahasa Inggris" : "Beralih ke Bahasa Indonesia"}
             >
-              <span className="material-symbols-outlined" style={{ fontSize: 16 }}>
-                swap_horiz
-              </span>
+              <ArrowLeftRight size={15} />
               <span>{locale === "id" ? "Ke Versi EN" : "Ke Versi ID"}</span>
             </a>
 
@@ -488,9 +485,7 @@ export const LocaleDocumentControls: React.FC = () => {
                 onClick={() => setTransModalOpen(true)}
                 title={isEn ? "English Translation AI" : "Terjemahan Bahasa Inggris (AI)"}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: 15 }}>
-                  translate
-                </span>
+                <Languages size={15} />
                 <span>{isEn ? "Translation (AI)" : "Terjemahan (AI)"}</span>
               </button>
             )}
@@ -510,9 +505,7 @@ export const LocaleDocumentControls: React.FC = () => {
 
             {translation.status === "needs_update" && (
               <a className="mwc-translation-workflow__action" href="?locale=id">
-                <span className="material-symbols-outlined" aria-hidden>
-                  arrow_back
-                </span>
+                <ArrowLeft size={15} />
                 {isEn ? "Open Indonesian source" : "Buka sumber Indonesia"}
               </a>
             )}
@@ -619,9 +612,13 @@ export const LocaleDocumentControls: React.FC = () => {
 
             {action && (
               <button className="mwc-translation-workflow__action" type="button" onClick={() => void runAction(action)}>
-                <span className="material-symbols-outlined" aria-hidden>
-                  {action === "approve" ? "check_circle" : action === "retry" ? "refresh" : "translate"}
-                </span>
+                {action === "approve" ? (
+                  <CheckCircle2 size={15} />
+                ) : action === "retry" ? (
+                  <RefreshCw size={15} />
+                ) : (
+                  <Languages size={15} />
+                )}
                 {actionLabel(action)}
               </button>
             )}

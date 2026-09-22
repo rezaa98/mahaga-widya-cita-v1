@@ -2,12 +2,35 @@
 
 import React, { useState } from "react";
 import { toast, useForm, useFormFields, useAuth, useDocumentInfo, useFormModified } from "@payloadcms/ui";
-import { Globe } from "lucide-react";
+import {
+  Globe,
+  Eye,
+  FileEdit,
+  Clock,
+  Rocket,
+  Send,
+  CheckCircle2,
+  MessageSquareWarning,
+  CalendarClock,
+  Archive,
+  RotateCcw,
+} from "lucide-react";
 import { hasCapability } from "@/utils/access";
 import { useAdminLanguage, useContentLocale } from "./adminLocale";
 import { TranslationModal } from "./TranslationModal";
 
 type AuthUser = { role?: unknown } | null | undefined;
+
+const ACTION_ICONS: Record<string, React.ComponentType<{ size?: number; style?: React.CSSProperties }>> = {
+  rocket_launch: Rocket,
+  send: Send,
+  check_circle: CheckCircle2,
+  feedback: MessageSquareWarning,
+  public: Globe,
+  schedule: CalendarClock,
+  inventory_2: Archive,
+  unarchive: RotateCcw,
+};
 
 const STATUS_ACTIONS: Record<string, { label: string; icon: string; nextStatuses: string[] }[]> = {
   draft: [
@@ -108,9 +131,13 @@ export const EditorActionBar: React.FC = () => {
     <>
       <div className="mwc-editor-action-bar">
         <div className="mwc-editor-action-bar__status">
-          <span className="material-symbols-outlined" aria-hidden style={{ fontSize: 18 }}>
-            {currentStatus === "published" ? "public" : currentStatus === "draft" ? "edit_note" : "pending"}
-          </span>
+          {currentStatus === "published" ? (
+            <Globe size={16} style={{ color: "#166534" }} />
+          ) : currentStatus === "draft" ? (
+            <FileEdit size={16} style={{ color: "#64748b" }} />
+          ) : (
+            <Clock size={16} style={{ color: "#b45309" }} />
+          )}
           <span>
             {isEn ? "Status" : "Status"}: <strong>{statusLabel}</strong>
           </span>
@@ -118,20 +145,6 @@ export const EditorActionBar: React.FC = () => {
           {!modified && <small className="is-saved">{isEn ? "All changes saved" : "Semua perubahan tersimpan"}</small>}
         </div>
         <div className="mwc-editor-action-bar__actions">
-          {/* Quick Translation Button */}
-          <button
-            type="button"
-            className="mwc-editor-action-bar__btn mwc-editor-action-bar__btn--trans"
-            onClick={() => {
-              setIsPostPublish(false);
-              setTranslationModalOpen(true);
-            }}
-            title={isEn ? "Manage English Translation (AI)" : "Kelola Terjemahan Bahasa Inggris (AI)"}
-          >
-            <Globe size={15} />
-            <span>{isEn ? "Translation (EN)" : "Terjemahan (EN)"}</span>
-          </button>
-
           <a
             className="mwc-editor-action-bar__preview"
             aria-disabled={!docInfo?.id}
@@ -150,53 +163,52 @@ export const EditorActionBar: React.FC = () => {
                 : undefined
             }
           >
-            <span className="material-symbols-outlined" aria-hidden style={{ fontSize: 16 }}>
-              visibility
-            </span>
+            <Eye size={15} />
             {currentStatus === "published"
               ? `${isEn ? "View on Web" : "Lihat di Web"} (${locale.toUpperCase()})`
               : `${isEn ? "Preview Draft" : "Pratinjau Draf"} (${locale.toUpperCase()})`}
           </a>
 
-          {availableActions.map((action) => (
-            <button
-              className={`mwc-editor-action-bar__btn ${["revision_requested", "scheduled"].includes(action.nextStatuses[0]) ? "mwc-editor-action-bar__btn--secondary" : ""}`}
-              key={action.label}
-              disabled={Boolean(processingStatus)}
-              onClick={async () => {
-                const nextStatus = action.nextStatuses[0];
-                setProcessingStatus(nextStatus);
-                try {
-                  await submit({ overrides: { status: nextStatus } });
-                  toast.success(isEn ? "Editorial status saved" : "Status editorial berhasil disimpan");
+          {availableActions.map((action) => {
+            const ActionIcon = ACTION_ICONS[action.icon] || Rocket;
+            return (
+              <button
+                className={`mwc-editor-action-bar__btn ${["revision_requested", "scheduled"].includes(action.nextStatuses[0]) ? "mwc-editor-action-bar__btn--secondary" : ""}`}
+                key={action.label}
+                disabled={Boolean(processingStatus)}
+                onClick={async () => {
+                  const nextStatus = action.nextStatuses[0];
+                  setProcessingStatus(nextStatus);
+                  try {
+                    await submit({ overrides: { status: nextStatus } });
+                    toast.success(isEn ? "Editorial status saved" : "Status editorial berhasil disimpan");
 
-                  // Trigger post-publish translation modal when published in Indonesian
-                  if (nextStatus === "published" && locale === "id") {
-                    setIsPostPublish(true);
-                    setTranslationModalOpen(true);
+                    // Trigger post-publish translation modal when published in Indonesian
+                    if (nextStatus === "published" && locale === "id") {
+                      setIsPostPublish(true);
+                      setTranslationModalOpen(true);
+                    }
+                  } catch {
+                    toast.error(isEn ? "Failed to save editorial status" : "Gagal menyimpan status editorial");
+                  } finally {
+                    setProcessingStatus(null);
                   }
-                } catch {
-                  toast.error(isEn ? "Failed to save editorial status" : "Gagal menyimpan status editorial");
-                } finally {
-                  setProcessingStatus(null);
-                }
-              }}
-              type="button"
-            >
-              <span className="material-symbols-outlined" aria-hidden style={{ fontSize: 16 }}>
-                {action.icon}
-              </span>
-              {processingStatus === action.nextStatuses[0]
-                ? isEn
-                  ? "Saving…"
-                  : "Menyimpan…"
-                : modified
-                  ? `${isEn ? "Save &" : "Simpan &"} ${isEn ? EN_ACTION_LABELS[action.label] || action.label : action.label}`
-                  : isEn
-                    ? EN_ACTION_LABELS[action.label] || action.label
-                    : action.label}
-            </button>
-          ))}
+                }}
+                type="button"
+              >
+                <ActionIcon size={15} />
+                {processingStatus === action.nextStatuses[0]
+                  ? isEn
+                    ? "Saving…"
+                    : "Menyimpan…"
+                  : modified
+                    ? `${isEn ? "Save &" : "Simpan &"} ${isEn ? EN_ACTION_LABELS[action.label] || action.label : action.label}`
+                    : isEn
+                      ? EN_ACTION_LABELS[action.label] || action.label
+                      : action.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 

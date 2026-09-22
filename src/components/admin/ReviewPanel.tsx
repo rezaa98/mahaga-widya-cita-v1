@@ -3,6 +3,7 @@
 import React from "react";
 import { useFormFields } from "@payloadcms/ui";
 import { useAdminLanguage } from "./adminLocale";
+import { Clock, MessageSquareWarning, CheckCircle2 } from "lucide-react";
 
 /**
  * Compact review notes display shown in the article/journal sidebar when the
@@ -21,17 +22,25 @@ export const ReviewPanel: React.FC = () => {
   const showPanel = ["in_review", "revision_requested", "approved"].includes(currentStatus);
   if (!showPanel) return null;
 
-  const statusConfig: Record<string, { label: string; icon: string; borderColor: string }> = {
-    in_review: { label: isEn ? "In Review" : "Dalam Review", icon: "rate_review", borderColor: "#f59e0b" },
+  const statusConfig: Record<
+    string,
+    {
+      label: string;
+      icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }>;
+      borderColor: string;
+    }
+  > = {
+    in_review: { label: isEn ? "In Review" : "Dalam Review", icon: Clock, borderColor: "#f59e0b" },
     revision_requested: {
       label: isEn ? "Revision Required" : "Revisi Diperlukan",
-      icon: "feedback",
+      icon: MessageSquareWarning,
       borderColor: "#ef4444",
     },
-    approved: { label: isEn ? "Approved" : "Disetujui", icon: "check_circle", borderColor: "#10b981" },
+    approved: { label: isEn ? "Approved" : "Disetujui", icon: CheckCircle2, borderColor: "#10b981" },
   };
 
   const config = statusConfig[currentStatus] || statusConfig.in_review;
+  const ConfigIcon = config.icon;
 
   return (
     <div
@@ -55,9 +64,7 @@ export const ReviewPanel: React.FC = () => {
           color: config.borderColor,
         }}
       >
-        <span className="material-symbols-outlined" aria-hidden style={{ fontSize: 18 }}>
-          {config.icon}
-        </span>
+        <ConfigIcon size={18} />
         {config.label}
       </div>
       {reviewNotes && (

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AdminAuthShell } from "./AdminAuthShell";
+import { Mail, Lock, Eye, EyeOff, Loader2, ArrowRight } from "lucide-react";
 
 export const CustomLogin = () => {
   const [email, setEmail] = useState("");
@@ -52,7 +53,7 @@ export const CustomLogin = () => {
             Alamat email
           </label>
           <div className="admin-auth-input-wrap">
-            <span className="material-symbols-outlined admin-auth-input-icon">mail</span>
+            <Mail size={18} className="admin-auth-input-icon" />
             <input
               className="admin-auth-input"
               id="login-email"
@@ -75,7 +76,7 @@ export const CustomLogin = () => {
             </Link>
           </div>
           <div className="admin-auth-input-wrap">
-            <span className="material-symbols-outlined admin-auth-input-icon">lock</span>
+            <Lock size={18} className="admin-auth-input-icon" />
             <input
               className="admin-auth-input"
               id="login-password"
@@ -92,21 +93,18 @@ export const CustomLogin = () => {
               aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
               onClick={() => setShowPassword((value) => !value)}
             >
-              <span className="material-symbols-outlined">{showPassword ? "visibility_off" : "visibility"}</span>
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
         </div>
         <button className="admin-auth-button" type="submit" disabled={loading}>
           {loading ? (
             <>
-              <span className="material-symbols-outlined admin-auth-spin">progress_activity</span> Memproses...
+              <Loader2 size={18} className="admin-auth-spin" /> Memproses...
             </>
           ) : (
             <>
-              Masuk ke Admin{" "}
-              <span className="material-symbols-outlined" style={{ fontSize: 18 }}>
-                arrow_forward
-              </span>
+              Masuk ke Admin <ArrowRight size={18} />
             </>
           )}
         </button>

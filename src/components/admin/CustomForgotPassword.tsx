@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AdminAuthShell } from "./AdminAuthShell";
+import { CheckCircle2, Mail, Loader2, ArrowRight } from "lucide-react";
 
 export const CustomForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -41,9 +42,7 @@ export const CustomForgotPassword = () => {
       {submitted ? (
         <>
           <div className="admin-auth-success">
-            <span className="material-symbols-outlined" style={{ fontSize: 31 }}>
-              mark_email_read
-            </span>
+            <CheckCircle2 size={32} />
           </div>
           <p className="admin-auth-description">
             Jika <strong>{email}</strong> terdaftar, email pengaturan ulang kata sandi akan segera diterima.
@@ -64,7 +63,7 @@ export const CustomForgotPassword = () => {
               Alamat email
             </label>
             <div className="admin-auth-input-wrap">
-              <span className="material-symbols-outlined admin-auth-input-icon">mail</span>
+              <Mail size={18} className="admin-auth-input-icon" />
               <input
                 className="admin-auth-input"
                 id="forgot-email"
@@ -80,14 +79,11 @@ export const CustomForgotPassword = () => {
           <button className="admin-auth-button" type="submit" disabled={loading}>
             {loading ? (
               <>
-                <span className="material-symbols-outlined admin-auth-spin">progress_activity</span> Mengirim...
+                <Loader2 size={18} className="admin-auth-spin" /> Mengirim...
               </>
             ) : (
               <>
-                Kirim tautan pemulihan{" "}
-                <span className="material-symbols-outlined" style={{ fontSize: 18 }}>
-                  arrow_forward
-                </span>
+                Kirim tautan pemulihan <ArrowRight size={18} />
               </>
             )}
           </button>

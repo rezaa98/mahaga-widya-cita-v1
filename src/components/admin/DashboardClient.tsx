@@ -24,6 +24,13 @@ import {
   CheckCircle2,
   Sparkles,
   ChevronDown,
+  Bell,
+  ChevronRight,
+  AlertCircle,
+  RefreshCw,
+  Image as ImageIcon,
+  Settings,
+  Languages,
 } from "lucide-react";
 import { HelpCenterModal } from "./HelpCenterModal";
 
@@ -66,12 +73,15 @@ type DashboardData = {
   weeklyChartData: WeeklyChartData[];
 };
 
-const icons: Record<ActivityItem["type"], string> = {
-  article: "article",
-  journal: "menu_book",
-  contact: "mail",
-  subscriber: "person_add",
-  media: "image",
+const activityIconMap: Record<
+  ActivityItem["type"],
+  React.ComponentType<{ size?: number; style?: React.CSSProperties }>
+> = {
+  article: FileText,
+  journal: BookOpen,
+  contact: Mail,
+  subscriber: Users,
+  media: ImageIcon,
 };
 
 function timeAgo(value: string, isEn: boolean) {
@@ -83,47 +93,6 @@ function timeAgo(value: string, isEn: boolean) {
   return new Date(value).toLocaleDateString(isEn ? "en-US" : "id-ID", { day: "numeric", month: "short" });
 }
 
-function Icon({ children }: { children: string }) {
-  return (
-    <span aria-hidden className="material-symbols-outlined mwc-dashboard__icon">
-      {children}
-    </span>
-  );
-}
-
-function MetricCard({
-  label,
-  value,
-  detail,
-  href,
-  icon,
-  tone = "blue",
-  loading,
-}: {
-  label: string;
-  value?: number;
-  detail: string;
-  href: string;
-  icon: string;
-  tone?: string;
-  loading: boolean;
-}) {
-  return (
-    <a className={`mwc-metric mwc-metric--${tone}`} href={href} aria-label={label}>
-      <span className="mwc-metric__icon">
-        <Icon>{icon}</Icon>
-      </span>
-      <span className="mwc-metric__body">
-        <span className="mwc-metric__label">{label}</span>
-        <strong className={loading ? "mwc-skeleton mwc-metric__value" : "mwc-metric__value"}>
-          {loading ? "" : (value ?? 0)}
-        </strong>
-        <small>{detail}</small>
-      </span>
-    </a>
-  );
-}
-
 function AttentionPanel({ data, isEn, locale }: { data: DashboardData | null; isEn: boolean; locale: "id" | "en" }) {
   if (!data) {
     return (
@@ -133,7 +102,7 @@ function AttentionPanel({ data, isEn, locale }: { data: DashboardData | null; is
             <p className="mwc-eyebrow">{isEn ? "Priority" : "Prioritas"}</p>
             <h2 id="attention-title">{isEn ? "Needs Attention" : "Perlu perhatian"}</h2>
           </div>
-          <Icon>notifications</Icon>
+          <Bell size={18} style={{ color: "#64748b" }} />
         </div>
         <p className="mwc-empty">{isEn ? "Loading..." : "Memuat data prioritas..."}</p>
       </section>
@@ -141,40 +110,46 @@ function AttentionPanel({ data, isEn, locale }: { data: DashboardData | null; is
   }
   const reviewTarget = data.translationQueue.find((item) => item.status === "needs_review")?.href;
   const recoveryTarget = data.translationQueue.find((item) => ["failed", "needs_update"].includes(item.status))?.href;
-  const items = [
+  const items: {
+    count: number;
+    label: string;
+    href: string;
+    icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }>;
+    translationTarget: boolean;
+  }[] = [
     {
       count: data.stats.articles.draft,
       label: isEn ? "draft articles" : "artikel draft",
       href: "/admin/collections/articles?where[status][equals]=draft",
-      icon: "article",
+      icon: FileText,
       translationTarget: false,
     },
     {
       count: data.stats.journals.draft,
       label: isEn ? "draft journals" : "jurnal draft",
       href: "/admin/collections/journals?where[status][equals]=draft",
-      icon: "menu_book",
+      icon: BookOpen,
       translationTarget: false,
     },
     {
       count: data.stats.contacts.recentCount,
       label: isEn ? "new messages" : "pesan baru",
       href: "/admin/collections/contact-submissions",
-      icon: "mail",
+      icon: Mail,
       translationTarget: false,
     },
     {
       count: data.stats.translations.needsReview,
       label: isEn ? "translations awaiting review" : "terjemahan menunggu review",
       href: reviewTarget || "#translation-queue",
-      icon: "rate_review",
+      icon: Languages,
       translationTarget: Boolean(reviewTarget),
     },
     {
       count: data.stats.translations.needsUpdate + data.stats.translations.failed,
       label: isEn ? "translations need recovery" : "terjemahan perlu diperbaiki",
       href: recoveryTarget || "#translation-queue",
-      icon: "translate",
+      icon: AlertCircle,
       translationTarget: Boolean(recoveryTarget),
     },
   ].filter((item) => item.count > 0);
@@ -186,20 +161,23 @@ function AttentionPanel({ data, isEn, locale }: { data: DashboardData | null; is
           <p className="mwc-eyebrow">{isEn ? "Priority" : "Prioritas"}</p>
           <h2 id="attention-title">{isEn ? "Needs Attention" : "Perlu perhatian"}</h2>
         </div>
-        <Icon>notifications</Icon>
+        <Bell size={18} style={{ color: "#64748b" }} />
       </div>
       {items.length ? (
         <div className="mwc-attention__list">
-          {items.map((item) => (
-            <a href={item.translationTarget ? item.href : withLocale(item.href, locale)} key={item.label}>
-              <span className="mwc-attention__count">{item.count}</span>
-              <span>
-                <Icon>{item.icon}</Icon>
-                {item.label}
-              </span>
-              <Icon>chevron_right</Icon>
-            </a>
-          ))}
+          {items.map((item) => {
+            const ItemIcon = item.icon;
+            return (
+              <a href={item.translationTarget ? item.href : withLocale(item.href, locale)} key={item.label}>
+                <span className="mwc-attention__count">{item.count}</span>
+                <span>
+                  <ItemIcon size={15} style={{ color: "#64748b" }} />
+                  {item.label}
+                </span>
+                <ChevronRight size={14} style={{ color: "#94a3b8" }} />
+              </a>
+            );
+          })}
         </div>
       ) : (
         <p className="mwc-empty">
@@ -260,7 +238,7 @@ function TranslationPanel({ data, isEn }: { data: DashboardData; isEn: boolean }
                 <small>{item.resourceId ? `#${item.resourceId}` : "Global"}</small>
               </span>
               <em className={`is-${item.status}`}>{labels[item.status]}</em>
-              <Icon>chevron_right</Icon>
+              <ChevronRight size={14} style={{ color: "#94a3b8" }} />
             </a>
           ))}
         </div>
@@ -307,18 +285,21 @@ function ActivityList({
         <p className="mwc-empty">{isEn ? "No recent activity recorded." : "Belum ada aktivitas tercatat."}</p>
       ) : (
         <div className="mwc-activity__list">
-          {data.recentActivity.map((item, index) => (
-            <a href={withLocale(item.link, locale)} key={`${item.time}-${index}`}>
-              <span className={`mwc-activity__type mwc-activity__type--${item.type}`}>
-                <Icon>{icons[item.type]}</Icon>
-              </span>
-              <span>
-                <strong>{item.label}</strong>
-                <small>{item.detail}</small>
-                <time dateTime={item.time}>{timeAgo(item.time, isEn)}</time>
-              </span>
-            </a>
-          ))}
+          {data.recentActivity.map((item, index) => {
+            const ActIcon = activityIconMap[item.type] || FileText;
+            return (
+              <a href={withLocale(item.link, locale)} key={`${item.time}-${index}`}>
+                <span className={`mwc-activity__type mwc-activity__type--${item.type}`}>
+                  <ActIcon size={16} />
+                </span>
+                <span>
+                  <strong>{item.label}</strong>
+                  <small>{item.detail}</small>
+                  <time dateTime={item.time}>{timeAgo(item.time, isEn)}</time>
+                </span>
+              </a>
+            );
+          })}
         </div>
       )}
     </section>
@@ -465,11 +446,11 @@ export const DashboardClient: React.FC = () => {
         {error && (
           <section className="mwc-dashboard__error" role="alert">
             <span>
-              <Icon>error</Icon>
+              <AlertCircle size={16} />
               {error}
             </span>
             <button onClick={reloadDashboard} type="button">
-              <Icon>refresh</Icon>
+              <RefreshCw size={14} />
               {isEn ? "Retry" : "Coba lagi"}
             </button>
           </section>
@@ -589,9 +570,7 @@ export const DashboardClient: React.FC = () => {
           <details className="mwc-advanced-details">
             <summary className="mwc-advanced-details__summary">
               <div className="mwc-advanced-details__summary-left">
-                <span className="material-symbols-outlined" style={{ fontSize: "20px", color: "#64748b" }}>
-                  settings_suggest
-                </span>
+                <Settings size={18} style={{ color: "#64748b" }} />
                 <span className="mwc-advanced-details__title">
                   {isEn
                     ? "System Status, AI Translation Queue & Content Growth"
