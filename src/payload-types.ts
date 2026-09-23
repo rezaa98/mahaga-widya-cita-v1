@@ -111,16 +111,16 @@ export interface Config {
     beranda: Beranda;
     'tentang-kami': TentangKami;
     kontak: Kontak;
-    footer: Footer;
     navbar: Navbar;
+    footer: Footer;
     'pengaturan-fitur': PengaturanFitur;
   };
   globalsSelect: {
     beranda: BerandaSelect<false> | BerandaSelect<true>;
     'tentang-kami': TentangKamiSelect<false> | TentangKamiSelect<true>;
     kontak: KontakSelect<false> | KontakSelect<true>;
-    footer: FooterSelect<false> | FooterSelect<true>;
     navbar: NavbarSelect<false> | NavbarSelect<true>;
+    footer: FooterSelect<false> | FooterSelect<true>;
     'pengaturan-fitur': PengaturanFiturSelect<false> | PengaturanFiturSelect<true>;
   };
   locale: 'id' | 'en';
@@ -1452,6 +1452,27 @@ export interface Kontak {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navbar".
+ */
+export interface Navbar {
+  id: number;
+  links: {
+    label: string;
+    href: string;
+    children?:
+      | {
+          label: string;
+          href: string;
+          id?: string | null;
+        }[]
+      | null;
+    id?: string | null;
+  }[];
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "footer".
  */
 export interface Footer {
@@ -1482,27 +1503,6 @@ export interface Footer {
    * Tahun akan ditambahkan secara otomatis (contoh: © 2026 PT Mahaga Widya Cita. Hak Cipta Dilindungi.)
    */
   copyrightText: string;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "navbar".
- */
-export interface Navbar {
-  id: number;
-  links: {
-    label: string;
-    href: string;
-    children?:
-      | {
-          label: string;
-          href: string;
-          id?: string | null;
-        }[]
-      | null;
-    id?: string | null;
-  }[];
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1701,6 +1701,29 @@ export interface KontakSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navbar_select".
+ */
+export interface NavbarSelect<T extends boolean = true> {
+  links?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        children?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
@@ -1727,29 +1750,6 @@ export interface FooterSelect<T extends boolean = true> {
         id?: T;
       };
   copyrightText?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "navbar_select".
- */
-export interface NavbarSelect<T extends boolean = true> {
-  links?:
-    | T
-    | {
-        label?: T;
-        href?: T;
-        children?:
-          | T
-          | {
-              label?: T;
-              href?: T;
-              id?: T;
-            };
-        id?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

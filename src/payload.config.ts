@@ -86,7 +86,7 @@ export default buildConfig({
       },
     },
   },
-  globals: [Beranda, TentangKami, Kontak, Footer, Navbar, PengaturanFitur],
+  globals: [Beranda, TentangKami, Kontak, Navbar, Footer, PengaturanFitur],
   collections: [
     Users,
     Media,

@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import { withPayload } from "@payloadcms/next/withPayload";
 
 const nextConfig: NextConfig = {
+  devIndicators: false,
   experimental: { globalNotFound: true },
   poweredByHeader: false,
   async headers() {
